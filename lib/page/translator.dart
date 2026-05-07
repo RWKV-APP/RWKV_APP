@@ -284,7 +284,7 @@ class _InferenceInfo extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final isGenerating = ref.watch(P.translator.isGenerating);
-    final currentModel = ref.watch(P.rwkv.latestModel);
+    final currentModel = ref.watch(P.rwkvModel.latest);
 
     return Card(
       elevation: 0,
@@ -339,7 +339,7 @@ class _ServiceInfo extends ConsumerWidget {
       case BackendState.stopping:
         return;
       case BackendState.stopped:
-        final currentModel = P.rwkv.latestModel.q;
+        final currentModel = P.rwkvModel.latest.q;
         if (currentModel == null) {
           ModelSelector.show();
           return;
@@ -519,7 +519,7 @@ class _TranslatorDebugInfo extends ConsumerWidget {
     P.translator.activedTab.q = null;
     P.translator.runningTaskTabId.q = null;
     P.translator.runningTaskUrl.q = null;
-    P.rwkv.stop();
+    P.rwkvGeneration.stop();
   }
 
   @override

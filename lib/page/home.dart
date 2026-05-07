@@ -10,15 +10,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/model_selector.dart';
 
 class PageHome extends ConsumerWidget {
   const PageHome({super.key});
@@ -319,7 +316,7 @@ class _NekoButton extends ConsumerWidget {
 
     return _HomeCard(
       heightsKey: 'neko',
-      onTap: () => _onTap(context),
+      onTap: _onTap,
       color: Colors.pinkAccent,
       icon: const FaIcon(FontAwesomeIcons.cat, color: Colors.white),
       title: s.neko,
@@ -327,23 +324,7 @@ class _NekoButton extends ConsumerWidget {
     );
   }
 
-  Future<void> _onTap(BuildContext context) async {
-    final current = P.rwkv.latestModel.q;
-    if (current == null || !current.isNeko) {
-      final nekoList = P.remote.getNekoModel();
-      final downloaded = nekoList.where((e) => P.remote.locals(e).q.hasFile).toList();
-      if (downloaded.isNotEmpty) {
-        final loaded = await _ModelLoadingDialog.show(context, downloaded.first);
-        if (!loaded) return;
-      } else if (nekoList.isNotEmpty) {
-        Alert.warning(S.current.chat_you_need_download_model_if_you_want_to_use_it);
-        ModelSelector.show(showNeko: true);
-        return;
-      } else {
-        Alert.error('Neko is not available');
-        return;
-      }
-    }
+  Future<void> _onTap() async {
     P.chat.startNewChat();
     push(.neko);
   }
@@ -406,60 +387,6 @@ class _BenchmarkButton extends ConsumerWidget {
       icon: const FaIcon(FontAwesomeIcons.gauge, color: Colors.white),
       title: s.performance_test,
       description: s.performance_test_description,
-    );
-  }
-}
-
-class _ModelLoadingDialog extends StatefulWidget {
-  final FileInfo file;
-
-  const _ModelLoadingDialog({required this.file});
-
-  static Future<bool> show(BuildContext context, FileInfo file) async {
-    final r = await showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) => _ModelLoadingDialog(file: file),
-    );
-    return r ?? false;
-  }
-
-  @override
-  State<_ModelLoadingDialog> createState() => _ModelLoadingDialogState();
-}
-
-class _ModelLoadingDialogState extends State<_ModelLoadingDialog> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        await P.rwkv.loadChat(fileInfo: widget.file);
-        if (mounted) Navigator.pop(context, true);
-      } catch (e) {
-        qqe('load model failed: $e');
-        if (mounted) Navigator.pop(context, false);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Material(
-        borderRadius: .circular(16),
-        child: Padding(
-          padding: const .symmetric(horizontal: 36, vertical: 24),
-          child: Column(
-            mainAxisSize: .min,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 16),
-              Text(S.current.model_loading),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

@@ -32,11 +32,11 @@ class Empty extends ConsumerWidget {
     final s = S.of(context);
     final messages = ref.watch(P.msg.list);
     if (messages.isNotEmpty) return Positioned.fill(child: IgnorePointer(child: Container()));
-    final loaded = ref.watch(P.rwkv.loaded);
-    final currentModel = ref.watch(P.rwkv.latestModel);
+    final loaded = ref.watch(P.rwkvModel.loaded);
+    final currentModel = ref.watch(P.rwkvModel.latest);
 
     final demoType = ref.watch(P.app.demoType);
-    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
+    final currentWorldType = ref.watch(P.rwkvContext.currentWorldType);
     String logoPath = "assets/img/${demoType.name}/logo.square.png";
 
     final hasSpecificEmpty = demoType == .see && currentWorldType != null;

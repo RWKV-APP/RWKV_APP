@@ -90,10 +90,10 @@ class _Benchmark {
 
 extension _$Benchmark on _Benchmark {
   Future<void> _init() async {
-    P.rwkv.decodeSpeed.l(_onDecodeSpeedChanged);
-    P.rwkv.prefillSpeed.l(_onPrefillSpeedChanged);
-    P.rwkv.prefillProgress.l(_onPrefillProgressChanged);
-    P.rwkv.generating.l(_onBackendGeneratingChanged);
+    P.rwkvGeneration.decodeSpeed.l(_onDecodeSpeedChanged);
+    P.rwkvGeneration.prefillSpeed.l(_onPrefillSpeedChanged);
+    P.rwkvGeneration.prefillProgress.l(_onPrefillProgressChanged);
+    P.rwkvGeneration.generating.l(_onBackendGeneratingChanged);
   }
 
   void _onDecodeSpeedChanged(double next) {
@@ -142,7 +142,7 @@ extension _$Benchmark on _Benchmark {
   }
 
   void _requestBenchmarkMetrics() {
-    P.rwkv.requestGenerationMetrics(weightType: .chat);
+    P.rwkvGeneration.requestGenerationMetrics(weightType: .chat);
   }
 
   void _startBenchmarkMetricsPolling() {
@@ -168,13 +168,13 @@ extension _$Benchmark on _Benchmark {
     final stopwatch = Stopwatch()..start();
     while (stopwatch.elapsed < benchmarkMetricsSettleTimeout) {
       final double settledDecodeSpeed = max(
-        max(decodeSpeed.q, P.rwkv.decodeSpeed.q),
+        max(decodeSpeed.q, P.rwkvGeneration.decodeSpeed.q),
         P.telemetry.snapshotPeakDecodeSpeed(),
       );
       if (expectDecode) {
         if (settledDecodeSpeed > 0) return;
       } else {
-        final double settledPrefillSpeed = max(prefillSpeed.q, P.rwkv.prefillSpeed.q);
+        final double settledPrefillSpeed = max(prefillSpeed.q, P.rwkvGeneration.prefillSpeed.q);
         if (settledPrefillSpeed > 0 || settledDecodeSpeed > 0) return;
       }
 
@@ -185,10 +185,10 @@ extension _$Benchmark on _Benchmark {
 
   Future<bool> _waitForBackendIdle({required Duration timeout}) async {
     final stopwatch = Stopwatch()..start();
-    while (P.rwkv.generating.q && stopwatch.elapsed < timeout) {
+    while (P.rwkvGeneration.generating.q && stopwatch.elapsed < timeout) {
       await Future<void>.delayed(benchmarkBackendIdlePollInterval);
     }
-    return !P.rwkv.generating.q;
+    return !P.rwkvGeneration.generating.q;
   }
 
   void _resetRunState({required List<int> plan}) {
@@ -226,15 +226,15 @@ extension $Benchmark on _Benchmark {
   void onPageOpened() {
     if (_pageActive) return;
     _pageActive = true;
-    _oldMaxLength = P.rwkv.arguments(Argument.maxLength).q;
-    P.rwkv.syncMaxLength(maxLength: benchmarkMaxLength);
+    _oldMaxLength = P.rwkvParams.arguments(Argument.maxLength).q;
+    P.rwkvParams.syncMaxLength(maxLength: benchmarkMaxLength);
   }
 
   void onPageClosed() {
     if (!_pageActive) return;
     _pageActive = false;
     stopBenchmark(report: true);
-    P.rwkv.syncMaxLength(maxLength: _oldMaxLength);
+    P.rwkvParams.syncMaxLength(maxLength: _oldMaxLength);
   }
 
   void onStartStopTap() {
@@ -262,11 +262,11 @@ extension $Benchmark on _Benchmark {
   }
 
   Future<void> _startBenchmarkSequence() async {
-    if (generating.q || _currentBatchCompleter != null || P.rwkv.generating.q) return;
+    if (generating.q || _currentBatchCompleter != null || P.rwkvGeneration.generating.q) return;
 
     final runId = ++_benchmarkRunId;
-    final model = P.rwkv.latestModel.q;
-    final plan = benchmarkBatchPlanFor(model: model, supportedBatchSizes: P.rwkv.supportedBatchSizes.q);
+    final model = P.rwkvModel.latest.q;
+    final plan = benchmarkBatchPlanFor(model: model, supportedBatchSizes: P.rwkvParams.supportedBatchSizes.q);
     _resetRunState(plan: plan);
 
     try {
@@ -309,12 +309,12 @@ extension $Benchmark on _Benchmark {
     _activeBatchAttemptId = attemptId;
     _resetCurrentBatchState(batchSize: batchSize, ordinal: ordinal);
 
-    P.rwkv.prefillProgress.q = 0;
+    P.rwkvGeneration.prefillProgress.q = 0;
     P.chat.receivedTokens.q = "";
-    await P.rwkv.clearStates();
+    await P.rwkvGeneration.clearStates();
 
     await _subscription?.cancel();
-    _subscription = P.rwkv
+    _subscription = P.rwkvGeneration
         .completion(
           benchmarkPrompt,
           batchSize: batchSize,
@@ -451,8 +451,8 @@ extension $Benchmark on _Benchmark {
     if (_currentBatchReportSubmitted) return;
 
     final double snapshotPeakDecodeSpeed = P.telemetry.snapshotPeakDecodeSpeed();
-    final double effectivePrefillSpeed = prefillSpeed.q > 0 ? prefillSpeed.q : P.rwkv.prefillSpeed.q;
-    final double directDecodeSpeed = decodeSpeed.q > 0 ? decodeSpeed.q : P.rwkv.decodeSpeed.q;
+    final double effectivePrefillSpeed = prefillSpeed.q > 0 ? prefillSpeed.q : P.rwkvGeneration.prefillSpeed.q;
+    final double directDecodeSpeed = decodeSpeed.q > 0 ? decodeSpeed.q : P.rwkvGeneration.decodeSpeed.q;
     final double displayDecodeSpeed = directDecodeSpeed > 0 ? directDecodeSpeed : snapshotPeakDecodeSpeed;
     if (effectivePrefillSpeed <= 0 && displayDecodeSpeed <= 0) return;
 
@@ -481,7 +481,7 @@ extension $Benchmark on _Benchmark {
     required double decodeSpeed,
     required double peakDecodeSpeed,
   }) {
-    final model = P.rwkv.latestModel.q;
+    final model = P.rwkvModel.latest.q;
     final double modelSizeGb = model == null ? 0 : model.fileSize / 1024 / 1024 / 1024;
     final double effectiveDecodeSpeed = batchSize > 1 && peakDecodeSpeed > 0 ? peakDecodeSpeed : decodeSpeed;
     final result = BenchmarkRunResult(

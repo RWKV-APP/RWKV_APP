@@ -29,8 +29,8 @@ class InputTextField extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
-    final loaded = ref.watch(P.rwkv.loaded);
-    final loading = ref.watch(P.rwkv.loading);
+    final loaded = ref.watch(P.rwkvModel.loaded);
+    final loading = ref.watch(P.rwkvModel.loading);
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final isChat = demoType == .chat;
     final isTalk = demoType == .tts;

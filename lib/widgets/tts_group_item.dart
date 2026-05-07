@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_roleplay/flutter_roleplay.dart';
 import 'package:flutter_roleplay/models/model_info.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
@@ -18,7 +17,6 @@ import 'package:sprintf/sprintf.dart';
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
-import 'package:zone/model/group_info.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
@@ -54,14 +52,14 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   void _onDownloadAllTap() async {
     P.remote.activeDownloadGroupIds.q = {...P.remote.activeDownloadGroupIds.q, widget.fileInfo.fileName};
     final missingFileInfos = _fileInfos.where((e) => P.remote.locals(e).q.hasFile == false).toList();
-    for (var e in missingFileInfos) {
+    for (final e in missingFileInfos) {
       P.remote.getFile(fileInfo: e);
     }
   }
 
   void _onDeleteAllTap() async {
     P.remote.activeDownloadGroupIds.q = P.remote.activeDownloadGroupIds.q.difference({widget.fileInfo.fileName});
-    for (var e in _fileInfos) {
+    for (final e in _fileInfos) {
       P.remote.deleteFile(fileInfo: e);
     }
   }
@@ -72,7 +70,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
 
   int _getDownloadedSize() {
     int downloaded = 0;
-    for (var fileInfo in _fileInfos) {
+    for (final fileInfo in _fileInfos) {
       final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading) {
         final progress = localFile.progress.clamp(0.0, 100.0) / 100.0;
@@ -98,7 +96,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
 
     if (!isExplicitlyActive && !isCoreActive) return false;
 
-    for (var fileInfo in _fileInfos) {
+    for (final fileInfo in _fileInfos) {
       final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading) {
         return true;
@@ -109,7 +107,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
 
   double _getTotalSpeed() {
     double totalSpeed = 0.0;
-    for (var fileInfo in _fileInfos) {
+    for (final fileInfo in _fileInfos) {
       final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading && localFile.networkSpeed > 0) {
         totalSpeed += localFile.networkSpeed;
@@ -121,7 +119,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   Duration _getAverageRemaining() {
     Duration totalRemaining = Duration.zero;
     int downloadingCount = 0;
-    for (var fileInfo in _fileInfos) {
+    for (final fileInfo in _fileInfos) {
       final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading && !localFile.timeRemaining.isNegative) {
         totalRemaining += localFile.timeRemaining;
@@ -197,7 +195,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       }
 
       if (shouldCancelDependencies) {
-        for (var fileInfo in _fileInfos) {
+        for (final fileInfo in _fileInfos) {
           if (fileInfo.fileName != widget.fileInfo.fileName) {
             await P.remote.cancelDownload(fileInfo: fileInfo);
           }
@@ -234,7 +232,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     }
 
     if (shouldPauseDependencies) {
-      for (var fileInfo in _fileInfos) {
+      for (final fileInfo in _fileInfos) {
         if (fileInfo.fileName != widget.fileInfo.fileName) {
           P.remote.pauseDownload(fileInfo: fileInfo);
         }
@@ -243,93 +241,18 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   }
 
   Future<void> _onSparkTap() async {
-    if (P.rwkv.loading.q) {
+    if (P.rwkvModel.loading.q) {
       Alert.warning(S.current.please_wait_for_the_model_to_load);
       return;
     }
-    final availableModels = P.remote.ttsWeights.q;
-    final fileInfos = availableModels.toList();
-    final sparkFileKeys = fileInfos.where((e) => e.tags.contains("spark")).toList();
-    if (sparkFileKeys.isEmpty) {
-      Alert.error("Spark file not found");
-      qqe;
-      return;
-    }
-
-    final wav2vec2FileKey = sparkFileKeys.firstWhereOrNull((e) => e.tags.contains("wav2vec2"));
-    final detokenizeFileKey = sparkFileKeys.firstWhereOrNull((e) => e.tags.contains("detokenize"));
-    final bicodecTokenizeFileKey = sparkFileKeys.firstWhereOrNull((e) => e.tags.contains("tokenize"));
-
-    if (wav2vec2FileKey == null) {
-      Alert.error("Wav2vec2 file not found");
-      qqe;
-      return;
-    }
-
-    if (detokenizeFileKey == null) {
-      Alert.error("Detokenize file not found");
-      qqe;
-      return;
-    }
-
-    if (bicodecTokenizeFileKey == null) {
-      Alert.error("Tokenize file not found");
-      qqe;
-      return;
-    }
-
-    final modelLocalFile = P.remote.locals(widget.fileInfo).q;
-    final localWav2vec2File = P.remote.locals(wav2vec2FileKey).q;
-    final localDetokenizeFile = P.remote.locals(detokenizeFileKey).q;
-    final localTokenizeFile = P.remote.locals(bicodecTokenizeFileKey).q;
-    final fileInfo = widget.fileInfo;
 
     if (P.remote.modelSelectorShown.q) {
       Navigator.pop(context);
     }
 
-    if (P.app.pageKey.q == .rolePlaying) {
-      final info = ModelInfo(
-        id: fileInfo.fileName,
-        modelPath: modelLocalFile.targetPath,
-        statePath: '',
-        backend: fileInfo.backend!,
-        modelType: RoleplayManageModelType.tts,
-      );
-      final sp = await P.rwkv.loadTTS(
-        modelPath: modelLocalFile.targetPath,
-        backend: fileInfo.backend!,
-        wav2vec2Path: localWav2vec2File.targetPath,
-        detokenizePath: localDetokenizeFile.targetPath,
-        bicodecTokenzerPath: localTokenizeFile.targetPath,
-        fileInfo: fileInfo,
-      );
-      RoleplayManage.onModelDownloadComplete(info, [sp.$1, sp.$2], P.rwkv.receivePort);
-      return;
-    }
-
-    P.rwkv.clearStates();
-    P.chat.clearMessages();
-
-    try {
-      await P.rwkv.loadTTS(
-        modelPath: modelLocalFile.targetPath,
-        backend: fileInfo.backend!,
-        wav2vec2Path: localWav2vec2File.targetPath,
-        detokenizePath: localDetokenizeFile.targetPath,
-        bicodecTokenzerPath: localTokenizeFile.targetPath,
-        fileInfo: fileInfo,
-      );
-      P.talk.getTTSSpkNames();
-    } catch (e) {
-      qqe("$e");
-      Alert.error(e.toString());
-      P.rwkv.currentGroupInfo.q = null;
-      return;
-    }
-
-    P.rwkv.currentGroupInfo.q = GroupInfo(displayName: fileInfo.name);
-    Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    final result = await P.rwkvAutoLoad.loadTtsCoreForCurrentScene(fileInfo: widget.fileInfo);
+    if (result.$2 != null) return;
+    P.rwkvContext.currentGroupInfo.q = null;
   }
 
   @override
@@ -366,11 +289,11 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     final networkSpeed = _getTotalSpeed();
     final timeRemaining = _getAverageRemaining();
 
-    final currentModel = ref.watch(P.rwkv.latestModel);
+    final currentModel = ref.watch(P.rwkvModel.latest);
     bool alreadyStarted = currentModel == widget.fileInfo;
-    final loading = ref.watch(P.rwkv.loading);
-    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
-    final loadingProgress = ref.watch(P.rwkv.loadingProgress);
+    final loading = ref.watch(P.rwkvModel.loading);
+    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus);
+    final loadingProgress = ref.watch(P.rwkvModel.loadingProgress);
     final modelLoading =
         loadingStatus[widget.fileInfo] == .loading ||
         loadingStatus[widget.fileInfo] == .loadModelWithExtra ||

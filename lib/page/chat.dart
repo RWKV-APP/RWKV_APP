@@ -7,7 +7,6 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 
 // Project imports:
-import 'package:zone/func/extensions/num.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
@@ -26,22 +25,6 @@ class PageChat extends StatefulWidget {
 }
 
 class _PageChatState extends State<PageChat> {
-  @override
-  void initState() {
-    super.initState();
-
-    // 自动展示模型选择器
-    if (P.app.demoType.q == .chat) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-        final loaded = P.rwkv.latestModel.q != null;
-        if (!loaded) {
-          await 200.msLater;
-          P.chat.tryLoadLastChatModel();
-        }
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return PopScope<void>(
@@ -98,7 +81,7 @@ class _List extends ConsumerWidget {
     double bottom = inputHeight;
     double scrollBarBottom = inputHeight + 4;
 
-    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
+    final currentWorldType = ref.watch(P.rwkvContext.currentWorldType);
 
     switch (currentWorldType) {
       case null:

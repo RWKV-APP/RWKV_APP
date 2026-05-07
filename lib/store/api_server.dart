@@ -163,10 +163,10 @@ extension _$ApiServer on _ApiServer {
     required List<String> messages,
   }) async {
     final request = to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID);
-    P.rwkv.send(request);
+    P.rwkvBridge.send(request);
 
     try {
-      final response = await P.rwkv.broadcastStream
+      final response = await P.rwkvBridge.broadcastStream
           .whereType<from_rwkv.ResponseBufferContent>()
           .firstWhere((event) => event.req == request)
           .timeout(_apiServerFinalBufferTimeout);
@@ -271,7 +271,7 @@ extension _$ApiServer on _ApiServer {
   }
 
   shelf.Response _handleModels(shelf.Request request) {
-    final loaded = P.rwkv.loadedModels.q;
+    final loaded = P.rwkvModel.allLoaded.q;
     final models = loaded.keys.where((e) => e.weightType == .chat).map((info) {
       return {
         'id': _modelId(info),
@@ -285,7 +285,7 @@ extension _$ApiServer on _ApiServer {
   }
 
   shelf.Response _handleStatus(shelf.Request request) {
-    final loaded = P.rwkv.loadedModels.q;
+    final loaded = P.rwkvModel.allLoaded.q;
     final modelNames = loaded.keys.where((e) => e.weightType == .chat).map((e) => _modelId(e)).toList();
     final uptime = _startTime != null ? DateTime.now().difference(_startTime!).inSeconds : 0;
 
@@ -328,7 +328,7 @@ extension _$ApiServer on _ApiServer {
       return _jsonResponse(_errorJson('messages is required'), status: 400);
     }
 
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return _jsonResponse(_errorJson('No chat model loaded', type: 'model_not_found'), status: 503);
     }
@@ -360,7 +360,7 @@ extension _$ApiServer on _ApiServer {
     }
 
     final reqId = 'chatcmpl-${DateTime.now().millisecondsSinceEpoch}';
-    final modelName = P.rwkv.latestModel.q != null ? _modelId(P.rwkv.latestModel.q!) : 'rwkv';
+    final modelName = P.rwkvModel.latest.q != null ? _modelId(P.rwkvModel.latest.q!) : 'rwkv';
 
     _addLog('POST /v1/chat/completions (stream=$stream, messages=${messagesRaw.length})');
     requestCount.q++;
@@ -441,13 +441,13 @@ extension _$ApiServer on _ApiServer {
           }
 
           void requestLatestBuffer() {
-            P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-            P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID));
+            P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
+            P.rwkvBridge.send(to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID));
           }
 
           _pollingTimer?.cancel();
           _broadcastSub?.cancel();
-          _broadcastSub = P.rwkv.broadcastStream.listen((event) {
+          _broadcastSub = P.rwkvBridge.broadcastStream.listen((event) {
             if (event is from_rwkv.GenerateStart) {
               if (event.req?.requestId != request.requestId) return;
               markGenerationStarted();
@@ -536,7 +536,7 @@ extension _$ApiServer on _ApiServer {
               sendDelta(delta);
             }
           });
-          P.rwkv.send(request);
+          P.rwkvBridge.send(request);
           requestLatestBuffer();
           _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
             requestLatestBuffer();
@@ -669,13 +669,13 @@ extension _$ApiServer on _ApiServer {
           }
 
           void requestLatestBuffer() {
-            P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-            P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID));
+            P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
+            P.rwkvBridge.send(to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID));
           }
 
           _pollingTimer?.cancel();
           _broadcastSub?.cancel();
-          _broadcastSub = P.rwkv.broadcastStream.listen((event) {
+          _broadcastSub = P.rwkvBridge.broadcastStream.listen((event) {
             if (event is from_rwkv.GenerateStart) {
               if (event.req?.requestId != request.requestId) return;
               markGenerationStarted();
@@ -713,7 +713,7 @@ extension _$ApiServer on _ApiServer {
               lastContent = full;
             }
           });
-          P.rwkv.send(request);
+          P.rwkvBridge.send(request);
           requestLatestBuffer();
           _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
             requestLatestBuffer();
@@ -778,7 +778,7 @@ extension _$ApiServer on _ApiServer {
       return _jsonResponse(_errorJson('prompt is required'), status: 400);
     }
 
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return _jsonResponse(_errorJson('No chat model loaded', type: 'model_not_found'), status: 503);
     }
@@ -786,7 +786,7 @@ extension _$ApiServer on _ApiServer {
     final stream = json['stream'] == true;
     final maxTokens = json['max_tokens'] as int?;
     final reqId = 'cmpl-${DateTime.now().millisecondsSinceEpoch}';
-    final modelName = P.rwkv.latestModel.q != null ? _modelId(P.rwkv.latestModel.q!) : 'rwkv';
+    final modelName = P.rwkvModel.latest.q != null ? _modelId(P.rwkvModel.latest.q!) : 'rwkv';
 
     _addLog('POST /v1/completions (stream=$stream)');
     requestCount.q++;
@@ -864,13 +864,13 @@ extension _$ApiServer on _ApiServer {
           }
 
           void requestLatestBuffer() {
-            P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-            P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
+            P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
+            P.rwkvBridge.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
           }
 
           _pollingTimer?.cancel();
           _broadcastSub?.cancel();
-          _broadcastSub = P.rwkv.broadcastStream.listen((event) {
+          _broadcastSub = P.rwkvBridge.broadcastStream.listen((event) {
             if (event is from_rwkv.GenerateStart) {
               if (event.req?.requestId != request.requestId) return;
               markGenerationStarted();
@@ -960,7 +960,7 @@ extension _$ApiServer on _ApiServer {
               sendDelta(delta);
             }
           });
-          P.rwkv.send(request);
+          P.rwkvBridge.send(request);
           requestLatestBuffer();
           _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
             requestLatestBuffer();
@@ -1088,13 +1088,13 @@ extension _$ApiServer on _ApiServer {
           }
 
           void requestLatestBuffer() {
-            P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-            P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
+            P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
+            P.rwkvBridge.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
           }
 
           _pollingTimer?.cancel();
           _broadcastSub?.cancel();
-          _broadcastSub = P.rwkv.broadcastStream.listen((event) {
+          _broadcastSub = P.rwkvBridge.broadcastStream.listen((event) {
             if (event is from_rwkv.GenerateStart) {
               if (event.req?.requestId != request.requestId) return;
               markGenerationStarted();
@@ -1132,7 +1132,7 @@ extension _$ApiServer on _ApiServer {
               lastContent = full;
             }
           });
-          P.rwkv.send(request);
+          P.rwkvBridge.send(request);
           requestLatestBuffer();
           _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
             requestLatestBuffer();
@@ -1217,11 +1217,11 @@ extension _$ApiServer on _ApiServer {
     if (!activeRequest.q) return false;
     final modelID = _activeModelID;
     _addLog('Stop requested for active API request');
-    if (P.rwkv.isAlbatrossLoaded.q || modelID == null) {
-      await P.rwkv.stop();
+    if (P.rwkvContext.isAlbatrossLoaded.q || modelID == null) {
+      await P.rwkvGeneration.stop();
       return true;
     }
-    P.rwkv.send(to_rwkv.Stop(modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.Stop(modelID: modelID));
     return true;
   }
 
@@ -1284,7 +1284,7 @@ extension $ApiServer on _ApiServer {
 
     if (state.q != BackendState.stopped) return;
 
-    final loaded = P.rwkv.loadedModels.q;
+    final loaded = P.rwkvModel.allLoaded.q;
     if (loaded.isEmpty || !loaded.keys.any((e) => e.weightType == .chat)) {
       Alert.warning(S.current.api_server_select_model_first);
       return;

@@ -166,7 +166,7 @@ class _Chat {
   });
 
   late final effectiveBatchEnabled = qp((ref) {
-    final currentModel = ref.watch(P.rwkv.latestModel);
+    final currentModel = ref.watch(P.rwkvModel.latest);
     if (!(currentModel?.supportsBatchInference ?? false)) {
       return false;
     }
@@ -179,7 +179,7 @@ class _Chat {
   });
 
   late final effectiveBatchCount = qp((ref) {
-    final currentModel = ref.watch(P.rwkv.latestModel);
+    final currentModel = ref.watch(P.rwkvModel.latest);
     if (!(currentModel?.supportsBatchInference ?? false)) {
       return 1;
     }
@@ -217,7 +217,7 @@ extension $Chat on _Chat {
   Future<void> onDeleteBranchPressed({
     required Message msg,
   }) async {
-    if (P.rwkv.generating.q) {
+    if (P.rwkvGeneration.generating.q) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
@@ -329,7 +329,7 @@ extension $Chat on _Chat {
   }
 
   void onSwitchWebSearchMode(WebSearchMode mode) async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -338,7 +338,7 @@ extension $Chat on _Chat {
   }
 
   void onFakeBatchInferenceBenchmarkChanged(bool value) async {
-    if (P.rwkv.generating.q) {
+    if (P.rwkvGeneration.generating.q) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
@@ -347,7 +347,7 @@ extension $Chat on _Chat {
   }
 
   Future<void> onWebSearchModeTapped() async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -388,13 +388,13 @@ extension $Chat on _Chat {
   }
 
   Future<void> onResponseStyleTapped() async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
 
-    final model = P.rwkv.latestModel.q;
+    final model = P.rwkvModel.latest.q;
     if (model == null) {
       ModelSelector.show();
       return;
@@ -411,7 +411,7 @@ extension $Chat on _Chat {
     required ResponseStyleRoute route,
     required bool enabled,
   }) async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -443,7 +443,7 @@ extension $Chat on _Chat {
   }
 
   Future<void> onAllResponseStyleRoutesSelected() async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -464,7 +464,7 @@ extension $Chat on _Chat {
   }
 
   Future<void> onResponseStyleRandomQuestionsTapped() async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -472,7 +472,7 @@ extension $Chat on _Chat {
 
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
-    final model = P.rwkv.latestModel.q;
+    final model = P.rwkvModel.latest.q;
     if (model == null) {
       ModelSelector.show();
       return;
@@ -537,7 +537,7 @@ extension $Chat on _Chat {
     if (activeCount <= 0) {
       return false;
     }
-    final model = P.rwkv.latestModel.q;
+    final model = P.rwkvModel.latest.q;
     if (model == null) {
       return false;
     }
@@ -551,7 +551,7 @@ extension $Chat on _Chat {
     if (activeCount <= 1) {
       return false;
     }
-    final model = P.rwkv.latestModel.q;
+    final model = P.rwkvModel.latest.q;
     if (model == null) {
       return false;
     }
@@ -559,7 +559,7 @@ extension $Chat on _Chat {
       return false;
     }
 
-    final supportedBatchSizes = P.rwkv.supportedBatchSizes.q;
+    final supportedBatchSizes = P.rwkvParams.supportedBatchSizes.q;
     if (supportedBatchSizes.isEmpty) {
       return true;
     }
@@ -730,7 +730,7 @@ extension $Chat on _Chat {
       return false;
     }
 
-    final currentModel = P.rwkv.latestModel.q;
+    final currentModel = P.rwkvModel.latest.q;
     if (currentModel == null) {
       ModelSelector.show();
       return false;
@@ -742,7 +742,7 @@ extension $Chat on _Chat {
 
     final historyPrefix = _history();
     await _applyResponseStyleState(ResponseStyleState(enabledRoutes: routes));
-    final thinkingMode = P.rwkv.thinkingMode.q;
+    final thinkingMode = P.rwkvParams.thinkingMode.q;
     final userBatchContent = questions.join(Config.batchMarker) + Config.batchMarker + "-1";
     final storedContent = userBatchContent + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
     final userMsgId = HF.milliseconds;
@@ -775,7 +775,7 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
     receiveId.q = botMsgId;
     _setReceivedTokens("", immediateUi: true);
-    P.rwkv.generating.q = true;
+    P.rwkvGeneration.generating.q = true;
     _liveTokenCountThrottler.cancel();
     _scheduleRefreshLiveTokenCounts(messageId: botMsgId, liveBotContent: "");
 
@@ -799,7 +799,7 @@ extension $Chat on _Chat {
       );
     }
 
-    P.rwkv.sendMessages(
+    P.rwkvGeneration.sendMessages(
       slotConfigs.first.messages,
       overrideBatchSlotConfigs: slotConfigs,
     );
@@ -844,10 +844,10 @@ extension $Chat on _Chat {
   }
 
   Future<void> _setFastThinkingModeForResponseStyleBatch() async {
-    if (P.rwkv.thinkingMode.q == .fast) {
+    if (P.rwkvParams.thinkingMode.q == .fast) {
       return;
     }
-    await P.rwkv.setModelConfig(thinkingMode: .fast);
+    await P.rwkvParams.setModelConfig(thinkingMode: .fast);
   }
 
   List<String> _buildRequestHistoryForResponseStyleRoute({
@@ -1032,7 +1032,7 @@ extension $Chat on _Chat {
       assistantMessage: _responseStyleSequentialCurrentAssistantMessage,
     );
     _responseStyleSequentialCurrentAssistantMessage = null;
-    await P.rwkv.sendMessages(
+    await P.rwkvGeneration.sendMessages(
       requestHistory,
       forceChinese: _responseStyleSequentialForceChinese,
       forceLang: route.forceLang,
@@ -1129,7 +1129,7 @@ extension $Chat on _Chat {
 
     switch (event) {
       case from_rwkv.GenerateStart _:
-        P.rwkv.generating.q = true;
+        P.rwkvGeneration.generating.q = true;
         return true;
 
       case from_rwkv.ResponseBufferContent res:
@@ -1153,7 +1153,7 @@ extension $Chat on _Chat {
         return true;
 
       case from_rwkv.GenerateStop _:
-        P.rwkv.generating.q = false;
+        P.rwkvGeneration.generating.q = false;
         unawaited(_advanceResponseStyleSequentialGenerationAfterStop());
         return true;
 
@@ -1344,7 +1344,7 @@ extension $Chat on _Chat {
       final imagePath = P.see.imagePath.q;
       final isPureText = imagePath == null;
 
-      if (P.rwkv.generating.q) {
+      if (P.rwkvGeneration.generating.q) {
         // qqw("TODO:");
         // 1. 添加 message 至 queue
         // 2. 在 ui 上渲染 queue
@@ -1362,7 +1362,7 @@ extension $Chat on _Chat {
         if (P.msg.hasAtLeastOneImage.q) {
           P.msg._clear();
           await 10.msLater;
-          P.rwkv.clearStates();
+          P.rwkvGeneration.clearStates();
           await 10.msLater;
         }
         await send("", type: MessageType.userImage, imageUrl: imagePath);
@@ -1385,7 +1385,7 @@ extension $Chat on _Chat {
     qqq(aString);
     final textToSend = textInInput.q.trim();
 
-    final generating = P.rwkv.generating.q;
+    final generating = P.rwkvGeneration.generating.q;
 
     if (generating) {
       Alert.info("Please wait for the previous message to be generated");
@@ -1433,7 +1433,7 @@ extension $Chat on _Chat {
   }
 
   void onMessageTapped(Message msg) {
-    if (P.rwkv.currentWorldType.q != null) {
+    if (P.rwkvContext.currentWorldType.q != null) {
       Focus.of(getContext()!).unfocus();
     }
     focusNode.unfocus();
@@ -1556,12 +1556,12 @@ extension $Chat on _Chat {
   }
 
   Future<void> startNewChat() async {
-    if (P.rwkv.generating.q) await onStopButtonPressed();
+    if (P.rwkvGeneration.generating.q) await onStopButtonPressed();
     await 100.msLater;
     // Alert.success(S.current.new_chat_started);
     dismissNewConversationGuide();
     P.msg._clear();
-    P.rwkv.clearStates();
+    P.rwkvGeneration.clearStates();
     P.conversation.currentCreatedAtUS.q = P.msg.msgNode.q.createAtInUS;
   }
 
@@ -1571,18 +1571,18 @@ extension $Chat on _Chat {
   }
 
   void toggleCompletionMode() {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
     final r = !completionMode.q;
     completionMode.q = r;
-    P.rwkv.setGenerateMode(r);
+    P.rwkvParams.setGenerateMode(r);
   }
 
   Future<void> stopCompletion() async {
-    P.rwkv.stop();
+    P.rwkvGeneration.stop();
   }
 
   /// 拼装消息, 调用 rwkv 的 sendMessages 方法
@@ -1603,9 +1603,9 @@ extension $Chat on _Chat {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
     _clearResponseStyleSequentialState();
 
-    final currentModel = P.rwkv.latestModel.q!;
+    final currentModel = P.rwkvModel.latest.q!;
 
-    final thinkingMode = P.rwkv.thinkingMode.q;
+    final thinkingMode = P.rwkvParams.thinkingMode.q;
 
     MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
     final editingOrRegeneratingIndex = P.msg.editingOrRegeneratingIndex.q;
@@ -1732,7 +1732,7 @@ extension $Chat on _Chat {
     P.msg.editingOrRegeneratingIndex.q = null;
 
     _setReceivedTokens("", immediateUi: true);
-    P.rwkv.generating.q = true;
+    P.rwkvGeneration.generating.q = true;
     _liveTokenCountThrottler.cancel();
 
     final receiveMsg = Message(
@@ -1775,7 +1775,7 @@ extension $Chat on _Chat {
             history: history,
             routes: routes,
           );
-          P.rwkv.sendMessages(
+          P.rwkvGeneration.sendMessages(
             history,
             forceChinese: forceChinese,
             overrideBatchSlotConfigs: slotConfigs,
@@ -1801,7 +1801,7 @@ extension $Chat on _Chat {
         history: history,
         route: route,
       );
-      P.rwkv.sendMessages(
+      P.rwkvGeneration.sendMessages(
         singleRouteHistory,
         batchSize: effectiveBatchEnabled.q ? effectiveBatchCount.q : 1,
         forceChinese: forceChinese,
@@ -1812,7 +1812,7 @@ extension $Chat on _Chat {
     }
 
     final batchSize = inSee ? 1 : (effectiveBatchEnabled.q ? effectiveBatchCount.q : 1);
-    P.rwkv.sendMessages(history, batchSize: batchSize, forceChinese: forceChinese);
+    P.rwkvGeneration.sendMessages(history, batchSize: batchSize, forceChinese: forceChinese);
 
     _checkSensitive(raw);
   }
@@ -1826,7 +1826,7 @@ extension $Chat on _Chat {
       qqw("message id is null");
       return;
     }
-    if (!P.rwkv.generating.q) {
+    if (!P.rwkvGeneration.generating.q) {
       return;
     }
     _pauseMessageById(id: id);
@@ -1853,7 +1853,7 @@ extension $Chat on _Chat {
       if (responseStyleResumeRequest.slotConfigs != null) {
         await _setFastThinkingModeForResponseStyleBatch();
       }
-      P.rwkv.sendMessages(
+      P.rwkvGeneration.sendMessages(
         responseStyleResumeRequest.messages,
         batchSize: responseStyleResumeRequest.slotConfigs == null && effectiveBatchEnabled.q ? effectiveBatchCount.q : 1,
         overrideBatchSlotConfigs: responseStyleResumeRequest.slotConfigs,
@@ -1864,7 +1864,7 @@ extension $Chat on _Chat {
     }
     final batchResumeRequest = _buildBatchResumeRequest(messageId: id);
     if (batchResumeRequest != null) {
-      P.rwkv.sendMessages(
+      P.rwkvGeneration.sendMessages(
         batchResumeRequest.messages,
         batchSize: batchResumeRequest.batchMessages.length,
         overrideBatchMessages: batchResumeRequest.batchMessages,
@@ -1872,7 +1872,7 @@ extension $Chat on _Chat {
       _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
       return;
     }
-    P.rwkv.sendMessages(_history(), batchSize: effectiveBatchEnabled.q ? effectiveBatchCount.q : 1);
+    P.rwkvGeneration.sendMessages(_history(), batchSize: effectiveBatchEnabled.q ? effectiveBatchCount.q : 1);
     _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
   }
 
@@ -1888,7 +1888,7 @@ extension $Chat on _Chat {
       }
     }
 
-    final currentModel = P.rwkv.latestModel.q;
+    final currentModel = P.rwkvModel.latest.q;
     if (value && !(currentModel?.supportsBatchInference ?? false)) {
       batchEnabled.q = false;
       batchCount.q = Argument.batchCount.defaults.toInt();
@@ -1907,11 +1907,11 @@ extension $Chat on _Chat {
       return;
     }
 
-    final temperature = P.rwkv.arguments(Argument.temperature).q;
-    final topP = P.rwkv.arguments(Argument.topP).q;
-    final presencePenalty = P.rwkv.arguments(Argument.presencePenalty).q;
-    final frequencyPenalty = P.rwkv.arguments(Argument.frequencyPenalty).q;
-    final penaltyDecay = P.rwkv.arguments(Argument.penaltyDecay).q;
+    final temperature = P.rwkvParams.arguments(Argument.temperature).q;
+    final topP = P.rwkvParams.arguments(Argument.topP).q;
+    final presencePenalty = P.rwkvParams.arguments(Argument.presencePenalty).q;
+    final frequencyPenalty = P.rwkvParams.arguments(Argument.frequencyPenalty).q;
+    final penaltyDecay = P.rwkvParams.arguments(Argument.penaltyDecay).q;
 
     final newValue = List<SamplerAndPenaltyParam>.generate(
       100,
@@ -1924,12 +1924,12 @@ extension $Chat on _Chat {
       ),
     );
 
-    P.rwkv.frontendBatchParams.q = newValue;
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    P.rwkvParams.frontendBatchParams.q = newValue;
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return;
     }
-    P.rwkv.send(
+    P.rwkvBridge.send(
       to_rwkv.SetSamplerAndPenaltyParams(
         temperatures: newValue.map((e) => e.temperature).toList(),
         topKs: newValue.map((_) => 500.0).toList(),
@@ -1941,7 +1941,7 @@ extension $Chat on _Chat {
       ),
     );
     final currentBatchCount = batchCount.q;
-    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: currentBatchCount, modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: currentBatchCount, modelID: modelID));
   }
 
   void onManualBatchCountChanged(int value) {
@@ -1955,76 +1955,11 @@ extension $Chat on _Chat {
   }
 
   Future<void> tryLoadLastChatModel() async {
-    await 500.msLater;
-
-    final last = P.preference.lastChatModel.q;
-    if (last == null) {
-      ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
-      return;
-    }
-
-    final String savedFileName = last["fileName"];
-    final int savedFileSize = last["fileSize"];
-
-    final fileInfo = P.remote.chatWeights.q.firstWhereOrNull(
-      (e) => e.fileName == savedFileName && e.fileSize == savedFileSize,
-    );
-    final localFile = fileInfo != null ? P.remote.locals(fileInfo).q : null;
-
-    if (fileInfo == null || localFile == null || !localFile.hasFile || fileInfo.backend == null) {
-      ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
-      return;
-    }
-
-    // 以上校验通过，确认将要自动加载，开始显示加载动画
     isAutoLoadingModel.q = true;
     try {
-      P.rwkv.clearStates();
-      await P.rwkv.loadChat(fileInfo: fileInfo);
-
-      final batchAllowed = fileInfo.supportsBatchInference;
-      if (!batchAllowed) {
-        if (responseStyle.q.activeCount > 1) {
-          resetResponseStyle();
-        } else {
-          batchEnabled.q = false;
-          batchCount.q = Argument.batchCount.defaults.toInt();
-        }
-      } else if (responseStyle.q.activeCount > 1) {
-        await _syncBatchStateForResponseStyle(activeCount: responseStyle.q.activeCount);
-      }
-
-      final isTranslate = fileInfo.tags.contains("translate");
-      final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
-      if (modelID == null) return;
-
-      if (isTranslate) {
-        if (P.translator.enToZh.q) {
-          P.rwkv.send(to_rwkv.SetUserRole("English", modelID: modelID));
-          P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
-        } else {
-          P.rwkv.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
-          P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
-        }
-        await P.rwkv.setModelConfig(thinkingMode: .none, prompt: "<EOD>", setPrompt: true);
-        P.apiServer.start();
-      } else {
-        P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
-        P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
-      }
-
-      if (!isTranslate) {
-        P.rwkv.setModelConfig(thinkingMode: P.rwkv.thinkingModeForCurrentChatConfig());
-      }
-
-      for (var i = 0; i < 3; i++) {
-        (500 * i).msLater.then((_) {
-          P.rwkv.send(to_rwkv.GetSupportedBatchSizes(modelID: modelID));
-        });
-      }
+      await P.rwkvAutoLoad.restoreForPage(P.app.pageKey.q);
     } catch (e) {
       qqe("Failed to auto load chat model: $e");
-      ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
     } finally {
       isAutoLoadingModel.q = false;
     }
@@ -2071,8 +2006,8 @@ extension _$Chat on _Chat {
 
     P.app.pageKey.l(_onPageKeyChanged);
 
-    P.rwkv.oldBroadcastStream.listen(_onOldStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
-    final event = P.rwkv.broadcastStream;
+    P.rwkvBridge.oldBroadcastStream.listen(_onOldStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+    final event = P.rwkvBridge.broadcastStream;
     event.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
 
     /// update the conversation subtitle
@@ -2097,7 +2032,7 @@ extension _$Chat on _Chat {
     hasFocus.q = focusNode.hasFocus;
     P.app.lifecycleState.lb(_onLifecycleStateChanged);
 
-    P.rwkv.supportedBatchSizes.l(_onSupportedBatchSizesChanged);
+    P.rwkvParams.supportedBatchSizes.l(_onSupportedBatchSizesChanged);
 
     batchCount.l(_onBatchCountChanged);
 
@@ -2144,16 +2079,16 @@ extension _$Chat on _Chat {
 
     late final List<SamplerAndPenaltyParam> newFrontendBatchParams;
     newFrontendBatchParams = [
-      ...P.rwkv.frontendBatchParams.q,
-      P.rwkv.frontendBatchParams.q.last,
+      ...P.rwkvParams.frontendBatchParams.q,
+      P.rwkvParams.frontendBatchParams.q.last,
     ];
 
-    P.rwkv.frontendBatchParams.q = newFrontendBatchParams;
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    P.rwkvParams.frontendBatchParams.q = newFrontendBatchParams;
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return;
     }
-    P.rwkv.send(
+    P.rwkvBridge.send(
       to_rwkv.SetSamplerAndPenaltyParams(
         temperatures: newFrontendBatchParams.map((e) => e.temperature).toList(),
         topKs: newFrontendBatchParams.map((_) => 500.0).toList(),
@@ -2164,11 +2099,11 @@ extension _$Chat on _Chat {
         modelID: modelID,
       ),
     );
-    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: value, modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: value, modelID: modelID));
   }
 
   void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {
-    final currentModel = P.rwkv.latestModel.q;
+    final currentModel = P.rwkvModel.latest.q;
     if (currentModel != null && !currentModel.supportsBatchInference) {
       batchEnabled.q = false;
       batchCount.q = Argument.batchCount.defaults.toInt();
@@ -2226,7 +2161,7 @@ extension _$Chat on _Chat {
         }
 
         final message = P.msg.pool.q[messageId];
-        if (message == null || !message.changing || !P.rwkv.generating.q) {
+        if (message == null || !message.changing || !P.rwkvGeneration.generating.q) {
           _cancelFakeBatchInferenceBenchmark(updateGenerating: true);
           return;
         }
@@ -2378,7 +2313,7 @@ extension _$Chat on _Chat {
     _fakeBatchInferenceBenchmarkTick = 0;
     _fakeBatchInferenceBenchmarkFixedTargetsBySlot = const <int, int>{};
     if (active && updateGenerating) {
-      P.rwkv.generating.q = false;
+      P.rwkvGeneration.generating.q = false;
     }
   }
 
@@ -2401,7 +2336,7 @@ extension _$Chat on _Chat {
     if (P.app.isDesktop.q) return;
     final isToBackground = next == AppLifecycleState.paused || next == AppLifecycleState.hidden;
     if (isToBackground) {
-      if (receiveId.q != null && _autoPauseId.q == null && P.rwkv.generating.q == true) {
+      if (receiveId.q != null && _autoPauseId.q == null && P.rwkvGeneration.generating.q == true) {
         _autoPauseId.q = receiveId.q!;
         _pauseMessageById(id: receiveId.q!);
       }
@@ -2510,7 +2445,7 @@ extension _$Chat on _Chat {
     if (_responseStyleSequentialActive && _responseStyleSequentialMessageId == id) {
       _responseStyleSequentialStopRequested = true;
     }
-    P.rwkv.stop();
+    P.rwkvGeneration.stop();
 
     final newMsg = msg.copyWith(
       content: finalizedContent,
@@ -2555,27 +2490,28 @@ extension _$Chat on _Chat {
   }
 
   void _onPageKeyChanged(PageKey pageKey) async {
-    final model = P.rwkv.latestModel.q;
+    final model = P.rwkvModel.latest.q;
     final isTTS = model?.isTTS ?? false;
     final isSee = model?.worldType != null;
     switch (pageKey) {
       case .completion:
         final isTranslate = model?.tags.contains("translate") ?? false;
-        if (isTTS || isTranslate || isSee) await P.rwkv._releaseAllModels();
+        if (isTTS || isTranslate || isSee) await P.rwkvModel._releaseAllModels();
         break;
       case .chat:
-        P.rwkv.updateSystemPrompt();
+      case .neko:
+        P.rwkvParams.updateSystemPrompt();
         P.app.demoType.q = .chat;
         final isTranslate = model?.tags.contains("translate") ?? false;
         if (isTTS || isTranslate || isSee) {
-          P.rwkv.currentWorldType.q = null;
-          await P.rwkv._releaseAllModels();
+          P.rwkvContext.currentWorldType.q = null;
+          await P.rwkvModel._releaseAllModels();
         }
         break;
       case .talk:
         if (!isTTS) {
-          P.rwkv.currentGroupInfo.q = null;
-          await P.rwkv._releaseAllModels();
+          P.rwkvContext.currentGroupInfo.q = null;
+          await P.rwkvModel._releaseAllModels();
         }
         break;
       default:
@@ -2682,7 +2618,7 @@ extension _$Chat on _Chat {
     }
 
     receiveId.q = Config.chatPrefillId;
-    P.rwkv.sendMessages(history, maxLength: 0);
+    P.rwkvGeneration.sendMessages(history, maxLength: 0);
   }
 
   /// Update a message by id
@@ -2748,8 +2684,8 @@ extension _$Chat on _Chat {
   }
 
   (double? prefillSpeed, double? decodeSpeed) _currentSpeedSnapshotForStore() {
-    final currentPrefillSpeed = P.rwkv.prefillSpeed.q;
-    final currentDecodeSpeed = P.rwkv.decodeSpeed.q;
+    final currentPrefillSpeed = P.rwkvGeneration.prefillSpeed.q;
+    final currentDecodeSpeed = P.rwkvGeneration.decodeSpeed.q;
     final snapshotPrefillSpeed = currentPrefillSpeed > 0 ? currentPrefillSpeed : null;
     final snapshotDecodeSpeed = currentDecodeSpeed > 0 ? currentDecodeSpeed : null;
     return (snapshotPrefillSpeed, snapshotDecodeSpeed);
@@ -2827,8 +2763,8 @@ extension _$Chat on _Chat {
     if (history == null || history.isEmpty) return;
 
     final counts = await Future.wait([
-      P.rwkv.calculateTokensCountRaw(text: botContent),
-      P.rwkv.calculateTokensCountFromMessages(messages: history),
+      P.rwkvGeneration.calculateTokensCountRaw(text: botContent),
+      P.rwkvGeneration.calculateTokensCountFromMessages(messages: history),
     ]);
     final messageTokensCount = counts[0];
     final conversationTokensCount = counts[1];
@@ -2908,18 +2844,18 @@ extension _$Chat on _Chat {
   }
 
   String? _resolveDecodeParamsSnapshotRaw() {
-    final backendParams = P.rwkv.backendBatchParams.q;
+    final backendParams = P.rwkvParams.backendBatchParams.q;
     if (backendParams.isNotEmpty) return backendParams.rawDecodeParams;
 
-    final frontendParams = P.rwkv.frontendBatchParams.q;
+    final frontendParams = P.rwkvParams.frontendBatchParams.q;
     if (frontendParams.isNotEmpty) return frontendParams.rawDecodeParams;
 
     final currentParam = SamplerAndPenaltyParam(
-      temperature: P.rwkv.arguments(Argument.temperature).q,
-      topP: P.rwkv.arguments(Argument.topP).q,
-      presencePenalty: P.rwkv.arguments(Argument.presencePenalty).q,
-      frequencyPenalty: P.rwkv.arguments(Argument.frequencyPenalty).q,
-      penaltyDecay: P.rwkv.arguments(Argument.penaltyDecay).q,
+      temperature: P.rwkvParams.arguments(Argument.temperature).q,
+      topP: P.rwkvParams.arguments(Argument.topP).q,
+      presencePenalty: P.rwkvParams.arguments(Argument.presencePenalty).q,
+      frequencyPenalty: P.rwkvParams.arguments(Argument.frequencyPenalty).q,
+      penaltyDecay: P.rwkvParams.arguments(Argument.penaltyDecay).q,
     );
     return <SamplerAndPenaltyParam>[currentParam].rawDecodeParams;
   }
@@ -2931,13 +2867,13 @@ extension _$Chat on _Chat {
     switch (event.type) {
       case _RWKVMessageType.isGenerating:
         final isGenerating = event.content == "true";
-        P.rwkv.generating.q = isGenerating;
+        P.rwkvGeneration.generating.q = isGenerating;
         if (!isGenerating && !completionMode.q) _fullyReceived(callingFunction: "_onStreamEvent:isGenerating");
         break;
 
       case _RWKVMessageType.streamResponse:
         _setReceivedTokens(event.content);
-        P.rwkv.generating.q = true;
+        P.rwkvGeneration.generating.q = true;
         break;
 
       default:
@@ -2985,12 +2921,12 @@ extension _$Chat on _Chat {
 
       case from_rwkv.GenerateStop _:
         _setReceivedTokens("", immediateUi: true);
-        P.rwkv.generating.q = false;
+        P.rwkvGeneration.generating.q = false;
         break;
 
       case from_rwkv.GenerateStart _:
         _setReceivedTokens("", immediateUi: true);
-        P.rwkv.generating.q = true;
+        P.rwkvGeneration.generating.q = true;
         break;
 
       default:
@@ -3006,7 +2942,7 @@ extension _$Chat on _Chat {
     _clearResponseStyleSequentialState();
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;
-    P.rwkv.generating.q = false;
+    P.rwkvGeneration.generating.q = false;
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
@@ -3018,7 +2954,7 @@ extension _$Chat on _Chat {
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;
-    P.rwkv.generating.q = false;
+    P.rwkvGeneration.generating.q = false;
   }
 
   Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {

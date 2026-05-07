@@ -30,11 +30,11 @@ class _Telemetry {
     final String gpuName = ref.watch(_gpuName);
     final int totalMemoryMb = ref.watch(_totalMemoryMb);
     final int totalVramMb = ref.watch(_totalVramMb);
-    final String nativeSocName = ref.watch(P.rwkv.socName);
-    final String? frontendSocName = ref.watch(P.rwkv.frontendSocName);
-    final SocBrand nativeSocBrand = ref.watch(P.rwkv.socBrand);
-    final SocBrand? frontendSocBrand = ref.watch(P.rwkv.frontendSocBrand);
-    final FileInfo? model = ref.watch(P.rwkv.latestModel);
+    final String nativeSocName = ref.watch(P.rwkvBackend.socName);
+    final String? frontendSocName = ref.watch(P.rwkvBackend.frontendSocName);
+    final SocBrand nativeSocBrand = ref.watch(P.rwkvBackend.socBrand);
+    final SocBrand? frontendSocBrand = ref.watch(P.rwkvBackend.frontendSocBrand);
+    final FileInfo? model = ref.watch(P.rwkvModel.latest);
 
     final String socName = _resolveSocName(
       nativeSocName: nativeSocName,
@@ -103,7 +103,7 @@ extension $Telemetry on _Telemetry {
       if (prefillSpeed == null || prefillSpeed <= 0) return;
       if (decodeSpeed == null || decodeSpeed <= 0) return;
 
-      final FileInfo? model = P.rwkv.latestModel.q;
+      final FileInfo? model = P.rwkvModel.latest.q;
       if (model == null) return;
 
       // sha256 可能为空（部分权重没有），用 fileName 兜底
@@ -114,8 +114,8 @@ extension $Telemetry on _Telemetry {
       if (backendName.isEmpty) return;
 
       final String socName = _resolveSocName(
-        nativeSocName: P.rwkv.socName.q,
-        frontendSocName: P.rwkv.frontendSocName.q,
+        nativeSocName: P.rwkvBackend.socName.q,
+        frontendSocName: P.rwkvBackend.frontendSocName.q,
         macChipName: _macChipName.q,
         gpuName: _gpuName.q,
         cpuName: _cpuName.q,
@@ -130,8 +130,8 @@ extension $Telemetry on _Telemetry {
       final double effectiveDecodeSpeed = (batchCount > 1 && snapshotPeakDecodeSpeed > 0) ? snapshotPeakDecodeSpeed : decodeSpeed;
 
       final String socBrandName = _resolveSocBrandName(
-        nativeSocBrand: P.rwkv.socBrand.q,
-        frontendSocBrand: P.rwkv.frontendSocBrand.q,
+        nativeSocBrand: P.rwkvBackend.socBrand.q,
+        frontendSocBrand: P.rwkvBackend.frontendSocBrand.q,
         gpuName: _gpuName.q,
         cpuName: _cpuName.q,
       );

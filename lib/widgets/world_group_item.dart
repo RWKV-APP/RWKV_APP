@@ -45,14 +45,14 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   void _onDownloadAllTap() async {
     P.remote.activeDownloadGroupIds.q = {...P.remote.activeDownloadGroupIds.q, widget.socPair.$2};
     final missingFileInfos = _fileInfos.where((e) => P.remote.locals(e).q.hasFile == false).toList();
-    for (var e in missingFileInfos) {
+    for (final e in missingFileInfos) {
       P.remote.getFile(fileInfo: e);
     }
   }
 
   void _onDeleteAllTap() async {
     P.remote.activeDownloadGroupIds.q = P.remote.activeDownloadGroupIds.q.difference({widget.socPair.$2});
-    for (var e in _fileInfos) {
+    for (final e in _fileInfos) {
       P.remote.deleteFile(fileInfo: e);
     }
   }
@@ -69,7 +69,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
 
   int _getDownloadedSize() {
     int downloaded = 0;
-    for (var fileInfo in _fileInfos) {
+    for (final fileInfo in _fileInfos) {
       final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading) {
         final progress = localFile.progress.clamp(0.0, 100.0) / 100.0;
@@ -99,7 +99,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
 
     if (!isExplicitlyActive && !isCoreActive) return false;
 
-    for (var fileInfo in _fileInfos) {
+    for (final fileInfo in _fileInfos) {
       final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading) {
         return true;
@@ -110,7 +110,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
 
   double _getTotalSpeed() {
     double totalSpeed = 0.0;
-    for (var fileInfo in _fileInfos) {
+    for (final fileInfo in _fileInfos) {
       final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading && localFile.networkSpeed > 0) {
         totalSpeed += localFile.networkSpeed;
@@ -122,7 +122,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   Duration _getAverageRemaining() {
     Duration totalRemaining = Duration.zero;
     int downloadingCount = 0;
-    for (var fileInfo in _fileInfos) {
+    for (final fileInfo in _fileInfos) {
       final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading && !localFile.timeRemaining.isNegative) {
         totalRemaining += localFile.timeRemaining;
@@ -156,7 +156,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   }
 
   void _onStartToChatTap() async {
-    if (P.rwkv.loading.q) {
+    if (P.rwkvModel.loading.q) {
       Alert.warning("Please wait for the model to load...");
       return;
     }
@@ -164,66 +164,26 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final modelFileName = widget.socPair.$2;
     final availableModels = P.remote.seeWeights.q;
     final fileInfos = availableModels.where((e) => e.worldType == worldType).toList();
-    final encoderFileKey = fileInfos.firstWhereOrNull((e) => e.isEncoder);
     final modelFileKey = fileInfos.firstWhereOrNull((e) => !e.isEncoder && e.fileName == modelFileName);
-    final adapterFileKey = fileInfos.firstWhereOrNull((e) => e.isAdapter);
 
-    if (encoderFileKey == null || modelFileKey == null) {
+    if (modelFileKey == null) {
       Alert.error("Required model files not found");
       return;
     }
-    final encoderLocalFile = P.remote.locals(encoderFileKey).q;
-    final modelLocalFile = P.remote.locals(modelFileKey).q;
-    final adapterLocalFile = adapterFileKey != null ? P.remote.locals(adapterFileKey).q : null;
 
     if (P.remote.modelSelectorShown.q) {
       Navigator.pop(context);
     }
 
-    P.rwkv.currentWorldType.q = worldType;
-
     qqq("worldType: $worldType");
 
-    P.rwkv.clearStates();
-    P.chat.clearMessages();
-
-    try {
-      switch (worldType) {
-        case WorldType.reasoningQA:
-        case WorldType.ocr:
-          await P.rwkv.loadSee(
-            modelPath: modelLocalFile.targetPath,
-            encoderPath: encoderLocalFile.targetPath,
-            backend: modelFileKey.backend!,
-            enableReasoning: worldType.isReasoning,
-            adapterPath: null,
-            fileInfo: modelFileKey,
-          );
-        case WorldType.modrwkvV2:
-        case WorldType.modrwkvV3:
-          final modelID = await P.rwkv.loadSee(
-            modelPath: modelLocalFile.targetPath,
-            encoderPath: encoderLocalFile.targetPath,
-            backend: modelFileKey.backend!,
-            enableReasoning: worldType.isReasoning,
-            adapterPath: adapterLocalFile?.targetPath,
-            fileInfo: modelFileKey,
-          );
-          if (modelID != null) P.rwkv.send(SetImageUniqueIdentifier("image"));
-          if (modelID != null) P.rwkv.send(SetSpaceAfterRoles(false, modelID: modelID));
-      }
-    } catch (e) {
-      qqe("$e");
-      Alert.error(e.toString());
-      P.rwkv.currentWorldType.q = null;
-      return;
+    final loaded = await P.rwkvAutoLoad.loadSeeWorldModel(
+      worldType: worldType,
+      modelFileName: modelFileKey.fileName,
+    );
+    if (!loaded) {
+      P.rwkvContext.currentWorldType.q = null;
     }
-
-    P.preference.saveLastWorldModel({
-      "worldType": worldType.name,
-      "modelFileName": modelFileKey.fileName,
-    });
-    Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
   }
 
   void _onDownloadTap(BuildContext context) async {
@@ -263,7 +223,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
       }
 
       if (shouldCancelDependencies) {
-        for (var fileInfo in _fileInfos) {
+        for (final fileInfo in _fileInfos) {
           if (fileInfo.fileName != widget.socPair.$2) {
             await P.remote.cancelDownload(fileInfo: fileInfo);
           }
@@ -293,7 +253,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     }
 
     if (shouldPauseDependencies) {
-      for (var fileInfo in _fileInfos) {
+      for (final fileInfo in _fileInfos) {
         if (fileInfo.fileName != widget.socPair.$2) {
           P.remote.pauseDownload(fileInfo: fileInfo);
         }
@@ -334,22 +294,22 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final networkSpeed = _getTotalSpeed();
     final timeRemaining = _getAverageRemaining();
 
-    final isCurrentModel = P.rwkv.latestModel.q?.fileName == widget.socPair.$2;
-    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
+    final isCurrentModel = P.rwkvModel.latest.q?.fileName == widget.socPair.$2;
+    final currentWorldType = ref.watch(P.rwkvContext.currentWorldType);
     final alreadyStarted = currentWorldType == widget.worldType && isCurrentModel;
-    final loading = ref.watch(P.rwkv.loading);
+    final loading = ref.watch(P.rwkvModel.loading);
 
     final modelFileKey = _fileInfos.firstWhereOrNull((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
     if (modelFileKey == null) {
       return const SizedBox.shrink();
     }
 
-    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus);
     final modelLoading =
         loadingStatus[modelFileKey] == .loading ||
         loadingStatus[modelFileKey] == .loadModelWithExtra ||
         loadingStatus[modelFileKey] == .setQnnLibraryPath;
-    final loadingProgress = ref.watch(P.rwkv.loadingProgress);
+    final loadingProgress = ref.watch(P.rwkvModel.loadingProgress);
     final modelLoadingProgress = loadingProgress[modelFileKey];
 
     String startTitle = s.start_to_chat;

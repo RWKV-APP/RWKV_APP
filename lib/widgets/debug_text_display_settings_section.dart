@@ -20,9 +20,9 @@ class DebugTextDisplaySettingsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final renderNewlineDirectly = ref.watch(P.rwkv.renderNewlineDirectly);
-    final renderSpaceSymbol = ref.watch(P.rwkv.renderSpaceSymbol);
-    final showPrefillLogOnly = ref.watch(P.rwkv.showPrefillLogOnly);
+    final renderNewlineDirectly = ref.watch(P.rwkvDebug.renderNewlineDirectly);
+    final renderSpaceSymbol = ref.watch(P.rwkvDebug.renderSpaceSymbol);
+    final showPrefillLogOnly = ref.watch(P.rwkvDebug.showPrefillLogOnly);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -30,13 +30,13 @@ class DebugTextDisplaySettingsSection extends ConsumerWidget {
         _DebugSwitchRow(
           label: S.current.render_newline_directly,
           value: renderNewlineDirectly,
-          onChanged: P.rwkv.toggleRenderNewlineDirectly,
+          onChanged: P.rwkvDebug.toggleRenderNewlineDirectly,
         ),
         const SizedBox(height: 2),
         _DebugSwitchRow(
           label: S.current.render_space_symbol,
           value: renderSpaceSymbol,
-          onChanged: P.rwkv.toggleRenderSpaceSymbol,
+          onChanged: P.rwkvDebug.toggleRenderSpaceSymbol,
         ),
         if (includePrefillLogOnlySetting) const SizedBox(height: 2),
         if (includePrefillLogOnlySetting)
@@ -44,7 +44,7 @@ class DebugTextDisplaySettingsSection extends ConsumerWidget {
             label: S.current.show_prefill_log_only,
             value: showPrefillLogOnly,
             valueLabel: showPrefillLogOnly ? S.current.enabled : S.current.disabled,
-            onChanged: P.rwkv.toggleShowPrefillLogOnly,
+            onChanged: P.rwkvDebug.toggleShowPrefillLogOnly,
           ),
         const SizedBox(height: 2),
         Container(height: .5, color: theme.colorScheme.outlineVariant),

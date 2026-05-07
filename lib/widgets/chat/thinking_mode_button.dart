@@ -33,10 +33,10 @@ class ThinkingModeButton extends ConsumerWidget {
     final s = S.of(context);
     final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
     final appTheme = ref.watch(P.app.theme);
-    final loading = ref.watch(P.rwkv.loading);
-    final generating = ref.watch(P.rwkv.generating);
-    final loaded = ref.watch(P.rwkv.loaded);
-    final thinkingMode = ref.watch(P.rwkv.thinkingMode);
+    final loading = ref.watch(P.rwkvModel.loading);
+    final generating = ref.watch(P.rwkvGeneration.generating);
+    final loaded = ref.watch(P.rwkvModel.loaded);
+    final thinkingMode = ref.watch(P.rwkvParams.thinkingMode);
 
     final canEnable = loaded && !loading && !generating;
     final InteractionVisualState interactionState = switch (thinkingMode) {
@@ -84,7 +84,7 @@ class ThinkingModeButton extends ConsumerWidget {
           opacity: loading ? .33 : 1,
           duration: 250.ms,
           child: GestureDetector(
-            onTap: P.rwkv.onThinkModeTapped,
+            onTap: P.rwkvParams.onThinkModeTapped,
             child: ClipRRect(
               borderRadius: .circular(60),
               child: BackdropFilter(

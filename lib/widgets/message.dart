@@ -76,12 +76,12 @@ class _MessageState extends ConsumerState<Message> {
     final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    final worldType = ref.watch(P.rwkv.currentWorldType);
+    final worldType = ref.watch(P.rwkvContext.currentWorldType);
     final isMobile = ref.watch(P.app.isMobile);
     final sharingMode = ref.watch(P.chat.isSharing);
     final editingIndex = ref.watch(P.msg.editingOrRegeneratingIndex);
     final receiveId = ref.watch(P.chat.receiveId);
-    final receiving = ref.watch(P.rwkv.generating);
+    final receiving = ref.watch(P.rwkvGeneration.generating);
     final inSee = ref.watch(P.app.pageKey) == .see;
     final screenWidth = ref.watch(P.app.screenWidth);
     final screenHeight = ref.watch(P.app.screenHeight);

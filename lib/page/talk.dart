@@ -104,7 +104,7 @@ class _Empty extends ConsumerWidget {
     final inputHeight = ref.watch(P.chat.inputHeight);
     final version = ref.watch(P.app.version);
     final s = S.of(context);
-    final loaded = ref.watch(P.rwkv.loaded);
+    final loaded = ref.watch(P.rwkvModel.loaded);
     final messages = ref.watch(P.msg.list);
     final qb = ref.watch(P.app.qb);
 

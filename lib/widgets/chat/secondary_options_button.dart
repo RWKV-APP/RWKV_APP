@@ -17,7 +17,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
   const SecondaryOptionsButton({super.key});
 
   void _onTap() {
-    P.rwkv.onSecondaryOptionsTapped();
+    P.rwkvParams.onSecondaryOptionsTapped();
   }
 
   @override
@@ -26,10 +26,10 @@ class SecondaryOptionsButton extends ConsumerWidget {
     final s = S.of(context);
     final fontSize = theme.textTheme.bodySmall?.fontSize ?? 10;
     final appTheme = ref.watch(P.app.theme);
-    final loading = ref.watch(P.rwkv.loading);
-    final generating = ref.watch(P.rwkv.generating);
-    final loaded = ref.watch(P.rwkv.loaded);
-    final thinkingMode = ref.watch(P.rwkv.thinkingMode);
+    final loading = ref.watch(P.rwkvModel.loading);
+    final generating = ref.watch(P.rwkvGeneration.generating);
+    final loaded = ref.watch(P.rwkvModel.loaded);
+    final thinkingMode = ref.watch(P.rwkvParams.thinkingMode);
 
     final canEnable = loaded && !loading && !generating;
     final interactionState = switch (thinkingMode) {

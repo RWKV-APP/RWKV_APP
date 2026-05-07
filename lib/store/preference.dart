@@ -274,7 +274,7 @@ extension _$Preference on _Preference {
         final presencePenalty = sp.getDouble("halo_state.custom.presencePenalty");
         final frequencyPenalty = sp.getDouble("halo_state.custom.frequencyPenalty");
         final penaltyDecay = sp.getDouble("halo_state.custom.penaltyDecay");
-        await P.rwkv.syncSamplerParams(
+        await P.rwkvParams.syncSamplerParams(
           temperature: temperature,
           topP: topP,
           presencePenalty: presencePenalty,
@@ -282,7 +282,7 @@ extension _$Preference on _Preference {
           penaltyDecay: penaltyDecay,
         );
       } else {
-        await P.rwkv.syncSamplerParamsFromDefault(type);
+        await P.rwkvParams.syncSamplerParamsFromDefault(type);
       }
 
       final latestSkippedBuildNumber = sp.getInt("halo_state.latestSkippedBuildNumber");
@@ -325,12 +325,12 @@ extension _$Preference on _Preference {
 
     final debugRenderNewlineDirectly = sp.getBool(_debugRenderNewlineDirectlyPreferenceKey);
     if (debugRenderNewlineDirectly != null) {
-      P.rwkv.renderNewlineDirectly.q = debugRenderNewlineDirectly;
+      P.rwkvDebug.renderNewlineDirectly.q = debugRenderNewlineDirectly;
       await sp.remove(_legacyDebugRenderNewlineDirectlyPreferenceKey);
     } else {
       final legacyDebugRenderNewlineDirectly = sp.getBool(_legacyDebugRenderNewlineDirectlyPreferenceKey);
       if (legacyDebugRenderNewlineDirectly != null) {
-        P.rwkv.renderNewlineDirectly.q = legacyDebugRenderNewlineDirectly;
+        P.rwkvDebug.renderNewlineDirectly.q = legacyDebugRenderNewlineDirectly;
         await sp.setBool(_debugRenderNewlineDirectlyPreferenceKey, legacyDebugRenderNewlineDirectly);
         await sp.remove(_legacyDebugRenderNewlineDirectlyPreferenceKey);
       }
@@ -338,12 +338,12 @@ extension _$Preference on _Preference {
 
     final debugRenderSpaceSymbol = sp.getBool(_debugRenderSpaceSymbolPreferenceKey);
     if (debugRenderSpaceSymbol != null) {
-      P.rwkv.renderSpaceSymbol.q = debugRenderSpaceSymbol;
+      P.rwkvDebug.renderSpaceSymbol.q = debugRenderSpaceSymbol;
       await sp.remove(_legacyDebugRenderSpaceSymbolPreferenceKey);
     } else {
       final legacyDebugRenderSpaceSymbol = sp.getBool(_legacyDebugRenderSpaceSymbolPreferenceKey);
       if (legacyDebugRenderSpaceSymbol != null) {
-        P.rwkv.renderSpaceSymbol.q = legacyDebugRenderSpaceSymbol;
+        P.rwkvDebug.renderSpaceSymbol.q = legacyDebugRenderSpaceSymbol;
         await sp.setBool(_debugRenderSpaceSymbolPreferenceKey, legacyDebugRenderSpaceSymbol);
         await sp.remove(_legacyDebugRenderSpaceSymbolPreferenceKey);
       }
@@ -351,7 +351,7 @@ extension _$Preference on _Preference {
 
     final debugShowPrefillLogOnly = sp.getBool(_debugShowPrefillLogOnlyPreferenceKey);
     if (debugShowPrefillLogOnly != null) {
-      P.rwkv.showPrefillLogOnly.q = debugShowPrefillLogOnly;
+      P.rwkvDebug.showPrefillLogOnly.q = debugShowPrefillLogOnly;
     }
 
     await sp.remove("halo_state.debug.visibleSpaceSymbol");
@@ -547,11 +547,11 @@ extension $Preference on _Preference {
   void saveCustomDecodeParams() async {
     final sp = await SharedPreferences.getInstance();
     await sp.setInt("halo_state.decodeParamType", DecodeParamType.custom.index);
-    await sp.setDouble("halo_state.custom.temperature", P.rwkv.arguments(Argument.temperature).q);
-    await sp.setDouble("halo_state.custom.topP", P.rwkv.arguments(Argument.topP).q);
-    await sp.setDouble("halo_state.custom.presencePenalty", P.rwkv.arguments(Argument.presencePenalty).q);
-    await sp.setDouble("halo_state.custom.frequencyPenalty", P.rwkv.arguments(Argument.frequencyPenalty).q);
-    await sp.setDouble("halo_state.custom.penaltyDecay", P.rwkv.arguments(Argument.penaltyDecay).q);
+    await sp.setDouble("halo_state.custom.temperature", P.rwkvParams.arguments(Argument.temperature).q);
+    await sp.setDouble("halo_state.custom.topP", P.rwkvParams.arguments(Argument.topP).q);
+    await sp.setDouble("halo_state.custom.presencePenalty", P.rwkvParams.arguments(Argument.presencePenalty).q);
+    await sp.setDouble("halo_state.custom.frequencyPenalty", P.rwkvParams.arguments(Argument.frequencyPenalty).q);
+    await sp.setDouble("halo_state.custom.penaltyDecay", P.rwkvParams.arguments(Argument.penaltyDecay).q);
   }
 
   void saveLatestSkippedBuildNumber(int buildNumber) async {

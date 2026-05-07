@@ -433,7 +433,7 @@ extension _$App on _App {
       case .tts:
       case .see:
         latency.msLater.then((_) {
-          final loaded = P.rwkv.loaded.q;
+          final loaded = P.rwkvModel.loaded.q;
           if (loaded) return;
           if (!Args.disableAutoShowOfWeightsPanel) ModelSelector.show();
         });

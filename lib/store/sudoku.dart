@@ -143,8 +143,8 @@ extension $Sudoku on _Sudoku {
 
     func_sudoku.SudokuGrid grid = staticData.q;
     final prompt = _genPrompt(grid);
-    P.rwkv.clearStates();
-    P.rwkv.send(
+    P.rwkvGeneration.clearStates();
+    P.rwkvBridge.send(
       to_rwkv.SudokuOthelloGenerate(
         prompt,
         decodeStream: false,
@@ -453,7 +453,7 @@ extension _$Sudoku on _Sudoku {
     clear();
     _loadDefaultPuzzle();
 
-    P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+    P.rwkvBridge.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {

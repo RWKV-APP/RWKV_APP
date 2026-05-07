@@ -25,7 +25,7 @@ class ReferenceInfo extends ConsumerStatefulWidget {
 class _ReferenceInfoState extends ConsumerState<ReferenceInfo> {
   @override
   Widget build(BuildContext context) {
-    final prefill = ref.watch(P.rwkv.prefillProgress).clamp(0, 1).toDouble();
+    final prefill = ref.watch(P.rwkvGeneration.prefillProgress).clamp(0, 1).toDouble();
 
     final hasError = widget.refInfo.error.isNotEmpty;
     final showProgress = prefill > 0 && prefill < 1 && widget.generating && !hasError;

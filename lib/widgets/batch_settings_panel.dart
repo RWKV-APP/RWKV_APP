@@ -352,7 +352,7 @@ class _DecodeParams extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final frontendBatchParams = ref.watch(P.rwkv.frontendBatchParams);
+    final frontendBatchParams = ref.watch(P.rwkvParams.frontendBatchParams);
     final batchCount = ref.watch(P.chat.batchCount);
     final paramsToShow = frontendBatchParams.take(batchCount).toList();
     final qb = ref.watch(P.app.qb);
@@ -472,20 +472,20 @@ class _DecodeParam extends ConsumerWidget {
     }
 
     final newValue = forAll
-        ? List.generate(P.rwkv.frontendBatchParams.q.length, (index) => newParam)
+        ? List.generate(P.rwkvParams.frontendBatchParams.q.length, (index) => newParam)
         : [
-            ...P.rwkv.frontendBatchParams.q.sublist(0, index),
+            ...P.rwkvParams.frontendBatchParams.q.sublist(0, index),
             newParam,
-            ...P.rwkv.frontendBatchParams.q.sublist(index + 1),
+            ...P.rwkvParams.frontendBatchParams.q.sublist(index + 1),
           ];
 
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return;
     }
 
-    P.rwkv.frontendBatchParams.q = newValue;
-    P.rwkv.send(
+    P.rwkvParams.frontendBatchParams.q = newValue;
+    P.rwkvBridge.send(
       SetSamplerAndPenaltyParams(
         temperatures: newValue.map((e) => e.temperature).toList(),
         topKs: newValue.map((e) => 500.0).toList(),
@@ -496,7 +496,7 @@ class _DecodeParam extends ConsumerWidget {
         modelID: modelID,
       ),
     );
-    P.rwkv.send(GetSamplerAndPenaltyParams(batchSize: P.chat.batchCount.q, modelID: modelID));
+    P.rwkvBridge.send(GetSamplerAndPenaltyParams(batchSize: P.chat.batchCount.q, modelID: modelID));
   }
 
   String _fmt(double value) {

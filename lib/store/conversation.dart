@@ -39,7 +39,7 @@ extension _$Conversation on _Conversation {
 
   Future<void> _onMsgNodeChanged() async {
     qq;
-    if (P.rwkv.inTTSTranslateOrSee.q) return;
+    if (P.rwkvContext.inTTSTranslateOrSee.q) return;
 
     final createAtUS = P.msg.msgNode.q.createAtInUS;
     if (currentCreatedAtUS.q == createAtUS) {
@@ -50,7 +50,7 @@ extension _$Conversation on _Conversation {
 
   Future<void> _syncNode() async {
     qq;
-    if (P.rwkv.inTTSTranslateOrSee.q) return;
+    if (P.rwkvContext.inTTSTranslateOrSee.q) return;
 
     final msgNode = P.msg.msgNode.q;
     final db = P.app._db;
@@ -305,7 +305,7 @@ extension $Conversation on _Conversation {
 
   Future<void> onDeleteClicked(BuildContext context, ConversationData conversation) async {
     qq;
-    if (P.rwkv.inTTSTranslateOrSee.q) return;
+    if (P.rwkvContext.inTTSTranslateOrSee.q) return;
 
     final createAtInUS = conversation.createdAtUS;
     final success = await _deleteConversationByCreatedAtUS(createAtInUS);
@@ -320,7 +320,7 @@ extension $Conversation on _Conversation {
 
   Future<void> onRenameClicked(BuildContext context, ConversationData conversation) async {
     qq;
-    if (P.rwkv.inTTSTranslateOrSee.q) return;
+    if (P.rwkvContext.inTTSTranslateOrSee.q) return;
 
     final s = S.of(context);
     final currentTitle = conversation.title;
@@ -358,7 +358,7 @@ extension $Conversation on _Conversation {
   }
 
   Future<void> updateCurrentConvSubtitle(String subtitle, {bool force = false}) async {
-    if (P.rwkv.inTTSTranslateOrSee.q) return;
+    if (P.rwkvContext.inTTSTranslateOrSee.q) return;
     final currentConversationId = currentCreatedAtUS.q;
     if (currentConversationId == null) {
       return;
@@ -422,7 +422,7 @@ extension $Conversation on _Conversation {
   /// context
   Future<void> onExportClicked(BuildContext context, ConversationData conversation) async {
     qq;
-    if (P.rwkv.inTTSTranslateOrSee.q) return;
+    if (P.rwkvContext.inTTSTranslateOrSee.q) return;
     final s = S.of(context);
 
     try {
@@ -505,7 +505,7 @@ extension $Conversation on _Conversation {
 
   Future<void> deleteSelectedConversations(BuildContext context) async {
     qq;
-    if (P.rwkv.inTTSTranslateOrSee.q) return;
+    if (P.rwkvContext.inTTSTranslateOrSee.q) return;
 
     final s = S.of(context);
     final selectedIds = Set<int>.from(selectedConversations.q);

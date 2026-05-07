@@ -26,7 +26,7 @@ class DecodeParamButton extends ConsumerWidget {
   const DecodeParamButton({super.key});
 
   void _onTap() async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -38,7 +38,7 @@ class DecodeParamButton extends ConsumerWidget {
 
     final s = S.current;
 
-    final current = P.rwkv.decodeParamType.q;
+    final current = P.rwkvParams.decodeParamType.q;
 
     qqr(current);
 
@@ -71,7 +71,7 @@ class DecodeParamButton extends ConsumerWidget {
       await ArgumentsPanel.show(getContext()!);
       P.preference.saveCustomDecodeParams();
     } else {
-      await P.rwkv.syncSamplerParamsFromDefault(res);
+      await P.rwkvParams.syncSamplerParamsFromDefault(res);
       P.preference.saveDecodeParamType(res);
     }
   }
@@ -82,10 +82,10 @@ class DecodeParamButton extends ConsumerWidget {
     final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
     final appTheme = ref.watch(P.app.theme);
     final height = InputInteractions.calculateButtonHeight(context);
-    final loading = ref.watch(P.rwkv.loading);
-    final generating = ref.watch(P.rwkv.generating);
-    final loaded = ref.watch(P.rwkv.loaded);
-    final decodeParamType = ref.watch(P.rwkv.decodeParamType);
+    final loading = ref.watch(P.rwkvModel.loading);
+    final generating = ref.watch(P.rwkvGeneration.generating);
+    final loaded = ref.watch(P.rwkvModel.loaded);
+    final decodeParamType = ref.watch(P.rwkvParams.decodeParamType);
     final canEnable = loaded && !loading && !generating;
     final interactionState = canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable;
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);

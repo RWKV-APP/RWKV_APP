@@ -21,11 +21,11 @@ class StatePanel extends ConsumerWidget {
     await P.ui.showPanel(
       key: panelKey,
       beforeShow: () async {
-        P.rwkv.statePanelShown.q = true;
-        P.rwkv.refreshStatePanel();
+        P.rwkvDebug.statePanelShown.q = true;
+        P.rwkvDebug.refreshStatePanel();
       },
       afterHide: (_) {
-        P.rwkv.statePanelShown.q = false;
+        P.rwkvDebug.statePanelShown.q = false;
       },
       initialChildSize: .8,
       maxChildSize: .905,
@@ -41,7 +41,7 @@ class StatePanel extends ConsumerWidget {
 
   void _onRefreshPressed() {
     Alert.info(S.current.refreshed);
-    P.rwkv.refreshStatePanel();
+    P.rwkvDebug.refreshStatePanel();
     if (scrollController.hasClients) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
@@ -54,11 +54,11 @@ class StatePanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final stateLogList = ref.watch(P.rwkv.stateLogList);
+    final stateLogList = ref.watch(P.rwkvDebug.stateLogList);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
-    final renderNewlineDirectly = ref.watch(P.rwkv.renderNewlineDirectly);
-    final renderSpaceSymbol = ref.watch(P.rwkv.renderSpaceSymbol);
+    final renderNewlineDirectly = ref.watch(P.rwkvDebug.renderNewlineDirectly);
+    final renderSpaceSymbol = ref.watch(P.rwkvDebug.renderSpaceSymbol);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
 
     return ClipRRect(

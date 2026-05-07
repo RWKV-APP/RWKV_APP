@@ -172,8 +172,8 @@ class CompletionSpeed extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final prefillSpeed = item?.prefillSpeed ?? ref.watch(P.rwkv.prefillSpeed) ?? 0;
-    final decodeSpeed = item?.decodeSpeed ?? ref.watch(P.rwkv.decodeSpeed) ?? 0;
+    final prefillSpeed = item?.prefillSpeed ?? ref.watch(P.rwkvGeneration.prefillSpeed) ?? 0;
+    final decodeSpeed = item?.decodeSpeed ?? ref.watch(P.rwkvGeneration.decodeSpeed) ?? 0;
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
     return Padding(

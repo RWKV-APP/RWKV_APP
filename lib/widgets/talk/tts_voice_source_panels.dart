@@ -524,7 +524,7 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
   const _TTSRecordVoicePanel({required this.scrollController});
 
   Future<void> _onPressStart() async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) return;
     if (P.see.recording.q) return;
     P.app.hapticLight();
@@ -533,7 +533,7 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
   }
 
   Future<void> _onPressEnd(BuildContext context, {bool isCancel = false}) async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) return;
     if (!P.see.recording.q) return;
     if (isCancel) {
@@ -568,7 +568,7 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
     final s = S.of(context);
     final primary = theme.colorScheme.primary;
     final qb = ref.watch(P.app.qb);
-    final generating = ref.watch(P.rwkv.generating);
+    final generating = ref.watch(P.rwkvGeneration.generating);
     final recording = ref.watch(P.see.recording);
     final paddingBottom = ref.watch(P.app.paddingBottom);
 

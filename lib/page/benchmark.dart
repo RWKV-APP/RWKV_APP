@@ -132,8 +132,8 @@ class _Test extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
-    final model = ref.watch(P.rwkv.latestModel);
-    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
+    final model = ref.watch(P.rwkvModel.latest);
+    final supportedBatchSizes = ref.watch(P.rwkvParams.supportedBatchSizes);
     final maxSupportedBatchSize = benchmarkMaxSupportedBatchSize(model: model, supportedBatchSizes: supportedBatchSizes);
     final generating = ref.watch(P.benchmark.generating);
     final currentBatchSize = ref.watch(P.benchmark.currentBatchSize);

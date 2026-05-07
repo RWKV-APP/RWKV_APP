@@ -35,9 +35,25 @@ class ChatAppBar extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    final activeLoadingFile = ref.watch(P.rwkv.activeLoadingFile);
-    final currentModel = ref.watch(P.rwkv.latestModel);
-    final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
+    final pageKey = ref.watch(P.app.pageKey);
+    final rawActiveLoadingFile = ref.watch(P.rwkvModel.activeLoadingFile);
+    final rawCurrentModel = ref.watch(P.rwkvModel.latest);
+    final rawCurrentGroupInfo = ref.watch(P.rwkvContext.currentGroupInfo);
+    final activeLoadingFile = P.rwkvAutoLoad.visibleActiveLoadingFileForPage(
+      fileInfo: rawActiveLoadingFile,
+      pageKey: pageKey,
+      preferredDemoType: demoType,
+    );
+    final currentModel = P.rwkvAutoLoad.visibleCurrentModelForPage(
+      fileInfo: rawCurrentModel,
+      pageKey: pageKey,
+      preferredDemoType: demoType,
+    );
+    final currentGroupInfo = P.rwkvAutoLoad.visibleGroupInfoForPage(
+      groupInfo: rawCurrentGroupInfo,
+      pageKey: pageKey,
+      preferredDemoType: demoType,
+    );
     final selectMessageMode = ref.watch(P.chat.isSharing);
 
     String displayName = s.click_to_select_model;

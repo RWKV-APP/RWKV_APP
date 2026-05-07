@@ -120,7 +120,7 @@ extension $See on _See {
 
     await file.writeAsBytes(wavHeader);
 
-    for (var chunk in _audioData) {
+    for (final chunk in _audioData) {
       await file.writeAsBytes(chunk, mode: FileMode.append);
     }
 
@@ -168,80 +168,6 @@ extension $See on _See {
     await prefillImage(imagePath);
   }
 
-  Future<void> _tryLoadLastWorldModel() async {
-    if (P.app.pageKey.q != .see) return;
-
-    await 500.msLater;
-
-    final last = P.preference.lastWorldModel.q;
-    if (last == null) {
-      if (P.app.pageKey.q == .see) {
-        ModelSelector.show(preferredDemoType: .see);
-      }
-      return;
-    }
-
-    try {
-      final worldTypeString = last["worldType"];
-      final modelFileName = last["modelFileName"];
-      final worldType = WorldType.values.byName(worldTypeString);
-
-      final availableModels = P.remote.seeWeights.q;
-      final fileInfos = availableModels.where((e) => e.worldType == worldType).toList();
-
-      final encoderFileKey = fileInfos.firstWhere((e) => e.isEncoder);
-      final modelFileKey = fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == modelFileName);
-      final adapterFileKey = fileInfos.firstWhereOrNull((e) => e.isAdapter);
-
-      final encoderLocalFile = P.remote.locals(encoderFileKey).q;
-      final modelLocalFile = P.remote.locals(modelFileKey).q;
-      final adapterLocalFile = adapterFileKey != null ? P.remote.locals(adapterFileKey).q : null;
-
-      if (!encoderLocalFile.hasFile || !modelLocalFile.hasFile || (adapterLocalFile != null && !adapterLocalFile.hasFile)) {
-        if (P.app.pageKey.q == .see) {
-          ModelSelector.show(preferredDemoType: .see);
-        }
-        return;
-      }
-
-      P.rwkv.currentWorldType.q = worldType;
-      P.rwkv.clearStates();
-      P.chat.clearMessages();
-
-      switch (worldType) {
-        case WorldType.reasoningQA:
-        case WorldType.ocr:
-          await P.rwkv.loadSee(
-            modelPath: modelLocalFile.targetPath,
-            encoderPath: encoderLocalFile.targetPath,
-            backend: modelFileKey.backend!,
-            enableReasoning: worldType.isReasoning,
-            adapterPath: null,
-            fileInfo: modelFileKey,
-          );
-        case WorldType.modrwkvV2:
-        case WorldType.modrwkvV3:
-          final modelID = await P.rwkv.loadSee(
-            modelPath: modelLocalFile.targetPath,
-            encoderPath: encoderLocalFile.targetPath,
-            backend: modelFileKey.backend!,
-            enableReasoning: worldType.isReasoning,
-            adapterPath: adapterLocalFile?.targetPath,
-            fileInfo: modelFileKey,
-          );
-          if (modelID != null) P.rwkv.send(SetImageUniqueIdentifier("image"));
-          if (modelID != null) P.rwkv.send(SetSpaceAfterRoles(false, modelID: modelID));
-      }
-
-      if (P.app.pageKey.q != .see) return;
-    } catch (e) {
-      qqe("Failed to auto load world model: $e");
-      if (P.app.pageKey.q == .see) {
-        ModelSelector.show(preferredDemoType: .see);
-      }
-    }
-  }
-
   Future<void> prefillImage(String imagePath) async {
     if (imagePath.isEmpty) {
       qqe("imagePath is empty");
@@ -251,7 +177,7 @@ extension $See on _See {
       "<image>$imagePath</image>",
     ];
     P.chat.receiveId.q = Config.seePrefillId;
-    await P.rwkv.sendMessages(messages, maxLength: 0);
+    await P.rwkvGeneration.sendMessages(messages, maxLength: 0);
   }
 
   Future<void> autoTest() async {
@@ -299,13 +225,13 @@ extension _$See on _See {
       case .see:
     }
     qq;
-    P.rwkv.currentWorldType.lv(_onWorldTypeChanged);
+    P.rwkvContext.currentWorldType.lv(_onWorldTypeChanged);
     P.talk.audioInteractorShown.lv(_onAudioInteractorShown);
     P.app.demoType.lv(_onWorldTypeChanged);
     _audioPlayer.eventStream.listen(_onPlayerChanged);
     _audioPlayer.onPlayerStateChanged.listen(_onPlayerStateChanged);
     P.app.pageKey.lb(_onPageKeyChanged);
-    P.rwkv.generating.lb(_onGeneratingChanged);
+    P.rwkvGeneration.generating.lb(_onGeneratingChanged);
   }
 
   void _onGeneratingChanged(bool? previous, bool next) async {
@@ -332,7 +258,7 @@ extension _$See on _See {
       if (hasAtLeastOneImage) {
         P.msg._clear();
         await 10.msLater;
-        P.rwkv.clearStates();
+        P.rwkvGeneration.clearStates();
         await 10.msLater;
       }
       await P.chat.send("", type: MessageType.userImage, imageUrl: waitingImagePath);
@@ -348,21 +274,21 @@ extension _$See on _See {
       imageHeight.q = null;
       visualFloatHeight.q = null;
       P.app.demoType.q = .chat;
-      P.rwkv.clearStates();
+      P.rwkvGeneration.clearStates();
       P.chat.clearMessages();
-      // P.rwkv.currentWorldType.q = null;
-      // P.rwkv.currentModel.q = null;
+      // P.rwkvContext.currentWorldType.q = null;
     } else if (previous != .see && next == .see) {
-      P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .chat);
-      P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .tts);
+      P.rwkvModel._releaseModelByWeightTypeIfNeeded(weightType: .chat);
+      P.rwkvModel._releaseModelByWeightTypeIfNeeded(weightType: .roleplay);
+      P.rwkvModel._releaseModelByWeightTypeIfNeeded(weightType: .tts);
       imagePath.q = null;
       imageHeight.q = null;
       visualFloatHeight.q = null;
-      P.rwkv.clearStates();
+      P.rwkvGeneration.clearStates();
       P.chat.clearMessages();
       P.app.demoType.q = .see;
       bool isWorldModelLoaded = false;
-      final currentModel = P.rwkv.latestModel.q;
+      final currentModel = P.rwkvModel.latest.q;
       if (currentModel != null) {
         if (currentModel.worldType != null) {
           isWorldModelLoaded = true;
@@ -372,10 +298,9 @@ extension _$See on _See {
       if (isWorldModelLoaded) {
         // OK
       } else {
-        P.rwkv.currentGroupInfo.q = null;
-        P.rwkv.currentWorldType.q = null;
-        await P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .see);
-        _tryLoadLastWorldModel();
+        P.rwkvContext.currentGroupInfo.q = null;
+        P.rwkvContext.currentWorldType.q = null;
+        await P.rwkvModel._releaseModelByWeightTypeIfNeeded(weightType: .see);
       }
     } else {}
   }

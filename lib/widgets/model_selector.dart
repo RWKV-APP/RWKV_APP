@@ -306,7 +306,7 @@ class _ModelsInConfigFile extends ConsumerWidget {
             .where((e) => e.available)
             .expand(
               (e) => e.socPairs
-                  .where((pair) => pair.$1.isEmpty || pair.$1 == P.rwkv.socName.q)
+                  .where((pair) => pair.$1.isEmpty || pair.$1 == P.rwkvBackend.socName.q)
                   .sortedBy<num>((pair) => -pair.$1.length)
                   .map((pair) => WorldGroupItem(e, socPair: pair)),
             )
@@ -380,8 +380,8 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
     final supportedNpus = P.remote.getSupportedNpuChips;
-    final currentSocName = ref.watch(P.rwkv.socName);
-    final frontendSocName = ref.watch(P.rwkv.frontendSocName);
+    final currentSocName = ref.watch(P.rwkvBackend.socName);
+    final frontendSocName = ref.watch(P.rwkvBackend.frontendSocName);
 
     if (supportedNpus.isEmpty) return const SizedBox.shrink();
 
@@ -596,10 +596,10 @@ class _LocalPthFileItem extends ConsumerWidget {
     final s = S.of(context);
     ref.watch(P.app.theme);
     final appTheme = ref.watch(P.app.theme);
-    final currentModel = ref.watch(P.rwkv.latestModel);
+    final currentModel = ref.watch(P.rwkvModel.latest);
     final isCurrent = currentModel == fileInfo;
-    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
-    final loadingProgress = ref.watch(P.rwkv.loadingProgress);
+    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus);
+    final loadingProgress = ref.watch(P.rwkvModel.loadingProgress);
 
     final loading =
         loadingStatus[fileInfo] == LoadingStatus.loading ||

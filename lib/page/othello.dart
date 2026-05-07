@@ -485,10 +485,10 @@ class _Score extends ConsumerWidget {
     final blackScore = ref.watch(P.othello.blackScore);
     final whiteScore = ref.watch(P.othello.whiteScore);
     final blackTurn = ref.watch(P.othello.blackTurn);
-    final generating = ref.watch(P.rwkv.generating);
+    final generating = ref.watch(P.rwkvGeneration.generating);
     final usePortrait = ref.watch(P.othello.usePortrait);
-    final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
-    final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
+    final prefillSpeed = ref.watch(P.rwkvGeneration.prefillSpeed);
+    final decodeSpeed = ref.watch(P.rwkvGeneration.decodeSpeed);
     final qb = ref.watch(P.app.qb);
 
     final thinkingWidget = Column(

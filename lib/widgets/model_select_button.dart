@@ -24,14 +24,29 @@ class ModelSelectButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final currentModel = ref.watch(P.rwkv.latestModel);
-    final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
-    final activeLoadingFile = ref.watch(P.rwkv.activeLoadingFile);
-    final activeLoadingProgress = ref.watch(P.rwkv.activeLoadingProgress);
+    final rawCurrentModel = ref.watch(P.rwkvModel.latest);
+    final rawCurrentGroupInfo = ref.watch(P.rwkvContext.currentGroupInfo);
+    final rawActiveLoadingFile = ref.watch(P.rwkvModel.activeLoadingFile);
+    final activeLoadingProgress = ref.watch(P.rwkvModel.activeLoadingProgress);
     final s = S.of(context);
     final batchEnabled = ref.watch(P.chat.effectiveBatchEnabled);
     final pageKey = ref.watch(P.app.pageKey);
     final screenWidth = ref.watch(P.app.screenWidth);
+    final currentModel = P.rwkvAutoLoad.visibleCurrentModelForPage(
+      fileInfo: rawCurrentModel,
+      pageKey: pageKey,
+      preferredDemoType: preferredDemoType,
+    );
+    final currentGroupInfo = P.rwkvAutoLoad.visibleGroupInfoForPage(
+      groupInfo: rawCurrentGroupInfo,
+      pageKey: pageKey,
+      preferredDemoType: preferredDemoType,
+    );
+    final activeLoadingFile = P.rwkvAutoLoad.visibleActiveLoadingFileForPage(
+      fileInfo: rawActiveLoadingFile,
+      pageKey: pageKey,
+      preferredDemoType: preferredDemoType,
+    );
 
     String modelDisplay = activeLoadingFile?.name ?? currentGroupInfo?.displayName ?? currentModel?.name ?? s.click_to_select_model;
     final isLoadingModel = activeLoadingFile != null;
@@ -101,7 +116,7 @@ class ModelSelectButton extends ConsumerWidget {
                 ),
                 InkWell(
                   borderRadius: const .horizontal(right: .circular(16)),
-                  onTap: P.rwkv.onBatchInferenceTapped,
+                  onTap: P.rwkvParams.onBatchInferenceTapped,
                   child: Padding(
                     padding: const .symmetric(horizontal: 8, vertical: 4),
                     child: Text("  " + s.batch_inference_short + "  ", style: const TextStyle(fontSize: 10, height: 1, fontWeight: .w500)),

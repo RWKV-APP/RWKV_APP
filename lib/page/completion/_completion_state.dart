@@ -11,13 +11,13 @@ import 'package:zone/widgets/completion/batch_completion_settings_panel.dart';
 class CompletionState {
   static final tipsDisabled = qs(false);
 
-  static final model = P.rwkv.latestModel;
+  static final model = P.rwkvModel.latest;
 
   static final generating = qs(false);
 
   static final generateButtonEnabled = qs(false);
 
-  static final decodeParamType = P.rwkv.decodeParamType;
+  static final decodeParamType = P.rwkvParams.decodeParamType;
 
   static final batchSettings = BatchCompletionSettingsPanel.settings;
 

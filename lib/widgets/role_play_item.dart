@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/models/model_info.dart';
-import 'package:flutter_roleplay/services/role_play_manage.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart';
@@ -52,20 +51,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
       Navigator.pop(context);
     }
 
-    final info = ModelInfo(
-      id: file.fileName,
-      modelPath: P.remote.locals(file).q.targetPath,
-      statePath: state == null ? '' : P.remote.locals(state).q.targetPath,
-      backend: file.backend!,
-      topP: state?.decodeParam['topP'],
-      temperature: state?.decodeParam['temperature']?.toDouble(),
-      penaltyDecay: state?.decodeParam['penaltyDecay']?.toDouble(),
-      presencePenalty: state?.decodeParam['presencePenalty']?.toDouble(),
-      frequencyPenalty: state?.decodeParam['frequencyPenalty']?.toDouble(),
-      modelType: RoleplayManageModelType.chat,
-    );
-    final sp = await P.rwkv.loadChat(fileInfo: file);
-    RoleplayManage.onModelDownloadComplete(info, [sp.$1, sp.$2], P.rwkv.receivePort);
+    await P.rwkvAutoLoad.loadRoleplayChatModel(fileInfo: file, state: state);
   }
 
   @override

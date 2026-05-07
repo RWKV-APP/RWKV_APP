@@ -15,11 +15,11 @@ class _BenchmarkScaffoldActionBar extends ConsumerWidget {
     final isLambadaTab = activeTabIndex == 1;
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
-    final loadingModel = ref.watch(P.rwkv.loading);
-    final activeLoadingFile = ref.watch(P.rwkv.activeLoadingFile);
-    final activeLoadingProgress = ref.watch(P.rwkv.activeLoadingProgress);
-    final backendGenerating = ref.watch(P.rwkv.generating);
-    final model = ref.watch(P.rwkv.latestModel);
+    final loadingModel = ref.watch(P.rwkvModel.loading);
+    final activeLoadingFile = ref.watch(P.rwkvModel.activeLoadingFile);
+    final activeLoadingProgress = ref.watch(P.rwkvModel.activeLoadingProgress);
+    final backendGenerating = ref.watch(P.rwkvGeneration.generating);
+    final model = ref.watch(P.rwkvModel.latest);
     final lambadaRunning = ref.watch(P.lambada.autoStartNextTest);
     final running = isLambadaTab ? lambadaRunning : benchmarkSnapshot.generating;
     final finishing = benchmarkSnapshot.finishing;

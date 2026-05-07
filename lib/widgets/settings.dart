@@ -42,7 +42,7 @@ class Settings extends ConsumerWidget {
     final iconPath = "assets/img/chat/icon.png";
     final version = ref.watch(P.app.version);
     final buildNumber = ref.watch(P.app.buildNumber);
-    final commitId = ref.watch(P.rwkv.commitId);
+    final commitId = ref.watch(P.rwkvBackend.commitId);
     final normalizedCommitId = commitId.trim();
     final shortCommitId = normalizedCommitId.length > 7 ? normalizedCommitId.substring(0, 7) : normalizedCommitId;
     final preferredTextScaleFactor = ref.watch(P.preference.preferredTextScaleFactor);

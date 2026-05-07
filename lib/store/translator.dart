@@ -36,7 +36,7 @@ class _Translator {
   late final runningTaskTabId = qs<int?>(null);
   late final runningTaskUrl = qs<String?>(null);
 
-  @Deprecated("Use P.rwkv.generating instead")
+  @Deprecated("Use P.rwkvGeneration.generating instead")
   late final isGenerating = qs(false);
 
   late final serveMode = qs(ServeMode.hoverLoop);
@@ -83,7 +83,7 @@ extension _$Translator on _Translator {
     source.l(_onTextChanged);
     result.l(_onResultChanged);
     P.app.pageKey.l(_onPageKeyChanged);
-    P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+    P.rwkvBridge.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
     runningTaskKey.l(_onRunningTaskKeyChanged);
     translations.l(_onTranslationsChanged);
 
@@ -102,7 +102,7 @@ extension _$Translator on _Translator {
   }
 
   void _checkTask() async {
-    final model = P.rwkv.latestModel.q;
+    final model = P.rwkvModel.latest.q;
     if (model == null) return;
     final apiServerRunning = P.apiServer.state.q == BackendState.running;
     if (!apiServerRunning) return;
@@ -220,21 +220,10 @@ extension _$Translator on _Translator {
       case .translator:
       case .ocr:
         P.app.demoType.q = .chat;
-        final currentModel = P.rwkv.latestModel.q;
-        if (currentModel == null) {
-          500.msLater.then((_) {
-            ModelSelector.show();
-          });
-        } else {
-          if (!currentModel.tags.contains("translate")) {
-            await P.rwkv._releaseAllModels();
-            Alert.info(S.current.please_load_model_first);
-            500.msLater.then((_) {
-              ModelSelector.show();
-            });
-            return;
-          }
-        }
+        final currentModel = P.rwkvModel.latest.q;
+        if (currentModel == null) return;
+        if (currentModel.hasEffectiveTag("translate")) return;
+        await P.rwkvModel._releaseAllModels();
         break;
       default:
         break;
@@ -433,9 +422,9 @@ extension _$Translator on _Translator {
   }
 
   void _startNewTask(String source) {
-    P.rwkv.stop();
+    P.rwkvGeneration.stop();
     runningTaskKey.q = source;
-    P.rwkv.sendMessages(
+    P.rwkvGeneration.sendMessages(
       [source],
       getIsGeneratingRate: 1,
       getResponseBufferContentRate: .1,
@@ -444,7 +433,7 @@ extension _$Translator on _Translator {
 
   void _startBatchTask(List<String> lines) {
     qq;
-    P.rwkv.stop();
+    P.rwkvGeneration.stop();
 
     // 清理之前的定时器
     if (_batchTaskTimer != null) {
@@ -465,13 +454,13 @@ extension _$Translator on _Translator {
     }
 
     // 使用批量模式发送：每个批次是一条独立的消息列表
-    final thinkingMode = P.rwkv.thinkingMode.q;
+    final thinkingMode = P.rwkvParams.thinkingMode.q;
     final reasoning = thinkingMode.hasThinkTag;
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return;
     }
-    P.rwkv.send(
+    P.rwkvBridge.send(
       to_rwkv.ChatBatchAsync(
         batchMessages,
         enableReasoning: reasoning,
@@ -485,9 +474,9 @@ extension _$Translator on _Translator {
     // 启动定时器获取响应
     _batchTaskTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
       // 获取批量响应（无参数版本会返回所有批次的响应）
-      P.rwkv.send(to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID));
-      P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-      P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
   }
 
@@ -592,22 +581,22 @@ extension _$Translator on _Translator {
 extension $Translator on _Translator {
   Future<void> onPressTest() async {
     final s = S.current;
-    if (!P.rwkv.loaded.q) {
+    if (!P.rwkvModel.loaded.q) {
       Alert.info(s.please_load_model_first);
       ModelSelector.show();
       return;
     }
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return;
     }
     // 确保角色与方向一致
     if (enToZh.q) {
-      P.rwkv.send(to_rwkv.SetUserRole("English", modelID: modelID));
-      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetUserRole("English", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
     } else {
-      P.rwkv.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
-      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
     }
     result.q = "";
     resultTextEditingController.text = "";
@@ -651,16 +640,16 @@ extension $Translator on _Translator {
 
   void onDirectionButtonPressed() async {
     enToZh.q = !enToZh.q;
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return;
     }
     if (enToZh.q) {
-      P.rwkv.send(to_rwkv.SetUserRole("English", modelID: modelID));
-      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetUserRole("English", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
     } else {
-      P.rwkv.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
-      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
     }
 
     // 将下方结果文本移动到上方输入；若结果为空，则会清空上方，实现“清除全部”

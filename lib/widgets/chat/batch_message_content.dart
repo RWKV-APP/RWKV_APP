@@ -120,7 +120,7 @@ class _BatchSlotsListView extends ConsumerWidget {
     final (batch, _, batchCount, _) = getBatchInfo(finalContent);
     final appTheme = ref.watch(P.app.theme);
     final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
-    final generating = ref.watch(P.rwkv.generating);
+    final generating = ref.watch(P.rwkvGeneration.generating);
     final screenWidth = MediaQuery.sizeOf(context).width;
     final parsedDecodeParams = msg.parsedDecodeParams;
     final slotWidth = screenWidth * (batchViewportWidth / 100);
@@ -378,7 +378,7 @@ class _SlotContent extends ConsumerWidget {
       slotIndex: slotIndex,
     );
     final bodyCanScroll = ref.watch(P.ui.batchSlotBodyCanScroll(key));
-    final streaming = msg.changing && ref.watch(P.rwkv.generating);
+    final streaming = msg.changing && ref.watch(P.rwkvGeneration.generating);
     final inferring = ref.watch(P.ui.batchSlotInferring(key));
     final hasQuestion = question != null && question!.trim().isNotEmpty;
 

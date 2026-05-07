@@ -164,7 +164,7 @@ class _Suggestion {
 
   List<dynamic> _seeSuggestions(Ref ref) {
     final config = ref.watch(this.config);
-    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
+    final currentWorldType = ref.watch(P.rwkvContext.currentWorldType);
 
     switch (currentWorldType) {
       case WorldType.reasoningQA:
@@ -183,12 +183,12 @@ class _Suggestion {
 
   final worldSuggestion = qp<List<String>>((ref) {
     final _ = ref.watch(P.suggestion.ttsTicker);
-    final _ = ref.watch(P.rwkv.latestModel);
+    final _ = ref.watch(P.rwkvModel.latest);
     final _ = ref.watch(P.msg.length);
 
     final config = ref.watch(P.suggestion.config);
 
-    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
+    final currentWorldType = ref.watch(P.rwkvContext.currentWorldType);
 
     switch (currentWorldType) {
       case WorldType.reasoningQA:
@@ -205,7 +205,7 @@ class _Suggestion {
 
   final talkSuggestion = qp<List<String>>((ref) {
     final _ = ref.watch(P.suggestion.ttsTicker);
-    final _ = ref.watch(P.rwkv.latestModel);
+    final _ = ref.watch(P.rwkvModel.latest);
     final _ = ref.watch(P.msg.length);
 
     final config = ref.watch(P.suggestion.config);

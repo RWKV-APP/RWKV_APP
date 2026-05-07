@@ -37,7 +37,7 @@ class _Ocr {
 
   late final runningTaskKey = qs<String?>(null);
 
-  @Deprecated("Use P.rwkv.generating instead")
+  @Deprecated("Use P.rwkvGeneration.generating instead")
   late final isGenerating = qs(false);
 
   /// 当前批量任务的原始行列表（用于多行翻译）
@@ -57,7 +57,7 @@ extension _$Ocr on _Ocr {
 
     _updateTextRecognizer();
 
-    P.rwkv.broadcastStream.listen(
+    P.rwkvBridge.broadcastStream.listen(
       _onStreamEvent,
       onDone: _onStreamDone,
       onError: _onStreamError,
@@ -217,11 +217,11 @@ extension _$Ocr on _Ocr {
   }
 
   void _sendTasks(List<String> tasks) {
-    P.rwkv.stop();
+    P.rwkvGeneration.stop();
 
     if (tasks.isEmpty) return;
 
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return;
     }
@@ -239,18 +239,18 @@ extension _$Ocr on _Ocr {
 
     // Set roles based on enToZh
     if (enToZh.q) {
-      P.rwkv.send(to_rwkv.SetUserRole("English", modelID: modelID));
-      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetUserRole("English", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
     } else {
-      P.rwkv.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
-      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
     }
 
     // 使用批量模式发送：每个批次是一条独立的消息列表
-    final thinkingMode = P.rwkv.thinkingMode.q;
+    final thinkingMode = P.rwkvParams.thinkingMode.q;
     final reasoning = thinkingMode.hasThinkTag;
     isGenerating.q = true;
-    P.rwkv.send(
+    P.rwkvBridge.send(
       to_rwkv.ChatBatchAsync(
         batchMessages,
         enableReasoning: reasoning,
@@ -276,8 +276,8 @@ extension _$Ocr on _Ocr {
     final onScreenTexts = this.onScreenTexts.q.toList();
     final batchTranslations = translations.q;
     int supportedBatchSize = 1;
-    if (P.rwkv.supportedBatchSizes.q.isNotEmpty) {
-      supportedBatchSize = P.rwkv.supportedBatchSizes.q.max;
+    if (P.rwkvParams.supportedBatchSizes.q.isNotEmpty) {
+      supportedBatchSize = P.rwkvParams.supportedBatchSizes.q.max;
     }
 
     final runningTasks = this.runningTasks.q;
@@ -302,13 +302,13 @@ extension _$Ocr on _Ocr {
   }
 
   void _getResponse() {
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return;
     }
-    P.rwkv.send(to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID));
-    P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-    P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
   }
 }
 
@@ -323,7 +323,7 @@ extension $Ocr on _Ocr {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final currentModel = P.rwkv.latestModel.q;
+    final currentModel = P.rwkvModel.latest.q;
     if (currentModel == null) {
       ModelSelector.show();
       return;
@@ -357,7 +357,7 @@ extension $Ocr on _Ocr {
     if (image.q != null) {
       translations.q = {};
       runningTasks.q = [];
-      P.rwkv.stop();
+      P.rwkvGeneration.stop();
       isGenerating.q = false;
 
       // 使用新的识别器重新处理图片
@@ -377,7 +377,7 @@ extension $Ocr on _Ocr {
     image.q = null;
     translations.q = {};
     runningTasks.q = [];
-    P.rwkv.stop();
+    P.rwkvGeneration.stop();
     isGenerating.q = false;
     _textRecognizer?.close();
     _textRecognizer = null;

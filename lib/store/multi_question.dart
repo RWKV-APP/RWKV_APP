@@ -8,7 +8,7 @@ class _MultiQuestion {
   late final questions = qs<List<String>>([]);
 
   late final canSend = qp((ref) {
-    final generating = ref.watch(P.rwkv.generating);
+    final generating = ref.watch(P.rwkvGeneration.generating);
     if (generating) return false;
     final questionList = ref.watch(questions);
     return questionList.any((q) => q.trim().isNotEmpty);
@@ -77,14 +77,14 @@ extension $MultiQuestion on _MultiQuestion {
     ];
     if (nonEmpty.isEmpty) return;
 
-    final currentModel = P.rwkv.latestModel.q;
+    final currentModel = P.rwkvModel.latest.q;
     if (currentModel == null || !currentModel.supportsBatchInference) {
       Alert.warning(S.current.this_model_does_not_support_batch_inference, position: AlertPosition.bottom);
       return;
     }
 
     // 检查模型是否支持 batch
-    final List<int> supported = P.rwkv.supportedBatchSizes.q;
+    final List<int> supported = P.rwkvParams.supportedBatchSizes.q;
     if (supported.isEmpty) {
       Alert.warning(S.current.this_model_does_not_support_batch_inference, position: AlertPosition.bottom);
       return;
@@ -121,7 +121,7 @@ extension $MultiQuestion on _MultiQuestion {
       return;
     }
 
-    final currentModel = P.rwkv.latestModel.q;
+    final currentModel = P.rwkvModel.latest.q;
     if (currentModel == null || !currentModel.supportsBatchInference) {
       Alert.warning(S.current.this_model_does_not_support_batch_inference, position: AlertPosition.bottom);
       return;
@@ -129,12 +129,12 @@ extension $MultiQuestion on _MultiQuestion {
 
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
-    if (P.rwkv.generating.q) {
+    if (P.rwkvGeneration.generating.q) {
       Alert.warning(S.current.please_wait_for_the_model_to_finish_generating, position: AlertPosition.bottom);
       return;
     }
 
-    final thinkingMode = P.rwkv.thinkingMode.q;
+    final thinkingMode = P.rwkvParams.thinkingMode.q;
     // 1. 构建 batch 格式的用户消息 content
     final String userBatchContent = effectiveQuestions.join(Config.batchMarker) + Config.batchMarker + "-1";
     final String storedContent = userBatchContent + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
@@ -220,7 +220,7 @@ extension $MultiQuestion on _MultiQuestion {
     // 6. 设置 receiveId，让 _Chat._onStreamEvent 处理
     P.chat.receiveId.q = botMsgId;
     P.chat.receivedTokens.q = "";
-    P.rwkv.generating.q = true;
+    P.rwkvGeneration.generating.q = true;
 
     // 7. 关闭面板
     reset();
@@ -242,7 +242,7 @@ extension $MultiQuestion on _MultiQuestion {
 
     // 9. 发送
     final int batchSize = batchMessages.length;
-    P.rwkv.sendMessages(
+    P.rwkvGeneration.sendMessages(
       batchMessages.first,
       batchSize: batchSize,
       overrideBatchMessages: batchMessages,

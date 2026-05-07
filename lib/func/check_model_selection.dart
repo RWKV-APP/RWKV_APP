@@ -14,7 +14,7 @@ bool checkModelSelection({
   bool showModelSelector = true,
   required DemoType preferredDemoType,
 }) {
-  final loadedModelsCount = P.rwkv.loadedModelsCount.q;
+  final loadedModelsCount = P.rwkvModel.loadedModelsCount.q;
 
   if (loadedModelsCount == 0) {
     if (showAlert) Alert.info(S.current.please_load_model_first);
@@ -22,14 +22,14 @@ bool checkModelSelection({
     return false;
   }
 
-  final loaded = P.rwkv.loaded.q;
+  final loaded = P.rwkvModel.loaded.q;
 
   if (!loaded) {
     if (showAlert) Alert.info(S.current.please_load_model_first);
     return false;
   }
 
-  final loading = P.rwkv.loading.q;
+  final loading = P.rwkvModel.loading.q;
   if (loading) {
     if (showAlert) Alert.info(S.current.please_wait_for_the_model_to_load);
     return false;

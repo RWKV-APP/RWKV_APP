@@ -112,7 +112,7 @@ class PromptTemplate {
       case .free:
         return thinkingFree.isNotEmpty ? thinkingFree : thinking_mode.ThinkingMode.free.header;
       case .preferChinese:
-        final fileInfo = P.rwkv.latestModel.q;
+        final fileInfo = P.rwkvModel.latest.q;
         final date = fileInfo?.date;
         if (date != null && date.isAfter(DateTime(2025, 9, 21))) {
           final result = thinkingWithChinese.isNotEmpty ? thinkingWithChinese : "<think>好的";

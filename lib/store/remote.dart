@@ -282,7 +282,7 @@ extension $Remote on _Remote {
 
     ttsCores.q = this.ttsWeights.q.where((e) => e.tags.contains("core")).toSet();
 
-    if (P.rwkv.enableAlbatross.q) {
+    if (P.rwkvFeature.enableAlbatross.q) {
       this.chatWeights.q = this.chatWeights.q.union(albatrossWeights.where((e) => e.available).toSet());
     }
   }
@@ -1879,7 +1879,7 @@ extension $Remote on _Remote {
       fromPthFile: true,
     );
 
-    await P.rwkv.loadChat(fileInfo: fileInfo);
+    await P.rwkvModel.loadChat(fileInfo: fileInfo);
     return fileInfo;
   }
 

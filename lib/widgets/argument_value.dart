@@ -35,10 +35,10 @@ class ArgumentValue extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final _ = (theme, ref.watch(P.rwkv.supportedBatchSizes));
+    final _ = (theme, ref.watch(P.rwkvParams.supportedBatchSizes));
     final builtInValue = switch (argument) {
       Argument.batchCount => ref.watch(P.chat.batchCount),
-      _ => ref.watch(P.rwkv.arguments(argument)),
+      _ => ref.watch(P.rwkvParams.arguments(argument)),
     };
     num value = defaultValue ?? builtInValue;
     double? batchValue;

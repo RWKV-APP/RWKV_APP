@@ -27,9 +27,9 @@ class WebSearchModeButton extends ConsumerWidget {
     final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
     final appTheme = ref.watch(P.app.theme);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
-    final loading = ref.watch(P.rwkv.loading);
-    final loaded = ref.watch(P.rwkv.loaded);
-    final generating = ref.watch(P.rwkv.generating);
+    final loading = ref.watch(P.rwkvModel.loading);
+    final loaded = ref.watch(P.rwkvModel.loaded);
+    final generating = ref.watch(P.rwkvGeneration.generating);
     final webSearchMode = ref.watch(P.chat.webSearchMode);
 
     final canEnable = loaded && !loading && !generating;

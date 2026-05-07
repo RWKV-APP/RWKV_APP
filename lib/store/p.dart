@@ -22,6 +22,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_roleplay/models/model_info.dart';
 import 'package:flutter_roleplay/services/role_play_manage.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
@@ -122,8 +123,10 @@ import 'package:zone/store/albatross.dart';
 import 'package:zone/widgets/batch_settings_panel.dart';
 import 'package:zone/widgets/chat/response_style_panel.dart';
 import 'package:zone/widgets/model_selector.dart';
+import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/talk/tts_voice_source_panels.dart';
 import 'package:zone/widgets/theme_selector.dart';
+import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/version_info_panel.dart';
 
 part "adapter.dart";
@@ -142,6 +145,14 @@ part "networking.dart";
 part "othello.dart";
 part "preference.dart";
 part "rwkv.dart";
+part "rwkv_auto_load.dart";
+part "rwkv_backend.dart";
+part "rwkv_context.dart";
+part "rwkv_debug.dart";
+part "rwkv_feature.dart";
+part "rwkv_generation.dart";
+part "rwkv_model.dart";
+part "rwkv_params.dart";
 part "see.dart";
 part "sudoku.dart";
 part "suggestion.dart";
@@ -173,7 +184,15 @@ abstract class P {
   static final msg = _Msg();
   static final othello = _Othello();
   static final preference = _Preference();
-  static final rwkv = _RWKV();
+  static final rwkvBackend = _RWKVBackend();
+  static final rwkvAutoLoad = _RWKVAutoLoad();
+  static final rwkvBridge = _RWKVBridge();
+  static final rwkvContext = _RWKVContext();
+  static final rwkvDebug = _RWKVDebug();
+  static final rwkvFeature = _RWKVFeature();
+  static final rwkvGeneration = _RWKVGeneration();
+  static final rwkvModel = _RWKVModel();
+  static final rwkvParams = _RWKVParams();
   static final sudoku = _Sudoku();
   static final suggestion = _Suggestion();
   static final translator = _Translator();
@@ -210,7 +229,8 @@ abstract class P {
   static Future<void> _unorderedInit() async {
     await Future.wait([
       _safeInit(() => askQuestion._init(), mark: "askQuestion"),
-      _safeInit(() => rwkv._init(), mark: "rwkv"),
+      _safeInit(() => rwkvBridge._init(), mark: "rwkvBridge"),
+      _safeInit(() => rwkvAutoLoad._init(), mark: "rwkvAutoLoad"),
       _safeInit(() => chat._init(), mark: "chat"),
       _safeInit(() => othello._init(), mark: "othello"),
       _safeInit(() => remote._init(), mark: "fileManager"),

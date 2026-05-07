@@ -17,8 +17,8 @@ class SendingInteraction extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final generating = ref.watch(P.rwkv.generating);
-    final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
+    final generating = ref.watch(P.rwkvGeneration.generating);
+    final hiddenPrefilling = ref.watch(P.rwkvGeneration.hiddenPrefilling);
     // final waitingImagePath = ref.watch(P.see.waitingImagePath);
     final waitingText = ref.watch(P.see.waitingText);
 

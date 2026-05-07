@@ -162,14 +162,14 @@ class FileInfo extends Equatable {
 
   bool get socSupported {
     if (socLimitations.isEmpty) return true;
-    final soc = P.rwkv.socName.q;
+    final soc = P.rwkvBackend.socName.q;
     return socLimitations.contains(soc);
   }
 
   bool get available {
     if (isDebug) return kDebugMode && platformSupported;
     if (fileType == FileType.downloadTest) return kDebugMode;
-    if (unsupportedSocBrand.contains(P.rwkv.socBrand.q)) return false;
+    if (unsupportedSocBrand.contains(P.rwkvBackend.socBrand.q)) return false;
     return platformSupported && socSupported;
   }
 

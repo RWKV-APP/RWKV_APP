@@ -121,7 +121,7 @@ extension $Pth on _Pth {
     if (P.remote.modelSelectorShown.q) {
       await pop();
     }
-    await P.rwkv.startPthForChat(fileInfo);
+    await P.rwkvModel.startPthForChat(fileInfo);
   }
 
   Future<void> addFolder(PthFolderEntry entry) async {
@@ -213,8 +213,8 @@ extension $Pth on _Pth {
       isDestructiveAction: true,
     );
     if (res != OkCancelResult.ok) return;
-    if (P.rwkv.loadedModels.q.keys.contains(file)) {
-      await P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .chat);
+    if (P.rwkvModel.allLoaded.q.keys.contains(file)) {
+      await P.rwkvModel._releaseModelByWeightTypeIfNeeded(weightType: .chat);
     }
     await removeFile(folder, file);
   }

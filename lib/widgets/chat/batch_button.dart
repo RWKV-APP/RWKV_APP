@@ -22,10 +22,10 @@ class BatchButton extends ConsumerWidget {
     final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
     final appTheme = ref.watch(P.app.theme);
     final height = InputInteractions.calculateButtonHeight(context);
-    final loading = ref.watch(P.rwkv.loading);
-    final generating = ref.watch(P.rwkv.generating);
-    final loaded = ref.watch(P.rwkv.loaded);
-    final latestModel = ref.watch(P.rwkv.latestModel);
+    final loading = ref.watch(P.rwkvModel.loading);
+    final generating = ref.watch(P.rwkvGeneration.generating);
+    final loaded = ref.watch(P.rwkvModel.loaded);
+    final latestModel = ref.watch(P.rwkvModel.latest);
     final batchAllowed = latestModel?.supportsBatchInference ?? false;
     final batchEnabled = ref.watch(P.chat.effectiveBatchEnabled);
     final batchCount = ref.watch(P.chat.effectiveBatchCount);
@@ -49,7 +49,7 @@ class BatchButton extends ConsumerWidget {
 
     return IntrinsicWidth(
       child: GestureDetector(
-        onTap: P.rwkv.onBatchInferenceTapped,
+        onTap: P.rwkvParams.onBatchInferenceTapped,
         child: ClipRRect(
           borderRadius: .circular(60),
           child: BackdropFilter(

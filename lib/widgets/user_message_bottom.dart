@@ -120,7 +120,7 @@ class UserMessageBottom extends ConsumerWidget {
 
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
-    final worldType = ref.watch(P.rwkv.currentWorldType);
+    final worldType = ref.watch(P.rwkvContext.currentWorldType);
     final selectMessageMode = ref.watch(P.chat.isSharing);
     ref.watch(P.msg.msgNode);
 

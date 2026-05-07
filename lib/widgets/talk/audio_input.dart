@@ -26,7 +26,7 @@ class AudioInput extends ConsumerWidget {
   const AudioInput({super.key, required this.demoType});
 
   Future<void> _onPanStart(DragStartDetails details) async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) return;
     P.app.hapticLight();
     Alert.info(S.current.recording_your_voice);
@@ -34,7 +34,7 @@ class AudioInput extends ConsumerWidget {
   }
 
   Future<void> _onPanEnd(DragEndDetails details) async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) return;
     P.app.hapticMedium();
     final success = await P.see.stopRecord();
@@ -43,7 +43,7 @@ class AudioInput extends ConsumerWidget {
   }
 
   Future<void> _onPanCancel() async {
-    final receiving = P.rwkv.generating.q;
+    final receiving = P.rwkvGeneration.generating.q;
     if (receiving) return;
     P.app.hapticLight();
     await P.see.stopRecord(isCancel: true);
@@ -54,9 +54,9 @@ class AudioInput extends ConsumerWidget {
     final s = S.of(context);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final primary = Theme.of(context).colorScheme.primary;
-    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
+    final currentWorldType = ref.watch(P.rwkvContext.currentWorldType);
     final screenWidth = ref.watch(P.app.screenWidth);
-    final receiving = ref.watch(P.rwkv.generating);
+    final receiving = ref.watch(P.rwkvGeneration.generating);
     final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
 
     bool shouldShow = false;

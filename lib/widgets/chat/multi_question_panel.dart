@@ -45,7 +45,7 @@ class MultiQuestionPanel extends ConsumerWidget {
     final questions = ref.watch(P.multiQuestion.questions);
     final canSend = ref.watch(P.multiQuestion.canSend);
     final batchCount = ref.watch(P.chat.batchCount);
-    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
+    final supportedBatchSizes = ref.watch(P.rwkvParams.supportedBatchSizes);
     final int maxBatchSize = supportedBatchSizes.isNotEmpty ? supportedBatchSizes.reduce((a, b) => a > b ? a : b) : 4;
     final bool canAdd = batchCount < maxBatchSize;
     final bool canRemove = questions.length > 2;

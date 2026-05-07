@@ -29,9 +29,9 @@ class ResponseStyleButton extends ConsumerWidget {
     final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
     final appTheme = ref.watch(P.app.theme);
     final responseStyle = ref.watch(P.chat.responseStyle);
-    final model = ref.watch(P.rwkv.latestModel);
-    final loading = ref.watch(P.rwkv.loading);
-    final generating = ref.watch(P.rwkv.generating);
+    final model = ref.watch(P.rwkvModel.latest);
+    final loading = ref.watch(P.rwkvModel.loading);
+    final generating = ref.watch(P.rwkvGeneration.generating);
 
     final height = InputInteractions.calculateButtonHeight(context);
     final canEnable = model != null && !loading && !generating;

@@ -30,10 +30,10 @@ class Debugger extends ConsumerWidget {
 
     final qw = ref.watch(P.app.qw);
 
-    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
-    final currentModel = ref.watch(P.rwkv.latestModel);
+    final currentWorldType = ref.watch(P.rwkvContext.currentWorldType);
+    final currentModel = ref.watch(P.rwkvModel.latest);
     final visualFloatHeight = ref.watch(P.see.visualFloatHeight);
-    final loading = ref.watch(P.rwkv.loading);
+    final loading = ref.watch(P.rwkvModel.loading);
     final playing = ref.watch(P.see.playing);
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
     final inputHeight = ref.watch(P.chat.inputHeight);
@@ -48,14 +48,14 @@ class Debugger extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final drawerWidth = ref.watch(Pager.drawerWidth);
     final screenWidth = ref.watch(P.app.screenWidth);
-    final thinkingMode = ref.watch(P.rwkv.thinkingMode);
+    final thinkingMode = ref.watch(P.rwkvParams.thinkingMode);
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final messages = ref.watch(P.msg.list);
     final ids = ref.watch(P.msg.ids);
-    final socName = ref.watch(P.rwkv.socName);
-    final socBrand = ref.watch(P.rwkv.socBrand);
-    final frontendSocName = ref.watch(P.rwkv.frontendSocName);
-    final frontendSocBrand = ref.watch(P.rwkv.frontendSocBrand);
+    final socName = ref.watch(P.rwkvBackend.socName);
+    final socBrand = ref.watch(P.rwkvBackend.socBrand);
+    final frontendSocName = ref.watch(P.rwkvBackend.frontendSocName);
+    final frontendSocBrand = ref.watch(P.rwkvBackend.frontendSocBrand);
     final availableModels = ref.watch(P.remote.chatWeights);
     final disableRemoteConfig = Args.disableRemoteConfig;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
@@ -66,8 +66,8 @@ class Debugger extends ConsumerWidget {
     final msgNode = ref.watch(P.msg.msgNode);
     final pool = ref.watch(P.msg.pool);
     final conversations = ref.watch(P.conversation.conversations);
-    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
-    final receivingTokens = ref.watch(P.rwkv.generating);
+    final supportedBatchSizes = ref.watch(P.rwkvParams.supportedBatchSizes);
+    final receivingTokens = ref.watch(P.rwkvGeneration.generating);
 
     final batcbatchEnabledhCount = ref.watch(P.chat.batchEnabled);
     final batchEnabled = ref.watch(P.chat.batchEnabled);
@@ -75,18 +75,18 @@ class Debugger extends ConsumerWidget {
     final batchCount = ref.watch(P.chat.batchCount);
     final batchViewportSlotIndexes = ref.watch(P.chat.batchViewportSlotIndexes);
 
-    final loadedModels = ref.watch(P.rwkv.loadedModels);
-    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+    final loadedModels = ref.watch(P.rwkvModel.allLoaded);
+    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus);
 
-    final unzipping = ref.watch(P.rwkv.unzipping);
+    final unzipping = ref.watch(P.rwkvModel.unzipping);
 
-    final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
+    final currentGroupInfo = ref.watch(P.rwkvContext.currentGroupInfo);
 
-    final latestModel = ref.watch(P.rwkv.latestModel);
+    final latestModel = ref.watch(P.rwkvModel.latest);
 
-    final generating = ref.watch(P.rwkv.generating);
-    final generatingId = ref.watch(P.rwkv.generatingId);
-    final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
+    final generating = ref.watch(P.rwkvGeneration.generating);
+    final generatingId = ref.watch(P.rwkvGeneration.generatingId);
+    final hiddenPrefilling = ref.watch(P.rwkvGeneration.hiddenPrefilling);
 
     final preferredUIFont = ref.watch(P.preference.preferredUIFont);
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
@@ -98,7 +98,7 @@ class Debugger extends ConsumerWidget {
     final usingCustomModelsDir = ref.watch(P.remote.usingCustomModelsDir);
     final customModelsDir = ref.watch(P.preference.customModelsDir);
 
-    final loadingProgress = ref.watch(P.rwkv.loadingProgress);
+    final loadingProgress = ref.watch(P.rwkvModel.loadingProgress);
 
     final isMobile = ref.watch(P.app.isMobile);
 
@@ -115,7 +115,7 @@ class Debugger extends ConsumerWidget {
 
     final questions = ref.watch(P.askQuestion.questions);
 
-    // final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
+    // final supportedBatchSizes = ref.watch(P.rwkvParams.supportedBatchSizes);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -297,7 +297,7 @@ class _SudokuDebugger extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final paddingTop = ref.watch(P.app.paddingTop);
-    final loaded = ref.watch(P.rwkv.loaded);
+    final loaded = ref.watch(P.rwkvModel.loaded);
     final running = ref.watch(P.sudoku.running);
     final page = ref.watch(Pager.page);
     final mainPageNotIgnoring = ref.watch(Pager.atMainPage);
@@ -387,7 +387,7 @@ class _TTSDebugger extends ConsumerWidget {
     final generating = ref.watch(P.talk.generating);
     final asFull = ref.watch(P.talk.asFull);
     final asExhaust = ref.watch(P.talk.asExhaust);
-    final currentModel = ref.watch(P.rwkv.latestModel);
+    final currentModel = ref.watch(P.rwkvModel.latest);
 
     return Positioned(
       left: 0,

@@ -49,13 +49,13 @@ class Albatross {
   Albatross._();
 
   Future _updateDecodeParam() async {
-    _decodeParam['temperature'] = P.rwkv.arguments(Argument.temperature).q;
-    _decodeParam['top_k'] = P.rwkv.arguments(Argument.topK).q;
-    _decodeParam['top_p'] = P.rwkv.arguments(Argument.topP).q;
-    _decodeParam['alpha_presence'] = P.rwkv.arguments(Argument.presencePenalty).q;
-    _decodeParam['alpha_frequency'] = P.rwkv.arguments(Argument.frequencyPenalty).q;
-    _decodeParam['alpha_decay'] = P.rwkv.arguments(Argument.penaltyDecay).q;
-    _decodeParam['max_tokens'] = P.rwkv.arguments(Argument.maxLength).q;
+    _decodeParam['temperature'] = P.rwkvParams.arguments(Argument.temperature).q;
+    _decodeParam['top_k'] = P.rwkvParams.arguments(Argument.topK).q;
+    _decodeParam['top_p'] = P.rwkvParams.arguments(Argument.topP).q;
+    _decodeParam['alpha_presence'] = P.rwkvParams.arguments(Argument.presencePenalty).q;
+    _decodeParam['alpha_frequency'] = P.rwkvParams.arguments(Argument.frequencyPenalty).q;
+    _decodeParam['alpha_decay'] = P.rwkvParams.arguments(Argument.penaltyDecay).q;
+    _decodeParam['max_tokens'] = P.rwkvParams.arguments(Argument.maxLength).q;
   }
 
   Future init() async {
@@ -68,26 +68,26 @@ class Albatross {
       //
     }
 
-    P.rwkv.enableAlbatross.q = available;
+    P.rwkvFeature.enableAlbatross.q = available;
     qqq('>> albatross is ${available ? 'enabled' : 'disabled'}');
   }
 
   Future load(FileInfo fileInfo) async {
-    if (!P.rwkv.enableAlbatross.q) {
+    if (!P.rwkvFeature.enableAlbatross.q) {
       return;
     }
     final local = P.remote.locals(fileInfo).q;
     try {
-      P.rwkv.loadingStatus.q = {...P.rwkv.loadingStatus.q, fileInfo: LoadingStatus.loading};
+      P.rwkvModel.loadingStatus.q = {...P.rwkvModel.loadingStatus.q, fileInfo: LoadingStatus.loading};
       final r = await _dio.post(
         '/load-model',
         data: {'model_path': local.targetPath},
       );
       if (r.statusCode == 200) {
         P.app.demoType.q = .chat;
-        P.rwkv.supportedBatchSizes.q = [2, 4, 6, 8, 10];
-        P.rwkv.loadedModels.q = {...P.rwkv.loadedModels.q, fileInfo: -1};
-        P.rwkv.setModelConfig(thinkingMode: .free);
+        P.rwkvParams.supportedBatchSizes.q = [2, 4, 6, 8, 10];
+        P.rwkvModel.allLoaded.q = {...P.rwkvModel.allLoaded.q, fileInfo: -1};
+        P.rwkvParams.setModelConfig(thinkingMode: .free);
       } else {
         final body = r.data['error'];
         Alert.error("${r.statusCode}: $body");
@@ -95,7 +95,7 @@ class Albatross {
     } catch (e) {
       qqe(e);
     } finally {
-      P.rwkv.loadingStatus.q = {...P.rwkv.loadingStatus.q, fileInfo: LoadingStatus.none};
+      P.rwkvModel.loadingStatus.q = {...P.rwkvModel.loadingStatus.q, fileInfo: LoadingStatus.none};
     }
   }
 
@@ -106,12 +106,12 @@ class Albatross {
   Future stop() async {
     _cancelToken?.cancel('user cancel');
     _cancelToken = null;
-    P.rwkv.generating.q = false;
+    P.rwkvGeneration.generating.q = false;
   }
 
   Stream<FromRWKV> chat(List<String> messages, {int batchSize = 1}) async* {
     await _updateDecodeParam();
-    final enableThink = P.rwkv.thinkingMode.q != .none;
+    final enableThink = P.rwkvParams.thinkingMode.q != .none;
     final data = {
       "messages": [
         for (var i = 0; i < messages.length; i++) //
@@ -129,7 +129,7 @@ class Albatross {
     };
     try {
       qqq('starting...');
-      P.rwkv.generating.q = true;
+      P.rwkvGeneration.generating.q = true;
       _cancelToken = CancelToken();
       final resp = await _dio.post(
         '/v3/chat/completions',
@@ -181,7 +181,7 @@ class Albatross {
       rethrow;
     } finally {
       qqq('stopped');
-      P.rwkv.generating.q = false;
+      P.rwkvGeneration.generating.q = false;
       _cancelToken = null;
     }
   }
@@ -204,7 +204,7 @@ class Albatross {
     );
     try {
       qqq('starting...');
-      P.rwkv.generating.q = true;
+      P.rwkvGeneration.generating.q = true;
       _cancelToken = CancelToken();
       final resp = await _dio.post(
         '/v2/chat/completions',
@@ -246,7 +246,7 @@ class Albatross {
       rethrow;
     } finally {
       qqq('stopped');
-      P.rwkv.generating.q = false;
+      P.rwkvGeneration.generating.q = false;
       _cancelToken = null;
     }
   }

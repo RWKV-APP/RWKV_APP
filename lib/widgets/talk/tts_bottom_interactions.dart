@@ -529,8 +529,8 @@ class _InstructTabs extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final loaded = ref.watch(P.rwkv.loaded);
-    final loading = ref.watch(P.rwkv.loading);
+    final loaded = ref.watch(P.rwkvModel.loaded);
+    final loading = ref.watch(P.rwkvModel.loading);
     bool enabled = loaded && !loading;
 
     final primary = Theme.of(context).colorScheme.primary;
@@ -681,8 +681,8 @@ class _TextField extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final primary = Theme.of(context).colorScheme.primary;
-    final loaded = ref.watch(P.rwkv.loaded);
-    final loading = ref.watch(P.rwkv.loading);
+    final loaded = ref.watch(P.rwkvModel.loaded);
+    final loading = ref.watch(P.rwkvModel.loading);
     final demoType = ref.watch(P.app.demoType);
 
     late final String hintText;

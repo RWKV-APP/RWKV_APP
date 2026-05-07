@@ -23,7 +23,7 @@ class AskQuestionButton extends ConsumerWidget {
   const AskQuestionButton({super.key});
 
   Future<void> _onTap() async {
-    final generating = P.rwkv.generating.q;
+    final generating = P.rwkvGeneration.generating.q;
     if (generating) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -42,9 +42,9 @@ class AskQuestionButton extends ConsumerWidget {
     final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
     final appTheme = ref.watch(P.app.theme);
     final height = InputInteractions.calculateButtonHeight(context);
-    final loading = ref.watch(P.rwkv.loading);
-    final generating = ref.watch(P.rwkv.generating);
-    final loaded = ref.watch(P.rwkv.loaded);
+    final loading = ref.watch(P.rwkvModel.loading);
+    final generating = ref.watch(P.rwkvGeneration.generating);
+    final loaded = ref.watch(P.rwkvModel.loaded);
     final canEnable = loaded && !loading && !generating;
 
     InteractionVisualState interactionState = canEnable ? .available : .idleInteractive;

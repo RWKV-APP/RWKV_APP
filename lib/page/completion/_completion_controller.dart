@@ -44,18 +44,18 @@ class CompletionController {
     _subscription2?.cancel();
     _subscription = null;
     _subscription2 = null;
-    P.rwkv.stop();
+    P.rwkvGeneration.stop();
 
     for (final arg in _decodeParam.keys) {
-      _decodeParam[arg] = P.rwkv.arguments(arg).q;
-      P.rwkv.arguments(arg).q = _originDecodeParam[arg]!;
+      _decodeParam[arg] = P.rwkvParams.arguments(arg).q;
+      P.rwkvParams.arguments(arg).q = _originDecodeParam[arg]!;
     }
   }
 
   void init() {
     for (final arg in _decodeParam.keys) {
-      _originDecodeParam[arg] = P.rwkv.arguments(arg).q;
-      P.rwkv.arguments(arg).q = _decodeParam[arg]!;
+      _originDecodeParam[arg] = P.rwkvParams.arguments(arg).q;
+      P.rwkvParams.arguments(arg).q = _decodeParam[arg]!;
     }
     qqq('completion controller init');
     CompletionState.controllerInput.q = TextEditingController()
@@ -78,16 +78,16 @@ class CompletionController {
     // avoid decode param override by model load
     _subscription2?.cancel();
     var model = CompletionState.model.q;
-    _subscription2 = P.rwkv.broadcastStream.whereType<SamplerParams>().listen((e) async {
+    _subscription2 = P.rwkvBridge.broadcastStream.whereType<SamplerParams>().listen((e) async {
       if (model != CompletionState.model.q) {
         for (final arg in _decodeParam.keys) {
-          P.rwkv.arguments(arg).q = _decodeParam[arg]!;
+          P.rwkvParams.arguments(arg).q = _decodeParam[arg]!;
         }
         qqq('DEBUG: decode param restored');
         model = CompletionState.model.q;
       } else {
         for (final arg in _decodeParam.keys) {
-          _decodeParam[arg] = P.rwkv.arguments(arg).q;
+          _decodeParam[arg] = P.rwkvParams.arguments(arg).q;
         }
         qqq('DEBUG: decode param stored');
       }
@@ -96,7 +96,7 @@ class CompletionController {
 
   void onStopTap() async {
     CompletionState.generateButtonEnabled.q = false;
-    P.rwkv.stop();
+    P.rwkvGeneration.stop();
     await Future.delayed(const Duration(seconds: 1));
     CompletionState.generating.q = false;
     CompletionState.generateButtonEnabled.q = true;
@@ -122,8 +122,8 @@ class CompletionController {
     if (!regenerate) {
       final tail = _node.tail;
       if (!tail.isUser) {
-        tail.decodeSpeed = P.rwkv.decodeSpeed.q;
-        tail.prefillSpeed = P.rwkv.prefillSpeed.q;
+        tail.decodeSpeed = P.rwkvGeneration.decodeSpeed.q;
+        tail.prefillSpeed = P.rwkvGeneration.prefillSpeed.q;
         tail.parent.switched = true;
       }
       _node.tail = lastNode;
@@ -144,14 +144,14 @@ class CompletionController {
     lastNode.next = outputs[0];
     _notifyItemChanged();
 
-    await P.rwkv.clearStates();
+    await P.rwkvGeneration.clearStates();
 
     final prompt = _node.joinedContent;
     final trimLen = prompt.length;
     bool firstOutput = true;
 
     _subscription?.cancel();
-    _subscription = P.rwkv
+    _subscription = P.rwkvGeneration
         .completion(prompt, batchSize: batch)
         .listen(
           (v) {
@@ -183,7 +183,7 @@ class CompletionController {
           },
         );
 
-    P.rwkv.broadcastStream
+    P.rwkvBridge.broadcastStream
         .whereType<IsGenerating>() //
         .where((e) => !e.isGenerating)
         .take(1)
@@ -217,7 +217,7 @@ class CompletionController {
     if (type == DecodeParamType.custom) {
       ArgumentsPanel.show(ctx);
     } else {
-      P.rwkv.syncSamplerParamsFromDefault(type);
+      P.rwkvParams.syncSamplerParamsFromDefault(type);
     }
   }
 

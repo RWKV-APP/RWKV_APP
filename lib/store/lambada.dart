@@ -33,13 +33,13 @@ extension _$Lambada on _Lambada {
   }
 
   void _onPageKeyChanged(PageKey pageKey) async {
-    final model = P.rwkv.latestModel.q;
+    final model = P.rwkvModel.latest.q;
     final isTTS = model?.isTTS ?? false;
     final isSee = model?.worldType != null;
     final isTranslate = model?.tags.contains("translate") ?? false;
     switch (pageKey) {
       case .benchmark:
-        if (isTTS || isTranslate || isSee) await P.rwkv._releaseAllModels();
+        if (isTTS || isTranslate || isSee) await P.rwkvModel._releaseAllModels();
         P.app.demoType.q = .chat;
         break;
       default:
@@ -82,7 +82,7 @@ extension _$Lambada on _Lambada {
     final item = waitingItems.q.first;
     waitingItems.q = waitingItems.q.skip(1).toList();
 
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return;
     }
@@ -90,7 +90,7 @@ extension _$Lambada on _Lambada {
     final newRequest = to_rwkv.RunEvaluation(item.sourceText, item.targetText, modelID: modelID);
     currentItem.q = item;
     currentRequest.q = newRequest;
-    P.rwkv.send(newRequest);
+    P.rwkvBridge.send(newRequest);
   }
 }
 
@@ -140,14 +140,14 @@ extension $Lambada on _Lambada {
     waitingItems.q = testItems.q;
     final item = waitingItems.q.first;
     currentItem.q = item;
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return;
     }
     final request = to_rwkv.RunEvaluation(item.sourceText, item.targetText, modelID: modelID);
     currentRequest.q = request;
     waitingItems.q = waitingItems.q.skip(1).toList();
-    P.rwkv.send(request);
+    P.rwkvBridge.send(request);
   }
 
   void reset() {

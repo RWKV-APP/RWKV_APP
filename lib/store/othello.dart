@@ -75,7 +75,7 @@ extension $Othello on _Othello {
   }
 
   Future<void> onCellTap({required int row, required int col}) async {
-    final thinking = P.rwkv.generating.q;
+    final thinking = P.rwkvGeneration.generating.q;
     if (thinking) return;
     final eatCountMatrixForBlack = this.eatCountMatrixForBlack.q;
     final eatCountMatrixForWhite = this.eatCountMatrixForWhite.q;
@@ -126,12 +126,12 @@ extension $Othello on _Othello {
     if (blackAuto || whiteAuto) {
       qqr("Auto placing!");
 
-      P.rwkv.generating.q = true;
+      P.rwkvGeneration.generating.q = true;
 
       final prompt = _generatePrompt();
 
-      P.rwkv.generate(prompt);
-      P.rwkv.generating.q = false;
+      P.rwkvGeneration.generate(prompt);
+      P.rwkvGeneration.generating.q = false;
     }
   }
 }
@@ -156,8 +156,8 @@ extension _$Othello on _Othello {
       }
     }, fireImmediately: true);
 
-    P.rwkv.oldBroadcastStream.listen(_onOldStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
-    P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+    P.rwkvBridge.oldBroadcastStream.listen(_onOldStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+    P.rwkvBridge.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
 
     blackTurn.lv(_onBlackTurnChanged, fireImmediately: true);
     state.lv(_onStateChanged, fireImmediately: true);
@@ -173,7 +173,7 @@ extension _$Othello on _Othello {
 
     if (Config.firstPage == PageKey.othello.name) {
       1000.msLater.then((_) {
-        P.rwkv.loadOthello();
+        P.rwkvModel.loadOthello();
       });
     }
   }
@@ -195,11 +195,11 @@ extension _$Othello on _Othello {
 
     for (var i = 0; i < 1000; i++) {
       await 10.msLater;
-      final thinking = P.rwkv.generating.q;
+      final thinking = P.rwkvGeneration.generating.q;
       if (!thinking) break;
     }
 
-    qqq("Placing event received: $event, thinking: ${P.rwkv.generating.q}");
+    qqq("Placing event received: $event, thinking: ${P.rwkvGeneration.generating.q}");
     await onCellTap(row: event.$1, col: event.$2);
   }
 
@@ -248,7 +248,7 @@ extension _$Othello on _Othello {
 
     blackIsAI.q = false;
     whiteIsAI.q = true;
-    P.rwkv.generating.q = false;
+    P.rwkvGeneration.generating.q = false;
     received.q = "";
     searchDepth.q = 1;
     searchBreadth.q = 1;
@@ -269,7 +269,7 @@ extension _$Othello on _Othello {
         break;
       case _RWKVMessageType.isGenerating:
         final isGenerating = event.content == "true";
-        P.rwkv.generating.q = isGenerating;
+        P.rwkvGeneration.generating.q = isGenerating;
         break;
       case _RWKVMessageType.sudokuOthelloResponse:
         received.q = event.content;
@@ -346,12 +346,12 @@ extension _$Othello on _Othello {
         break;
 
       case from_rwkv.GenerateStart _:
-        P.rwkv.generating.q = true;
+        P.rwkvGeneration.generating.q = true;
         received.q = "";
         break;
 
       case from_rwkv.GenerateStop _:
-        P.rwkv.generating.q = false;
+        P.rwkvGeneration.generating.q = false;
         break;
 
       default:
@@ -363,7 +363,7 @@ extension _$Othello on _Othello {
     final pageKey = P.app.pageKey.q;
     if (pageKey != .othello) return;
     qqq("_onStreamDone");
-    P.rwkv.generating.q = false;
+    P.rwkvGeneration.generating.q = false;
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
@@ -372,7 +372,7 @@ extension _$Othello on _Othello {
     qqq("_onStreamError");
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
-    P.rwkv.generating.q = false;
+    P.rwkvGeneration.generating.q = false;
   }
 
   void _onBlackTurnChanged() {

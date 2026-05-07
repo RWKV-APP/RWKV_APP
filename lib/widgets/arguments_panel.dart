@@ -23,12 +23,12 @@ class ArgumentsPanel extends ConsumerWidget {
     String? title,
     SamplerAndPenaltyParam? temporarySamplerAndPenaltyParam,
   }) async {
-    if (P.rwkv.argumentsPanelShown.q) return null;
-    P.rwkv.argumentsPanelShown.q = true;
+    if (P.rwkvDebug.argumentsPanelShown.q) return null;
+    P.rwkvDebug.argumentsPanelShown.q = true;
 
     if (isEditingBatchParams) {
       if (temporarySamplerAndPenaltyParam == null) {
-        P.rwkv.argumentsPanelShown.q = false;
+        P.rwkvDebug.argumentsPanelShown.q = false;
         qqe("temporarySamplerAndPenaltyParam is null");
         return null;
       }
@@ -56,7 +56,7 @@ class ArgumentsPanel extends ConsumerWidget {
         );
       },
     );
-    P.rwkv.argumentsPanelShown.q = false;
+    P.rwkvDebug.argumentsPanelShown.q = false;
     return temporary.q;
   }
 
@@ -101,17 +101,17 @@ class ArgumentsPanel extends ConsumerWidget {
         penaltyDecay: argument == Argument.penaltyDecay ? rawNewValue.toDouble() : temporary.penaltyDecay,
       );
     } else {
-      final currentValue = P.rwkv.arguments(argument).q;
+      final currentValue = P.rwkvParams.arguments(argument).q;
       if (currentValue == rawNewValue) return;
       if (argument.enableGaimon) P.app.hapticLight();
-      P.rwkv.arguments(argument).q = rawNewValue;
+      P.rwkvParams.arguments(argument).q = rawNewValue;
       if (argument == Argument.maxLength) {
-        P.rwkv.argumentUpdatingDebouncer.call(() {
-          P.rwkv.syncMaxLength();
+        P.rwkvParams.argumentUpdatingDebouncer.call(() {
+          P.rwkvParams.syncMaxLength();
         });
       } else {
-        P.rwkv.argumentUpdatingDebouncer.call(() {
-          P.rwkv.syncSamplerParams();
+        P.rwkvParams.argumentUpdatingDebouncer.call(() {
+          P.rwkvParams.syncSamplerParams();
         });
       }
     }
@@ -201,7 +201,7 @@ class _SamplerOptions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final reasoning = ref.watch(P.rwkv.reasoning);
+    final reasoning = ref.watch(P.rwkvParams.reasoning);
     final qb = ref.watch(P.app.qb);
     return Container(
       margin: const .symmetric(horizontal: 12),
@@ -216,7 +216,7 @@ class _SamplerOptions extends ConsumerWidget {
               iconSize: 16,
             ),
             onPressed: () {
-              P.rwkv.resetSamplerParams(enableReasoning: reasoning);
+              P.rwkvParams.resetSamplerParams(enableReasoning: reasoning);
             },
             child: Text(s.reset),
           ),
@@ -233,7 +233,7 @@ class _CompletionOptions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
-    final reasoning = ref.watch(P.rwkv.reasoning);
+    final reasoning = ref.watch(P.rwkvParams.reasoning);
     return Container(
       margin: const .symmetric(horizontal: 12),
       decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
@@ -247,7 +247,7 @@ class _CompletionOptions extends ConsumerWidget {
               iconSize: 16,
             ),
             onPressed: () {
-              P.rwkv.resetMaxLength(enableReasoning: reasoning);
+              P.rwkvParams.resetMaxLength(enableReasoning: reasoning);
             },
             child: Text(s.reset),
           ),

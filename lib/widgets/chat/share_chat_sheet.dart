@@ -445,7 +445,7 @@ class _PreviewState extends ConsumerState<_Preview> {
               ],
             ),
             Text(
-              sprintf(S.current.from_model, [P.rwkv.latestModel.q?.name ?? ""]),
+              sprintf(S.current.from_model, [P.rwkvModel.latest.q?.name ?? ""]),
               style: const TextStyle(
                 fontSize: 10,
               ),

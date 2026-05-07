@@ -21,11 +21,11 @@ class LogPanel extends ConsumerWidget {
     await P.ui.showPanel(
       key: panelKey,
       beforeShow: () async {
-        P.rwkv.logPanelShown.q = true;
-        P.rwkv.refreshRuntimeLog();
+        P.rwkvDebug.logPanelShown.q = true;
+        P.rwkvDebug.refreshRuntimeLog();
       },
       afterHide: (_) {
-        P.rwkv.logPanelShown.q = false;
+        P.rwkvDebug.logPanelShown.q = false;
       },
       initialChildSize: .8,
       maxChildSize: .905,
@@ -41,7 +41,7 @@ class LogPanel extends ConsumerWidget {
 
   void _onRefreshPressed() {
     Alert.info(S.current.refreshed);
-    P.rwkv.refreshRuntimeLog();
+    P.rwkvDebug.refreshRuntimeLog();
     if (scrollController.hasClients) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
@@ -54,12 +54,12 @@ class LogPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final renderNewlineDirectly = ref.watch(P.rwkv.renderNewlineDirectly);
-    final renderSpaceSymbol = ref.watch(P.rwkv.renderSpaceSymbol);
+    final renderNewlineDirectly = ref.watch(P.rwkvDebug.renderNewlineDirectly);
+    final renderSpaceSymbol = ref.watch(P.rwkvDebug.renderSpaceSymbol);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
-    final showPrefillLogOnly = ref.watch(P.rwkv.showPrefillLogOnly);
-    final rawRuntimeLog = ref.watch(P.rwkv.runtimeLog);
+    final showPrefillLogOnly = ref.watch(P.rwkvDebug.showPrefillLogOnly);
+    final rawRuntimeLog = ref.watch(P.rwkvDebug.runtimeLog);
     final runtimeLog = rawRuntimeLog.where((log) => showPrefillLogOnly ? log.isPrefill : true).toList();
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
 

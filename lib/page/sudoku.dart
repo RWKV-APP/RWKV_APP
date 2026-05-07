@@ -94,7 +94,7 @@ class _ButtonGenerate extends ConsumerWidget {
 
   void _onPressed(BuildContext context, WidgetRef ref) async {
     final s = S.of(context);
-    if (!P.rwkv.loaded.q) {
+    if (!P.rwkvModel.loaded.q) {
       Alert.info(s.please_load_model_first);
       ModelSelector.show();
       return;
@@ -132,7 +132,7 @@ class _ButtonGenerateHardest extends ConsumerWidget {
 
   void _onPressed(BuildContext context, WidgetRef ref) async {
     final s = S.of(context);
-    if (!P.rwkv.loaded.q) {
+    if (!P.rwkvModel.loaded.q) {
       Alert.info(s.please_load_model_first);
       ModelSelector.show();
       return;
@@ -189,7 +189,7 @@ class _ButtonInference extends ConsumerWidget {
 
   void _onPressed(BuildContext context, WidgetRef ref) async {
     final s = S.of(context);
-    if (!P.rwkv.loaded.q) {
+    if (!P.rwkvModel.loaded.q) {
       Alert.info(s.please_load_model_first);
       ModelSelector.show();
       return;
@@ -552,7 +552,7 @@ class _TokensInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tokenCount = ref.watch(P.sudoku.tokensCount);
-    final tokensPerSecond = ref.watch(P.rwkv.decodeSpeed);
+    final tokensPerSecond = ref.watch(P.rwkvGeneration.decodeSpeed);
     final isPortrait = MediaQuery.orientationOf(context) == Orientation.portrait;
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;

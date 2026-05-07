@@ -97,7 +97,7 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
   }
 
   void _onAlbatrossChanged(bool value) {
-    P.rwkv.enableAlbatross.q = value;
+    P.rwkvFeature.enableAlbatross.q = value;
     setState(() {});
   }
 
@@ -182,7 +182,7 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
                         _DevSwitchItem(
                           title: 'Albatross',
                           subtitle: 'Use Albatross bridge in RWKV runtime.',
-                          value: P.rwkv.enableAlbatross.q,
+                          value: P.rwkvFeature.enableAlbatross.q,
                           onChanged: _onAlbatrossChanged,
                         ),
                         Container(height: .5, color: borderColor),

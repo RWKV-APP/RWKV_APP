@@ -19,8 +19,8 @@ class PerformanceInfo extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
-    final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
+    final prefillSpeed = ref.watch(P.rwkvGeneration.prefillSpeed);
+    final decodeSpeed = ref.watch(P.rwkvGeneration.decodeSpeed);
     final qb = ref.watch(P.app.qb);
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
     return Column(

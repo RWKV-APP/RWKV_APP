@@ -131,7 +131,7 @@ class _AskQuestion {
   });
 
   late final maxParallelCount = qp((ref) {
-    final latestModel = ref.watch(P.rwkv.latestModel);
+    final latestModel = ref.watch(P.rwkvModel.latest);
     final batchAllowed = latestModel?.supportsBatchInference ?? false;
     final batchEnabled = ref.watch(P.chat.batchEnabled);
     final targetQuestionCount = ref.watch(this.targetQuestionCount);
@@ -186,7 +186,7 @@ class _AskQuestion {
 
 /// Private methods
 extension _$AskQuestion on _AskQuestion {
-  bool get _isGenerating => P.rwkv.generating.q && interceptingEvents.q;
+  bool get _isGenerating => P.rwkvGeneration.generating.q && interceptingEvents.q;
 
   Language _resolveLanguage(Language preferredLanguage) {
     return switch (preferredLanguage) {
@@ -202,7 +202,7 @@ extension _$AskQuestion on _AskQuestion {
   Future<void> _init() async {
     P.preference.preferredLanguage.lv(_onPreferredLanguageChanged, fireImmediately: true);
 
-    P.rwkv.broadcastStream.listen(
+    P.rwkvBridge.broadcastStream.listen(
       _onStreamEvent,
       onDone: _onStreamDone,
       onError: _onStreamError,
@@ -305,7 +305,7 @@ extension _$AskQuestion on _AskQuestion {
     }
 
     interceptingEvents.q = false;
-    P.rwkv.generating.q = false;
+    P.rwkvGeneration.generating.q = false;
     parallelCount.q = 1;
     scheduledQuestionCount.q = 0;
     retainedQuestionCount.q = 0;
@@ -362,7 +362,7 @@ extension _$AskQuestion on _AskQuestion {
     if (modelID == null) return;
 
     _stopRequested = true;
-    P.rwkv.send(to_rwkv.Stop(modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.Stop(modelID: modelID));
   }
 
   bool _sameQuestionList(List<String> a, List<String> b) {
@@ -473,7 +473,7 @@ extension _$AskQuestion on _AskQuestion {
   int _resolveParallelCount({
     required int targetQuestionCount,
   }) {
-    final latestModel = P.rwkv.latestModel.q;
+    final latestModel = P.rwkvModel.latest.q;
     final batchAllowed = latestModel?.supportsBatchInference ?? false;
     if (!batchAllowed) return 1;
     if (targetQuestionCount <= 1) return 1;
@@ -484,28 +484,28 @@ extension _$AskQuestion on _AskQuestion {
     _getResponseTimer?.cancel();
     _getResponseTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
       if (isBatchInference) {
-        P.rwkv.send(to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID));
+        P.rwkvBridge.send(to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID));
       } else {
-        P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
+        P.rwkvBridge.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
       }
-      P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-      P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
   }
 
   Future<bool> _ensureChatModelIdle({required int modelID}) async {
-    if (!P.rwkv.generating.q) return true;
+    if (!P.rwkvGeneration.generating.q) return true;
     if (interceptingEvents.q) return false;
 
     final request = to_rwkv.GetIsGenerating(modelID: modelID);
-    P.rwkv.send(request);
+    P.rwkvBridge.send(request);
 
     try {
-      final response = await P.rwkv.broadcastStream
+      final response = await P.rwkvBridge.broadcastStream
           .whereType<from_rwkv.IsGenerating>()
           .firstWhere((event) => event.req == request)
           .timeout(const Duration(milliseconds: 400));
-      P.rwkv.generating.q = response.isGenerating;
+      P.rwkvGeneration.generating.q = response.isGenerating;
       return !response.isGenerating;
     } catch (_) {
       return false;
@@ -513,9 +513,9 @@ extension _$AskQuestion on _AskQuestion {
   }
 
   void _refreshChatModelGeneratingState() {
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) return;
-    P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
   }
 
   String _trimTranscript(String transcript) {
@@ -727,7 +727,7 @@ extension _$AskQuestion on _AskQuestion {
     this.parallelCount.q = parallelCount;
     scheduledQuestionCount.q = 0;
     interceptingEvents.q = true;
-    P.rwkv.generating.q = true;
+    P.rwkvGeneration.generating.q = true;
     _clearQuestionSelectionState();
 
     await _startQuestionGenerationRun(
@@ -760,12 +760,12 @@ extension _$AskQuestion on _AskQuestion {
     scheduledQuestionCount.q =
         _retainedQuestions.length + math.min(_completedQuestions.length + effectiveParallelCount, _targetQuestionCount);
 
-    await P.rwkv.clearStates();
+    await P.rwkvGeneration.clearStates();
     if (sessionId != _sessionId) return;
     if (!interceptingEvents.q) return;
 
-    P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
-    P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.SetUserRole("User", modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
 
     final isBatchInference = effectiveParallelCount > 1;
     if (isBatchInference) {
@@ -773,7 +773,7 @@ extension _$AskQuestion on _AskQuestion {
       for (int i = 0; i < effectiveParallelCount; i++) {
         batchMessages.add([...messages]);
       }
-      P.rwkv.send(
+      P.rwkvBridge.send(
         to_rwkv.ChatBatchAsync(
           batchMessages,
           enableReasoning: false,
@@ -784,7 +784,7 @@ extension _$AskQuestion on _AskQuestion {
         ),
       );
     } else {
-      P.rwkv.send(
+      P.rwkvBridge.send(
         to_rwkv.ChatAsync(
           messages,
           enableReasoning: false,
@@ -863,12 +863,12 @@ extension $AskQuestion on _AskQuestion {
     _sessionId = _sessionId + 1;
     final modelID = _runningModelID;
     if (modelID != null) {
-      P.rwkv.send(to_rwkv.Stop(modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.Stop(modelID: modelID));
     }
 
     _cancelRunningTasks();
 
-    P.rwkv.generating.q = false;
+    P.rwkvGeneration.generating.q = false;
     interceptingEvents.q = false;
     parallelCount.q = 1;
     scheduledQuestionCount.q = 0;
@@ -978,7 +978,7 @@ extension $AskQuestion on _AskQuestion {
   Future<void> generateFromCurrentChat() async {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       Alert.info(S.current.please_load_model_first);
       return;
@@ -1015,7 +1015,7 @@ extension $AskQuestion on _AskQuestion {
   Future<void> generateFromMessages(List<String> historyMessages) async {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       Alert.info(S.current.please_load_model_first);
       return;

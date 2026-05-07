@@ -209,7 +209,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     final serverPort = ref.watch(P.apiServer.port);
     final reqCount = ref.watch(P.apiServer.requestCount);
     final activeRequest = ref.watch(P.apiServer.activeRequest);
-    final latestModel = ref.watch(P.rwkv.latestModel);
+    final latestModel = ref.watch(P.rwkvModel.latest);
     final isDesktop = ref.watch(P.app.isDesktop);
     final isRunning = serverState == BackendState.running;
     final logs = ref.watch(P.apiServer.logs);

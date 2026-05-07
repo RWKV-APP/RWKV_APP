@@ -390,9 +390,9 @@ class _PrefillProgressNotice extends ConsumerWidget {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final generating = ref.watch(P.askQuestion.interceptingEvents);
-    final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
-    final prefillProgress = ref.watch(P.rwkv.prefillProgress).clamp(0, 1).toDouble();
-    final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
+    final hiddenPrefilling = ref.watch(P.rwkvGeneration.hiddenPrefilling);
+    final prefillProgress = ref.watch(P.rwkvGeneration.prefillProgress).clamp(0, 1).toDouble();
+    final prefillSpeed = ref.watch(P.rwkvGeneration.prefillSpeed);
     final showProgress = generating && !hiddenPrefilling && prefillProgress > 0 && prefillProgress < 1;
     final isDark = theme.brightness == Brightness.dark;
     final backgroundColor = qb.q(isDark ? .09 : .035);
@@ -472,9 +472,9 @@ class _GenerateButton extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final generating = ref.watch(P.askQuestion.interceptingEvents);
-    final activelyGenerating = generating && ref.watch(P.rwkv.generating);
-    final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
-    final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
+    final activelyGenerating = generating && ref.watch(P.rwkvGeneration.generating);
+    final prefillSpeed = ref.watch(P.rwkvGeneration.prefillSpeed);
+    final decodeSpeed = ref.watch(P.rwkvGeneration.decodeSpeed);
     final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;
     final isGenerateEnabled = !generating;
     final isDark = theme.brightness == Brightness.dark;
@@ -1195,9 +1195,9 @@ class _AskAllAsBatchButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
-    final generating = ref.watch(P.rwkv.generating);
-    final latestModel = ref.watch(P.rwkv.latestModel);
-    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
+    final generating = ref.watch(P.rwkvGeneration.generating);
+    final latestModel = ref.watch(P.rwkvModel.latest);
+    final supportedBatchSizes = ref.watch(P.rwkvParams.supportedBatchSizes);
     final bool supported = (latestModel?.supportsBatchInference ?? false) && supportedBatchSizes.isNotEmpty && questions.length >= 2;
 
     return Padding(

@@ -51,7 +51,7 @@ class _Talk {
   late final spkShown = qs(false);
   late final textInInput = qs(_Talk._defaultTextInInput);
 
-  @Deprecated("Use P.rwkv.generating instead")
+  @Deprecated("Use P.rwkvGeneration.generating instead")
   late final generating = qs(false);
   late final latestBufferLength = qs(0);
 
@@ -86,7 +86,7 @@ extension _$Talk on _Talk {
     selectedSpkName.l(_onSelectSpkNameChanged, fireImmediately: true);
     spkShown.l(_onSpkShownChanged, fireImmediately: true);
 
-    P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+    P.rwkvBridge.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
 
     P.app.pageKey.lb(_onPageKeyChanged);
   }
@@ -102,7 +102,7 @@ extension _$Talk on _Talk {
       P.msg._clear(syncNode: false);
       P.app.demoType.q = .tts;
       bool isTTSModelLoaded = false;
-      final currentModel = P.rwkv.latestModel.q;
+      final currentModel = P.rwkvModel.latest.q;
       if (currentModel != null) {
         if (currentModel.isTTS) {
           isTTSModelLoaded = true;
@@ -110,20 +110,9 @@ extension _$Talk on _Talk {
       }
 
       if (!isTTSModelLoaded) {
-        await P.rwkv._releaseAllModels();
-        _showModelSelector();
+        await P.rwkvModel._releaseAllModels();
       }
     } else {}
-  }
-
-  Future<void> _showModelSelector() async {
-    if (P.app.pageKey.q != .talk) return;
-
-    await 500.msLater;
-
-    if (P.app.pageKey.q == .talk) {
-      ModelSelector.show(preferredDemoType: .tts);
-    }
   }
 
   void _onSpkShownChanged(bool next) {
@@ -176,13 +165,13 @@ extension _$Talk on _Talk {
   }
 
   void _pulse() {
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .tts);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .tts);
     if (modelID == null) {
       return;
     }
-    P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
-    P.rwkv.send(to_rwkv.GetTTSStreamingBuffer(modelID: modelID));
-    P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.GetTTSStreamingBuffer(modelID: modelID));
+    P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
   }
 
   void _stopQueryTimer() {
@@ -223,11 +212,11 @@ extension _$Talk on _Talk {
 
     this.audioStream = audioStream;
 
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .tts);
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .tts);
     if (modelID == null) {
       return;
     }
-    P.rwkv.send(
+    P.rwkvBridge.send(
       to_rwkv.StartTTS(
         ttsText: ttsText,
         instructionText: instructionText,
@@ -460,8 +449,8 @@ extension $Talk on _Talk {
     final id = HF.milliseconds;
     final receiveId = HF.milliseconds + 1;
     final spkName = selectedSpkName.q;
-    final currentModel = P.rwkv.latestModel.q;
-    final currentGroupInfo = P.rwkv.currentGroupInfo.q;
+    final currentModel = P.rwkvModel.latest.q;
+    final currentGroupInfo = P.rwkvContext.currentGroupInfo.q;
     final currentModelName = currentModel?.name ?? currentGroupInfo?.displayName;
 
     if (spkName == null && this.selectSourceAudioPath.q == null) {
@@ -512,9 +501,7 @@ extension $Talk on _Talk {
     P.msg._syncMsg(id, msg);
     P.msg.msgNode.q.rootAdd(MsgNode(id));
 
-    34.msLater.then((_) {
-      P.chat.scrollToBottom();
-    });
+    unawaited(_scrollToBottomLater());
 
     final receiveMsg = Message(
       id: receiveId,
@@ -546,6 +533,11 @@ outputWavPath: $outputWavPath""");
       promptSpeechText: promptSpeechText,
       outputWavPath: outputWavPath,
     );
+  }
+
+  Future<void> _scrollToBottomLater() async {
+    await 34.msLater;
+    P.chat.scrollToBottom();
   }
 
   void dismissAllShown({bool intonationShown = false}) {

@@ -47,8 +47,8 @@ class _ItemList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final features = ref.watch(P.app.featureRollout);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
-    final currentModelIsBefore20250922 = ref.watch(P.rwkv.currentModelIsBefore20250922);
-    final isAlbatrossLoaded = ref.watch(P.rwkv.isAlbatrossLoaded);
+    final currentModelIsBefore20250922 = ref.watch(P.rwkvParams.currentModelIsBefore20250922);
+    final isAlbatrossLoaded = ref.watch(P.rwkvContext.isAlbatrossLoaded);
 
     final children = [
       if (features.webSearch && preferredDemoType == .chat) const WebSearchModeButton(),
