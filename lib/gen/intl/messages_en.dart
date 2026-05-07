@@ -772,6 +772,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("Export Data"),
     "export_failed": MessageLookupByLibrary.simpleMessage("Export failed"),
+    "export_markdown_archive": MessageLookupByLibrary.simpleMessage(
+      "Export Markdown Archive",
+    ),
+    "export_sqlite_database": MessageLookupByLibrary.simpleMessage(
+      "Export SQLite Database",
+    ),
     "export_success": MessageLookupByLibrary.simpleMessage("Export successful"),
     "export_title": MessageLookupByLibrary.simpleMessage("Conversation title:"),
     "export_weight_file": MessageLookupByLibrary.simpleMessage(

@@ -142,6 +142,8 @@
   "delete_conversations_message": "대화 {count}개를 삭제하시겠습니까?",
   "delete_conversations_failed": "대화 삭제에 실패했습니다",
   "export_data": "데이터 내보내기",
+  "export_sqlite_database": "SQLite 데이터베이스 내보내기",
+  "export_markdown_archive": "Markdown 아카이브 내보내기",
   "chat_title": "RWKV 채팅",
   "othello_title": "RWKV 오셀로",
   "send_message_to_rwkv": "RWKV에게 메시지 보내기",

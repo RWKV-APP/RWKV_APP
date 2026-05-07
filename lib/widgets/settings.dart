@@ -206,6 +206,11 @@ class Settings extends ConsumerWidget {
               onTap: P.preference.showThemeSettings,
             ),
             FormItem(
+              icon: Icon(Icons.file_download_outlined, color: qb.q(.667), size: 16),
+              title: s.export_data,
+              onTap: () => P.dataExport.showExportDataSheet(context),
+            ),
+            FormItem(
               isSectionEnd: true,
               icon: Icon(Icons.storage, color: qb.q(.667), size: 16),
               title: s.weights_mangement,

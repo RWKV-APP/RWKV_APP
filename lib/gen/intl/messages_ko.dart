@@ -653,6 +653,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("데이터 내보내기"),
     "export_failed": MessageLookupByLibrary.simpleMessage("내보내기 실패"),
+    "export_markdown_archive": MessageLookupByLibrary.simpleMessage(
+      "Markdown 아카이브 내보내기",
+    ),
+    "export_sqlite_database": MessageLookupByLibrary.simpleMessage(
+      "SQLite 데이터베이스 내보내기",
+    ),
     "export_success": MessageLookupByLibrary.simpleMessage("내보내기 성공"),
     "export_title": MessageLookupByLibrary.simpleMessage("대화 제목:"),
     "export_weight_file": MessageLookupByLibrary.simpleMessage("가중치 파일 내보내기"),

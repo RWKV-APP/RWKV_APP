@@ -142,6 +142,8 @@
   "delete_conversations_message": "{count} 件の会話を削除してもよろしいですか？",
   "delete_conversations_failed": "会話の削除に失敗しました",
   "export_data": "データのエクスポート",
+  "export_sqlite_database": "SQLite データベースをエクスポート",
+  "export_markdown_archive": "Markdown アーカイブをエクスポート",
   "chat_title": "RWKVチャット",
   "othello_title": "RWKV オセロ",
   "send_message_to_rwkv": "RWKVにメッセージを送信",

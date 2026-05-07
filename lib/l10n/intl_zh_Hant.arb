@@ -142,6 +142,8 @@
   "delete_conversations_message": "確定要刪除 {count} 個對話嗎？",
   "delete_conversations_failed": "刪除對話失敗",
   "export_data": "匯出資料",
+  "export_sqlite_database": "匯出 SQLite 資料庫",
+  "export_markdown_archive": "匯出 Markdown 封存",
   "chat_title": "RWKV 聊天",
   "othello_title": "RWKV 黑白棋",
   "send_message_to_rwkv": "傳送訊息給 RWKV",

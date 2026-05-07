@@ -795,6 +795,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("Экспорт данных"),
     "export_failed": MessageLookupByLibrary.simpleMessage("Экспорт не удался"),
+    "export_markdown_archive": MessageLookupByLibrary.simpleMessage(
+      "Экспорт Markdown-архива",
+    ),
+    "export_sqlite_database": MessageLookupByLibrary.simpleMessage(
+      "Экспорт базы SQLite",
+    ),
     "export_success": MessageLookupByLibrary.simpleMessage("Экспорт успешен"),
     "export_title": MessageLookupByLibrary.simpleMessage("Название диалога:"),
     "export_weight_file": MessageLookupByLibrary.simpleMessage(

@@ -659,6 +659,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("データのエクスポート"),
     "export_failed": MessageLookupByLibrary.simpleMessage("エクスポート失敗"),
+    "export_markdown_archive": MessageLookupByLibrary.simpleMessage(
+      "Markdown アーカイブをエクスポート",
+    ),
+    "export_sqlite_database": MessageLookupByLibrary.simpleMessage(
+      "SQLite データベースをエクスポート",
+    ),
     "export_success": MessageLookupByLibrary.simpleMessage("エクスポート成功"),
     "export_title": MessageLookupByLibrary.simpleMessage("会話のタイトル："),
     "export_weight_file": MessageLookupByLibrary.simpleMessage("重みファイルをエクスポート"),

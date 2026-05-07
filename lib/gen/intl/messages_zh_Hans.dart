@@ -611,6 +611,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("导出数据"),
     "export_failed": MessageLookupByLibrary.simpleMessage("导出失败"),
+    "export_markdown_archive": MessageLookupByLibrary.simpleMessage(
+      "导出 Markdown 归档",
+    ),
+    "export_sqlite_database": MessageLookupByLibrary.simpleMessage(
+      "导出 SQLite 数据库",
+    ),
     "export_success": MessageLookupByLibrary.simpleMessage("导出成功"),
     "export_title": MessageLookupByLibrary.simpleMessage("会话标题:"),
     "export_weight_file": MessageLookupByLibrary.simpleMessage("导出权重文件"),

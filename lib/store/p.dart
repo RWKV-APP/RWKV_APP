@@ -14,7 +14,7 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:archive/archive.dart';
+import 'package:archive/archive_io.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:collection/collection.dart';
 import 'package:detect_proxy_setting/detect_proxy_setting.dart';
@@ -135,6 +135,7 @@ part "app.dart";
 part "backend.dart";
 part "chat.dart";
 part "conversation.dart";
+part "data_export.dart";
 part "device.dart";
 part "dump.dart";
 part "remote.dart";
@@ -175,6 +176,7 @@ abstract class P {
   static final backend = _Backend();
   static final chat = _Chat();
   static final conversation = _Conversation();
+  static final dataExport = _DataExport();
   static final device = _Device();
   static final dump = _Dump();
   static final remote = _Remote();

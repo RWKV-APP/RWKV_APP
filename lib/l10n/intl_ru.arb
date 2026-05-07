@@ -142,6 +142,8 @@
   "delete_conversations_message": "Вы уверены, что хотите удалить {count} диалогов?",
   "delete_conversations_failed": "Не удалось удалить диалоги",
   "export_data": "Экспорт данных",
+  "export_sqlite_database": "Экспорт базы SQLite",
+  "export_markdown_archive": "Экспорт Markdown-архива",
   "chat_title": "RWKV Чат",
   "othello_title": "RWKV Отелло",
   "send_message_to_rwkv": "Отправить сообщение в RWKV",

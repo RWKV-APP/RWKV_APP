@@ -126,6 +126,8 @@ class _ConversationSubtitleRepairCandidate {
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
+  static const databaseFileName = 'rwkv_db.sqlite';
+
   bool _didRepairLegacyConversationTitles = false;
 
   @override
@@ -522,6 +524,26 @@ class AppDatabase extends _$AppDatabase {
     return await query.get();
   }
 
+  Future<List<ConversationData>> allConversationsForExport() async {
+    final query = select(conversation)
+      ..orderBy([
+        (t) => OrderingTerm.desc(t.updatedAtUS),
+        (t) => OrderingTerm.desc(t.createdAtUS),
+      ]);
+
+    final conversationDataList = await query.get();
+    final hasRepairedTitles = await _repairLegacyTruncatedTitles(conversationDataList);
+    final hasRepairedSubtitles = await _repairMissingConversationSubtitles(conversationDataList);
+    if (!hasRepairedTitles && !hasRepairedSubtitles) {
+      return conversationDataList;
+    }
+    return await query.get();
+  }
+
+  Future<void> exportSqliteSnapshot(String targetPath) async {
+    await customStatement('VACUUM INTO ${_sqliteStringLiteral(targetPath)}');
+  }
+
   Future<ConversationData?> findConvByCreateAtInUS(int createAtInUS) async {
     final query = select(conversation)..where((tbl) => tbl.createdAtUS.equals(createAtInUS));
     final res = await query.getSingleOrNull();
@@ -536,6 +558,10 @@ class AppDatabase extends _$AppDatabase {
   Future<bool> deleteMsgsByCreateAtInUS(Iterable<int> ids) async {
     return await (delete(msg)..where((tbl) => tbl.id.isIn(ids))).go() > 0;
   }
+}
+
+String _sqliteStringLiteral(String value) {
+  return "'${value.replaceAll("'", "''")}'";
 }
 
 model.Message _msgDataToMessage(_MsgData msgData) {

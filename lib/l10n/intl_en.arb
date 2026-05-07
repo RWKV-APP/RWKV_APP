@@ -142,6 +142,8 @@
   "delete_conversations_message": "Are you sure you want to delete {count} conversations?",
   "delete_conversations_failed": "Failed to delete conversations",
   "export_data": "Export Data",
+  "export_sqlite_database": "Export SQLite Database",
+  "export_markdown_archive": "Export Markdown Archive",
   "chat_title": "RWKV Chat",
   "othello_title": "RWKV Othello",
   "send_message_to_rwkv": "Message RWKV",

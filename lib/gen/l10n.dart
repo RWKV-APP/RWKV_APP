@@ -1276,6 +1276,26 @@ class S {
     return Intl.message('导出数据', name: 'export_data', desc: '', args: []);
   }
 
+  /// `导出 SQLite 数据库`
+  String get export_sqlite_database {
+    return Intl.message(
+      '导出 SQLite 数据库',
+      name: 'export_sqlite_database',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导出 Markdown 归档`
+  String get export_markdown_archive {
+    return Intl.message(
+      '导出 Markdown 归档',
+      name: 'export_markdown_archive',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `RWKV Chat`
   String get chat_title {
     return Intl.message('RWKV Chat', name: 'chat_title', desc: '', args: []);
