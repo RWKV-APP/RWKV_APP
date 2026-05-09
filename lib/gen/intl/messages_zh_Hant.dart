@@ -152,7 +152,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m62(footer) => "推理${footer}-高";
 
-  static String m63(footer) => "推理${footer}-關";
+  static String m63(footer) => "推理${footer}-笨";
 
   static String m64(value) => "Top P: ${value}";
 

@@ -111,7 +111,7 @@
   "response_style_route_en_detail": "English only",
   "response_style_route_ja_detail": "Japanese only",
   "response_style_route_yue_detail": "Written Cantonese",
-  "thinking_mode_off": "Reasoning{footer}-Off",
+  "thinking_mode_off": "Reasoning{footer}-Dumb",
   "thinking_mode_auto": "Reasoning{footer}-Auto",
   "thinking_mode_high": "Reasoning{footer}-High",
   "download_all_missing": "Download All Missing Files",

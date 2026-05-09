@@ -165,7 +165,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m62(footer) => "Мышление${footer}-Вкл";
 
-  static String m63(footer) => "Мышление${footer}-Выкл";
+  static String m63(footer) => "Мышление${footer}-Глупо";
 
   static String m64(value) => "Top P: ${value}";
 

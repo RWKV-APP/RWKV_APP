@@ -111,7 +111,7 @@
   "response_style_route_en_detail": "只用英文",
   "response_style_route_ja_detail": "用日語直接回答",
   "response_style_route_yue_detail": "香港書面粵語",
-  "thinking_mode_off": "推理{footer}-關",
+  "thinking_mode_off": "推理{footer}-笨",
   "thinking_mode_auto": "推理{footer}-中",
   "thinking_mode_high": "推理{footer}-高",
   "download_all_missing": "下載全部缺失檔案",

@@ -111,7 +111,7 @@
   "response_style_route_en_detail": "English only",
   "response_style_route_ja_detail": "日本語のみ",
   "response_style_route_yue_detail": "書き言葉の広東語",
-  "thinking_mode_off": "推論{footer}-オフ",
+  "thinking_mode_off": "推論{footer}-愚か",
   "thinking_mode_auto": "推論{footer}-自動",
   "thinking_mode_high": "推論{footer}-高",
   "download_all_missing": "不足しているファイルをすべてダウンロード",

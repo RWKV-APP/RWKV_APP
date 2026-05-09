@@ -111,7 +111,7 @@
   "response_style_route_en_detail": "Только английский",
   "response_style_route_ja_detail": "Только японский",
   "response_style_route_yue_detail": "Письменный кантонский",
-  "thinking_mode_off": "Мышление{footer}-Выкл",
+  "thinking_mode_off": "Мышление{footer}-Глупо",
   "thinking_mode_auto": "Мышление{footer}-Авто",
   "thinking_mode_high": "Мышление{footer}-Вкл",
   "download_all_missing": "Скачать все недостающие файлы",

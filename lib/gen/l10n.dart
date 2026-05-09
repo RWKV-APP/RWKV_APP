@@ -1029,10 +1029,10 @@ class S {
     );
   }
 
-  /// `推理{footer}-关`
+  /// `推理{footer}-笨`
   String thinking_mode_off(Object footer) {
     return Intl.message(
-      '推理$footer-关',
+      '推理$footer-笨',
       name: 'thinking_mode_off',
       desc: '',
       args: [footer],

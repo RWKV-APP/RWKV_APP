@@ -164,7 +164,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m62(footer) => "Reasoning${footer}-High";
 
-  static String m63(footer) => "Reasoning${footer}-Off";
+  static String m63(footer) => "Reasoning${footer}-Dumb";
 
   static String m64(value) => "Top P: ${value}";
 

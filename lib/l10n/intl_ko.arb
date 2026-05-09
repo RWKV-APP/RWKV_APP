@@ -111,7 +111,7 @@
   "response_style_route_en_detail": "English only",
   "response_style_route_ja_detail": "일본어만",
   "response_style_route_yue_detail": "광둥어 문어체",
-  "thinking_mode_off": "추론{footer}-끔",
+  "thinking_mode_off": "추론{footer}-멍청함",
   "thinking_mode_auto": "추론{footer}-자동",
   "thinking_mode_high": "추론{footer}-높음",
   "download_all_missing": "누락된 파일 모두 다운로드",

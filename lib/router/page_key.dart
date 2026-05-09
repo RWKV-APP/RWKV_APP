@@ -11,13 +11,11 @@ import 'package:zone/page/advanced_sesttings.dart';
 import 'package:zone/page/api_server.dart';
 import 'package:zone/page/batch_slot_preview.dart';
 import 'package:zone/page/benchmark.dart';
-import 'package:zone/page/bot_message_bottom_preview.dart';
 import 'package:zone/page/chat.dart';
 import 'package:zone/page/completion/completion_page.dart';
 import 'package:zone/page/conversation.dart';
 import 'package:zone/page/font_settings.dart';
 import 'package:zone/page/home.dart';
-import 'package:zone/page/interactions_preview.dart';
 import 'package:zone/page/ocr.dart';
 import 'package:zone/page/othello.dart';
 import 'package:zone/page/see.dart';
@@ -42,8 +40,6 @@ enum PageKey {
   advancedSettings,
   fontSettings,
   benchmark,
-  interactionsPreview,
-  botMessageBottomPreview,
   batchSlotPreview,
   othello,
   sudoku,
@@ -77,8 +73,6 @@ enum PageKey {
     weightManager => const PageWeightManager(),
     translator => const PageTranslator(),
     benchmark => const PageBenchmark(),
-    interactionsPreview => const PageInteractionsPreview(),
-    botMessageBottomPreview => const PageBotMessageBottomPreview(),
     batchSlotPreview => const PageBatchSlotPreview(),
     lambada => const PageBenchmark(),
     advancedSettings => const PageAdvancedSettings(),
