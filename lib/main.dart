@@ -94,6 +94,7 @@ FutureOr<void> _configureSentry(SentryFlutterOptions options) {
   options.diagnosticLevel = SentryLevel.warning;
   if (kReleaseMode) {
     options.environment = 'production';
+    options.enableTombstone = true;
   } else if (kProfileMode) {
     options.environment = 'testing';
   } else {
