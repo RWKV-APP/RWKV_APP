@@ -144,7 +144,7 @@
         "quantization": "INT8",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu"],
+        "tags": ["reason", "mlx", "gpu", "batch"],
         "date": 1770801719
       },
       {
@@ -155,7 +155,7 @@
         "quantization": "INT8",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu"],
+        "tags": ["reason", "mlx", "gpu", "batch"],
         "date": 1770801692
       },
       {
@@ -166,7 +166,7 @@
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu"],
+        "tags": ["reason", "mlx", "gpu", "batch"],
         "date": 1777038345
       },
       {
@@ -177,7 +177,7 @@
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu"],
+        "tags": ["reason", "mlx", "gpu", "batch"],
         "date": 1777038419
       },
       {
@@ -188,7 +188,7 @@
         "quantization": "INT6",
         "platforms": ["macos"],
         "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu"],
+        "tags": ["reason", "mlx", "gpu", "batch"],
         "date": 1777038540
       },
       {
