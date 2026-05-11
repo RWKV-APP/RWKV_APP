@@ -743,7 +743,7 @@ extension $Chat on _Chat {
     final historyPrefix = _history();
     await _applyResponseStyleState(ResponseStyleState(enabledRoutes: routes));
     final thinkingMode = P.rwkvParams.thinkingMode.q;
-    final userBatchContent = questions.join(Config.batchMarker) + Config.batchMarker + "-1";
+    final userBatchContent = buildBatchContent(questions);
     final storedContent = userBatchContent + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
     final userMsgId = HF.milliseconds;
     final userMsg = Message(
@@ -1014,7 +1014,7 @@ extension $Chat on _Chat {
     if (currentOutput != null && completedCount < totalCount) {
       slotOutputs[completedCount] = currentOutput;
     }
-    return slotOutputs.join(Config.batchMarker) + Config.batchMarker + "-1";
+    return buildBatchContent(slotOutputs);
   }
 
   Future<void> _sendCurrentResponseStyleSequentialRoute() async {
@@ -1987,6 +1987,62 @@ extension _$Chat on _Chat {
     visibleReceivedTokens.q = value;
   }
 
+  int _runtimeMaxSupportedBatchCount() {
+    final supportedBatchSizes = P.rwkvParams.supportedBatchSizes.q;
+    if (supportedBatchSizes.isEmpty) return 0;
+    return math.max(1, supportedBatchSizes.max);
+  }
+
+  int _normalizeExpectedBatchCount(int value, {required int runtimeMaxBatchCount}) {
+    if (value <= 1) return 1;
+    if (runtimeMaxBatchCount > 1 && value > runtimeMaxBatchCount) return 0;
+    return value;
+  }
+
+  int _resolveExpectedBatchResponseCount({
+    required Message? message,
+    required from_rwkv.ResponseBatchBufferContent response,
+    required int runtimeMaxBatchCount,
+  }) {
+    final labels = message?.batchSlotLabels;
+    final labelCount = _normalizeExpectedBatchCount(labels?.length ?? 0, runtimeMaxBatchCount: runtimeMaxBatchCount);
+    if (labelCount > 1) return labelCount;
+
+    final decodeParamCount = _normalizeExpectedBatchCount(
+      message?.parsedDecodeParams.length ?? 0,
+      runtimeMaxBatchCount: runtimeMaxBatchCount,
+    );
+    if (decodeParamCount > 1) return decodeParamCount;
+
+    final effectiveCount = _normalizeExpectedBatchCount(
+      effectiveBatchEnabled.q ? effectiveBatchCount.q : 1,
+      runtimeMaxBatchCount: runtimeMaxBatchCount,
+    );
+    if (effectiveCount > 1) return effectiveCount;
+
+    final responseBatchCount = _normalizeExpectedBatchCount(response.batchSize, runtimeMaxBatchCount: runtimeMaxBatchCount);
+    if (responseBatchCount > 1) return responseBatchCount;
+
+    return _normalizeExpectedBatchCount(response.responseBufferContent.length, runtimeMaxBatchCount: runtimeMaxBatchCount);
+  }
+
+  String _buildBatchResponseBufferContent(from_rwkv.ResponseBatchBufferContent response) {
+    final currentReceiveId = receiveId.q;
+    final message = currentReceiveId == null ? null : P.msg.pool.q[currentReceiveId];
+    final runtimeMaxBatchCount = _runtimeMaxSupportedBatchCount();
+    final expectedBatchCount = _resolveExpectedBatchResponseCount(
+      message: message,
+      response: response,
+      runtimeMaxBatchCount: runtimeMaxBatchCount,
+    );
+    final normalized = normalizeBatchResponseBufferContent(
+      responseBufferContent: response.responseBufferContent,
+      expectedBatchCount: expectedBatchCount,
+      maxBatchSlotCount: runtimeMaxBatchCount,
+    );
+    return buildBatchContent(normalized);
+  }
+
   Future<void> _init() async {
     switch (P.app.demoType.q) {
       case .fifthteenPuzzle:
@@ -2023,7 +2079,7 @@ extension _$Chat on _Chat {
         .where((e) => P.msg.list.q.length <= 2)
         .throttleTime(const Duration(milliseconds: 500), trailing: true, leading: true)
         .listen((e) {
-          final content = e.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
+          final content = _buildBatchResponseBufferContent(e);
           unawaited(P.conversation.updateCurrentConvSubtitleFromResponseContent(content));
         });
 
@@ -2194,7 +2250,7 @@ extension _$Chat on _Chat {
     if (slotOutputs.length == 1) {
       return slotOutputs.first;
     }
-    return slotOutputs.join(Config.batchMarker) + Config.batchMarker + "-1";
+    return buildBatchContent(slotOutputs);
   }
 
   String _nextFakeBatchInferenceBenchmarkChunk() {
@@ -2904,7 +2960,7 @@ extension _$Chat on _Chat {
         break;
 
       case from_rwkv.ResponseBatchBufferContent res:
-        final responseBufferContent = res.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
+        final responseBufferContent = _buildBatchResponseBufferContent(res);
         _setReceivedTokens(responseBufferContent);
         if (completionMode.q) return;
         final currentReceiveId = receiveId.q;

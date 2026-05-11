@@ -136,7 +136,7 @@ extension $MultiQuestion on _MultiQuestion {
 
     final thinkingMode = P.rwkvParams.thinkingMode.q;
     // 1. 构建 batch 格式的用户消息 content
-    final String userBatchContent = effectiveQuestions.join(Config.batchMarker) + Config.batchMarker + "-1";
+    final String userBatchContent = buildBatchContent(effectiveQuestions);
     final String storedContent = userBatchContent + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
 
     // 2. 处理父节点的 batch finalization (同 _Chat.send 727-737)

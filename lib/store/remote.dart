@@ -338,7 +338,9 @@ extension $Remote on _Remote {
         final fileSizeNotCorrect = expectFileSize != fileSize;
         final shouldDelete = isNotDebug && fileSizeNotCorrect;
 
-        if (shouldDelete) await File(path).delete();
+        if (shouldDelete) {
+          await _deleteDownloadArtifacts(fileInfo: fileInfo, path: path);
+        }
       }
       final currentLocal = local.q;
       if (!fileSizeVerified && currentLocal.state == TaskState.completed) {
@@ -423,6 +425,52 @@ extension $Remote on _Remote {
     return nekos;
   }
 
+  bool _hasInPlaceCacheDirectory(FileInfo fileInfo) {
+    final backend = fileInfo.backend;
+    if (backend == Backend.mlx) return true;
+    if (backend == Backend.coreml) return true;
+    return false;
+  }
+
+  Future<void> _deleteDownloadArtifacts({
+    required FileInfo fileInfo,
+    required String path,
+  }) async {
+    final targetFile = File(path);
+    if (await targetFile.exists()) {
+      await targetFile.delete();
+    }
+
+    final tempFile = File("$path.tmp");
+    if (await tempFile.exists()) {
+      await tempFile.delete();
+    }
+
+    if (!_hasInPlaceCacheDirectory(fileInfo)) return;
+
+    final cacheDirectory = Directory(withoutExtension(path));
+    if (!await cacheDirectory.exists()) return;
+
+    await cacheDirectory.delete(recursive: true);
+  }
+
+  Future<void> _deleteStaleDownloadArtifactsIfNeeded({
+    required FileInfo fileInfo,
+    required String path,
+  }) async {
+    final targetFile = File(path);
+    if (!await targetFile.exists()) return;
+
+    final fileSize = await targetFile.length();
+    if (fileSize == fileInfo.fileSize) return;
+
+    qqw("delete stale download file: $path");
+    qqw("expectFileSize: ${fileInfo.fileSize}");
+    qqw("fileSize: $fileSize");
+    await _deleteDownloadArtifacts(fileInfo: fileInfo, path: path);
+    _downloadTasks.remove(fileInfo.fileName);
+  }
+
   Future<void> getFile({required FileInfo fileInfo}) async {
     final url = downloadSource.q.prefix + downloadSource.q.transformRaw(fileInfo.raw) + downloadSource.q.suffix;
     final path = _paths(fileInfo).q;
@@ -433,47 +481,58 @@ extension $Remote on _Remote {
 
     qqq('start download file: \n>>url:$url\n>>path:$path');
 
-    DownloadTask? task = _downloadTasks[fileInfo.fileName];
-    task?.url = url;
-    if (task == null) {
-      task = await DownloadTask.create(url: url, path: path);
-      _downloadTasks[fileInfo.fileName] = task;
-    }
-
-    if (task.state == TaskState.running) return;
-
     final state = locals(fileInfo);
 
-    task
-        .events()
-        .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
-        .listen(
-          (e) {
-            if (HF.randomBool(truePercentage: .2)) {
-              qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s, ${e.totalSize}');
-            }
-            state.q = state.q.copyWith(
-              timeRemaining: Duration(seconds: e.remainSeconds.round().clamp(0, 60 * 60 * 24)),
-              progress: e.progress,
-              state: e.state,
-              networkSpeed: e.speedInMB,
-              hasFile: e.state == TaskState.completed,
-            );
-          },
-          onError: (e) {
-            qqe(e);
-            Alert.error(S.current.download_failed);
-            Sentry.captureException(e, stackTrace: StackTrace.current);
-          },
-          onDone: () {
-            qqq('event done');
-          },
-        );
-
-    // 开始下载时，重置进度并确保 hasFile 为 false（避免进度计算错误）
-    state.q = state.q.copyWith(progress: 0, state: TaskState.running, hasFile: false);
-
     try {
+      final currentTask = _downloadTasks[fileInfo.fileName];
+      if (currentTask?.state == TaskState.running) return;
+
+      await _deleteStaleDownloadArtifactsIfNeeded(fileInfo: fileInfo, path: path);
+
+      final task = await DownloadTask.create(
+        url: url,
+        path: path,
+        acceptedSize: fileInfo.fileSize,
+      );
+      _downloadTasks[fileInfo.fileName] = task;
+
+      if (task.state == TaskState.completed) {
+        state.q = state.q.copyWith(
+          progress: 100,
+          state: TaskState.completed,
+          hasFile: true,
+        );
+        return;
+      }
+
+      task
+          .events()
+          .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
+          .listen(
+            (e) {
+              if (HF.randomBool(truePercentage: .2)) {
+                qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s, ${e.totalSize}');
+              }
+              state.q = state.q.copyWith(
+                timeRemaining: Duration(seconds: e.remainSeconds.round().clamp(0, 60 * 60 * 24)),
+                progress: e.progress,
+                state: e.state,
+                networkSpeed: e.speedInMB,
+                hasFile: e.state == TaskState.completed,
+              );
+            },
+            onError: (e) {
+              qqe(e);
+              Alert.error(S.current.download_failed);
+              Sentry.captureException(e, stackTrace: StackTrace.current);
+            },
+            onDone: () {
+              qqq('event done');
+            },
+          );
+
+      // 开始下载时，重置进度并确保 hasFile 为 false（避免进度计算错误）
+      state.q = state.q.copyWith(progress: 0, state: TaskState.running, hasFile: false);
       await task.start();
     } on HttpException catch (e) {
       qqe(e.message);
@@ -526,7 +585,7 @@ extension $Remote on _Remote {
       state.q = value.copyWith(hasFile: false, state: TaskState.idle, progress: 0);
       return;
     }
-    await File(path).delete();
+    await _deleteDownloadArtifacts(fileInfo: fileInfo, path: path);
     state.q = value.copyWith(hasFile: false, state: TaskState.idle, progress: 0);
 
     await sync();
