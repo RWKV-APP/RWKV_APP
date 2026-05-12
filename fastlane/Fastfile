@@ -189,7 +189,7 @@ lane :all do |params|
     version_number = raw_increase_version_number()
   end
   if env == 'chat'
-    git_commit(message: version_number.to_s + '(' + build_number.to_s + ')', path: '*')
+    git_commit(message: version_number.to_s + '(' + build_number.to_s + ')', path: ['*', '.github/workflows'])
     # Push changes to remote repository
     push_to_git_remote()
   end

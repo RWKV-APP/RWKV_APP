@@ -1,3 +1,4 @@
+require 'fileutils'
 require 'shellwords'
 
 module Fastlane
@@ -35,13 +36,13 @@ module Fastlane
            "--split-debug-info=#{sentry_symbols_path} " \
            "--dart-define=SENTRY_RELEASE=#{sentry_release} " \
            "--dart-define=SENTRY_DIST=#{build_number}"
-        upload_sentry_symbols(project_root, sentry_symbols_path, sentry_release, build_number)
 
         # 重命名 APK 文件
         if File.exist?(default_apk_path)
           File.rename(default_apk_path, custom_apk_path)
           UI.message("APK built successfully: #{custom_apk_name}")
           UI.message("Output path: #{custom_apk_path}")
+          upload_sentry_symbols(project_root, sentry_symbols_path, sentry_release, build_number)
 
           # Return the relative path for use in the lane
           return "./build/app/outputs/flutter-apk/#{custom_apk_name}"
@@ -60,10 +61,28 @@ module Fastlane
           return
         end
 
-        sh "cd #{Shellwords.escape(project_root)} && dart run sentry_dart_plugin " \
-           "#{Shellwords.escape("--sentry-define=symbols_path=#{symbols_path}")} " \
-           "#{Shellwords.escape("--sentry-define=release=#{sentry_release}")} " \
-           "#{Shellwords.escape("--sentry-define=dist=#{dist}")}"
+        without_local_sentry_properties(project_root) do
+          sh "cd #{Shellwords.escape(project_root)} && dart run sentry_dart_plugin " \
+             "#{Shellwords.escape('--sentry-define=org=ce-wang')} " \
+             "#{Shellwords.escape('--sentry-define=project=rwkv_app')} " \
+             "#{Shellwords.escape("--sentry-define=symbols_path=#{symbols_path}")} " \
+             "#{Shellwords.escape("--sentry-define=release=#{sentry_release}")} " \
+             "#{Shellwords.escape("--sentry-define=dist=#{dist}")}"
+        end
+      end
+
+      def self.without_local_sentry_properties(project_root)
+        properties_path = File.join(project_root, 'sentry.properties')
+        backup_path = "#{properties_path}.fastlane-backup.#{$$}"
+        moved = false
+        if File.exist?(properties_path)
+          FileUtils.mv(properties_path, backup_path)
+          moved = true
+        end
+
+        yield
+      ensure
+        FileUtils.mv(backup_path, properties_path) if moved && File.exist?(backup_path)
       end
     end
   end

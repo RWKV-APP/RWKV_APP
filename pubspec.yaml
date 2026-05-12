@@ -193,5 +193,5 @@ sentry:
   upload_source_maps: true
   upload_sources: true
   wait_for_processing: true
-  project: rwkv0
+  project: rwkv_app
   org: ce-wang

@@ -105,10 +105,28 @@ module Fastlane
           return
         end
 
-        sh "cd #{Shellwords.escape(project_root)} && dart run sentry_dart_plugin " \
-           "#{Shellwords.escape("--sentry-define=symbols_path=#{symbols_path}")} " \
-           "#{Shellwords.escape("--sentry-define=release=#{sentry_release}")} " \
-           "#{Shellwords.escape("--sentry-define=dist=#{dist}")}"
+        without_local_sentry_properties(project_root) do
+          sh "cd #{Shellwords.escape(project_root)} && dart run sentry_dart_plugin " \
+             "#{Shellwords.escape('--sentry-define=org=ce-wang')} " \
+             "#{Shellwords.escape('--sentry-define=project=rwkv_app')} " \
+             "#{Shellwords.escape("--sentry-define=symbols_path=#{symbols_path}")} " \
+             "#{Shellwords.escape("--sentry-define=release=#{sentry_release}")} " \
+             "#{Shellwords.escape("--sentry-define=dist=#{dist}")}"
+        end
+      end
+
+      def self.without_local_sentry_properties(project_root)
+        properties_path = File.join(project_root, 'sentry.properties')
+        backup_path = "#{properties_path}.fastlane-backup.#{$$}"
+        moved = false
+        if File.exist?(properties_path)
+          FileUtils.mv(properties_path, backup_path)
+          moved = true
+        end
+
+        yield
+      ensure
+        FileUtils.mv(backup_path, properties_path) if moved && File.exist?(backup_path)
       end
     end
   end

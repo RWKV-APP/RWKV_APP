@@ -158,6 +158,8 @@ jobs:
             throw "SENTRY_AUTH_TOKEN secret is required for Sentry symbol upload"
           }
           dart run sentry_dart_plugin `
+            "--sentry-define=org=ce-wang" `
+            "--sentry-define=project=rwkv_app" `
             "--sentry-define=symbols_path=build/sentry-symbols/windows-x64" `
             "--sentry-define=release=rwkv-chat@${{ needs.setup.outputs.version }}+${{ needs.setup.outputs.build_number }}" `
             "--sentry-define=dist=${{ needs.setup.outputs.build_number }}"
