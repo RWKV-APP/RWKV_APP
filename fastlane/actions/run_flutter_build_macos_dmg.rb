@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'shellwords'
 
 # macos_build_and_upload
 
@@ -16,6 +17,8 @@ module Fastlane
         version_parts = version_info.split('+')
         version_number = version_parts[0]
         build_number = version_parts[1] || '1'
+        sentry_release = "rwkv-chat@#{version_number}+#{build_number}"
+        sentry_symbols_path = 'build/sentry-symbols/macos'
 
         project_name = 'rwkv_chat'
         UI.message("开始构建 macOS 版本: #{version_info}...")
@@ -23,7 +26,11 @@ module Fastlane
         # 1. Flutter 构建
         sh "cd #{project_root} && flutter clean"
         sh "cd #{project_root} && flutter pub get"
-        sh "cd #{project_root} && flutter build macos --release"
+        sh "cd #{project_root} && flutter build macos --release " \
+           "--split-debug-info=#{sentry_symbols_path} " \
+           "--dart-define=SENTRY_RELEASE=#{sentry_release} " \
+           "--dart-define=SENTRY_DIST=#{build_number}"
+        upload_sentry_symbols(project_root, sentry_symbols_path, sentry_release, build_number)
 
         app_folder_name = 'RWKV_Chat.app'
         app_path = File.join(project_root, "build/macos/Build/Products/Release/#{app_folder_name}")
@@ -90,6 +97,18 @@ module Fastlane
 
       def self.is_supported?(platform)
         platform == :mac
+      end
+
+      def self.upload_sentry_symbols(project_root, symbols_path, sentry_release, dist)
+        if ENV['SENTRY_AUTH_TOKEN'].to_s.strip.empty?
+          UI.important('跳过 Sentry 符号上传 (SENTRY_AUTH_TOKEN 未设置)')
+          return
+        end
+
+        sh "cd #{Shellwords.escape(project_root)} && dart run sentry_dart_plugin " \
+           "#{Shellwords.escape("--sentry-define=symbols_path=#{symbols_path}")} " \
+           "#{Shellwords.escape("--sentry-define=release=#{sentry_release}")} " \
+           "#{Shellwords.escape("--sentry-define=dist=#{dist}")}"
       end
     end
   end

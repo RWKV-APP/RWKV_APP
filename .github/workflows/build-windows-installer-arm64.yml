@@ -130,7 +130,12 @@ jobs:
         run: flutter pub get
 
       - name: Build Windows arm64
-        run: flutter build windows
+        run: >
+          flutter build windows
+          --release
+          --split-debug-info=build/sentry-symbols/windows-arm64
+          --dart-define=SENTRY_RELEASE=rwkv-chat@${{ needs.setup.outputs.version }}+${{ needs.setup.outputs.build_number }}
+          --dart-define=SENTRY_DIST=${{ needs.setup.outputs.build_number }}
 
       - name: Verify QNN Windows assets in build output
         shell: pwsh
@@ -174,6 +179,40 @@ jobs:
             }
             Write-Host "Removed $removedCount x64 DLL file(s)"
           }
+
+      - name: Verify Windows PDB
+        shell: pwsh
+        run: |
+          $pdbPath = "build\windows\arm64\runner\Release\RWKV_Chat.pdb"
+          if (-not (Test-Path $pdbPath)) {
+            throw "Expected Windows PDB is missing: $pdbPath"
+          }
+          Write-Host "Found Windows PDB: $pdbPath"
+
+      - name: Upload Sentry debug files
+        if: needs.setup.outputs.should_publish == 'true'
+        shell: pwsh
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:SENTRY_AUTH_TOKEN)) {
+            throw "SENTRY_AUTH_TOKEN secret is required for Sentry symbol upload"
+          }
+          dart run sentry_dart_plugin `
+            "--sentry-define=symbols_path=build/sentry-symbols/windows-arm64" `
+            "--sentry-define=release=rwkv-chat@${{ needs.setup.outputs.version }}+${{ needs.setup.outputs.build_number }}" `
+            "--sentry-define=dist=${{ needs.setup.outputs.build_number }}"
+
+      - name: Remove PDB files from package source
+        shell: pwsh
+        run: |
+          $sourceDir = "build\windows\arm64\runner\Release"
+          $pdbFiles = @(Get-ChildItem -Path $sourceDir -Filter "*.pdb" -File -ErrorAction SilentlyContinue)
+          foreach ($file in $pdbFiles) {
+            Remove-Item -Path $file.FullName -Force
+            Write-Host "Removed: $($file.Name)"
+          }
+          Write-Host "Removed $($pdbFiles.Count) PDB file(s) from package source"
 
       - name: Create models directory
         shell: pwsh

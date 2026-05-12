@@ -28,6 +28,9 @@ import 'package:zone/widgets/debugger.dart';
 import 'package:zone/widgets/floating_performace_info.dart';
 import 'package:zone/widgets/input_bar_debugger.dart';
 
+const _sentryRelease = String.fromEnvironment('SENTRY_RELEASE');
+const _sentryDist = String.fromEnvironment('SENTRY_DIST');
+
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   keepUsedMaterialSymbols();
@@ -87,6 +90,8 @@ Future<void> _debugAppRunner() async {
 
 FutureOr<void> _configureSentry(SentryFlutterOptions options) {
   options.dsn = 'https://320015d75031601a48829d02f17a8394@o4506895545597952.ingest.us.sentry.io/4508996340482048';
+  if (_sentryRelease.isNotEmpty) options.release = _sentryRelease;
+  if (_sentryDist.isNotEmpty) options.dist = _sentryDist;
   options.tracesSampleRate = kDebugMode ? 1.0 : .05;
   // ignore: experimental_member_use
   options.profilesSampleRate = kDebugMode ? 1.0 : .05;

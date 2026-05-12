@@ -137,7 +137,13 @@ jobs:
         run: flutter doctor -v
 
       - name: Build Linux x64
-        run: flutter build linux --release --target-platform linux-x64
+        run: >
+          flutter build linux
+          --release
+          --target-platform linux-x64
+          --split-debug-info=build/sentry-symbols/linux-x64
+          --dart-define=SENTRY_RELEASE=rwkv-chat@${{ needs.setup.outputs.version }}+${{ needs.setup.outputs.build_number }}
+          --dart-define=SENTRY_DIST=${{ needs.setup.outputs.build_number }}
 
       - name: Remove aarch64 libraries
         run: |
@@ -153,6 +159,20 @@ jobs:
             done
             echo "Removed $REMOVED_COUNT aarch64 library file(s)"
           fi
+
+      - name: Upload Sentry debug files
+        if: needs.setup.outputs.should_publish == 'true'
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          if [ -z "${SENTRY_AUTH_TOKEN:-}" ]; then
+            echo "SENTRY_AUTH_TOKEN secret is required for Sentry symbol upload" >&2
+            exit 1
+          fi
+          dart run sentry_dart_plugin \
+            --sentry-define=symbols_path=build/sentry-symbols/linux-x64 \
+            --sentry-define=release=rwkv-chat@${{ needs.setup.outputs.version }}+${{ needs.setup.outputs.build_number }} \
+            --sentry-define=dist=${{ needs.setup.outputs.build_number }}
 
       - name: Create archive
         id: create-archive

@@ -191,5 +191,7 @@ flutter_intl:
 sentry:
   upload_debug_symbols: true
   upload_source_maps: true
+  upload_sources: true
+  wait_for_processing: true
   project: rwkv0
   org: ce-wang
