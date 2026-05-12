@@ -304,7 +304,7 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   proxy_setting_ios: 1ed970991868db0df25d0cd150504a9d0f59a4b3
   record_ios: 412daca2350b228e698fffcd08f1f94ceb1e3844
-  rwkv_mobile_flutter: 1ac221dbc3469b5cb1aab8248b34e1804e68aa98
+  rwkv_mobile_flutter: cbaff0f6b9be57bab3e75d8bf7d3dd7f9cf46c69
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
   Sentry: 958d9619ceccf6abb8c4736003fa336dac1a80a7
   sentry_flutter: bdfd7a7b8931c4ecefa37fde9e44a15cd0af30b1

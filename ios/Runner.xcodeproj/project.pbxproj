@@ -14,7 +14,6 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		E52486C92D7ED23900A6886C /* librwkv_mobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E52486C82D7ED23100A6886C /* librwkv_mobile.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,7 +47,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				52998698FAD83D758B9654AD /* Pods_Runner.framework in Frameworks */,
-				E52486C92D7ED23900A6886C /* librwkv_mobile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,6 +136,7 @@
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				0A8B3C68545976DD54E651AD /* [CP] Embed Pods Frameworks */,
 				462E488F4A7DC4D5A3E9C56B /* [CP] Copy Pods Resources */,
+				E8B0E734A1E64498A02A9518 /* Sign Native Asset Frameworks */,
 			);
 			buildRules = (
 			);
@@ -283,6 +282,21 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		E8B0E734A1E64498A02A9518 /* Sign Native Asset Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Sign Native Asset Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${CODE_SIGNING_ALLOWED:-}\" != \"YES\" ] || [ \"${CODE_SIGNING_REQUIRED:-}\" = \"NO\" ]; then\n  exit 0\nfi\n\nsign_identity=\"${EXPANDED_CODE_SIGN_IDENTITY:-}\"\nif [ -z \"$sign_identity\" ] || [ \"$sign_identity\" = \"-\" ]; then\n  sign_identity=\"${CODE_SIGN_IDENTITY:-}\"\nfi\nif [ -z \"$sign_identity\" ] || [ \"$sign_identity\" = \"-\" ]; then\n  exit 0\nfi\n\nif [ -n \"${DEVELOPMENT_TEAM:-}\" ]; then\n  certs_dir=$(mktemp -d \"${TMPDIR:-/tmp}/native-asset-certs.XXXXXX\")\n  trap 'rm -rf \"$certs_dir\"' EXIT\n  /usr/bin/security find-certificate -a -c \"$sign_identity\" -p > \"$certs_dir/certs.pem\" 2>/dev/null || true\n  /usr/bin/awk -v dir=\"$certs_dir\" '\n    /BEGIN CERTIFICATE/ { n++; file=sprintf(\"%s/cert-%d.pem\", dir, n) }\n    n > 0 { print > file }\n  ' \"$certs_dir/certs.pem\"\n  for cert in \"$certs_dir\"/cert-*.pem; do\n    [ -f \"$cert\" ] || continue\n    subject=$(/usr/bin/openssl x509 -in \"$cert\" -noout -subject 2>/dev/null || true)\n    case \"$subject\" in\n      *\"OU=${DEVELOPMENT_TEAM}\"*|*\"OU = ${DEVELOPMENT_TEAM}\"*)\n        fingerprint=$(/usr/bin/openssl x509 -in \"$cert\" -noout -fingerprint -sha1 2>/dev/null | /usr/bin/sed 's/^sha1 Fingerprint=//; s/://g')\n        if [ -n \"$fingerprint\" ]; then\n          sign_identity=\"$fingerprint\"\n        fi\n        break\n        ;;\n    esac\n  done\nfi\n\nframeworks_dir=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\nif [ ! -d \"$frameworks_dir\" ]; then\n  exit 0\nfi\n\nfind \"$frameworks_dir\" -maxdepth 1 -type d -name \"*.framework\" | while IFS= read -r framework; do\n  bundle_id=$(/usr/libexec/PlistBuddy -c \"Print CFBundleIdentifier\" \"$framework/Info.plist\" 2>/dev/null || true)\n  case \"$bundle_id\" in\n    io.flutter.flutter.native-assets.*)\n      /usr/bin/codesign --force --sign \"$sign_identity\" --preserve-metadata=identifier,entitlements --timestamp=none \"$framework\"\n      ;;\n  esac\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
