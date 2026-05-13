@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -23,11 +24,18 @@ import 'package:zone/store/p.dart';
 
 // ignore: depend_on_referenced_packages
 
+
 const int _softBreakStep = 12;
 const int _softBreakMinRunLength = 24;
 const int _markdownPreprocessCacheLimit = 96;
+const int _streamingMarkdownStableBlockTargetChars = 640;
 const String _softBreak = "\u200B";
+const String _markdownFenceBacktick = "```";
+const String _markdownFenceTilde = "~~~";
 final RegExp _markdownFenceLineExp = RegExp(r"^(```|~~~)");
+final RegExp _streamingTailFullMarkdownLineExp = RegExp(r"^\s{0,3}(#{1,6}(\s|$)|[-*+]\s+|\d+[.)]\s+|>\s+|\|)");
+final RegExp _streamingTailInlineCodeExp = RegExp(r"`[^`]+`");
+final RegExp _streamingTailLinkExp = RegExp(r"\[[^\]]+\]\([^)]+\)");
 final _markdownPreprocessCache = <String, String>{};
 const double _kInlineLatexDownwardShift = 1.5;
 
@@ -271,6 +279,613 @@ class MarkdownRender extends ConsumerWidget {
       ),
     );
   }
+}
+
+class StreamingMarkdownSplit {
+  final List<String> stableBlocks;
+  final String tail;
+
+  const StreamingMarkdownSplit({
+    required this.stableBlocks,
+    required this.tail,
+  });
+}
+
+class StreamingMarkdownRender extends ConsumerStatefulWidget {
+  final String raw;
+  final Color? color;
+  final bool streaming;
+  final bool useMessageLineHeight;
+  final double inlineLatexVerticalPaddingFactor;
+  final bool debugTintStableBlocks;
+  final Color debugStableBlockTint;
+
+  const StreamingMarkdownRender({
+    super.key,
+    required this.raw,
+    required this.streaming,
+    this.color,
+    this.useMessageLineHeight = false,
+    this.inlineLatexVerticalPaddingFactor = 0,
+    this.debugTintStableBlocks = false,
+    this.debugStableBlockTint = Colors.transparent,
+  });
+
+  @override
+  ConsumerState<StreamingMarkdownRender> createState() => _StreamingMarkdownRenderState();
+}
+
+class _StreamingMarkdownRenderState extends ConsumerState<StreamingMarkdownRender> {
+  final _stableBlockCache = <_StreamingMarkdownStableBlockCacheEntry>[];
+
+  @override
+  void didUpdateWidget(covariant StreamingMarkdownRender oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.streaming == widget.streaming) return;
+    if (widget.streaming) return;
+    _clearStableCache();
+  }
+
+  void _clearStableCache() {
+    _stableBlockCache.clear();
+  }
+
+  List<Widget> _stableMarkdownBlockWidgets(List<String> rawBlocks) {
+    _trimStableBlockCache(rawBlocks.length);
+    final widgets = <Widget>[];
+    for (int i = 0; i < rawBlocks.length; i++) {
+      widgets.add(
+        _stableMarkdownBlockWidget(
+          index: i,
+          raw: rawBlocks[i],
+        ),
+      );
+    }
+    return widgets;
+  }
+
+  void _trimStableBlockCache(int count) {
+    if (_stableBlockCache.length <= count) return;
+    _stableBlockCache.removeRange(count, _stableBlockCache.length);
+  }
+
+  Widget _stableMarkdownBlockWidget({
+    required int index,
+    required String raw,
+  }) {
+    if (index < _stableBlockCache.length) {
+      final cached = _stableBlockCache[index];
+      if (cached.matches(
+        raw: raw,
+        color: widget.color,
+        useMessageLineHeight: widget.useMessageLineHeight,
+        inlineLatexVerticalPaddingFactor: widget.inlineLatexVerticalPaddingFactor,
+        debugTintStableBlocks: widget.debugTintStableBlocks,
+        debugStableBlockTint: widget.debugStableBlockTint,
+      )) {
+        return cached.widget;
+      }
+    }
+
+    final markdown = MarkdownRender(
+      raw: raw,
+      color: widget.color,
+      useMessageLineHeight: widget.useMessageLineHeight,
+      inlineLatexVerticalPaddingFactor: widget.inlineLatexVerticalPaddingFactor,
+    );
+
+    final cached = _StreamingMarkdownStableBlockCacheEntry(
+      raw: raw,
+      color: widget.color,
+      useMessageLineHeight: widget.useMessageLineHeight,
+      inlineLatexVerticalPaddingFactor: widget.inlineLatexVerticalPaddingFactor,
+      debugTintStableBlocks: widget.debugTintStableBlocks,
+      debugStableBlockTint: widget.debugStableBlockTint,
+      widget: _debugTintStableMarkdown(markdown),
+    );
+    if (index < _stableBlockCache.length) {
+      _stableBlockCache[index] = cached;
+      return cached.widget;
+    }
+    _stableBlockCache.add(cached);
+    return cached.widget;
+  }
+
+  Widget _debugTintStableMarkdown(Widget child) {
+    if (!kDebugMode) return child;
+    if (!widget.debugTintStableBlocks) return child;
+    return ColoredBox(
+      color: widget.debugStableBlockTint,
+      child: child,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final _ = theme;
+
+    if (!widget.streaming) {
+      return MarkdownRender(
+        raw: widget.raw,
+        color: widget.color,
+        useMessageLineHeight: widget.useMessageLineHeight,
+        inlineLatexVerticalPaddingFactor: widget.inlineLatexVerticalPaddingFactor,
+      );
+    }
+
+    final split = splitStreamingMarkdown(widget.raw);
+    if (split.stableBlocks.isEmpty) {
+      return _StreamingMarkdownTail(
+        raw: split.tail,
+        color: widget.color,
+        useMessageLineHeight: widget.useMessageLineHeight,
+        inlineLatexVerticalPaddingFactor: widget.inlineLatexVerticalPaddingFactor,
+      );
+    }
+
+    final children = _stableMarkdownBlockWidgets(split.stableBlocks);
+    if (split.tail.isNotEmpty) {
+      children.add(
+        _StreamingMarkdownTail(
+          raw: split.tail,
+          color: widget.color,
+          useMessageLineHeight: widget.useMessageLineHeight,
+          inlineLatexVerticalPaddingFactor: widget.inlineLatexVerticalPaddingFactor,
+        ),
+      );
+    }
+
+    if (children.length == 1) return children.first;
+
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: children,
+    );
+  }
+}
+
+class _StreamingMarkdownStableBlockCacheEntry {
+  final String raw;
+  final Color? color;
+  final bool useMessageLineHeight;
+  final double inlineLatexVerticalPaddingFactor;
+  final bool debugTintStableBlocks;
+  final Color debugStableBlockTint;
+  final Widget widget;
+
+  const _StreamingMarkdownStableBlockCacheEntry({
+    required this.raw,
+    required this.color,
+    required this.useMessageLineHeight,
+    required this.inlineLatexVerticalPaddingFactor,
+    required this.debugTintStableBlocks,
+    required this.debugStableBlockTint,
+    required this.widget,
+  });
+
+  bool matches({
+    required String raw,
+    required Color? color,
+    required bool useMessageLineHeight,
+    required double inlineLatexVerticalPaddingFactor,
+    required bool debugTintStableBlocks,
+    required Color debugStableBlockTint,
+  }) {
+    if (this.raw != raw) return false;
+    if (this.color != color) return false;
+    if (this.useMessageLineHeight != useMessageLineHeight) return false;
+    if (this.inlineLatexVerticalPaddingFactor != inlineLatexVerticalPaddingFactor) return false;
+    if (this.debugTintStableBlocks != debugTintStableBlocks) return false;
+    return this.debugStableBlockTint == debugStableBlockTint;
+  }
+}
+
+class _StreamingMarkdownTail extends ConsumerWidget {
+  final String raw;
+  final Color? color;
+  final bool useMessageLineHeight;
+  final double inlineLatexVerticalPaddingFactor;
+
+  const _StreamingMarkdownTail({
+    required this.raw,
+    required this.color,
+    required this.useMessageLineHeight,
+    required this.inlineLatexVerticalPaddingFactor,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
+
+    if (raw.isEmpty) return const SizedBox.shrink();
+
+    final renderMarkdownAndLatexEnabled = ref.watch(P.preference.renderMarkdownAndLatexEnabled);
+    if (renderMarkdownAndLatexEnabled && shouldRenderStreamingMarkdownTailAsFullMarkdown(raw)) {
+      return MarkdownRender(
+        raw: raw,
+        color: color,
+        useMessageLineHeight: useMessageLineHeight,
+        inlineLatexVerticalPaddingFactor: inlineLatexVerticalPaddingFactor,
+      );
+    }
+
+    final textScaler = MediaQuery.textScalerOf(context);
+    const scale = Config.msgFontScale;
+    final textScaleFactor = textScaler.scale(1.0);
+    final effectiveScale = scale * textScaleFactor;
+    final qb = ref.watch(P.app.qb);
+    final effectiveMessageLineHeight = ref.watch(P.preference.effectiveMessageLineHeight);
+    final messageLineHeight = useMessageLineHeight ? effectiveMessageLineHeight : null;
+
+    return Text(
+      raw,
+      style: TextStyle(
+        color: color ?? qb,
+        fontSize: Config.markdownBodyFontSize * effectiveScale,
+        height: messageLineHeight,
+      ),
+      textScaler: .noScaling,
+    );
+  }
+}
+
+StreamingMarkdownSplit splitStreamingMarkdown(String raw) {
+  if (raw.isEmpty) return const StreamingMarkdownSplit(stableBlocks: <String>[], tail: "");
+
+  final boundaries = _stableStreamingMarkdownBoundaries(raw);
+  if (boundaries.isEmpty) {
+    return StreamingMarkdownSplit(stableBlocks: const <String>[], tail: raw);
+  }
+
+  final stableEnd = boundaries.last.offset;
+  if (stableEnd <= 0) {
+    return StreamingMarkdownSplit(stableBlocks: const <String>[], tail: raw);
+  }
+  return StreamingMarkdownSplit(
+    stableBlocks: _stableStreamingMarkdownBlocks(
+      raw: raw,
+      boundaries: boundaries,
+      stableEnd: stableEnd,
+    ),
+    tail: stableEnd >= raw.length ? "" : raw.substring(stableEnd),
+  );
+}
+
+List<String> _stableStreamingMarkdownBlocks({
+  required String raw,
+  required List<({int offset, bool hard})> boundaries,
+  required int stableEnd,
+}) {
+  final blocks = <String>[];
+  int blockStart = 0;
+
+  for (final boundary in boundaries) {
+    if (boundary.offset > stableEnd) break;
+    if (boundary.offset <= blockStart) continue;
+
+    final shouldCloseBlock =
+        boundary.hard || boundary.offset - blockStart >= _streamingMarkdownStableBlockTargetChars || boundary.offset >= stableEnd;
+    if (!shouldCloseBlock) continue;
+
+    blocks.add(raw.substring(blockStart, boundary.offset));
+    blockStart = boundary.offset;
+  }
+
+  if (blockStart < stableEnd) {
+    blocks.add(raw.substring(blockStart, stableEnd));
+  }
+  if (blocks.isNotEmpty) return blocks;
+  return <String>[raw.substring(0, stableEnd)];
+}
+
+List<({int offset, bool hard})> _stableStreamingMarkdownBoundaries(String raw) {
+  final boundaries = <({int offset, bool hard})>[];
+  bool insideFence = false;
+  String fenceMarker = "";
+  bool insideDisplayLatex = false;
+  bool insideDollarLatex = false;
+  bool previousLineWasTable = false;
+  int lineStart = 0;
+
+  while (lineStart < raw.length) {
+    int lineEnd = raw.indexOf("\n", lineStart);
+    if (lineEnd == -1) lineEnd = raw.length;
+
+    final line = raw.substring(lineStart, lineEnd);
+    final trimmedLine = line.trim();
+    final hasTrailingNewline = lineEnd < raw.length;
+    final lineBoundary = lineEnd < raw.length ? lineEnd + 1 : lineEnd;
+
+    final fenceBoundary = _resolveStreamingFenceBoundary(
+      trimmedLine: trimmedLine,
+      lineBoundary: lineBoundary,
+      insideFence: insideFence,
+      fenceMarker: fenceMarker,
+    );
+    if (fenceBoundary != null) {
+      insideFence = fenceBoundary.insideFence;
+      fenceMarker = fenceBoundary.fenceMarker;
+      final lastSafeBoundary = fenceBoundary.lastSafeBoundary;
+      if (lastSafeBoundary != null) {
+        _addStableStreamingMarkdownBoundary(
+          boundaries: boundaries,
+          offset: lastSafeBoundary,
+          hard: true,
+        );
+      }
+      lineStart = lineBoundary;
+      continue;
+    }
+
+    if (insideFence) {
+      lineStart = lineBoundary;
+      continue;
+    }
+
+    final latexBoundary = _resolveStreamingLatexBoundary(
+      trimmedLine: trimmedLine,
+      lineBoundary: lineBoundary,
+      insideDisplayLatex: insideDisplayLatex,
+      insideDollarLatex: insideDollarLatex,
+    );
+    insideDisplayLatex = latexBoundary.insideDisplayLatex;
+    insideDollarLatex = latexBoundary.insideDollarLatex;
+    if (latexBoundary.handled) {
+      final lastSafeBoundary = latexBoundary.lastSafeBoundary;
+      if (lastSafeBoundary != null) {
+        _addStableStreamingMarkdownBoundary(
+          boundaries: boundaries,
+          offset: lastSafeBoundary,
+          hard: true,
+        );
+      }
+      lineStart = lineBoundary;
+      continue;
+    }
+
+    if (trimmedLine.isEmpty) {
+      previousLineWasTable = false;
+      _addStableStreamingMarkdownBoundary(
+        boundaries: boundaries,
+        offset: lineBoundary,
+        hard: true,
+      );
+      lineStart = lineBoundary;
+      continue;
+    }
+
+    final isTableLine = _isStreamingMarkdownTableLine(trimmedLine);
+    if (isTableLine) {
+      previousLineWasTable = true;
+      lineStart = lineBoundary;
+      continue;
+    }
+
+    if (previousLineWasTable) {
+      previousLineWasTable = false;
+      _addStableStreamingMarkdownBoundary(
+        boundaries: boundaries,
+        offset: lineStart,
+        hard: true,
+      );
+    }
+
+    if (hasTrailingNewline) {
+      _addStableStreamingMarkdownBoundary(
+        boundaries: boundaries,
+        offset: lineBoundary,
+        hard: false,
+      );
+    }
+    lineStart = lineBoundary;
+  }
+
+  return boundaries;
+}
+
+void _addStableStreamingMarkdownBoundary({
+  required List<({int offset, bool hard})> boundaries,
+  required int offset,
+  required bool hard,
+}) {
+  if (offset <= 0) return;
+  if (boundaries.isEmpty) {
+    boundaries.add((offset: offset, hard: hard));
+    return;
+  }
+
+  final last = boundaries.last;
+  if (last.offset != offset) {
+    boundaries.add((offset: offset, hard: hard));
+    return;
+  }
+
+  if (!hard || last.hard) return;
+  boundaries[boundaries.length - 1] = (offset: offset, hard: true);
+}
+
+({bool insideFence, String fenceMarker, int? lastSafeBoundary})? _resolveStreamingFenceBoundary({
+  required String trimmedLine,
+  required int lineBoundary,
+  required bool insideFence,
+  required String fenceMarker,
+}) {
+  if (!_markdownFenceLineExp.hasMatch(trimmedLine)) return null;
+  if (!insideFence) {
+    final marker = trimmedLine.startsWith(_markdownFenceTilde) ? _markdownFenceTilde : _markdownFenceBacktick;
+    return (insideFence: true, fenceMarker: marker, lastSafeBoundary: null);
+  }
+
+  if (!trimmedLine.startsWith(fenceMarker)) {
+    return (insideFence: insideFence, fenceMarker: fenceMarker, lastSafeBoundary: null);
+  }
+
+  return (insideFence: false, fenceMarker: "", lastSafeBoundary: lineBoundary);
+}
+
+({bool handled, bool insideDisplayLatex, bool insideDollarLatex, int? lastSafeBoundary}) _resolveStreamingLatexBoundary({
+  required String trimmedLine,
+  required int lineBoundary,
+  required bool insideDisplayLatex,
+  required bool insideDollarLatex,
+}) {
+  if (insideDisplayLatex) {
+    final closed = trimmedLine.endsWith(r"\]");
+    return (
+      handled: true,
+      insideDisplayLatex: !closed,
+      insideDollarLatex: insideDollarLatex,
+      lastSafeBoundary: closed ? lineBoundary : null,
+    );
+  }
+
+  if (insideDollarLatex) {
+    final closed = trimmedLine.endsWith(r"$$");
+    return (
+      handled: true,
+      insideDisplayLatex: insideDisplayLatex,
+      insideDollarLatex: !closed,
+      lastSafeBoundary: closed ? lineBoundary : null,
+    );
+  }
+
+  if (trimmedLine.startsWith(r"\[") && !trimmedLine.endsWith(r"\]")) {
+    return (
+      handled: true,
+      insideDisplayLatex: true,
+      insideDollarLatex: false,
+      lastSafeBoundary: null,
+    );
+  }
+
+  if (trimmedLine.startsWith(r"\[") && trimmedLine.endsWith(r"\]")) {
+    return (
+      handled: true,
+      insideDisplayLatex: false,
+      insideDollarLatex: false,
+      lastSafeBoundary: lineBoundary,
+    );
+  }
+
+  if (trimmedLine.startsWith(r"$$") && !trimmedLine.endsWith(r"$$")) {
+    return (
+      handled: true,
+      insideDisplayLatex: false,
+      insideDollarLatex: true,
+      lastSafeBoundary: null,
+    );
+  }
+
+  if (trimmedLine == r"$$") {
+    return (
+      handled: true,
+      insideDisplayLatex: false,
+      insideDollarLatex: true,
+      lastSafeBoundary: null,
+    );
+  }
+
+  if (trimmedLine.startsWith(r"$$") && trimmedLine.endsWith(r"$$") && trimmedLine.length > 2) {
+    return (
+      handled: true,
+      insideDisplayLatex: false,
+      insideDollarLatex: false,
+      lastSafeBoundary: lineBoundary,
+    );
+  }
+
+  return (
+    handled: false,
+    insideDisplayLatex: false,
+    insideDollarLatex: false,
+    lastSafeBoundary: null,
+  );
+}
+
+bool _isStreamingMarkdownTableLine(String line) {
+  if (!line.contains("|")) return false;
+  final cells = line.split("|");
+  if (cells.length < 3) return false;
+  return true;
+}
+
+bool shouldRenderStreamingMarkdownTailAsFullMarkdown(String raw) {
+  if (raw.isEmpty) return false;
+  if (_hasUnclosedStreamingMarkdownFence(raw)) return false;
+  if (_hasUnclosedStreamingDisplayLatex(raw)) return false;
+
+  final trimmed = raw.trimLeft();
+  if (trimmed.isEmpty) return false;
+  if (_streamingTailFullMarkdownLineExp.hasMatch(trimmed)) return true;
+  if (_streamingTailInlineCodeExp.hasMatch(trimmed)) return true;
+  if (_streamingTailLinkExp.hasMatch(trimmed)) return true;
+  if (trimmed.contains(r"\(")) return true;
+  if (trimmed.contains(r"\)")) return true;
+  if (trimmed.contains(r"\[")) return true;
+  if (trimmed.contains(r"\]")) return true;
+  if (trimmed.contains("<br")) return true;
+  return trimmed.contains("<BR");
+}
+
+bool _hasUnclosedStreamingMarkdownFence(String raw) {
+  bool insideFence = false;
+  String fenceMarker = "";
+  final lines = raw.split("\n");
+
+  for (final line in lines) {
+    final trimmedLine = line.trim();
+    if (!_markdownFenceLineExp.hasMatch(trimmedLine)) continue;
+
+    if (!insideFence) {
+      insideFence = true;
+      fenceMarker = trimmedLine.startsWith(_markdownFenceTilde) ? _markdownFenceTilde : _markdownFenceBacktick;
+      continue;
+    }
+
+    if (!trimmedLine.startsWith(fenceMarker)) continue;
+    insideFence = false;
+    fenceMarker = "";
+  }
+
+  return insideFence;
+}
+
+bool _hasUnclosedStreamingDisplayLatex(String raw) {
+  bool insideDisplayLatex = false;
+  bool insideDollarLatex = false;
+  final lines = raw.split("\n");
+
+  for (final line in lines) {
+    final trimmedLine = line.trim();
+
+    if (insideDisplayLatex) {
+      if (trimmedLine.endsWith(r"\]")) insideDisplayLatex = false;
+      continue;
+    }
+
+    if (insideDollarLatex) {
+      if (trimmedLine.endsWith(r"$$")) insideDollarLatex = false;
+      continue;
+    }
+
+    if (trimmedLine.startsWith(r"\[") && !trimmedLine.endsWith(r"\]")) {
+      insideDisplayLatex = true;
+      continue;
+    }
+
+    if (trimmedLine == r"$$") {
+      insideDollarLatex = true;
+      continue;
+    }
+
+    if (trimmedLine.startsWith(r"$$") && !trimmedLine.endsWith(r"$$")) {
+      insideDollarLatex = true;
+    }
+  }
+
+  return insideDisplayLatex || insideDollarLatex;
 }
 
 ScrollController? _findParentHorizontalScrollController(BuildContext context) {

@@ -33,6 +33,8 @@ import 'package:zone/widgets/user_message_bottom.dart';
 
 const double _kBubbleMinHeight = 44.0;
 const double _kBubbleMaxWidthAdjust = .0;
+const bool _kDebugTintNonBatchStableMarkdown = true;
+const Color _kDebugNonBatchStableMarkdownTint = Color(0x224CAF50);
 
 class Message extends ConsumerStatefulWidget {
   final model.Message msg;
@@ -457,7 +459,14 @@ class _BotMessageBubble extends ConsumerWidget {
                 ],
               ),
             ),
-          if (!thinkingData.reasoning && !isBatch) MarkdownRender(raw: finalContent, useMessageLineHeight: true),
+          if (!thinkingData.reasoning && !isBatch)
+            StreamingMarkdownRender(
+              raw: finalContent,
+              streaming: thisMessageIsReceiving,
+              useMessageLineHeight: true,
+              debugTintStableBlocks: _kDebugTintNonBatchStableMarkdown,
+              debugStableBlockTint: _kDebugNonBatchStableMarkdownTint,
+            ),
           if (showReasoningHeader)
             GestureDetector(
               onTap: _toggleCotContent,
@@ -481,18 +490,24 @@ class _BotMessageBubble extends ConsumerWidget {
             AnimatedContainer(
               duration: 250.ms,
               height: cotContentHeight,
-              child: MarkdownRender(
+              child: StreamingMarkdownRender(
                 raw: thinkingData.cotContent,
                 color: cotColor,
+                streaming: thisMessageIsReceiving,
                 useMessageLineHeight: true,
+                debugTintStableBlocks: _kDebugTintNonBatchStableMarkdown,
+                debugStableBlockTint: _kDebugNonBatchStableMarkdownTint,
               ),
             ),
           if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && showingCotContent && !thinkingData.isQuickThinking && !isBatch)
             const SizedBox(height: 12),
           if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && !isBatch)
-            MarkdownRender(
+            StreamingMarkdownRender(
               raw: thinkingData.cotResult,
+              streaming: thisMessageIsReceiving,
               useMessageLineHeight: true,
+              debugTintStableBlocks: _kDebugTintNonBatchStableMarkdown,
+              debugStableBlockTint: _kDebugNonBatchStableMarkdownTint,
             ),
           if (isBatch)
             Expanded(

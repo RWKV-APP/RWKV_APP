@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 // Flutter imports:
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,7 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 
 // Project imports:
-import 'package:zone/config.dart';
 import 'package:zone/func/extract_thought_and_output_for_batch_inference.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
@@ -25,15 +23,8 @@ import 'package:zone/widgets/markdown_render.dart';
 const double _kSlotGap = 8.0;
 const double _kSlotScrollFadeHeight = 18.0;
 const double _kBatchInlineLatexVerticalPaddingFactor = 0.12;
-const int _kBatchMarkdownStableBlockTargetChars = 640;
 const bool _kDebugTintBatchStableMarkdown = true;
 const Color _kDebugBatchStableMarkdownTint = Color(0x224CAF50);
-const String _kMarkdownFenceBacktick = "```";
-const String _kMarkdownFenceTilde = "~~~";
-final RegExp _batchMarkdownFenceLineExp = RegExp(r"^(```|~~~)");
-final RegExp _batchStreamingTailFullMarkdownLineExp = RegExp(r"^\s{0,3}(#{1,6}(\s|$)|[-*+]\s+|\d+[.)]\s+|>\s+|\|)");
-final RegExp _batchStreamingTailInlineCodeExp = RegExp(r"`[^`]+`");
-final RegExp _batchStreamingTailLinkExp = RegExp(r"\[[^\]]+\]\([^)]+\)");
 
 class BatchMessageContent extends ConsumerWidget {
   final model.Message msg;
@@ -849,11 +840,14 @@ class _MarkdownBody extends ConsumerWidget {
       return Column(
         crossAxisAlignment: .stretch,
         children: [
-          _BatchIncrementalMarkdown(
+          StreamingMarkdownRender(
             key: const ValueKey("batch-output"),
             raw: output,
             streaming: streaming,
             useMessageLineHeight: true,
+            inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
+            debugTintStableBlocks: _kDebugTintBatchStableMarkdown,
+            debugStableBlockTint: _kDebugBatchStableMarkdownTint,
           ),
         ],
       );
@@ -863,584 +857,28 @@ class _MarkdownBody extends ConsumerWidget {
       crossAxisAlignment: .stretch,
       children: [
         if (thought.isNotEmpty)
-          _BatchIncrementalMarkdown(
+          StreamingMarkdownRender(
             key: const ValueKey("batch-thought"),
             raw: thought,
             color: qb.q(.55),
             streaming: streaming,
             useMessageLineHeight: true,
+            inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
+            debugTintStableBlocks: _kDebugTintBatchStableMarkdown,
+            debugStableBlockTint: _kDebugBatchStableMarkdownTint,
           ),
         if (output.isNotEmpty) const SizedBox(height: 4),
         if (output.isNotEmpty)
-          _BatchIncrementalMarkdown(
+          StreamingMarkdownRender(
             key: const ValueKey("batch-output"),
             raw: output,
             streaming: streaming,
             useMessageLineHeight: true,
+            inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
+            debugTintStableBlocks: _kDebugTintBatchStableMarkdown,
+            debugStableBlockTint: _kDebugBatchStableMarkdownTint,
           ),
       ],
     );
   }
-}
-
-class _BatchIncrementalMarkdown extends StatefulWidget {
-  final String raw;
-  final Color? color;
-  final bool streaming;
-  final bool useMessageLineHeight;
-
-  const _BatchIncrementalMarkdown({
-    required this.raw,
-    required this.streaming,
-    required this.useMessageLineHeight,
-    this.color,
-    super.key,
-  });
-
-  @override
-  State<_BatchIncrementalMarkdown> createState() => _BatchIncrementalMarkdownState();
-}
-
-class _BatchIncrementalMarkdownState extends State<_BatchIncrementalMarkdown> {
-  final _stableBlockCache = <_BatchMarkdownStableBlockCacheEntry>[];
-
-  @override
-  void didUpdateWidget(covariant _BatchIncrementalMarkdown oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.streaming == widget.streaming) return;
-    if (widget.streaming) return;
-    _clearStableCache();
-  }
-
-  void _clearStableCache() {
-    _stableBlockCache.clear();
-  }
-
-  List<Widget> _stableMarkdownBlockWidgets(List<String> rawBlocks) {
-    _trimStableBlockCache(rawBlocks.length);
-    final widgets = <Widget>[];
-    for (int i = 0; i < rawBlocks.length; i++) {
-      widgets.add(
-        _stableMarkdownBlockWidget(
-          index: i,
-          raw: rawBlocks[i],
-        ),
-      );
-    }
-    return widgets;
-  }
-
-  void _trimStableBlockCache(int count) {
-    if (_stableBlockCache.length <= count) return;
-    _stableBlockCache.removeRange(count, _stableBlockCache.length);
-  }
-
-  Widget _stableMarkdownBlockWidget({
-    required int index,
-    required String raw,
-  }) {
-    if (index < _stableBlockCache.length) {
-      final cached = _stableBlockCache[index];
-      if (cached.matches(
-        raw: raw,
-        color: widget.color,
-        useMessageLineHeight: widget.useMessageLineHeight,
-      )) {
-        return cached.widget;
-      }
-    }
-
-    final markdown = MarkdownRender(
-      raw: raw,
-      color: widget.color,
-      useMessageLineHeight: widget.useMessageLineHeight,
-      inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
-    );
-
-    final cached = _BatchMarkdownStableBlockCacheEntry(
-      raw: raw,
-      color: widget.color,
-      useMessageLineHeight: widget.useMessageLineHeight,
-      widget: _debugTintStableMarkdown(markdown),
-    );
-    if (index < _stableBlockCache.length) {
-      _stableBlockCache[index] = cached;
-      return cached.widget;
-    }
-    _stableBlockCache.add(cached);
-    return cached.widget;
-  }
-
-  Widget _debugTintStableMarkdown(Widget child) {
-    if (!kDebugMode) return child;
-    if (!_kDebugTintBatchStableMarkdown) return child;
-    return ColoredBox(
-      color: _kDebugBatchStableMarkdownTint,
-      child: child,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!widget.streaming) {
-      return MarkdownRender(
-        raw: widget.raw,
-        color: widget.color,
-        useMessageLineHeight: widget.useMessageLineHeight,
-        inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
-      );
-    }
-
-    final split = _splitBatchStreamingMarkdown(widget.raw);
-    if (split.stableBlocks.isEmpty) {
-      return _BatchStreamingTailMarkdown(
-        raw: split.tail,
-        color: widget.color,
-        useMessageLineHeight: widget.useMessageLineHeight,
-      );
-    }
-
-    final children = _stableMarkdownBlockWidgets(split.stableBlocks);
-    if (split.tail.isNotEmpty) {
-      children.add(
-        _BatchStreamingTailMarkdown(
-          raw: split.tail,
-          color: widget.color,
-          useMessageLineHeight: widget.useMessageLineHeight,
-        ),
-      );
-    }
-
-    if (children.length == 1) return children.first;
-
-    return Column(
-      crossAxisAlignment: .stretch,
-      children: children,
-    );
-  }
-}
-
-class _BatchMarkdownStableBlockCacheEntry {
-  final String raw;
-  final Color? color;
-  final bool useMessageLineHeight;
-  final Widget widget;
-
-  const _BatchMarkdownStableBlockCacheEntry({
-    required this.raw,
-    required this.color,
-    required this.useMessageLineHeight,
-    required this.widget,
-  });
-
-  bool matches({
-    required String raw,
-    required Color? color,
-    required bool useMessageLineHeight,
-  }) {
-    if (this.raw != raw) return false;
-    if (this.color != color) return false;
-    return this.useMessageLineHeight == useMessageLineHeight;
-  }
-}
-
-class _BatchStreamingTailMarkdown extends ConsumerWidget {
-  final String raw;
-  final Color? color;
-  final bool useMessageLineHeight;
-
-  const _BatchStreamingTailMarkdown({
-    required this.raw,
-    required this.color,
-    required this.useMessageLineHeight,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final _ = theme;
-
-    if (raw.isEmpty) return const SizedBox.shrink();
-
-    final renderMarkdownAndLatexEnabled = ref.watch(P.preference.renderMarkdownAndLatexEnabled);
-    if (renderMarkdownAndLatexEnabled && _shouldRenderStreamingTailAsFullMarkdown(raw)) {
-      return MarkdownRender(
-        raw: raw,
-        color: color,
-        useMessageLineHeight: useMessageLineHeight,
-        inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
-      );
-    }
-
-    final textScaler = MediaQuery.textScalerOf(context);
-    const scale = Config.msgFontScale;
-    final textScaleFactor = textScaler.scale(1.0);
-    final effectiveScale = scale * textScaleFactor;
-    final qb = ref.watch(P.app.qb);
-    final effectiveMessageLineHeight = ref.watch(P.preference.effectiveMessageLineHeight);
-    final messageLineHeight = useMessageLineHeight ? effectiveMessageLineHeight : null;
-
-    return Text(
-      raw,
-      style: TextStyle(
-        color: color ?? qb,
-        fontSize: Config.markdownBodyFontSize * effectiveScale,
-        height: messageLineHeight,
-      ),
-      textScaler: .noScaling,
-    );
-  }
-}
-
-({List<String> stableBlocks, String tail}) _splitBatchStreamingMarkdown(String raw) {
-  if (raw.isEmpty) return (stableBlocks: const <String>[], tail: "");
-
-  final boundaries = _stableBatchMarkdownBoundaries(raw);
-  if (boundaries.isEmpty) return (stableBlocks: const <String>[], tail: raw);
-
-  final stableEnd = boundaries.last.offset;
-  if (stableEnd <= 0) return (stableBlocks: const <String>[], tail: raw);
-  return (
-    stableBlocks: _stableBatchMarkdownBlocks(
-      raw: raw,
-      boundaries: boundaries,
-      stableEnd: stableEnd,
-    ),
-    tail: stableEnd >= raw.length ? "" : raw.substring(stableEnd),
-  );
-}
-
-List<String> _stableBatchMarkdownBlocks({
-  required String raw,
-  required List<({int offset, bool hard})> boundaries,
-  required int stableEnd,
-}) {
-  final blocks = <String>[];
-  int blockStart = 0;
-
-  for (final boundary in boundaries) {
-    if (boundary.offset > stableEnd) break;
-    if (boundary.offset <= blockStart) continue;
-
-    final shouldCloseBlock =
-        boundary.hard || boundary.offset - blockStart >= _kBatchMarkdownStableBlockTargetChars || boundary.offset >= stableEnd;
-    if (!shouldCloseBlock) continue;
-
-    blocks.add(raw.substring(blockStart, boundary.offset));
-    blockStart = boundary.offset;
-  }
-
-  if (blockStart < stableEnd) {
-    blocks.add(raw.substring(blockStart, stableEnd));
-  }
-  if (blocks.isNotEmpty) return blocks;
-  return <String>[raw.substring(0, stableEnd)];
-}
-
-List<({int offset, bool hard})> _stableBatchMarkdownBoundaries(String raw) {
-  final boundaries = <({int offset, bool hard})>[];
-  bool insideFence = false;
-  String fenceMarker = "";
-  bool insideDisplayLatex = false;
-  bool insideDollarLatex = false;
-  bool previousLineWasTable = false;
-  int lineStart = 0;
-
-  while (lineStart < raw.length) {
-    int lineEnd = raw.indexOf("\n", lineStart);
-    if (lineEnd == -1) lineEnd = raw.length;
-
-    final line = raw.substring(lineStart, lineEnd);
-    final trimmedLine = line.trim();
-    final hasTrailingNewline = lineEnd < raw.length;
-    final lineBoundary = lineEnd < raw.length ? lineEnd + 1 : lineEnd;
-
-    final fenceBoundary = _resolveFenceBoundary(
-      trimmedLine: trimmedLine,
-      lineBoundary: lineBoundary,
-      insideFence: insideFence,
-      fenceMarker: fenceMarker,
-    );
-    if (fenceBoundary != null) {
-      insideFence = fenceBoundary.insideFence;
-      fenceMarker = fenceBoundary.fenceMarker;
-      final lastSafeBoundary = fenceBoundary.lastSafeBoundary;
-      if (lastSafeBoundary != null) {
-        _addStableBatchMarkdownBoundary(
-          boundaries: boundaries,
-          offset: lastSafeBoundary,
-          hard: true,
-        );
-      }
-      lineStart = lineBoundary;
-      continue;
-    }
-
-    if (insideFence) {
-      lineStart = lineBoundary;
-      continue;
-    }
-
-    final latexBoundary = _resolveLatexBoundary(
-      trimmedLine: trimmedLine,
-      lineBoundary: lineBoundary,
-      insideDisplayLatex: insideDisplayLatex,
-      insideDollarLatex: insideDollarLatex,
-    );
-    insideDisplayLatex = latexBoundary.insideDisplayLatex;
-    insideDollarLatex = latexBoundary.insideDollarLatex;
-    if (latexBoundary.handled) {
-      final lastSafeBoundary = latexBoundary.lastSafeBoundary;
-      if (lastSafeBoundary != null) {
-        _addStableBatchMarkdownBoundary(
-          boundaries: boundaries,
-          offset: lastSafeBoundary,
-          hard: true,
-        );
-      }
-      lineStart = lineBoundary;
-      continue;
-    }
-
-    if (trimmedLine.isEmpty) {
-      previousLineWasTable = false;
-      _addStableBatchMarkdownBoundary(
-        boundaries: boundaries,
-        offset: lineBoundary,
-        hard: true,
-      );
-      lineStart = lineBoundary;
-      continue;
-    }
-
-    final isTableLine = _isBatchMarkdownTableLine(trimmedLine);
-    if (isTableLine) {
-      previousLineWasTable = true;
-      lineStart = lineBoundary;
-      continue;
-    }
-
-    if (previousLineWasTable) {
-      previousLineWasTable = false;
-      _addStableBatchMarkdownBoundary(
-        boundaries: boundaries,
-        offset: lineStart,
-        hard: true,
-      );
-    }
-
-    if (hasTrailingNewline) {
-      _addStableBatchMarkdownBoundary(
-        boundaries: boundaries,
-        offset: lineBoundary,
-        hard: false,
-      );
-    }
-    lineStart = lineBoundary;
-  }
-
-  return boundaries;
-}
-
-void _addStableBatchMarkdownBoundary({
-  required List<({int offset, bool hard})> boundaries,
-  required int offset,
-  required bool hard,
-}) {
-  if (offset <= 0) return;
-  if (boundaries.isEmpty) {
-    boundaries.add((offset: offset, hard: hard));
-    return;
-  }
-
-  final last = boundaries.last;
-  if (last.offset != offset) {
-    boundaries.add((offset: offset, hard: hard));
-    return;
-  }
-
-  if (!hard || last.hard) return;
-  boundaries[boundaries.length - 1] = (offset: offset, hard: true);
-}
-
-({bool insideFence, String fenceMarker, int? lastSafeBoundary})? _resolveFenceBoundary({
-  required String trimmedLine,
-  required int lineBoundary,
-  required bool insideFence,
-  required String fenceMarker,
-}) {
-  if (!_batchMarkdownFenceLineExp.hasMatch(trimmedLine)) return null;
-  if (!insideFence) {
-    final marker = trimmedLine.startsWith(_kMarkdownFenceTilde) ? _kMarkdownFenceTilde : _kMarkdownFenceBacktick;
-    return (insideFence: true, fenceMarker: marker, lastSafeBoundary: null);
-  }
-
-  if (!trimmedLine.startsWith(fenceMarker)) {
-    return (insideFence: insideFence, fenceMarker: fenceMarker, lastSafeBoundary: null);
-  }
-
-  return (insideFence: false, fenceMarker: "", lastSafeBoundary: lineBoundary);
-}
-
-({bool handled, bool insideDisplayLatex, bool insideDollarLatex, int? lastSafeBoundary}) _resolveLatexBoundary({
-  required String trimmedLine,
-  required int lineBoundary,
-  required bool insideDisplayLatex,
-  required bool insideDollarLatex,
-}) {
-  if (insideDisplayLatex) {
-    final closed = trimmedLine.endsWith(r"\]");
-    return (
-      handled: true,
-      insideDisplayLatex: !closed,
-      insideDollarLatex: insideDollarLatex,
-      lastSafeBoundary: closed ? lineBoundary : null,
-    );
-  }
-
-  if (insideDollarLatex) {
-    final closed = trimmedLine.endsWith(r"$$");
-    return (
-      handled: true,
-      insideDisplayLatex: insideDisplayLatex,
-      insideDollarLatex: !closed,
-      lastSafeBoundary: closed ? lineBoundary : null,
-    );
-  }
-
-  if (trimmedLine.startsWith(r"\[") && !trimmedLine.endsWith(r"\]")) {
-    return (
-      handled: true,
-      insideDisplayLatex: true,
-      insideDollarLatex: false,
-      lastSafeBoundary: null,
-    );
-  }
-
-  if (trimmedLine.startsWith(r"\[") && trimmedLine.endsWith(r"\]")) {
-    return (
-      handled: true,
-      insideDisplayLatex: false,
-      insideDollarLatex: false,
-      lastSafeBoundary: lineBoundary,
-    );
-  }
-
-  if (trimmedLine.startsWith(r"$$") && !trimmedLine.endsWith(r"$$")) {
-    return (
-      handled: true,
-      insideDisplayLatex: false,
-      insideDollarLatex: true,
-      lastSafeBoundary: null,
-    );
-  }
-
-  if (trimmedLine == r"$$") {
-    return (
-      handled: true,
-      insideDisplayLatex: false,
-      insideDollarLatex: true,
-      lastSafeBoundary: null,
-    );
-  }
-
-  if (trimmedLine.startsWith(r"$$") && trimmedLine.endsWith(r"$$") && trimmedLine.length > 2) {
-    return (
-      handled: true,
-      insideDisplayLatex: false,
-      insideDollarLatex: false,
-      lastSafeBoundary: lineBoundary,
-    );
-  }
-
-  return (
-    handled: false,
-    insideDisplayLatex: false,
-    insideDollarLatex: false,
-    lastSafeBoundary: null,
-  );
-}
-
-bool _isBatchMarkdownTableLine(String line) {
-  if (!line.contains("|")) return false;
-  final cells = line.split("|");
-  if (cells.length < 3) return false;
-  return true;
-}
-
-bool _shouldRenderStreamingTailAsFullMarkdown(String raw) {
-  if (raw.isEmpty) return false;
-  if (_hasUnclosedBatchMarkdownFence(raw)) return false;
-  if (_hasUnclosedBatchDisplayLatex(raw)) return false;
-
-  final trimmed = raw.trimLeft();
-  if (trimmed.isEmpty) return false;
-  if (_batchStreamingTailFullMarkdownLineExp.hasMatch(trimmed)) return true;
-  if (_batchStreamingTailInlineCodeExp.hasMatch(trimmed)) return true;
-  if (_batchStreamingTailLinkExp.hasMatch(trimmed)) return true;
-  if (trimmed.contains(r"\(")) return true;
-  if (trimmed.contains(r"\)")) return true;
-  if (trimmed.contains(r"\[")) return true;
-  if (trimmed.contains(r"\]")) return true;
-  if (trimmed.contains("<br")) return true;
-  return trimmed.contains("<BR");
-}
-
-bool _hasUnclosedBatchMarkdownFence(String raw) {
-  bool insideFence = false;
-  String fenceMarker = "";
-  final lines = raw.split("\n");
-
-  for (final line in lines) {
-    final trimmedLine = line.trim();
-    if (!_batchMarkdownFenceLineExp.hasMatch(trimmedLine)) continue;
-
-    if (!insideFence) {
-      insideFence = true;
-      fenceMarker = trimmedLine.startsWith(_kMarkdownFenceTilde) ? _kMarkdownFenceTilde : _kMarkdownFenceBacktick;
-      continue;
-    }
-
-    if (!trimmedLine.startsWith(fenceMarker)) continue;
-    insideFence = false;
-    fenceMarker = "";
-  }
-
-  return insideFence;
-}
-
-bool _hasUnclosedBatchDisplayLatex(String raw) {
-  bool insideDisplayLatex = false;
-  bool insideDollarLatex = false;
-  final lines = raw.split("\n");
-
-  for (final line in lines) {
-    final trimmedLine = line.trim();
-
-    if (insideDisplayLatex) {
-      if (trimmedLine.endsWith(r"\]")) insideDisplayLatex = false;
-      continue;
-    }
-
-    if (insideDollarLatex) {
-      if (trimmedLine.endsWith(r"$$")) insideDollarLatex = false;
-      continue;
-    }
-
-    if (trimmedLine.startsWith(r"\[") && !trimmedLine.endsWith(r"\]")) {
-      insideDisplayLatex = true;
-      continue;
-    }
-
-    if (trimmedLine == r"$$") {
-      insideDollarLatex = true;
-      continue;
-    }
-
-    if (trimmedLine.startsWith(r"$$") && !trimmedLine.endsWith(r"$$")) {
-      insideDollarLatex = true;
-    }
-  }
-
-  return insideDisplayLatex || insideDollarLatex;
 }
