@@ -73,8 +73,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "03875abfd4fbe5cd81a5262c52ebcb984824bb5c"
-          channel: "master"
+          flutter-version: "3.44.0"
+          channel: "stable"
           cache: true
           cache-path: "C:/f"
 

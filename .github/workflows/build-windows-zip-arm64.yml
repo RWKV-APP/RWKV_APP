@@ -7,6 +7,11 @@ on:
     tags:
       - "[0-9]*"
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Tag to publish zip assets to (e.g. 4.4.12). Leave empty to skip release/upload."
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -41,7 +46,7 @@ jobs:
 
           ZIP_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_windows-arm64.zip"
 
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+          if [[ "${{ github.ref }}" == refs/tags/* ]] || [[ "${{ inputs.release_tag }}" != "" ]]; then
             SHOULD_PUBLISH="true"
           else
             SHOULD_PUBLISH="false"
@@ -71,8 +76,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "03875abfd4fbe5cd81a5262c52ebcb984824bb5c"
-          channel: "master"
+          flutter-version: "3.44.0"
+          channel: "stable"
           cache: true
           cache-path: "C:/f"
 
@@ -255,6 +260,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
           generate_release_notes: false
           files: "*.zip"
 
