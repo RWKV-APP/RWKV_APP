@@ -15,9 +15,8 @@ class _ApiServerStoppingException implements Exception {}
 class _ApiServerResponseBufferGate {
   _ApiServerResponseBufferGate({
     required String staleContent,
-    String replacementPrefix = '',
+    this._replacementPrefix = '',
   }) : _staleContent = staleContent,
-       _replacementPrefix = replacementPrefix,
        _staleBufferReset = staleContent.isEmpty;
 
   final String _staleContent;

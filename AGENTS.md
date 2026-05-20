@@ -139,8 +139,8 @@ dart pub global run intl_utils:generate
 
 ### 4.10 版本与技术栈基线
 
-- Flutter 3.41.3+（stable）
-- Dart 3.11.0+（大量使用 Dot Shorthand）
+- Flutter 3.44.0+（stable）
+- Dart 3.12.0+（大量使用 Dot Shorthand）
 - 状态管理：Riverpod（`qs` / `qp` / `qsf` / `qsff`）
 - 路由：`go_router`
 - 推理：RWKV

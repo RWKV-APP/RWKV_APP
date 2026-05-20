@@ -3,6 +3,7 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
@@ -34,8 +35,8 @@ final _compositedConversations = qp<List<ConversationListItemData>>((ref) {
 void updateRolePlayConversations() async {
   qqq('load role play conversation list');
   final roleplaySessions = await RoleplayManage.getRolePlayListSession();
-  List<ConversationListItemData> data = [];
-  for (var rs in roleplaySessions) {
+  final data = <ConversationListItemData>[];
+  for (final rs in roleplaySessions) {
     data.add(ConversationListItemData.fromRoleplay(rs.values.first, rs.keys.first));
   }
   _roleplayConvList.q = data;
@@ -163,7 +164,7 @@ class _ConversationList extends ConsumerWidget {
     return ListView.separated(
       padding: .only(bottom: max(paddingBottom, 12) + appTheme.tabBarHeight + 12),
       itemCount: conversations.length,
-      cacheExtent: 200,
+      scrollCacheExtent: const ScrollCacheExtent.pixels(200),
       physics: const AlwaysScrollableScrollPhysics(),
       separatorBuilder: (context, index) => const _ConversationSeparator(),
       itemBuilder: (context, index) => _ConversationDismissible(conversation: conversations[index]),
@@ -176,11 +177,11 @@ class _ConversationSeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Divider(
-      height: 0,
-      indent: 68,
-      endIndent: 0,
-      color: Theme.of(context).dividerColor.q(.2),
+    final theme = Theme.of(context);
+    return Container(
+      height: .5,
+      margin: const .only(left: 68),
+      color: theme.dividerColor.q(.2),
     );
   }
 }

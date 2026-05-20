@@ -849,7 +849,7 @@ class _GeneratedQuestionsSectionState extends ConsumerState<_GeneratedQuestionsS
         opacity: _sectionOpacity,
         child: SizeTransition(
           sizeFactor: _sectionSize,
-          axisAlignment: -1,
+          alignment: AlignmentDirectional.topStart,
           child: IgnorePointer(
             ignoring: _isClearing,
             child: _PanelSection(
@@ -877,7 +877,7 @@ class _GeneratedQuestionsSectionState extends ConsumerState<_GeneratedQuestionsS
                     opacity: _bodyOpacity,
                     child: SizeTransition(
                       sizeFactor: _bodySize,
-                      axisAlignment: -1,
+                      alignment: AlignmentDirectional.topStart,
                       child: Column(
                         crossAxisAlignment: .stretch,
                         children: [
@@ -978,7 +978,7 @@ class _ClearExitItem extends StatelessWidget {
           position: slide,
           child: SizeTransition(
             sizeFactor: size,
-            axisAlignment: -1,
+            alignment: AlignmentDirectional.topStart,
             child: child,
           ),
         ),

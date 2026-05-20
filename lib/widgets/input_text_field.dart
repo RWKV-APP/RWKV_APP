@@ -125,7 +125,7 @@ class InputTextField extends ConsumerWidget {
                   return FadeTransition(
                     opacity: animation,
                     child: SizeTransition(
-                      axisAlignment: -1,
+                      alignment: AlignmentDirectional.topStart,
                       sizeFactor: animation,
                       child: child,
                     ),
@@ -148,7 +148,7 @@ class InputTextField extends ConsumerWidget {
                     return FadeTransition(
                       opacity: animation,
                       child: SizeTransition(
-                        axisAlignment: -1,
+                        alignment: AlignmentDirectional.topStart,
                         sizeFactor: animation,
                         child: child,
                       ),
@@ -173,7 +173,7 @@ class InputTextField extends ConsumerWidget {
                     return FadeTransition(
                       opacity: animation,
                       child: SizeTransition(
-                        axisAlignment: -1,
+                        alignment: AlignmentDirectional.topStart,
                         sizeFactor: animation,
                         child: child,
                       ),
@@ -520,7 +520,7 @@ class _SeeImageQuickButton extends ConsumerWidget {
           opacity: animation,
           child: SizeTransition(
             axis: Axis.horizontal,
-            axisAlignment: -1,
+            alignment: AlignmentDirectional.topStart,
             sizeFactor: animation,
             child: child,
           ),
@@ -673,7 +673,7 @@ class _TalkSourceQuickButton extends ConsumerWidget {
           opacity: animation,
           child: SizeTransition(
             axis: Axis.horizontal,
-            axisAlignment: -1,
+            alignment: AlignmentDirectional.topStart,
             sizeFactor: animation,
             child: child,
           ),

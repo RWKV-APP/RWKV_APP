@@ -96,12 +96,10 @@ class ModelSelector extends ConsumerWidget {
   }
 
   const ModelSelector._({
-    required ScrollController scrollController,
-    required bool showNeko,
-    required bool rolePlayOnly,
-  }) : _showNeko = showNeko,
-       _rolePlayOnly = rolePlayOnly,
-       _scrollController = scrollController;
+    required this._scrollController,
+    required this._showNeko,
+    required this._rolePlayOnly,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

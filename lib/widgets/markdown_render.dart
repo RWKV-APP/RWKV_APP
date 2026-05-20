@@ -22,9 +22,6 @@ import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 
-// ignore: depend_on_referenced_packages
-
-
 const int _softBreakStep = 12;
 const int _softBreakMinRunLength = 24;
 const int _markdownPreprocessCacheLimit = 96;
@@ -1193,8 +1190,8 @@ class _InlineLatexBaselineProxy extends SingleChildRenderObjectWidget {
 
 class _RenderInlineLatexBaselineProxy extends RenderProxyBox {
   _RenderInlineLatexBaselineProxy({
-    required double baseline,
-  }) : _baseline = baseline;
+    required this._baseline,
+  });
 
   double _baseline;
 
