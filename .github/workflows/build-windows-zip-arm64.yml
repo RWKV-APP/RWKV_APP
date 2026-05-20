@@ -78,8 +78,27 @@ jobs:
         with:
           flutter-version: "3.44.0"
           channel: "stable"
+          architecture: "x64"
           cache: true
           cache-path: "C:/f"
+
+      - name: Switch Flutter Dart SDK to arm64
+        shell: pwsh
+        run: |
+          $engineContentHash = "fcf463a2242790d1fdcd9d044f533080f5022e18"
+          $dartSdkUrl = "https://storage.googleapis.com/flutter_infra_release/flutter/$engineContentHash/dart-sdk-windows-arm64.zip"
+          $dartSdkZip = Join-Path $env:RUNNER_TEMP "dart-sdk-windows-arm64.zip"
+          $flutterCache = Join-Path $env:FLUTTER_ROOT "bin\cache"
+          $dartSdkPath = Join-Path $flutterCache "dart-sdk"
+
+          Invoke-WebRequest -Uri $dartSdkUrl -OutFile $dartSdkZip
+          if (Test-Path $dartSdkPath) {
+            Remove-Item -Path $dartSdkPath -Recurse -Force
+          }
+          Expand-Archive -Path $dartSdkZip -DestinationPath $flutterCache -Force
+
+          flutter --version
+          dart --version
 
       - name: Override dependency path
         run: |
