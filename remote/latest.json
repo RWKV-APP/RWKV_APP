@@ -63,30 +63,30 @@
         "date": 1776757968
       },
       {
-        "name": "RWKV7-G1f 7.2B",
+        "name": "RWKV7-G1g 7.2B",
         "type": "gguf",
         "modelSize": 7.2,
-        "fileName": "rwkv7-g1f-7.2b-20260414-ctx8192-Q4_K_M.gguf",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1f-7.2b-20260414-ctx8192-Q4_K_M.gguf",
-        "fileSize": 4579571904,
+        "fileName": "rwkv7-g1g-7.2b-20260523-ctx8192-Q4_K_M.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1g-7.2b-20260523-ctx8192-Q4_K_M.gguf",
+        "fileSize": 4579571840,
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1776267824
+        "date": 1779593997
       },
       {
-        "name": "RWKV7-G1f 13.3B",
+        "name": "RWKV7-G1g 13.3B",
         "type": "gguf",
         "modelSize": 13.3,
-        "fileName": "rwkv7-g1f-13.3b-20260415-ctx8192-Q4_K_M.gguf",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1f-13.3b-20260415-ctx8192-Q4_K_M.gguf",
-        "fileSize": 8457371872,
+        "fileName": "rwkv7-g1g-13.3b-20260523-ctx8192-Q4_K_M.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1g-13.3b-20260523-ctx8192-Q4_K_M.gguf",
+        "fileSize": 8457371808,
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "windows"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1776448226
+        "date": 1779593975
       },
       {
         "name": "RWKV7-G1d 0.1B (WebRWKV)",
@@ -137,6 +137,30 @@
         "date": 1776774554
       },
       {
+        "name": "RWKV7-G1g 7.2B (WebRWKV)",
+        "modelSize": 7.2,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1g-7.2b-20260523-ctx8192-nf4.prefab",
+        "fileSize": 4938093745,
+        "quantization": "NF4",
+        "platforms": ["macos", "web", "windows"],
+        "backends": ["webRwkv"],
+        "unsupportedSocBrand": ["snapdragon"],
+        "tags": ["reason", "batch"],
+        "date": 1779552010
+      },
+      {
+        "name": "RWKV7-G1g 13.3B (WebRWKV)",
+        "modelSize": 13.3,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1g-13.3b-20260523-ctx8192-nf4.prefab",
+        "fileSize": 8504144960,
+        "quantization": "NF4",
+        "platforms": ["macos", "web", "windows"],
+        "backends": ["webRwkv"],
+        "unsupportedSocBrand": ["snapdragon"],
+        "tags": ["reason", "batch"],
+        "date": 1779546500
+      },
+      {
         "name": "RWKV7-G1d 0.1B (MLX)",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-0.1B-g1d-20260129-ctx8192-mlx-8bit.zip",
@@ -181,15 +205,15 @@
         "date": 1777038419
       },
       {
-        "name": "RWKV7-G1f 7.2B (MLX)",
+        "name": "RWKV7-G1g 7.2B (MLX)",
         "modelSize": 7.2,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-7.2B-g1f-20260414-ctx8192-mlx-6bit.zip",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-7.2B-g1g-20260523-ctx8192-mlx-6bit.zip",
         "fileSize": 5983580523,
         "quantization": "INT6",
         "platforms": ["macos"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu", "batch"],
-        "date": 1777038540
+        "date": 1779555688
       },
       {
         "name": "RWKV7-G1d 0.1B (CoreML)",
@@ -234,18 +258,6 @@
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
         "date": 1777626519
-      },
-      {
-        "name": "RWKV7-G1f 7.2B (WebRWKV)",
-        "modelSize": 7.2,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1f-7.2b-20260414-ctx8192-nf4.prefab",
-        "fileSize": 5233791487,
-        "quantization": "NF4",
-        "platforms": ["macos", "web", "windows"],
-        "backends": ["webRwkv"],
-        "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "batch"],
-        "date": 1776270123
       },
       {
         "name": "RWKV7-G1 1.5B Neko (WebRWKV)",
