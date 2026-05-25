@@ -1260,6 +1260,9 @@ extension $Chat on _Chat {
   Future<void> onSendButtonPressed({
     required DemoType preferredDemoType,
   }) async {
+    final inSee = P.app.pageKey.q == .see;
+    if (!inSee && _showGeneratingSendBlockedAlert()) return;
+
     final textToSend = textInInput.q.trim();
 
     if (P.app.demoType.q == .tts) {
@@ -1269,8 +1272,6 @@ extension $Chat on _Chat {
 
     qq;
     if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
-
-    final inSee = P.app.pageKey.q == .see;
 
     if (inSee) {
       final hasAtLeastOneImage = P.msg.hasAtLeastOneImage.q;
@@ -1383,14 +1384,14 @@ extension $Chat on _Chat {
 
   Future<void> onKeyboardSubmitted(String aString) async {
     qqq(aString);
-    final textToSend = textInInput.q.trim();
-
-    final generating = P.rwkvGeneration.generating.q;
-
-    if (generating) {
-      Alert.info("Please wait for the previous message to be generated");
+    if (P.app.pageKey.q == .see) {
+      await onSendButtonPressed(preferredDemoType: .see);
       return;
     }
+
+    if (_showGeneratingSendBlockedAlert()) return;
+
+    final textToSend = textInInput.q.trim();
 
     if (P.app.demoType.q == .tts) {
       await P.talk.gen();
@@ -1585,6 +1586,12 @@ extension $Chat on _Chat {
     P.rwkvGeneration.stop();
   }
 
+  bool _showGeneratingSendBlockedAlert() {
+    if (!P.rwkvGeneration.generating.q) return false;
+    Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+    return true;
+  }
+
   /// 拼装消息, 调用 rwkv 的 sendMessages 方法
   Future<void> send(
     String raw, {
@@ -1596,6 +1603,8 @@ extension $Chat on _Chat {
     bool isRegenerate = false,
   }) async {
     assert(!raw.contains(Config.userMsgModifierSep));
+
+    if (_showGeneratingSendBlockedAlert()) return;
 
     raw = raw.trim();
     String message = raw;
