@@ -1222,6 +1222,54 @@
         "isDebug": true
       },
       {
+        "name": "RWKV7-G1g 7.2B (8 Elite Gen5)",
+        "modelSize": 7.2,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-7.2b-20260523-ctx8192-a16w4-lpbq-8elitegen5.rmpack",
+        "fileSize": 4706418688,
+        "quantization": "w4a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1779767067
+      },
+      {
+        "name": "RWKV7-G1g 7.2B (8 Elite)",
+        "modelSize": 7.2,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-7.2b-20260523-ctx8192-a16w4-lpbq-8elite.rmpack",
+        "fileSize": 4700135424,
+        "quantization": "w4a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["8 Elite"],
+        "date": 1779767014
+      },
+      {
+        "name": "RWKV7-G1g 7.2B (8 Gen 3)",
+        "modelSize": 7.2,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-7.2b-20260523-ctx8192-a16w4-lpbq-8gen3.rmpack",
+        "fileSize": 4699209728,
+        "quantization": "w4a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["8 Gen 3"],
+        "date": 1779766996
+      },
+      {
+        "name": "RWKV7-G1g 7.2B (8s Gen 3)",
+        "modelSize": 7.2,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-7.2b-20260523-ctx8192-a16w4-lpbq-8sgen3.rmpack",
+        "fileSize": 4698288128,
+        "quantization": "w4a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["8s Gen 3"],
+        "date": 1779766964
+      },
+      {
         "name": "RWKV7-G1 1.5B Neko (8 Elite)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1-1.5b-Lonely-Neko-a16w8-8elite.rmpack",
