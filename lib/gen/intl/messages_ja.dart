@@ -658,6 +658,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "会話を.txtファイルにエクスポート",
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("データのエクスポート"),
+    "export_debug_panels_to_txt": MessageLookupByLibrary.simpleMessage(
+      "デバッグパネルを .txt にエクスポート",
+    ),
     "export_failed": MessageLookupByLibrary.simpleMessage("エクスポート失敗"),
     "export_markdown_archive": MessageLookupByLibrary.simpleMessage(
       "Markdown アーカイブをエクスポート",

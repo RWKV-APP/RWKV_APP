@@ -339,6 +339,16 @@ class S {
     );
   }
 
+  /// `导出调试面板为 .txt`
+  String get export_debug_panels_to_txt {
+    return Intl.message(
+      '导出调试面板为 .txt',
+      name: 'export_debug_panels_to_txt',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `已选择 {count}`
   String selected_count(Object count) {
     return Intl.message(

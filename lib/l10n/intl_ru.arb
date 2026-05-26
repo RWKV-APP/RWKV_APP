@@ -38,6 +38,7 @@
   "close": "Закрыть",
   "runtime_log_panel": "Панель журнала выполнения",
   "open_debug_log_panel": "Открыть панель отладки",
+  "export_debug_panels_to_txt": "Экспорт панелей отладки в .txt",
   "selected_count": "Выбрано {count}",
   "select_all": "Выбрать все",
   "cancel_all_selection": "Отменить выбор всех",

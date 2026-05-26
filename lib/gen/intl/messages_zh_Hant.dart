@@ -607,6 +607,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "將對話匯出為 .txt 檔案",
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("匯出資料"),
+    "export_debug_panels_to_txt": MessageLookupByLibrary.simpleMessage(
+      "匯出調試面板為 .txt",
+    ),
     "export_failed": MessageLookupByLibrary.simpleMessage("匯出失敗"),
     "export_markdown_archive": MessageLookupByLibrary.simpleMessage(
       "匯出 Markdown 封存",

@@ -8,6 +8,8 @@ class _RWKVDebug {
   late final renderSpaceSymbol = qs(false);
   late final showPrefillLogOnly = qs(true);
 
+  late final rawRuntimeLog = qs("");
+  late final rawStateInfo = qs("");
   late final runtimeLog = qs<List<LogItem>>([]);
   late final stateLogList = qs<List<StateLog>>([]);
 }
@@ -61,6 +63,94 @@ extension $RWKVDebug on _RWKVDebug {
     await setShowPrefillLogOnly(!showPrefillLogOnly.q);
   }
 
+  Future<void> exportDebugPanelsToTxt() async {
+    final s = S.current;
+
+    try {
+      final runtimeLogText = await _requestLatestRawRuntimeLog();
+      final stateInfoText = await _requestLatestRawStateInfo();
+      if (!hasDebugPanelsExportData(runtimeLog: runtimeLogText, stateInfo: stateInfoText)) {
+        Alert.warning(s.no_data);
+        return;
+      }
+
+      final content = buildDebugPanelsExportContent(
+        runtimeLogTitle: s.runtime_log_panel,
+        statePanelTitle: s.state_panel,
+        runtimeLog: runtimeLogText,
+        stateInfo: stateInfoText,
+      );
+      final file = await _writeDebugPanelsExportFile(content);
+      final xFile = XFile(file.path, mimeType: 'text/plain');
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [xFile],
+          subject: basename(file.path),
+          title: s.export_debug_panels_to_txt,
+        ),
+      );
+    } catch (e, stackTrace) {
+      qqe("Export debug panels failed: $e");
+      Sentry.captureException(e, stackTrace: stackTrace);
+      Alert.error(s.export_failed);
+    }
+  }
+
+  Future<String> _requestLatestRawRuntimeLog() async {
+    if (P.rwkvBridge.sendPort == null) {
+      return rawRuntimeLog.q;
+    }
+
+    final request = to_rwkv.DumpLog();
+    final responseFuture = P.rwkvBridge.broadcastStream
+        .whereType<from_rwkv.RuntimeLog>()
+        .where((from_rwkv.RuntimeLog event) => event.req?.requestId == request.requestId)
+        .first
+        .timeout(const Duration(seconds: 3));
+    P.rwkvBridge.send(request);
+
+    try {
+      final response = await responseFuture;
+      return response.runtimeLog;
+    } catch (_) {
+      return rawRuntimeLog.q;
+    }
+  }
+
+  Future<String> _requestLatestRawStateInfo() async {
+    if (P.rwkvBridge.sendPort == null) {
+      return "";
+    }
+
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return "";
+    }
+
+    final request = to_rwkv.DumpStateInfo(modelID: modelID);
+    final responseFuture = P.rwkvBridge.broadcastStream
+        .whereType<from_rwkv.StateInfo>()
+        .where((from_rwkv.StateInfo event) => event.req?.requestId == request.requestId)
+        .first
+        .timeout(const Duration(seconds: 3));
+    P.rwkvBridge.send(request);
+
+    try {
+      final response = await responseFuture;
+      return response.stateInfo;
+    } catch (_) {
+      return rawStateInfo.q;
+    }
+  }
+
+  Future<File> _writeDebugPanelsExportFile(String content) async {
+    final tempDir = await getTemporaryDirectory();
+    final fileName = buildDebugPanelsExportFileName(now: DateTime.now());
+    final file = File(join(tempDir.path, fileName));
+    await file.writeAsString(content, encoding: utf8);
+    return file;
+  }
+
   /// 解析运行时日志，按 [INFO]、[DEBUG]、[WARN] 等标签分割
   List<LogItem> _parseRuntimeLog(String runtimeLog) {
     if (runtimeLog.isEmpty) return [];
@@ -99,4 +189,51 @@ extension $RWKVDebug on _RWKVDebug {
 
     return logItems;
   }
+}
+
+bool hasDebugPanelsExportData({
+  required String runtimeLog,
+  required String stateInfo,
+}) {
+  return runtimeLog.trim().isNotEmpty || stateInfo.trim().isNotEmpty;
+}
+
+String buildDebugPanelsExportContent({
+  required String runtimeLogTitle,
+  required String statePanelTitle,
+  required String runtimeLog,
+  required String stateInfo,
+}) {
+  final buffer = StringBuffer()
+    ..writeln('===== $runtimeLogTitle =====')
+    ..writeln()
+    ..write(runtimeLog);
+  if (runtimeLog.isNotEmpty && !runtimeLog.endsWith('\n')) {
+    buffer.writeln();
+  }
+
+  buffer
+    ..writeln()
+    ..writeln('===== $statePanelTitle =====')
+    ..writeln()
+    ..write(stateInfo);
+  if (stateInfo.isNotEmpty && !stateInfo.endsWith('\n')) {
+    buffer.writeln();
+  }
+
+  return buffer.toString();
+}
+
+String buildDebugPanelsExportFileName({required DateTime now}) {
+  return 'rwkv_debug_panels_${_formatDebugPanelsExportTimestamp(now)}.txt';
+}
+
+String _formatDebugPanelsExportTimestamp(DateTime dateTime) {
+  final year = dateTime.year.toString().padLeft(4, '0');
+  final month = dateTime.month.toString().padLeft(2, '0');
+  final day = dateTime.day.toString().padLeft(2, '0');
+  final hour = dateTime.hour.toString().padLeft(2, '0');
+  final minute = dateTime.minute.toString().padLeft(2, '0');
+  final second = dateTime.second.toString().padLeft(2, '0');
+  return '$year$month${day}_$hour$minute$second';
 }

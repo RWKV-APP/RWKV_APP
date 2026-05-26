@@ -771,6 +771,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Export conversation to .txt file",
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("Export Data"),
+    "export_debug_panels_to_txt": MessageLookupByLibrary.simpleMessage(
+      "Export Debug Panels to .txt",
+    ),
     "export_failed": MessageLookupByLibrary.simpleMessage("Export failed"),
     "export_markdown_archive": MessageLookupByLibrary.simpleMessage(
       "Export Markdown Archive",

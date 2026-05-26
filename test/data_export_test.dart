@@ -73,6 +73,48 @@ void main() {
     });
   });
 
+  group('debug panels export helpers', () {
+    test('builds safe txt file names', () {
+      final fileName = buildDebugPanelsExportFileName(now: DateTime(2026, 5, 26, 16, 14, 56));
+
+      expect(fileName, 'rwkv_debug_panels_20260526_161456.txt');
+    });
+
+    test('keeps runtime log and state info raw text in export content', () {
+      const runtimeLog = '[INFO][2026-05-26 16:14:56.001] hello\nraw runtime line\n';
+      const stateInfo = 'text =raw state text, remaining lifespan = 42';
+      final content = buildDebugPanelsExportContent(
+        runtimeLogTitle: 'Runtime Log Panel',
+        statePanelTitle: 'State Panel',
+        runtimeLog: runtimeLog,
+        stateInfo: stateInfo,
+      );
+
+      expect(content, contains('===== Runtime Log Panel ====='));
+      expect(content, contains(runtimeLog));
+      expect(content, contains('===== State Panel ====='));
+      expect(content, contains(stateInfo));
+      expect(hasDebugPanelsExportData(runtimeLog: runtimeLog, stateInfo: stateInfo), isTrue);
+    });
+
+    test('allows export when only one panel has content', () {
+      const stateInfo = 'text =state only, remaining lifespan = 1';
+      final content = buildDebugPanelsExportContent(
+        runtimeLogTitle: 'Runtime Log Panel',
+        statePanelTitle: 'State Panel',
+        runtimeLog: '',
+        stateInfo: stateInfo,
+      );
+
+      expect(content, contains(stateInfo));
+      expect(hasDebugPanelsExportData(runtimeLog: '', stateInfo: stateInfo), isTrue);
+    });
+
+    test('detects empty runtime log and state info', () {
+      expect(hasDebugPanelsExportData(runtimeLog: '  \n', stateInfo: '\n'), isFalse);
+    });
+  });
+
   group('database export helpers', () {
     test('reads all conversations and writes an openable SQLite snapshot', () async {
       final db = AppDatabase(NativeDatabase.memory());

@@ -208,12 +208,16 @@ extension _$RWKVBridge on _RWKVBridge {
         P.rwkvGeneration.generating.q = res.isGenerating;
 
       case from_rwkv.StateInfo response:
+        P.rwkvDebug.rawStateInfo.q = response.stateInfo;
         final stateInfo = response.stateInfo.trim();
-        if (stateInfo.isEmpty) return;
+        if (stateInfo.isEmpty) {
+          P.rwkvDebug.stateLogList.q = [];
+          return;
+        }
         final stateLogList = stateInfo.split("text =").where((e) => e.isNotEmpty).map((e) {
           final raw = e.split(", remaining lifespan = ");
           final text = raw[0];
-          final lifeSpan = int.tryParse(raw[1]) ?? 0;
+          final lifeSpan = raw.length > 1 ? int.tryParse(raw[1]) ?? 0 : 0;
           return StateLog(text: text, lifeSpan: lifeSpan);
         }).toList();
         P.rwkvDebug.stateLogList.q = stateLogList;
@@ -247,6 +251,7 @@ extension _$RWKVBridge on _RWKVBridge {
         P.rwkvParams.supportedBatchSizes.q = response.supportedBatchSizes;
 
       case from_rwkv.RuntimeLog response:
+        P.rwkvDebug.rawRuntimeLog.q = response.runtimeLog;
         P.rwkvDebug.runtimeLog.q = P.rwkvDebug._parseRuntimeLog(response.runtimeLog);
 
       default:

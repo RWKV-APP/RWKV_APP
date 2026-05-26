@@ -652,6 +652,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "대화를 .txt 파일로 내보내기",
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("데이터 내보내기"),
+    "export_debug_panels_to_txt": MessageLookupByLibrary.simpleMessage(
+      "디버그 패널을 .txt로 내보내기",
+    ),
     "export_failed": MessageLookupByLibrary.simpleMessage("내보내기 실패"),
     "export_markdown_archive": MessageLookupByLibrary.simpleMessage(
       "Markdown 아카이브 내보내기",

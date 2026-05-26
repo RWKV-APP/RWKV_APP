@@ -38,6 +38,7 @@
   "close": "关闭",
   "runtime_log_panel": "运行日志面板",
   "open_debug_log_panel": "打开调试日志面板",
+  "export_debug_panels_to_txt": "导出调试面板为 .txt",
   "selected_count": "已选择 {count}",
   "select_all": "全选",
   "cancel_all_selection": "取消全选",

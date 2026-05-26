@@ -794,6 +794,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Экспортировать диалог в файл .txt",
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("Экспорт данных"),
+    "export_debug_panels_to_txt": MessageLookupByLibrary.simpleMessage(
+      "Экспорт панелей отладки в .txt",
+    ),
     "export_failed": MessageLookupByLibrary.simpleMessage("Экспорт не удался"),
     "export_markdown_archive": MessageLookupByLibrary.simpleMessage(
       "Экспорт Markdown-архива",

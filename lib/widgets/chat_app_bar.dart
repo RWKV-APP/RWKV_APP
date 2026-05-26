@@ -220,12 +220,18 @@ class _MorePopupMenuButton extends ConsumerWidget {
     await StatePanel.show();
   }
 
+  void _exportDebugPanelsTapped() async {
+    await P.rwkvDebug.exportDebugPanelsToTxt();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final version = ref.watch(P.app.version);
     final s = S.of(context);
 
     return PopupMenuButton(
+      color: theme.popupMenuTheme.color,
       onSelected: (v) {
         switch (v) {
           case 1:
@@ -239,6 +245,9 @@ class _MorePopupMenuButton extends ConsumerWidget {
             break;
           case 4:
             _statePanelTapped();
+            break;
+          case 5:
+            _exportDebugPanelsTapped();
             break;
           default:
             break;
@@ -289,6 +298,16 @@ class _MorePopupMenuButton extends ConsumerWidget {
                 const FaIcon(FontAwesomeIcons.satellite, size: 14),
                 const SizedBox(width: 8),
                 Text(s.open_state_panel),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 5,
+            child: Row(
+              children: [
+                const FaIcon(FontAwesomeIcons.fileExport, size: 14),
+                const SizedBox(width: 8),
+                Text(s.export_debug_panels_to_txt),
               ],
             ),
           ),

@@ -38,6 +38,7 @@
   "close": "Close",
   "runtime_log_panel": "Runtime Log Panel",
   "open_debug_log_panel": "Open Debug Log Panel",
+  "export_debug_panels_to_txt": "Export Debug Panels to .txt",
   "selected_count": "Selected {count}",
   "select_all": "Select All",
   "cancel_all_selection": "Cancel All Selection",
