@@ -115,7 +115,7 @@ dependencies:
   permission_handler:
   photo_viewer:
   pretty_qr_code:
-  record:
+  record: 6.2.1
   rxdart:
   sentry_flutter: ^9.18.0
   share_plus:
