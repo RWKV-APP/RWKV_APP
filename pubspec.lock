@@ -285,10 +285,10 @@ packages:
     dependency: transitive
     description:
       name: code_assets
-      sha256: dad6bf6b9f4f378b0a69edbf42584d336efd1a9ce15deb1ba591cbb1b5ff440f
+      sha256: "67cf6d84013f9c601e42a6f8a6b74c4c0d9dc1a1619d775f2b28b732d3551b85"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   collection:
     dependency: "direct main"
     description:
@@ -788,10 +788,10 @@ packages:
     dependency: transitive
     description:
       name: gradient_borders
-      sha256: "492bc88ab8d88a4117a7f00e525a669b65f19973bea7ee677f9d9de7603bf037"
+      sha256: c65c9b2169cb32fa7164625fc438a597409576e4b5bee498655152abea4a93cc
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.4"
   graphs:
     dependency: transitive
     description:
@@ -1581,10 +1581,10 @@ packages:
     dependency: "direct dev"
     description:
       name: sentry_dart_plugin
-      sha256: "2c5f263f8d5aea3cf387a7e03f77e355d35c71bd9a429474d633fbc085b86ceb"
+      sha256: da9c1d0b3c87a251bfc36301f16af090a88c2d59128fe9a6f908f5ac20340c97
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.0"
+    version: "3.4.0"
   sentry_flutter:
     dependency: "direct main"
     description:
@@ -2060,10 +2060,10 @@ packages:
     dependency: transitive
     description:
       name: vector_graphics_compiler
-      sha256: b9b3f391857781aa96acacef96066f2f49b4cd03cf9fce3ca4d8da2ef5ea129e
+      sha256: "09854c7633b215e6f7bb2a9adb607bc525bae8655c7fc29db880c33e62f72230"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.3"
+    version: "1.2.4"
   vector_math:
     dependency: transitive
     description:
