@@ -128,6 +128,150 @@ def test_chat_completions_streaming(base_url: str) -> bool:
         return False
 
 
+def test_chat_completions_tool_call_blocking(base_url: str) -> bool:
+    print("\n=== POST /v1/chat/completions (tool calling, non-streaming) ===")
+    tools = [
+        {
+            "type": "function",
+            "function": {
+                "name": "get_current_time",
+                "description": "Get the current time in a given timezone",
+                "parameters": {
+                    "type": "object",
+                    "properties": {"timezone": {"type": "string"}},
+                    "required": ["timezone"],
+                },
+            },
+        }
+    ]
+    payload = {
+        "model": "rwkv",
+        "messages": [{"role": "user", "content": "What time is it right now? Use the tool."}],
+        "tools": tools,
+        "tool_choice": {"type": "function", "function": {"name": "get_current_time"}},
+        "stream": False,
+        "max_tokens": 128,
+    }
+    try:
+        r = requests.post(f"{base_url}/v1/chat/completions", json=payload, timeout=120)
+        print(f"Status: {r.status_code}")
+        data = r.json()
+        print(f"Response: {json.dumps(data, indent=2, ensure_ascii=False)}")
+        assert r.status_code == 200, f"Expected 200, got {r.status_code}"
+        msg = data["choices"][0]["message"]
+        assert "tool_calls" in msg, "Missing tool_calls in response message"
+        assert len(msg["tool_calls"]) > 0, "Empty tool_calls"
+        print("PASS")
+        return True
+    except Exception as e:
+        print(f"FAIL: {e}")
+        return False
+
+
+def test_chat_completions_tool_call_streaming(base_url: str) -> bool:
+    print("\n=== POST /v1/chat/completions (tool calling, streaming) ===")
+    tools = [
+        {
+            "type": "function",
+            "function": {
+                "name": "get_current_time",
+                "description": "Get the current time in a given timezone",
+                "parameters": {
+                    "type": "object",
+                    "properties": {"timezone": {"type": "string"}},
+                    "required": ["timezone"],
+                },
+            },
+        }
+    ]
+    payload = {
+        "model": "rwkv",
+        "messages": [{"role": "user", "content": "Use the tool to get current time in UTC."}],
+        "tools": tools,
+        "tool_choice": {"type": "function", "function": {"name": "get_current_time"}},
+        "stream": True,
+        "max_tokens": 128,
+    }
+    try:
+        r = requests.post(
+            f"{base_url}/v1/chat/completions",
+            json=payload,
+            timeout=120,
+            stream=True,
+        )
+        print(f"Status: {r.status_code}")
+        assert r.status_code == 200, f"Expected 200, got {r.status_code}"
+
+        saw_done = False
+        saw_tool_calls = False
+        last_finish_reason = None
+
+        for line in r.iter_lines(decode_unicode=True):
+            if not line:
+                continue
+            if not line.startswith("data: "):
+                continue
+            payload_str = line[6:].strip()
+            if payload_str == "[DONE]":
+                saw_done = True
+                break
+
+            chunk = json.loads(payload_str)
+            choice0 = chunk.get("choices", [{}])[0]
+            delta = choice0.get("delta", {})
+            last_finish_reason = choice0.get("finish_reason", last_finish_reason)
+            if "tool_calls" in delta:
+                saw_tool_calls = True
+                print("tool_calls delta:", json.dumps(delta["tool_calls"], ensure_ascii=False))
+
+        assert saw_done, "Did not receive [DONE]"
+        assert saw_tool_calls, "Did not receive tool_calls delta"
+        # Depending on server semantics, finish_reason can be tool_calls or stop.
+        assert last_finish_reason in ("tool_calls", "stop", None), f"Unexpected finish_reason: {last_finish_reason}"
+        print("PASS")
+        return True
+    except Exception as e:
+        print(f"FAIL: {e}")
+        return False
+
+
+def test_chat_completions_legacy_function_call_blocking(base_url: str) -> bool:
+    print("\n=== POST /v1/chat/completions (legacy function_call, non-streaming) ===")
+    functions = [
+        {
+            "name": "get_current_time",
+            "description": "Get the current time in a given timezone",
+            "parameters": {
+                "type": "object",
+                "properties": {"timezone": {"type": "string"}},
+                "required": ["timezone"],
+            },
+        }
+    ]
+    payload = {
+        "model": "rwkv",
+        "messages": [{"role": "user", "content": "Use the function to get the time in UTC."}],
+        "functions": functions,
+        "function_call": {"name": "get_current_time"},
+        "stream": False,
+        "max_tokens": 128,
+    }
+    try:
+        r = requests.post(f"{base_url}/v1/chat/completions", json=payload, timeout=120)
+        print(f"Status: {r.status_code}")
+        data = r.json()
+        print(f"Response: {json.dumps(data, indent=2, ensure_ascii=False)}")
+        assert r.status_code == 200, f"Expected 200, got {r.status_code}"
+        msg = data["choices"][0]["message"]
+        # Server may return modern tool_calls and mirror the first into legacy function_call.
+        assert "function_call" in msg or "tool_calls" in msg, "Missing function_call/tool_calls"
+        print("PASS")
+        return True
+    except Exception as e:
+        print(f"FAIL: {e}")
+        return False
+
+
 def test_completions_blocking(base_url: str) -> bool:
     print("\n=== POST /v1/completions (non-streaming) ===")
     payload = {
@@ -239,7 +383,7 @@ def test_not_found(base_url: str) -> bool:
 
 def main():
     parser = argparse.ArgumentParser(description="Test RWKV OpenAI Compatible API")
-    parser.add_argument("--base-url", default="http://localhost:8080", help="Server base URL")
+    parser.add_argument("--base-url", default="http://127.0.0.1:52345", help="Server base URL")
     args = parser.parse_args()
 
     base_url = args.base_url.rstrip("/")
@@ -250,6 +394,9 @@ def main():
         ("Models", test_models),
         ("Chat Completions (blocking)", test_chat_completions_blocking),
         ("Chat Completions (streaming)", test_chat_completions_streaming),
+        ("Chat Completions (tool calling)", test_chat_completions_tool_call_blocking),
+        ("Chat Completions (tool calling, streaming)", test_chat_completions_tool_call_streaming),
+        ("Chat Completions (legacy function_call)", test_chat_completions_legacy_function_call_blocking),
         ("Completions (blocking)", test_completions_blocking),
         ("Completions (streaming)", test_completions_streaming),
         ("Invalid Request", test_invalid_request),
