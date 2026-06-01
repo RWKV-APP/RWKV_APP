@@ -1153,6 +1153,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "not_syncing": MessageLookupByLibrary.simpleMessage("Не синхронизировано"),
     "npu_not_supported_title": m39,
+    "npu_recommendation_divider": MessageLookupByLibrary.simpleMessage(
+      "Рекомендуем выбрать NPU-модель выше",
+    ),
     "number": MessageLookupByLibrary.simpleMessage("Число"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Мрр~ Мрявк~"),
     "ocr_guide_text": m40,

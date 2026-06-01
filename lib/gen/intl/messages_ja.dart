@@ -943,6 +943,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "not_all_the_same": MessageLookupByLibrary.simpleMessage("すべて同じではない"),
     "not_syncing": MessageLookupByLibrary.simpleMessage("非同期"),
     "npu_not_supported_title": m39,
+    "npu_recommendation_divider": MessageLookupByLibrary.simpleMessage(
+      "上の NPU モデルの選択をおすすめします",
+    ),
     "number": MessageLookupByLibrary.simpleMessage("数字"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("にゃん~~、にゃん~~"),
     "ocr_guide_text": m40,

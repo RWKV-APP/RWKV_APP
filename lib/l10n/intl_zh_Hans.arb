@@ -401,6 +401,7 @@
   "pause": "暂停",
   "more": "更多",
   "str_model_selection_dialog_hint": "推荐至少选择1.5B模型，更大的2.9B模型更好",
+  "npu_recommendation_divider": "推荐选择上方 NPU 模型",
   "settings": "设置",
   "chat_history": "聊天记录",
   "source_code": "源代码",

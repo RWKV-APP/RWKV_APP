@@ -401,6 +401,7 @@
   "pause": "Пауза",
   "more": "Ещё",
   "str_model_selection_dialog_hint": "Для наилучшего опыта выберите 1.5B, 2.9B или больше.",
+  "npu_recommendation_divider": "Рекомендуем выбрать NPU-модель выше",
   "settings": "Настройки",
   "chat_history": "История чатов",
   "source_code": "Исходный код",

@@ -933,6 +933,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "not_all_the_same": MessageLookupByLibrary.simpleMessage("모두 같지 않음"),
     "not_syncing": MessageLookupByLibrary.simpleMessage("동기화되지 않음"),
     "npu_not_supported_title": m39,
+    "npu_recommendation_divider": MessageLookupByLibrary.simpleMessage(
+      "위의 NPU 모델 선택을 권장합니다",
+    ),
     "number": MessageLookupByLibrary.simpleMessage("숫자"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("야옹~~, 야옹~~"),
     "ocr_guide_text": m40,

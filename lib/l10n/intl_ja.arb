@@ -401,6 +401,7 @@
   "pause": "一時停止",
   "more": "その他",
   "str_model_selection_dialog_hint": "少なくとも1.5Bモデルを選択することをお勧めします。より大きい2.9Bモデルの方が優れています。",
+  "npu_recommendation_divider": "上の NPU モデルの選択をおすすめします",
   "settings": "設定",
   "chat_history": "チャット履歴",
   "source_code": "ソースコード",

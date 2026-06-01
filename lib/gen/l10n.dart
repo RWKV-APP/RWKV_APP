@@ -3103,6 +3103,16 @@ class S {
     );
   }
 
+  /// `推荐选择上方 NPU 模型`
+  String get npu_recommendation_divider {
+    return Intl.message(
+      '推荐选择上方 NPU 模型',
+      name: 'npu_recommendation_divider',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `设置`
   String get settings {
     return Intl.message('设置', name: 'settings', desc: '', args: []);

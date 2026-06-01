@@ -401,6 +401,7 @@
   "pause": "일시 정지",
   "more": "더 보기",
   "str_model_selection_dialog_hint": "최소 1.5B 모델을 선택하는 것이 좋으며, 더 큰 2.9B 모델이 더 좋습니다.",
+  "npu_recommendation_divider": "위의 NPU 모델 선택을 권장합니다",
   "settings": "설정",
   "chat_history": "채팅 기록",
   "source_code": "소스 코드",

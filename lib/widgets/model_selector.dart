@@ -298,7 +298,9 @@ class _ModelsInConfigFile extends ConsumerWidget {
     final shouldShowNpuHint =
         Platform.isAndroid && !inTranslator && !inBenchmark && !rolePlayOnly && !hasNpuModel && availableModels.isNotEmpty;
 
-    List<Widget> items = switch (preferredDemoType) {
+    final displayModels = availableModels.where((e) => showNeko == e.isNeko).sorted(_compare);
+
+    final items = switch (preferredDemoType) {
       .see =>
         WorldType.values
             .where((e) => e.available)
@@ -310,10 +312,17 @@ class _ModelsInConfigFile extends ConsumerWidget {
             )
             .toList(),
       .tts => ttsCores.sorted(_compare).map((fileInfo) => TTSGroupItem(fileInfo)).toList(),
-      .chat || .sudoku =>
-        availableModels
-            .where((e) => showNeko == e.isNeko)
-            .sorted(_compare)
+      .chat => _modelItemsWithNpuRecommendationDivider(
+        displayModels: displayModels,
+        showTags: userType.isGreaterThan(.user),
+        loadButtonTextShowLoad: pageKey == .benchmark,
+        showDivider: _shouldShowNpuRecommendationDivider(
+          inTranslator: inTranslator,
+          inBenchmark: inBenchmark,
+        ),
+      ),
+      .sudoku =>
+        displayModels
             .map(
               (fileInfo) => ModelItem(
                 fileInfo,
@@ -332,6 +341,47 @@ class _ModelsInConfigFile extends ConsumerWidget {
         ...items,
       ],
     );
+  }
+
+  bool _shouldShowNpuRecommendationDivider({
+    required bool inTranslator,
+    required bool inBenchmark,
+  }) {
+    if (!Platform.isAndroid) return false;
+    if (rolePlayOnly) return false;
+    if (inTranslator) return false;
+    if (inBenchmark) return false;
+    return true;
+  }
+
+  List<Widget> _modelItemsWithNpuRecommendationDivider({
+    required List<FileInfo> displayModels,
+    required bool showTags,
+    required bool loadButtonTextShowLoad,
+    required bool showDivider,
+  }) {
+    final firstNonNpuIndex = displayModels.indexWhere((e) => !e.hasEffectiveTag("npu"));
+    final hasNpu = firstNonNpuIndex > 0;
+    final hasCpu = displayModels.any((e) => e.hasEffectiveTag("cpu"));
+    final shouldInsertDivider = showDivider && hasNpu && hasCpu && firstNonNpuIndex != -1;
+    final items = <Widget>[];
+
+    for (int index = 0; index < displayModels.length; index++) {
+      if (shouldInsertDivider && index == firstNonNpuIndex) {
+        items.add(const _NpuRecommendationDivider());
+      }
+
+      final fileInfo = displayModels[index];
+      items.add(
+        ModelItem(
+          fileInfo,
+          showTags,
+          loadButtonTextShowLoad: loadButtonTextShowLoad,
+        ),
+      );
+    }
+
+    return items;
   }
 
   /// 根据专有加速进行排序
@@ -359,6 +409,47 @@ class _ModelsInConfigFile extends ConsumerWidget {
     if (aHasWebRWKV != bHasWebRWKV) return aHasWebRWKV ? -1 : 1;
 
     return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
+  }
+}
+
+class _NpuRecommendationDivider extends ConsumerWidget {
+  const _NpuRecommendationDivider();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final qb = ref.watch(P.app.qb);
+    final lineColor = qb.q(.35);
+    final textStyle = theme.textTheme.labelSmall?.copyWith(
+      color: qb.q(.55),
+      fontSize: 11,
+      fontWeight: .w500,
+      height: 1,
+    );
+
+    return Padding(
+      padding: const .only(top: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(height: 0.5, color: lineColor),
+          ),
+          Padding(
+            padding: const .symmetric(horizontal: 8),
+            child: Text(
+              s.npu_recommendation_divider,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: textStyle,
+            ),
+          ),
+          Expanded(
+            child: Container(height: 0.5, color: lineColor),
+          ),
+        ],
+      ),
+    );
   }
 }
 
