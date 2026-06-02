@@ -243,20 +243,90 @@ extension _$Conversation on _Conversation {
     return _sanitizeConversationExportFileNameBase(conversation.title);
   }
 
+  String _buildConversationExportFileName({
+    required ConversationData conversation,
+    required List<Message> orderedMessages,
+  }) {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final fileNameBase = _buildConversationExportFileNameBase(
+      conversation: conversation,
+      orderedMessages: orderedMessages,
+    );
+    return '${fileNameBase}_$timestamp.txt';
+  }
+
   Future<File> _writeConversationExportFile({
     required ConversationData conversation,
     required List<Message> orderedMessages,
     required String content,
   }) async {
     final tempDir = await getTemporaryDirectory();
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final fileNameBase = _buildConversationExportFileNameBase(
+    final fileName = _buildConversationExportFileName(
       conversation: conversation,
       orderedMessages: orderedMessages,
     );
-    final file = File(join(tempDir.path, '${fileNameBase}_$timestamp.txt'));
+    final file = File(join(tempDir.path, fileName));
     await file.writeAsString(content, encoding: utf8);
     return file;
+  }
+
+  bool _shouldSaveConversationExportFile() {
+    if (Platform.isWindows) return true;
+    if (Platform.isMacOS) return true;
+    if (Platform.isLinux) return true;
+    return false;
+  }
+
+  String _ensureConversationExportTxtPath(String targetPath) {
+    if (extension(targetPath).isNotEmpty) {
+      return targetPath;
+    }
+    return '$targetPath.txt';
+  }
+
+  Future<void> _saveConversationExportFile({
+    required ConversationData conversation,
+    required List<Message> orderedMessages,
+    required String content,
+  }) async {
+    final fileName = _buildConversationExportFileName(
+      conversation: conversation,
+      orderedMessages: orderedMessages,
+    );
+    final targetPath = await file_picker.FilePicker.saveFile(
+      dialogTitle: S.current.export_conversation_to_txt,
+      fileName: fileName,
+      type: file_picker.FileType.custom,
+      allowedExtensions: const ['txt'],
+      lockParentWindow: true,
+    );
+    if (targetPath == null) {
+      return;
+    }
+
+    final outputPath = _ensureConversationExportTxtPath(targetPath);
+    await File(outputPath).writeAsString(content, encoding: utf8);
+    Alert.success("${S.current.export_success}\n\n$outputPath");
+  }
+
+  Future<void> _shareConversationExportFile({
+    required ConversationData conversation,
+    required List<Message> orderedMessages,
+    required String content,
+  }) async {
+    final file = await _writeConversationExportFile(
+      conversation: conversation,
+      orderedMessages: orderedMessages,
+      content: content,
+    );
+    final xFile = XFile(file.path, mimeType: 'text/plain');
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [xFile],
+        subject: conversation.title,
+        title: conversation.title,
+      ),
+    );
   }
 
   bool _shouldUseMessageForCurrentConvSubtitle(Message message) {
@@ -446,18 +516,19 @@ extension $Conversation on _Conversation {
         conversation: conversation,
         orderedMessages: orderedMessages,
       );
-      final file = await _writeConversationExportFile(
+      if (_shouldSaveConversationExportFile()) {
+        await _saveConversationExportFile(
+          conversation: conversation,
+          orderedMessages: orderedMessages,
+          content: content,
+        );
+        return;
+      }
+
+      await _shareConversationExportFile(
         conversation: conversation,
         orderedMessages: orderedMessages,
         content: content,
-      );
-      final xFile = XFile(file.path, mimeType: 'text/plain');
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [xFile],
-          subject: conversation.title,
-          title: conversation.title,
-        ),
       );
     } catch (e, stackTrace) {
       qqe("Export conversation failed: $e");
