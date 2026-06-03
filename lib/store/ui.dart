@@ -98,6 +98,7 @@ class _UI {
   late final batchSlotAtBottom = qsf<({int messageId, int slotIndex}), bool>(true);
   late final batchSlotAtTop = qsf<({int messageId, int slotIndex}), bool>(true);
   late final batchSlotInferring = qsf<({int messageId, int slotIndex}), bool>(true);
+  late final batchSlotCotDisplayState = qsf<({int messageId, int slotIndex}), CoTDisplayState>(.previewCotContent);
   late final batchSlotViewportVisible = qsff<({int messageId, int slotIndex}), bool>((ref, key) {
     final visibleSlotIndexes = ref.watch(batchVisibleSlotIndexes(key.messageId));
     return visibleSlotIndexes.contains(key.slotIndex);
@@ -735,6 +736,7 @@ extension $UI on _UI {
       batchSlotAtBottom(key).q = true;
       batchSlotAtTop(key).q = true;
       batchSlotInferring(key).q = true;
+      batchSlotCotDisplayState(key).q = .previewCotContent;
       _batchSlotData.remove(key);
       _batchSlotPendingData.remove(key);
       _batchScheduledSlotContentKeys.remove(key);

@@ -1,5 +1,5 @@
 enum CoTDisplayState {
-  showCotHeaderIfCotResultIsEmpty,
   hideCotHeader,
+  previewCotContent,
   showCotHeaderAndCotContent,
 }

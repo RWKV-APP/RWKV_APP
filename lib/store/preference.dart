@@ -9,6 +9,7 @@ const String _messageLineHeightPreferenceKey = "halo_state.messageLineHeight";
 const String _fakeBatchInferenceBenchmarkPreferenceKey = "halo_state.fakeBatchInferenceBenchmarkEnabled";
 const String _batchViewportWidthPreferenceKey = "halo_state.batchViewportWidth";
 const String _renderMarkdownAndLatexPreferenceKey = "halo_state.renderMarkdownAndLatex";
+const String _renderThinkingTagAsPreviewPreferenceKey = "halo_state.renderThinkingTagAsPreview";
 const String _thinkingModePreferenceKey = "halo_state.thinkingMode";
 
 class _Preference {
@@ -33,6 +34,7 @@ class _Preference {
 
   bool fakeBatchInferenceBenchmarkEnabled = false;
   bool renderMarkdownAndLatex = true;
+  bool renderThinkingTagAsPreview = true;
 
   var promptTemplate = PromptTemplate.empty();
 
@@ -81,6 +83,7 @@ class _Preference {
   /// 偏好的消息气泡行距；0 表示使用默认行高
   late final preferredMessageLineHeight = qs<double>(0.0);
   late final renderMarkdownAndLatexEnabled = qs(true);
+  late final renderThinkingTagAsPreviewEnabled = qs(true);
 
   late final preferredThinkingMode = qs<thinking_mode.ThinkingMode>(.fast);
 
@@ -225,6 +228,8 @@ extension _$Preference on _Preference {
     fakeBatchInferenceBenchmarkEnabled = sp.getBool(_fakeBatchInferenceBenchmarkPreferenceKey) ?? false;
     renderMarkdownAndLatex = sp.getBool(_renderMarkdownAndLatexPreferenceKey) ?? true;
     renderMarkdownAndLatexEnabled.q = renderMarkdownAndLatex;
+    renderThinkingTagAsPreview = sp.getBool(_renderThinkingTagAsPreviewPreferenceKey) ?? true;
+    renderThinkingTagAsPreviewEnabled.q = renderThinkingTagAsPreview;
 
     final thinkingMode = sp.getString(_thinkingModePreferenceKey);
     final validThinkingMode = thinking_mode.ThinkingMode.values.map((e) => e.toString()).contains(thinkingMode);
@@ -489,6 +494,13 @@ extension $Preference on _Preference {
     renderMarkdownAndLatexEnabled.q = value;
     final sp = await SharedPreferences.getInstance();
     await sp.setBool(_renderMarkdownAndLatexPreferenceKey, value);
+  }
+
+  Future<void> setRenderThinkingTagAsPreviewEnabled(bool value) async {
+    renderThinkingTagAsPreview = value;
+    renderThinkingTagAsPreviewEnabled.q = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setBool(_renderThinkingTagAsPreviewPreferenceKey, value);
   }
 
   Future<void> saveThinkingMode(thinking_mode.ThinkingMode value) async {

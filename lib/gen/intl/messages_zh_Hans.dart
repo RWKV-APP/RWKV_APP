@@ -1262,6 +1262,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking_mode_high": m62,
     "thinking_mode_off": m63,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式模板"),
+    "thinking_tag_preview": MessageLookupByLibrary.simpleMessage("压缩展示思考过程"),
+    "thinking_tag_preview_subtitle": MessageLookupByLibrary.simpleMessage(
+      "用 5 行预览框展示思考内容，可展开查看全部",
+    ),
+    "thinking_tag_rendering": MessageLookupByLibrary.simpleMessage("思考标签"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),
     "this_model_does_not_support_batch_inference":

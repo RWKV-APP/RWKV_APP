@@ -17,7 +17,6 @@ import 'package:zone/config.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/app_theme.dart';
-import 'package:zone/model/cot_display_state.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/world_type.dart';
@@ -29,12 +28,15 @@ import 'package:zone/widgets/markdown_render.dart';
 import 'package:zone/widgets/see/photo_viewer_overlay.dart';
 import 'package:zone/widgets/talk/bot_tts_content.dart';
 import 'package:zone/widgets/talk/user_tts_content.dart';
+import 'package:zone/widgets/thinking_content_panel.dart';
 import 'package:zone/widgets/user_message_bottom.dart';
 
 const double _kBubbleMinHeight = 44.0;
 const double _kBubbleMaxWidthAdjust = .0;
+const double _kCotResultTopSpacing = 8.0;
 const bool _kDebugTintNonBatchStableMarkdown = true;
 const Color _kDebugNonBatchStableMarkdownTint = Color(0x224CAF50);
+const ValueKey<String> _kThinkingHeaderKey = ValueKey<String>("thinking-header");
 
 class Message extends ConsumerStatefulWidget {
   final model.Message msg;
@@ -91,6 +93,7 @@ class _MessageState extends ConsumerState<Message> {
     final cotDisplayState = ref.watch(P.msg.cotDisplayState(msg.id));
     final batchSelection = ref.watch(P.msg.batchSelection(msg));
     final messageLineHeight = ref.watch(P.preference.effectiveMessageLineHeight);
+    final renderThinkingTagAsPreview = ref.watch(P.preference.renderThinkingTagAsPreviewEnabled);
 
     final isMine = msg.isMine;
     final contextActions = UserMessageBottom.resolveContextMenuActions(
@@ -115,11 +118,9 @@ class _MessageState extends ConsumerState<Message> {
       finalContent: finalContent,
       worldType: worldType,
     );
-    final cotContentHeight = _resolveCotContentHeight(
-      cotDisplayState: cotDisplayState,
-      cotResult: thinkingData.cotResult,
-    );
-    final showingCotContent = cotContentHeight != 0;
+    final cotContentExpanded = renderThinkingTagAsPreview
+        ? cotDisplayState == .showCotHeaderAndCotContent
+        : cotDisplayState != .hideCotHeader;
     final batchData = _resolveBatchData(
       isMine: isMine,
       finalContent: finalContent,
@@ -186,8 +187,8 @@ class _MessageState extends ConsumerState<Message> {
               qb: qb,
               bubbleStyleData: bubbleStyleData,
               thinkingData: thinkingData,
-              cotContentHeight: cotContentHeight,
-              showingCotContent: showingCotContent,
+              cotContentExpanded: cotContentExpanded,
+              renderThinkingTagAsPreview: renderThinkingTagAsPreview,
               isBatch: batchData.isBatch,
               batchCount: batchData.batchCount,
               batchSelection: batchSelection,
@@ -361,8 +362,8 @@ class _BotMessageBubble extends ConsumerWidget {
   final Color qb;
   final _BubbleStyleData bubbleStyleData;
   final _ThinkingData thinkingData;
-  final double? cotContentHeight;
-  final bool showingCotContent;
+  final bool cotContentExpanded;
+  final bool renderThinkingTagAsPreview;
   final bool isBatch;
   final int batchCount;
   final int? batchSelection;
@@ -380,8 +381,8 @@ class _BotMessageBubble extends ConsumerWidget {
     required this.qb,
     required this.bubbleStyleData,
     required this.thinkingData,
-    required this.cotContentHeight,
-    required this.showingCotContent,
+    required this.cotContentExpanded,
+    required this.renderThinkingTagAsPreview,
     required this.isBatch,
     required this.batchCount,
     required this.batchSelection,
@@ -391,8 +392,8 @@ class _BotMessageBubble extends ConsumerWidget {
   });
 
   void _toggleCotContent() {
-    if (showingCotContent) {
-      P.msg.cotDisplayState(msg.id).q = .hideCotHeader;
+    if (cotContentExpanded) {
+      P.msg.cotDisplayState(msg.id).q = renderThinkingTagAsPreview ? .previewCotContent : .hideCotHeader;
       return;
     }
     P.msg.cotDisplayState(msg.id).q = .showCotHeaderAndCotContent;
@@ -469,6 +470,8 @@ class _BotMessageBubble extends ConsumerWidget {
             ),
           if (showReasoningHeader)
             GestureDetector(
+              key: _kThinkingHeaderKey,
+              behavior: HitTestBehavior.opaque,
               onTap: _toggleCotContent,
               child: Container(
                 decoration: const BoxDecoration(color: Colors.transparent),
@@ -478,18 +481,26 @@ class _BotMessageBubble extends ConsumerWidget {
                       thisMessageIsReceiving ? s.thinking : s.thought_result,
                       style: TS(c: thoughtLabelColor, w: .w600),
                     ),
-                    showingCotContent
-                        ? Icon(Icons.expand_more, color: thoughtLabelColor)
-                        : Icon(Icons.expand_less, color: thoughtLabelColor),
+                    cotContentExpanded
+                        ? Icon(Icons.expand_less, color: thoughtLabelColor)
+                        : Icon(Icons.expand_more, color: thoughtLabelColor),
                   ],
                 ),
               ),
             ),
           if (showReasoningHeader) const SizedBox(height: 4),
-          if (showReasoningHeader)
-            AnimatedContainer(
-              duration: 250.ms,
-              height: cotContentHeight,
+          if (showReasoningHeader && renderThinkingTagAsPreview)
+            ThinkingContentPanel(
+              raw: thinkingData.cotContent,
+              color: cotColor,
+              baseBackgroundColor: botMsgBg,
+              streaming: thisMessageIsReceiving,
+              expanded: cotContentExpanded,
+              onPreviewTap: _toggleCotContent,
+            ),
+          if (showReasoningHeader && !renderThinkingTagAsPreview)
+            ThinkingFullContentAnimator(
+              expanded: cotContentExpanded,
               child: StreamingMarkdownRender(
                 raw: thinkingData.cotContent,
                 color: cotColor,
@@ -499,8 +510,12 @@ class _BotMessageBubble extends ConsumerWidget {
                 debugStableBlockTint: _kDebugNonBatchStableMarkdownTint,
               ),
             ),
-          if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && showingCotContent && !thinkingData.isQuickThinking && !isBatch)
-            const SizedBox(height: 12),
+          if (thinkingData.cotResult.isNotEmpty &&
+              thinkingData.reasoning &&
+              cotContentExpanded &&
+              !thinkingData.isQuickThinking &&
+              !isBatch)
+            const SizedBox(height: _kCotResultTopSpacing),
           if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && !isBatch)
             StreamingMarkdownRender(
               raw: thinkingData.cotResult,
@@ -660,21 +675,6 @@ _ThinkingData _resolveThinkingData({
     cotContent: cotContent,
     cotResult: cotResult,
   );
-}
-
-double? _resolveCotContentHeight({
-  required CoTDisplayState cotDisplayState,
-  required String cotResult,
-}) {
-  switch (cotDisplayState) {
-    case .showCotHeaderIfCotResultIsEmpty:
-      if (cotResult.isEmpty) return null;
-      return 0;
-    case .showCotHeaderAndCotContent:
-      return null;
-    case .hideCotHeader:
-      return 0;
-  }
 }
 
 _BatchData _resolveBatchData({

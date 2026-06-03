@@ -1677,6 +1677,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон режима мышления",
     ),
+    "thinking_tag_preview": MessageLookupByLibrary.simpleMessage(
+      "Компактный показ рассуждений",
+    ),
+    "thinking_tag_preview_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Показывать рассуждения в панели предпросмотра на 5 строк",
+    ),
+    "thinking_tag_rendering": MessageLookupByLibrary.simpleMessage(
+      "Теги рассуждения",
+    ),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("Это самый сложный судоку в мире"),
     "this_model_does_not_support_batch_inference":

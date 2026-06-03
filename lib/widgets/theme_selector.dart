@@ -52,6 +52,8 @@ class ThemeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
 
@@ -101,11 +103,14 @@ class ThemeColorSettingSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
+    final renderThinkingTagAsPreview = ref.watch(P.preference.renderThinkingTagAsPreviewEnabled);
     final isLight = appTheme.isLight;
 
     return Column(
@@ -180,6 +185,36 @@ class ThemeColorSettingSection extends ConsumerWidget {
             onPressed: _onLightsOutPressed,
           ),
         ),
+        if (showDarkThemeTitle) const SizedBox(height: 12),
+        if (showDarkThemeTitle)
+          Row(
+            mainAxisAlignment: .start,
+            children: [
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  s.thinking_tag_rendering,
+                  style: TS(w: .w500, c: qb.q(.8), s: 12),
+                ),
+              ),
+            ],
+          ),
+        if (showDarkThemeTitle) const SizedBox(height: 12),
+        if (showDarkThemeTitle)
+          FormItem(
+            icon: Icon(Icons.psychology_alt_outlined, color: qb.q(.667), size: 16),
+            title: s.thinking_tag_preview,
+            subtitle: s.thinking_tag_preview_subtitle,
+            showArrow: false,
+            isSectionStart: true,
+            isSectionEnd: true,
+            onTap: null,
+            trailing: Switch.adaptive(
+              value: renderThinkingTagAsPreview,
+              onChanged: P.preference.setRenderThinkingTagAsPreviewEnabled,
+              activeThumbColor: appTheme.themePrimary,
+            ),
+          ),
       ],
     );
   }

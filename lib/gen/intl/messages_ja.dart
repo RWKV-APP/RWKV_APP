@@ -1379,6 +1379,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "思考モードテンプレート",
     ),
+    "thinking_tag_preview": MessageLookupByLibrary.simpleMessage(
+      "思考過程の表示をコンパクト化",
+    ),
+    "thinking_tag_preview_subtitle": MessageLookupByLibrary.simpleMessage(
+      "思考内容を5行のプレビューパネルで表示します",
+    ),
+    "thinking_tag_rendering": MessageLookupByLibrary.simpleMessage("思考タグ"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("これは世界で最も難しい数独です"),
     "this_model_does_not_support_batch_inference":

@@ -1625,6 +1625,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Thinking Mode Template",
     ),
+    "thinking_tag_preview": MessageLookupByLibrary.simpleMessage(
+      "Compact Thinking Display",
+    ),
+    "thinking_tag_preview_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Show thinking content in a 5-line preview panel",
+    ),
+    "thinking_tag_rendering": MessageLookupByLibrary.simpleMessage(
+      "Thinking Tag Rendering",
+    ),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage(
           "This is the hardest Sudoku in the world",

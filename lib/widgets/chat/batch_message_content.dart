@@ -9,22 +9,34 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/func/extract_thought_and_output_for_batch_inference.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/cot_display_state.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/markdown_render.dart';
+import 'package:zone/widgets/thinking_content_panel.dart';
 
 const double _kSlotGap = 8.0;
 const double _kSlotScrollFadeHeight = 18.0;
 const double _kBatchInlineLatexVerticalPaddingFactor = 0.12;
+const double _kBatchThinkingResultTopSpacing = 8.0;
 const bool _kDebugTintBatchStableMarkdown = true;
 const Color _kDebugBatchStableMarkdownTint = Color(0x224CAF50);
+
+ValueKey<String> _batchThinkingHeaderKey(int messageId, int slotIndex) => ValueKey<String>("batch-thinking-header-$messageId-$slotIndex");
+ValueKey<String> _batchThinkingPanelKey(int messageId, int slotIndex) =>
+    ValueKey<String>("batch-thinking-content-panel-$messageId-$slotIndex");
+ValueKey<String> _batchThinkingScrollKey(int messageId, int slotIndex) =>
+    ValueKey<String>("batch-thinking-content-scroll-$messageId-$slotIndex");
+ValueKey<String> _batchThinkingScrollToBottomButtonKey(int messageId, int slotIndex) =>
+    ValueKey<String>("batch-thinking-scroll-to-bottom-button-$messageId-$slotIndex");
 
 class BatchMessageContent extends ConsumerWidget {
   final model.Message msg;
@@ -410,8 +422,10 @@ class _SlotContent extends ConsumerWidget {
                         controller: scrollController,
                         padding: const .only(bottom: 16, top: 8),
                         child: _MarkdownBody(
+                          msg: msg,
+                          slotIndex: slotIndex,
                           data: data,
-                          streaming: streaming,
+                          streaming: streaming && inferring,
                         ),
                       ),
                     ),
@@ -820,19 +834,45 @@ class _DecodeParamBadge extends StatelessWidget {
 }
 
 class _MarkdownBody extends ConsumerWidget {
+  final model.Message msg;
+  final int slotIndex;
   final String data;
   final bool streaming;
 
   const _MarkdownBody({
+    required this.msg,
+    required this.slotIndex,
     required this.data,
     required this.streaming,
   });
+
+  void _toggleCotContent({
+    required ({int messageId, int slotIndex}) key,
+    required bool expanded,
+    required bool renderThinkingTagAsPreview,
+  }) {
+    if (expanded) {
+      P.ui.batchSlotCotDisplayState(key).q = renderThinkingTagAsPreview ? CoTDisplayState.previewCotContent : CoTDisplayState.hideCotHeader;
+      return;
+    }
+    P.ui.batchSlotCotDisplayState(key).q = CoTDisplayState.showCotHeaderAndCotContent;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final _ = theme;
+    final s = S.of(context);
     final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final key = (messageId: msg.id, slotIndex: slotIndex);
+    final renderThinkingTagAsPreview = ref.watch(P.preference.renderThinkingTagAsPreviewEnabled);
+    final cotDisplayState = ref.watch(P.ui.batchSlotCotDisplayState(key));
+    final cotContentExpanded = renderThinkingTagAsPreview
+        ? cotDisplayState == .showCotHeaderAndCotContent
+        : cotDisplayState != .hideCotHeader;
+    final thoughtLabelColor = qb.q(.5);
+    final cotColor = qb.q(.55);
 
     final (thought, output) = extractThoughtAndOutputForBatchInference(data);
 
@@ -853,21 +893,106 @@ class _MarkdownBody extends ConsumerWidget {
       );
     }
 
+    if (!renderThinkingTagAsPreview) {
+      return Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          GestureDetector(
+            key: _batchThinkingHeaderKey(msg.id, slotIndex),
+            behavior: HitTestBehavior.opaque,
+            onTap: () => _toggleCotContent(
+              key: key,
+              expanded: cotContentExpanded,
+              renderThinkingTagAsPreview: renderThinkingTagAsPreview,
+            ),
+            child: Container(
+              decoration: const BoxDecoration(color: Colors.transparent),
+              child: Row(
+                children: [
+                  Text(
+                    streaming ? s.thinking : s.thought_result,
+                    style: TS(c: thoughtLabelColor, w: .w600),
+                  ),
+                  cotContentExpanded
+                      ? Icon(Icons.expand_less, color: thoughtLabelColor)
+                      : Icon(Icons.expand_more, color: thoughtLabelColor),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          ThinkingFullContentAnimator(
+            expanded: cotContentExpanded,
+            child: StreamingMarkdownRender(
+              key: const ValueKey("batch-thought"),
+              raw: thought,
+              color: cotColor,
+              streaming: streaming,
+              useMessageLineHeight: true,
+              inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
+              debugTintStableBlocks: _kDebugTintBatchStableMarkdown,
+              debugStableBlockTint: _kDebugBatchStableMarkdownTint,
+            ),
+          ),
+          if (output.isNotEmpty && cotContentExpanded) const SizedBox(height: 4),
+          if (output.isNotEmpty)
+            StreamingMarkdownRender(
+              key: const ValueKey("batch-output"),
+              raw: output,
+              streaming: streaming,
+              useMessageLineHeight: true,
+              inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
+              debugTintStableBlocks: _kDebugTintBatchStableMarkdown,
+              debugStableBlockTint: _kDebugBatchStableMarkdownTint,
+            ),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        if (thought.isNotEmpty)
-          StreamingMarkdownRender(
-            key: const ValueKey("batch-thought"),
-            raw: thought,
-            color: qb.q(.55),
-            streaming: streaming,
-            useMessageLineHeight: true,
-            inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
-            debugTintStableBlocks: _kDebugTintBatchStableMarkdown,
-            debugStableBlockTint: _kDebugBatchStableMarkdownTint,
+        GestureDetector(
+          key: _batchThinkingHeaderKey(msg.id, slotIndex),
+          behavior: HitTestBehavior.opaque,
+          onTap: () => _toggleCotContent(
+            key: key,
+            expanded: cotContentExpanded,
+            renderThinkingTagAsPreview: renderThinkingTagAsPreview,
           ),
-        if (output.isNotEmpty) const SizedBox(height: 4),
+          child: Container(
+            decoration: const BoxDecoration(color: Colors.transparent),
+            child: Row(
+              children: [
+                Text(
+                  streaming ? s.thinking : s.thought_result,
+                  style: TS(c: thoughtLabelColor, w: .w600),
+                ),
+                cotContentExpanded ? Icon(Icons.expand_less, color: thoughtLabelColor) : Icon(Icons.expand_more, color: thoughtLabelColor),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        ThinkingContentPanel(
+          panelKey: _batchThinkingPanelKey(msg.id, slotIndex),
+          scrollKey: _batchThinkingScrollKey(msg.id, slotIndex),
+          scrollToBottomButtonKey: _batchThinkingScrollToBottomButtonKey(msg.id, slotIndex),
+          raw: thought,
+          color: cotColor,
+          baseBackgroundColor: qw,
+          streaming: streaming,
+          expanded: cotContentExpanded,
+          onPreviewTap: () => _toggleCotContent(
+            key: key,
+            expanded: false,
+            renderThinkingTagAsPreview: renderThinkingTagAsPreview,
+          ),
+          inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
+          debugTintStableBlocks: _kDebugTintBatchStableMarkdown,
+          debugStableBlockTint: _kDebugBatchStableMarkdownTint,
+        ),
+        if (output.isNotEmpty) const SizedBox(height: _kBatchThinkingResultTopSpacing),
         if (output.isNotEmpty)
           StreamingMarkdownRender(
             key: const ValueKey("batch-output"),

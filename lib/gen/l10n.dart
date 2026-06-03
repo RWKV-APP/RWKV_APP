@@ -2953,6 +2953,36 @@ class S {
     return Intl.message('黑色', name: 'theme_lights_out', desc: '', args: []);
   }
 
+  /// `思考标签`
+  String get thinking_tag_rendering {
+    return Intl.message(
+      '思考标签',
+      name: 'thinking_tag_rendering',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `压缩展示思考过程`
+  String get thinking_tag_preview {
+    return Intl.message(
+      '压缩展示思考过程',
+      name: 'thinking_tag_preview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用 5 行预览框展示思考内容，可展开查看全部`
+  String get thinking_tag_preview_subtitle {
+    return Intl.message(
+      '用 5 行预览框展示思考内容，可展开查看全部',
+      name: 'thinking_tag_preview_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `浅色`
   String get theme_light {
     return Intl.message('浅色', name: 'theme_light', desc: '', args: []);

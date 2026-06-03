@@ -1367,6 +1367,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking_mode_high": m62,
     "thinking_mode_off": m63,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("사고 모드 템플릿"),
+    "thinking_tag_preview": MessageLookupByLibrary.simpleMessage("사고 과정 표시 압축"),
+    "thinking_tag_preview_subtitle": MessageLookupByLibrary.simpleMessage(
+      "사고 내용을 5줄 미리보기 패널로 표시합니다",
+    ),
+    "thinking_tag_rendering": MessageLookupByLibrary.simpleMessage("사고 태그"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("이것은 세상에서 가장 어려운 스도쿠입니다"),
     "this_model_does_not_support_batch_inference":
