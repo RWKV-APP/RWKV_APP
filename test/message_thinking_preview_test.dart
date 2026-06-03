@@ -456,7 +456,7 @@ String _openThinkingResponse({required int lineCount}) {
 }
 
 double _expectedPreviewMaxHeight() {
-  final textStyle = TextStyle(
+  final textStyle = const TextStyle(
     fontSize: Config.markdownBodyFontSize * Config.msgFontScale,
     height: 1.2,
   );
