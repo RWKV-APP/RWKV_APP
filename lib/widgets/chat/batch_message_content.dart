@@ -20,6 +20,7 @@ import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat_layout_metrics.dart';
 import 'package:zone/widgets/markdown_render.dart';
 import 'package:zone/widgets/thinking_content_panel.dart';
 
@@ -37,6 +38,12 @@ ValueKey<String> _batchThinkingScrollKey(int messageId, int slotIndex) =>
     ValueKey<String>("batch-thinking-content-scroll-$messageId-$slotIndex");
 ValueKey<String> _batchThinkingScrollToBottomButtonKey(int messageId, int slotIndex) =>
     ValueKey<String>("batch-thinking-scroll-to-bottom-button-$messageId-$slotIndex");
+
+double _resolveBatchViewportWidth(BoxConstraints constraints, BuildContext context) {
+  final width = constraints.maxWidth;
+  if (width.isFinite && width > 0) return width;
+  return MediaQuery.sizeOf(context).width;
+}
 
 class BatchMessageContent extends ConsumerWidget {
   final model.Message msg;
@@ -61,22 +68,30 @@ class BatchMessageContent extends ConsumerWidget {
     final scrollController = P.ui.batchMessageScrollController(messageId: msg.id);
     P.ui.scheduleBatchMessageScrollButtonSync(messageId: msg.id);
 
-    return Stack(
-      children: [
-        _BatchSlotsListView(
-          msg: msg,
-          finalContent: finalContent,
-          scrollController: scrollController,
-          perSlotQuestions: perSlotQuestions,
-          slotLabels: slotLabels,
-        ),
-        _BatchScrollLeftButton(
-          messageId: msg.id,
-        ),
-        _BatchScrollRightButton(
-          messageId: msg.id,
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final viewportWidth = _resolveBatchViewportWidth(constraints, context);
+        return Stack(
+          children: [
+            _BatchSlotsListView(
+              msg: msg,
+              finalContent: finalContent,
+              scrollController: scrollController,
+              perSlotQuestions: perSlotQuestions,
+              slotLabels: slotLabels,
+              viewportWidth: viewportWidth,
+            ),
+            _BatchScrollLeftButton(
+              messageId: msg.id,
+              viewportWidth: viewportWidth,
+            ),
+            _BatchScrollRightButton(
+              messageId: msg.id,
+              viewportWidth: viewportWidth,
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -87,6 +102,7 @@ class _BatchSlotsListView extends ConsumerWidget {
   final ScrollController scrollController;
   final List<String>? perSlotQuestions;
   final List<String>? slotLabels;
+  final double viewportWidth;
 
   const _BatchSlotsListView({
     required this.msg,
@@ -94,6 +110,7 @@ class _BatchSlotsListView extends ConsumerWidget {
     required this.scrollController,
     required this.perSlotQuestions,
     required this.slotLabels,
+    required this.viewportWidth,
   });
 
   String? _slotLabelAt(int index) {
@@ -124,14 +141,16 @@ class _BatchSlotsListView extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
     final generating = ref.watch(P.rwkvGeneration.generating);
-    final screenWidth = MediaQuery.sizeOf(context).width;
     final parsedDecodeParams = msg.parsedDecodeParams;
-    final slotWidth = screenWidth * (batchViewportWidth / 100);
+    final slotWidth = viewportWidth * (batchViewportWidth / 100);
     final shouldGateByViewport = msg.changing && generating;
+    final wideScreenPadding = resolveChatBatchListHorizontalPadding(
+      viewportWidth: viewportWidth,
+    );
 
     final EdgeInsets padding = .only(
-      left: appTheme.msgListMarginLeft,
-      right: appTheme.msgListMarginRight,
+      left: appTheme.msgListMarginLeft + wideScreenPadding,
+      right: appTheme.msgListMarginRight + wideScreenPadding,
     );
 
     final visibleSlotIndexes = P.ui.resolveBatchVisibleSlotIndexes(
@@ -139,7 +158,7 @@ class _BatchSlotsListView extends ConsumerWidget {
       batchCount: batchCount,
       paddingLeft: padding.left,
       slotWidth: slotWidth,
-      viewportWidth: screenWidth,
+      viewportWidth: viewportWidth,
     );
 
     P.ui.scheduleBatchSlotsViewportSync(
@@ -147,7 +166,7 @@ class _BatchSlotsListView extends ConsumerWidget {
       batchCount: batchCount,
       paddingLeft: padding.left,
       slotWidth: slotWidth,
-      viewportWidth: screenWidth,
+      viewportWidth: viewportWidth,
     );
 
     // return C();
@@ -264,20 +283,21 @@ class _BatchSlotItem extends ConsumerWidget {
 
 class _BatchScrollLeftButton extends ConsumerWidget {
   final int messageId;
+  final double viewportWidth;
 
   const _BatchScrollLeftButton({
     required this.messageId,
+    required this.viewportWidth,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final _ = theme;
-    final screenWidth = ref.watch(P.app.screenWidth);
     final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
-    final step = screenWidth * (batchViewportWidth / 100) * 0.9;
+    final step = viewportWidth * (batchViewportWidth / 100) * 0.9;
     final visibility = ref.watch(P.ui.batchScrollButtonVisibility(messageId));
     final show = visibility.left;
 
@@ -310,20 +330,21 @@ class _BatchScrollLeftButton extends ConsumerWidget {
 
 class _BatchScrollRightButton extends ConsumerWidget {
   final int messageId;
+  final double viewportWidth;
 
   const _BatchScrollRightButton({
     required this.messageId,
+    required this.viewportWidth,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final _ = theme;
-    final screenWidth = ref.watch(P.app.screenWidth);
     final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
-    final step = screenWidth * (batchViewportWidth / 100) * 0.9;
+    final step = viewportWidth * (batchViewportWidth / 100) * 0.9;
     final visibility = ref.watch(P.ui.batchScrollButtonVisibility(messageId));
     final show = visibility.right;
 
@@ -612,23 +633,27 @@ class _SlotHeaderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool hasSlotLabel = slotLabel != null && slotLabel!.trim().isNotEmpty;
+    final theme = Theme.of(context);
+    final _ = theme;
+    final hasSlotLabel = slotLabel != null && slotLabel!.trim().isNotEmpty;
+    final hasDecodeParam = decodeParam != null;
+    final hasHeaderMeta = hasSlotLabel || hasDecodeParam;
+
     return Row(
       crossAxisAlignment: .center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            if (hasSlotLabel) _SlotLabelBadge(label: slotLabel!),
-            if (hasSlotLabel && decodeParam != null) const SizedBox(width: 6),
-            if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
-          ],
+        Expanded(
+          child: Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            children: [
+              if (hasSlotLabel) _SlotLabelBadge(label: slotLabel!),
+              if (hasDecodeParam) _DecodeParamBadge(decodeParam: decodeParam!),
+            ],
+          ),
         ),
-        Row(
-          children: [
-            _SlotPreviewButton(onTap: onPreviewPressed),
-          ],
-        ),
+        if (hasHeaderMeta) const SizedBox(width: 6),
+        _SlotPreviewButton(onTap: onPreviewPressed),
       ],
     );
   }

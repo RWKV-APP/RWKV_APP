@@ -24,6 +24,7 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/bot_message_bottom.dart';
 import 'package:zone/widgets/chat/batch_message_content.dart';
 import 'package:zone/widgets/chat/reference_info.dart';
+import 'package:zone/widgets/chat_layout_metrics.dart';
 import 'package:zone/widgets/markdown_render.dart';
 import 'package:zone/widgets/see/photo_viewer_overlay.dart';
 import 'package:zone/widgets/talk/bot_tts_content.dart';
@@ -198,62 +199,95 @@ class _MessageState extends ConsumerState<Message> {
             ),
     );
 
-    return GestureDetector(
-      child: Align(
-        alignment: isMine ? .centerRight : .centerLeft,
-        child: IgnorePointer(
-          ignoring: editingIndex != null && editingIndex != index,
-          child: AnimatedOpacity(
-            opacity: opacity,
-            duration: 250.ms,
-            child: Padding(
-              padding: .only(
-                left: batchData.isBatch ? 0 : appTheme.msgListMarginLeft,
-                right: batchData.isBatch ? 0 : appTheme.msgListMarginRight,
-                top: appTheme.msgListMarginTop,
-                bottom: appTheme.msgListMarginBottom,
-              ),
-              child: Column(
-                crossAxisAlignment: .start,
-                children: [
-                  if (demoType == .chat && msg.reference.enable) ReferenceInfo(refInfo: msg.reference, generating: msg.changing),
-                  GestureDetector(
-                    onTap: () => P.chat.onMessageTapped(msg),
-                    onLongPressStart: canShowUserMessageMenu && isMobile
-                        ? (_) {
-                            P.app.hapticLight();
-                            P.chat.showUserMessageContextMenu(
-                              context: context,
-                              canEdit: contextActions.canEdit,
-                              canCopy: contextActions.canCopy,
-                              index: index,
-                              msg: msg,
-                            );
-                          }
-                        : null,
-                    child: isMine && !isMobile
-                        ? MouseRegion(
-                            onEnter: (_) => _onDesktopHoverChanged(true),
-                            onExit: (_) => _onDesktopHoverChanged(false),
-                            child: bubbleContent,
-                          )
-                        : bubbleContent,
-                  ),
-                  if (showTTSBottomOutsideBubble)
-                    ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: screenWidth - _kBubbleMaxWidthAdjust),
-                      child: BotMessageBottom(
-                        msg,
-                        index,
-                        preferredDemoType: preferredDemoType,
-                        finalContent: finalContent,
-                      ),
+    return _MessageWidthLimit(
+      isBatch: batchData.isBatch,
+      viewportWidth: screenWidth,
+      child: GestureDetector(
+        child: Align(
+          alignment: isMine ? .centerRight : .centerLeft,
+          child: IgnorePointer(
+            ignoring: editingIndex != null && editingIndex != index,
+            child: AnimatedOpacity(
+              opacity: opacity,
+              duration: 250.ms,
+              child: Padding(
+                padding: .only(
+                  left: batchData.isBatch ? 0 : appTheme.msgListMarginLeft,
+                  right: batchData.isBatch ? 0 : appTheme.msgListMarginRight,
+                  top: appTheme.msgListMarginTop,
+                  bottom: appTheme.msgListMarginBottom,
+                ),
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    if (demoType == .chat && msg.reference.enable) ReferenceInfo(refInfo: msg.reference, generating: msg.changing),
+                    GestureDetector(
+                      onTap: () => P.chat.onMessageTapped(msg),
+                      onLongPressStart: canShowUserMessageMenu && isMobile
+                          ? (_) {
+                              P.app.hapticLight();
+                              P.chat.showUserMessageContextMenu(
+                                context: context,
+                                canEdit: contextActions.canEdit,
+                                canCopy: contextActions.canCopy,
+                                index: index,
+                                msg: msg,
+                              );
+                            }
+                          : null,
+                      child: isMine && !isMobile
+                          ? MouseRegion(
+                              onEnter: (_) => _onDesktopHoverChanged(true),
+                              onExit: (_) => _onDesktopHoverChanged(false),
+                              child: bubbleContent,
+                            )
+                          : bubbleContent,
                     ),
-                ],
+                    if (showTTSBottomOutsideBubble)
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: screenWidth - _kBubbleMaxWidthAdjust),
+                        child: BotMessageBottom(
+                          msg,
+                          index,
+                          preferredDemoType: preferredDemoType,
+                          finalContent: finalContent,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _MessageWidthLimit extends StatelessWidget {
+  final bool isBatch;
+  final double viewportWidth;
+  final Widget child;
+
+  const _MessageWidthLimit({
+    required this.isBatch,
+    required this.viewportWidth,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final _ = theme;
+    final maxWidth = resolveChatMessageMaxWidth(
+      viewportWidth: viewportWidth,
+      isBatch: isBatch,
+    );
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        child: child,
       ),
     );
   }
@@ -439,25 +473,27 @@ class _BotMessageBubble extends ConsumerWidget {
         children: [
           if (kDebugMode && Args.debugMsgId) _MessageDebugId(msgId: msg.id, debugColor: debugColor),
           if (isBatch)
-            Padding(
-              padding: .only(
-                left: appTheme.msgListMarginLeft,
-                right: appTheme.msgListMarginRight,
-                bottom: 8,
-              ),
-              child: Wrap(
-                children: [
-                  Text(
-                    s.batch_inference_running(batchCount),
-                    style: TS(c: appTheme.qb5),
-                  ),
-                  if (batchSelection != null) const SizedBox(width: 16),
-                  if (batchSelection != null)
+            _BatchChromeWidthLimit(
+              child: Padding(
+                padding: .only(
+                  left: appTheme.msgListMarginLeft,
+                  right: appTheme.msgListMarginRight,
+                  bottom: 8,
+                ),
+                child: Wrap(
+                  children: [
                     Text(
-                      s.batch_inference_selected(batchSelection! + 1),
+                      s.batch_inference_running(batchCount),
                       style: TS(c: appTheme.qb5),
                     ),
-                ],
+                    if (batchSelection != null) const SizedBox(width: 16),
+                    if (batchSelection != null)
+                      Text(
+                        s.batch_inference_selected(batchSelection! + 1),
+                        style: TS(c: appTheme.qb5),
+                      ),
+                  ],
+                ),
               ),
             ),
           if (!thinkingData.reasoning && !isBatch)
@@ -530,7 +566,11 @@ class _BotMessageBubble extends ConsumerWidget {
             ),
           if (demoType == .tts) BotTtsContent(msg, index),
           if (!selectMode && demoType != .tts)
-            BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
+            isBatch
+                ? _BatchChromeWidthLimit(
+                    child: BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
+                  )
+                : BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
         ],
       ),
     );
@@ -539,6 +579,29 @@ class _BotMessageBubble extends ConsumerWidget {
       return SizedBox(height: fixedBatchBubbleHeight, child: bubble);
     }
     return bubble;
+  }
+}
+
+class _BatchChromeWidthLimit extends StatelessWidget {
+  final Widget child;
+
+  const _BatchChromeWidthLimit({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final _ = theme;
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: chatNonBatchMessageMaxWidth),
+        child: SizedBox(
+          width: double.infinity,
+          child: child,
+        ),
+      ),
+    );
   }
 }
 

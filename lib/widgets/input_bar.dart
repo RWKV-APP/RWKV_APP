@@ -13,6 +13,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat_layout_metrics.dart';
 import 'package:zone/widgets/input_interactions.dart';
 import 'package:zone/widgets/input_text_field.dart';
 
@@ -27,6 +28,8 @@ class InputBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final inRWKVSee = P.app.pageKey.q == .see;
 
     final selectMessageMode = ref.watch(P.chat.isSharing);
@@ -55,19 +58,46 @@ class InputBar extends ConsumerWidget {
               end: Alignment(0, gradientForInputBar),
             ),
           ),
-          child: AnimatedSize(
-            duration: 250.ms,
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                if (preferredDemoType == .chat) const SizedBox(height: 12),
-                if (inRWKVSee) const _WaitingMsg(),
-                if (preferredDemoType != .tts) InputInteractions(preferredDemoType: preferredDemoType),
-                InputTextField(preferredDemoType: preferredDemoType),
-              ],
+          child: _InputBarWidthLimit(
+            preferredDemoType: preferredDemoType,
+            child: AnimatedSize(
+              duration: 250.ms,
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  if (preferredDemoType == .chat) const SizedBox(height: 12),
+                  if (inRWKVSee) const _WaitingMsg(),
+                  if (preferredDemoType != .tts) InputInteractions(preferredDemoType: preferredDemoType),
+                  InputTextField(preferredDemoType: preferredDemoType),
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _InputBarWidthLimit extends StatelessWidget {
+  final DemoType preferredDemoType;
+  final Widget child;
+
+  const _InputBarWidthLimit({
+    required this.preferredDemoType,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final _ = theme;
+    if (preferredDemoType != .chat) return child;
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: chatInputBarMaxWidth),
+        child: child,
       ),
     );
   }
@@ -78,6 +108,8 @@ class _WaitingMsg extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final s = S.of(context);
     final waitingText = ref.watch(P.see.waitingText);
     if (waitingText == null) return const SizedBox.shrink();
@@ -123,6 +155,8 @@ class _ImagePreview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final screenWidth = ref.watch(P.app.screenWidth);
     if (imagePath.isEmpty) return const SizedBox.shrink();
 
