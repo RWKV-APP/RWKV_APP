@@ -81,6 +81,7 @@ dependencies:
   collection:
   crypto:
   cupertino_icons:
+  desktop_drop:
   device_info_plus:
   dio: ^5.9.0
   drift:

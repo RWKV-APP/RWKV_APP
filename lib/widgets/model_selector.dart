@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:collection/collection.dart';
+import 'package:desktop_drop/desktop_drop.dart' as desktop_drop;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
@@ -105,17 +106,11 @@ class ModelSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final isMobile = ref.watch(P.app.isMobile);
-    final folders = ref.watch(P.pth.folders);
     final canUsePth = ref.watch(P.app.pageKey) == .chat || ref.watch(P.app.pageKey) == .completion;
 
     final items = [
       const _SelectionHint(),
-      if (!isMobile && canUsePth)
-        ...[
-          const _LocalPthFolderHeader(),
-          if (folders.isEmpty) const _LocalPthEmpty(),
-          if (folders.isNotEmpty) ...folders.map((e) => _LocalPthFolder(e)),
-        ].widgetJoin((index) => const SizedBox(height: 8)),
+      if (!isMobile && canUsePth) const _LocalPthDropZone(),
       if (!isMobile && canUsePth) ...[
         const SizedBox(height: 4),
         const _ModelsInConfigHeader(),
@@ -674,6 +669,39 @@ String _truncatePath(String pathStr, [int maxLen = 56]) {
   return '${pathStr.substring(0, head)}...${pathStr.substring(pathStr.length - tail)}';
 }
 
+List<(String tag, bool forceUppercase)> _localModelTags({
+  required FileInfo fileInfo,
+  required bool isCurrent,
+  required List<int> supportedBatchSizes,
+}) {
+  final tags = <(String tag, bool forceUppercase)>[];
+  for (final tag in fileInfo.localModelStaticTags) {
+    tags.add((tag, tag == fileInfo.quantization?.toUpperCase()));
+  }
+  final runtimeBatchTag = _runtimeBatchTag(
+    fileInfo: fileInfo,
+    isCurrent: isCurrent,
+    supportedBatchSizes: supportedBatchSizes,
+  );
+  if (runtimeBatchTag != null) tags.add((runtimeBatchTag, false));
+  return tags;
+}
+
+String? _runtimeBatchTag({
+  required FileInfo fileInfo,
+  required bool isCurrent,
+  required List<int> supportedBatchSizes,
+}) {
+  if (!fileInfo.fromLocalGgufFile) return null;
+  if (!isCurrent) return null;
+  if (supportedBatchSizes.isEmpty) return "Batch ?";
+  int maxBatchSize = 1;
+  for (final size in supportedBatchSizes) {
+    if (size > maxBatchSize) maxBatchSize = size;
+  }
+  return "Batch x$maxBatchSize";
+}
+
 class _LocalPthFileItem extends ConsumerWidget {
   final FileInfo fileInfo;
   final VoidCallback? onStartToChat;
@@ -682,6 +710,7 @@ class _LocalPthFileItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     ref.watch(P.app.theme);
     final appTheme = ref.watch(P.app.theme);
@@ -699,8 +728,13 @@ class _LocalPthFileItem extends ConsumerWidget {
 
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
-    final date = fileInfo.dateDisplayString;
     final primary = appTheme.primary;
+    final supportedBatchSizes = ref.watch(P.rwkvParams.supportedBatchSizes);
+    final modelTags = _localModelTags(
+      fileInfo: fileInfo,
+      isCurrent: isCurrent,
+      supportedBatchSizes: supportedBatchSizes,
+    );
 
     return Row(
       children: [
@@ -713,7 +747,7 @@ class _LocalPthFileItem extends ConsumerWidget {
                 spacing: 8,
                 runSpacing: 0,
                 children: [
-                  Text(fileInfo.name, style: const TS(w: .w600)),
+                  Text(fileInfo.name, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .w600)),
                   Text(
                     formatBytes(fileInfo.fileSize),
                     style: TS(c: qb.q(.7), w: .w500),
@@ -721,14 +755,12 @@ class _LocalPthFileItem extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 4),
-              Wrap(
-                spacing: 4,
-                runSpacing: 8,
-                children: [
-                  if (date != null) ModelTag(tag: date),
-                  if (fileInfo.ctxLength != null) ModelTag(tag: s.ctx_length_label(fileInfo.ctxLength ?? "")),
-                ],
-              ),
+              if (modelTags.isNotEmpty)
+                Wrap(
+                  spacing: 4,
+                  runSpacing: 8,
+                  children: modelTags.map((tag) => ModelTag(tag: tag.$1, forceUppercase: tag.$2)).toList(),
+                ),
             ],
           ),
         ),
@@ -808,6 +840,110 @@ class _LocalPthFolderHeader extends ConsumerWidget {
         if (folders.isNotEmpty)
           IconButton(onPressed: P.pth.onAddFolderClicked, icon: const Icon(Icons.add), tooltip: S.current.add_local_folder),
       ],
+    );
+  }
+}
+
+class _LocalPthDropZone extends ConsumerStatefulWidget {
+  const _LocalPthDropZone();
+
+  @override
+  ConsumerState<_LocalPthDropZone> createState() => _LocalPthDropZoneState();
+}
+
+class _LocalPthDropZoneState extends ConsumerState<_LocalPthDropZone> {
+  bool _dragging = false;
+
+  void _setDragging(bool dragging) {
+    if (_dragging == dragging) return;
+    setState(() {
+      _dragging = dragging;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final folders = ref.watch(P.pth.folders);
+    final qb = ref.watch(P.app.qb);
+    final primary = theme.colorScheme.primary;
+    final folderWidgets = folders.map((e) => _LocalPthFolder(e)).toList().widgetJoin((index) => const SizedBox(height: 8));
+
+    return desktop_drop.DropTarget(
+      onDragEntered: (_) => _setDragging(true),
+      onDragUpdated: (_) => _setDragging(true),
+      onDragExited: (_) => _setDragging(false),
+      onDragDone: (detail) async {
+        _setDragging(false);
+        await P.pth.onLocalModelDropDone(detail.files);
+      },
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: .stretch,
+            children: [
+              const _LocalPthFolderHeader(),
+              const SizedBox(height: 4),
+              Container(
+                padding: const .symmetric(horizontal: 10, vertical: 8),
+                decoration: BoxDecoration(
+                  color: primary.q(_dragging ? .14 : .08),
+                  borderRadius: .circular(8),
+                  border: .all(color: primary.q(_dragging ? .75 : .35), width: _dragging ? 1 : 0.5),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.file_upload_outlined, size: 18, color: primary),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        S.current.drag_local_model_file_to_add_folder,
+                        style: TS(c: qb.q(.82), s: 12, w: .w500),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              if (folders.isEmpty) const _LocalPthEmpty(),
+              if (folders.isNotEmpty) ...folderWidgets,
+            ],
+          ),
+          if (_dragging)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: primary.q(.08),
+                    borderRadius: .circular(10),
+                    border: .all(color: primary.q(.9), width: 2),
+                  ),
+                  child: Center(
+                    child: Container(
+                      padding: const .symmetric(horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface.q(.92),
+                        borderRadius: .circular(8),
+                        border: .all(color: primary.q(.6), width: 0.5),
+                      ),
+                      child: Row(
+                        mainAxisSize: .min,
+                        children: [
+                          Icon(Icons.file_upload_outlined, size: 20, color: primary),
+                          const SizedBox(width: 8),
+                          Text(
+                            S.current.drag_local_model_file_to_add_folder,
+                            style: TS(c: qb.q(.9), s: 13, w: .w600),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -956,7 +1092,7 @@ class _LocalPthFolder extends ConsumerWidget {
                       border: .all(color: qb.q(.1), width: .5),
                     ),
                     padding: const .all(4),
-                    child: _LocalPthFileItem(e, onStartToChat: () => P.pth.onStartPthFileForChat(e)),
+                    child: _LocalPthFileItem(e, onStartToChat: () => P.pth.onStartLocalModelFileForChat(e)),
                   ),
                 )
                 .toList()

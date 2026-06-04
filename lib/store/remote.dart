@@ -402,6 +402,10 @@ extension $Remote on _Remote {
           continue;
         }
 
+        if (isLocalModelFileExtension(entity.path)) {
+          continue;
+        }
+
         // 检查文件大小，只删除大于 20MB 的文件
         final fileSize = await File(entity.path).length();
         final needToCheckBecauseTheFileIsBigEnough = fileSize > maxSizeBytes;
@@ -1767,6 +1771,8 @@ extension $Remote on _Remote {
 
           final fileName = basename(filePath);
           if (allWeightFileNames.contains(fileName)) continue;
+          if (P.pth.isRecognizedLocalModelPath(filePath)) continue;
+          if (await isRecognizedRwkvGgufFile(filePath)) continue;
 
           final fileSize = await entity.length();
 

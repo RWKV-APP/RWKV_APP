@@ -510,7 +510,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Click here to start a new chat",
     ),
     "click_plus_add_local_folder": MessageLookupByLibrary.simpleMessage(
-      "Click + to add local folder. RWKV Chat will scan the folder for .pth files and list them as loadable weights",
+      "Click + to add a local folder. RWKV Chat will scan for .pth files and RWKV .gguf files, then list them as loadable weights",
     ),
     "click_plus_to_add_more_folders": MessageLookupByLibrary.simpleMessage(
       "Click + to add more local folders",
@@ -588,10 +588,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "This folder has no local models",
     ),
     "current_model": m21,
-    "current_model_from_latest_json_not_pth":
-        MessageLookupByLibrary.simpleMessage(
-          "The current model is from latest.json config, not a local .pth file",
-        ),
+    "current_model_from_latest_json_not_pth": MessageLookupByLibrary.simpleMessage(
+      "The current model is from latest.json config, with no local model file loaded",
+    ),
     "current_progress": m22,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
       "Current task Tab ID",
@@ -720,6 +719,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "download_source": MessageLookupByLibrary.simpleMessage("Download Source"),
     "downloading": MessageLookupByLibrary.simpleMessage("Downloading"),
+    "drag_local_model_file_to_add_folder": MessageLookupByLibrary.simpleMessage(
+      "Drag a .pth file, a RWKV .gguf file, or a folder here to add its folder to the scan list",
+    ),
     "draw": MessageLookupByLibrary.simpleMessage("Draw!"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage(
       "Dump Message Records",
@@ -978,16 +980,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading_progress_percent": m34,
     "local_folder_name": m35,
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
-      "Local .pth file",
+      "Local model files",
     ),
     "local_pth_option_files_in_config": MessageLookupByLibrary.simpleMessage(
       "Weights in config",
     ),
     "local_pth_option_local_pth_files": MessageLookupByLibrary.simpleMessage(
-      "Local .pth file",
+      "Local model files",
     ),
     "local_pth_you_can_select": MessageLookupByLibrary.simpleMessage(
-      "You can select and load a local .pth file",
+      "You can select and load local .pth files or RWKV .gguf files",
     ),
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
     "memory_used": m36,
@@ -1084,10 +1086,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "No latest version information",
     ),
     "no_local_folders": MessageLookupByLibrary.simpleMessage(
-      "You haven\'t added a local folder that contains .pth files",
+      "You haven\'t added a local folder that contains model files",
     ),
     "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
-      "No local .pth file loaded yet",
+      "No local model file loaded yet",
     ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage(
       "No message to export",
@@ -1434,7 +1436,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
-      "Scanning this folder for .pth files",
+      "Scanning this folder for .pth files and RWKV .gguf files",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("Screen width"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
@@ -1456,7 +1458,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "select_image": MessageLookupByLibrary.simpleMessage("Select Image"),
     "select_local_pth_file_button": MessageLookupByLibrary.simpleMessage(
-      "Select local .pth file",
+      "Select local model file",
     ),
     "select_model": MessageLookupByLibrary.simpleMessage("Select Model"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("Select Image"),
@@ -1465,7 +1467,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Please select a preset from below, or tap \'Custom\' to configure manually",
         ),
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
-      "Select weights from config or local .pth file",
+      "Select weights from config or local model files",
     ),
     "selected_count": m53,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
@@ -1750,10 +1752,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Welcome to RWKV",
     ),
     "what_is_pth_file_message": MessageLookupByLibrary.simpleMessage(
-      ".pth files are weight files loaded directly from the local file system, without downloading from a server.\n\nModels trained with PyTorch are often saved as .pth files.\n\nRWKV Chat supports loading .pth files.",
+      "Local model files are weight files loaded directly from the local file system, without downloading from a server.\n\nRWKV Chat supports local .pth files and RWKV GGUF files. GGUF files from other model families are not listed as loadable models.",
     ),
     "what_is_pth_file_title": MessageLookupByLibrary.simpleMessage(
-      "What is a .pth file?",
+      "What are local model files?",
     ),
     "white": MessageLookupByLibrary.simpleMessage("White"),
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),

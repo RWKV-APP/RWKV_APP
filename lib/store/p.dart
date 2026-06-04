@@ -18,6 +18,7 @@ import 'package:archive/archive_io.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:collection/collection.dart';
 import 'package:detect_proxy_setting/detect_proxy_setting.dart';
+import 'package:desktop_drop/desktop_drop.dart' as desktop_drop;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
@@ -70,6 +71,7 @@ import 'package:zone/func/extensions/string.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/func/is_chinese.dart';
+import 'package:zone/func/local_model_discovery.dart';
 import 'package:zone/func/open_folder.dart';
 import 'package:zone/func/save_asset_to_file.dart';
 import 'package:zone/func/show_image_selector.dart';
@@ -262,19 +264,19 @@ abstract class P {
 
   static Future<void> _safeInit(Future<void> Function() initFunc, {String? mark}) async {
     final name = mark;
-    var isCompleted = false;
-    var hasWarned = false;
+    bool isCompleted = false;
+    bool hasWarned = false;
 
     const check = 2000;
     const timeout = 4000;
 
-    // 启动超时检测
-    check.msLater.then((_) {
+    unawaited(() async {
+      await check.msLater;
       if (!isCompleted && !hasWarned) {
         hasWarned = true;
         qqe('Warning: $name initialization is taking longer than ${check}ms');
       }
-    });
+    }());
 
     try {
       await initFunc().timeout(const Duration(milliseconds: timeout));

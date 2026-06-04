@@ -112,3 +112,34 @@ Future<void> openFolder(
     swAll.stop();
   }
 }
+
+Future<void> openFileLocation(String? path) async {
+  try {
+    if (path == null) {
+      Alert.warning(S.current.open_folder_path_is_null);
+      return;
+    }
+
+    final fixedPath = Platform.isWindows ? path.trim().replaceAll('/', r'\') : path.trim();
+    if (fixedPath.isEmpty) {
+      Alert.warning(S.current.open_folder_path_is_null);
+      return;
+    }
+
+    if (Platform.isMacOS) {
+      await Process.start('open', <String>['-R', fixedPath]);
+      return;
+    }
+
+    if (Platform.isWindows) {
+      await Process.start('explorer.exe', <String>['/select,', fixedPath], runInShell: true);
+      return;
+    }
+
+    await openFolder(File(fixedPath).parent.path);
+  } catch (e, st) {
+    qqe("openFileLocation fatal error: $e");
+    Sentry.captureException(e, stackTrace: st);
+    Alert.error(e.toString());
+  }
+}

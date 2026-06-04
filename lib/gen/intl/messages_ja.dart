@@ -433,7 +433,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ここをクリックして新しいチャットを開始",
     ),
     "click_plus_add_local_folder": MessageLookupByLibrary.simpleMessage(
-      "+ をクリックしてローカルフォルダを追加。RWKV Chat がフォルダ内の .pth ファイルをスキャンし、読み込み可能な重みとして表示します",
+      "+ をクリックしてローカルフォルダを追加。RWKV Chat がフォルダ内の .pth ファイルと RWKV .gguf ファイルをスキャンし、読み込み可能な重みとして表示します",
     ),
     "click_plus_to_add_more_folders": MessageLookupByLibrary.simpleMessage(
       "+ をクリックしてローカルフォルダを追加",
@@ -502,7 +502,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_model": m21,
     "current_model_from_latest_json_not_pth":
         MessageLookupByLibrary.simpleMessage(
-          "現在読み込んでいるのは latest.json の設定であり、ローカル .pth ファイルではありません",
+          "現在のモデルは latest.json の設定から読み込まれており、ローカルモデルファイルは読み込まれていません",
         ),
     "current_progress": m22,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("現在のタスクのタブID"),
@@ -615,6 +615,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "download_source": MessageLookupByLibrary.simpleMessage("ダウンロード元"),
     "downloading": MessageLookupByLibrary.simpleMessage("ダウンロード中"),
+    "drag_local_model_file_to_add_folder": MessageLookupByLibrary.simpleMessage(
+      ".pth ファイル、RWKV .gguf ファイル、またはフォルダをここにドラッグすると、そのフォルダをスキャンパスに追加できます",
+    ),
     "draw": MessageLookupByLibrary.simpleMessage("引き分け！"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("自動ダンプメッセージ履歴"),
     "dump_see_files_alert_message": m25,
@@ -837,16 +840,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading_progress_percent": m34,
     "local_folder_name": m35,
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
-      "ローカル .pth ファイル",
+      "ローカルモデルファイル",
     ),
     "local_pth_option_files_in_config": MessageLookupByLibrary.simpleMessage(
       "設定ファイルの重み",
     ),
     "local_pth_option_local_pth_files": MessageLookupByLibrary.simpleMessage(
-      "ローカル .pth ファイル",
+      "ローカルモデルファイル",
     ),
     "local_pth_you_can_select": MessageLookupByLibrary.simpleMessage(
-      "ローカルの .pth ファイルを選択して読み込めます",
+      "ローカルの .pth ファイルまたは RWKV .gguf ファイルを選択して読み込めます",
     ),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
     "memory_used": m36,
@@ -921,10 +924,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "最新バージョン情報がありません",
     ),
     "no_local_folders": MessageLookupByLibrary.simpleMessage(
-      ".pth ファイルを含むローカルフォルダをまだ追加していません",
+      "モデルファイルを含むローカルフォルダをまだ追加していません",
     ),
     "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
-      "読み込み済みのローカル .pth ファイルはありません",
+      "読み込み済みのローカルモデルファイルはありません",
     ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage(
       "エクスポートするメッセージがありません",
@@ -1221,7 +1224,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("QRコードをスキャン"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
-      "このフォルダ内の .pth ファイルをスキャン中",
+      "このフォルダ内の .pth ファイルと RWKV .gguf ファイルをスキャン中",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("画面幅"),
     "search": MessageLookupByLibrary.simpleMessage("検索"),
@@ -1237,7 +1240,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_from_library": MessageLookupByLibrary.simpleMessage("ライブラリから選択"),
     "select_image": MessageLookupByLibrary.simpleMessage("画像を選択"),
     "select_local_pth_file_button": MessageLookupByLibrary.simpleMessage(
-      "ローカル .pth ファイルを選択",
+      "ローカルモデルファイルを選択",
     ),
     "select_model": MessageLookupByLibrary.simpleMessage("モデルを選択"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("画像を選択"),
@@ -1246,7 +1249,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "以下からプリセットを選択するか、「カスタム」をタップして手動で設定してください",
         ),
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
-      "設定ファイルの重みまたはローカル .pth ファイルを選択",
+      "設定ファイルの重みまたはローカルモデルファイルを選択",
     ),
     "selected_count": m53,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
@@ -1488,10 +1491,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage("RWKVへようこそ"),
     "what_is_pth_file_message": MessageLookupByLibrary.simpleMessage(
-      ".pth ファイルはダウンロードサーバーを経由せず、ローカルファイルシステムから直接読み込む重みファイルです。\n\nPyTorch で訓練したモデルは通常 .pth ファイルとして保存されます。\n\nRWKV Chat は .pth ファイルの読み込みに対応しています。",
+      "ローカルモデルファイルは、ダウンロードサーバーを経由せず、ローカルファイルシステムから直接読み込む重みファイルです。\n\nRWKV Chat はローカル .pth ファイルと RWKV GGUF ファイルの読み込みに対応しています。他のモデルファミリーの GGUF ファイルは読み込み可能なモデルとして表示されません。",
     ),
     "what_is_pth_file_title": MessageLookupByLibrary.simpleMessage(
-      ".pth ファイルとは？",
+      "ローカルモデルファイルとは？",
     ),
     "white": MessageLookupByLibrary.simpleMessage("白"),
     "white_score": MessageLookupByLibrary.simpleMessage("白のスコア"),

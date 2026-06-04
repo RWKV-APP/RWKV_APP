@@ -5153,20 +5153,20 @@ class S {
     );
   }
 
-  /// `当前加载的是 latest.json 中的配置，不是本地 .pth 文件`
+  /// `当前模型来自 latest.json 配置，未加载本地模型文件`
   String get current_model_from_latest_json_not_pth {
     return Intl.message(
-      '当前加载的是 latest.json 中的配置，不是本地 .pth 文件',
+      '当前模型来自 latest.json 配置，未加载本地模型文件',
       name: 'current_model_from_latest_json_not_pth',
       desc: '',
       args: [],
     );
   }
 
-  /// `暂无已加载的本地 .pth 文件`
+  /// `暂无已加载的本地模型文件`
   String get no_local_pth_loaded_yet {
     return Intl.message(
-      '暂无已加载的本地 .pth 文件',
+      '暂无已加载的本地模型文件',
       name: 'no_local_pth_loaded_yet',
       desc: '',
       args: [],
@@ -5193,70 +5193,70 @@ class S {
     );
   }
 
-  /// `本地 .pth 文件`
+  /// `本地模型文件`
   String get local_pth_option_local_pth_files {
     return Intl.message(
-      '本地 .pth 文件',
+      '本地模型文件',
       name: 'local_pth_option_local_pth_files',
       desc: '',
       args: [],
     );
   }
 
-  /// `选择配置文件中的权重或者本地 .pth 文件`
+  /// `选择配置文件中的权重或者本地模型文件`
   String get select_weights_or_local_pth_hint {
     return Intl.message(
-      '选择配置文件中的权重或者本地 .pth 文件',
+      '选择配置文件中的权重或者本地模型文件',
       name: 'select_weights_or_local_pth_hint',
       desc: '',
       args: [],
     );
   }
 
-  /// `本地 .pth 文件`
+  /// `本地模型文件`
   String get local_pth_files_section_title {
     return Intl.message(
-      '本地 .pth 文件',
+      '本地模型文件',
       name: 'local_pth_files_section_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `你可以选择本地的 .pth 文件进行加载`
+  /// `你可以选择本地 .pth 文件或 RWKV .gguf 文件进行加载`
   String get local_pth_you_can_select {
     return Intl.message(
-      '你可以选择本地的 .pth 文件进行加载',
+      '你可以选择本地 .pth 文件或 RWKV .gguf 文件进行加载',
       name: 'local_pth_you_can_select',
       desc: '',
       args: [],
     );
   }
 
-  /// `什么是 .pth 文件？`
+  /// `什么是本地模型文件？`
   String get what_is_pth_file_title {
     return Intl.message(
-      '什么是 .pth 文件？',
+      '什么是本地模型文件？',
       name: 'what_is_pth_file_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `.pth 文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。\n\n通常通过 Pytorch 训练的模型会保存为 .pth 文件。\n\nRWKV Chat 支持加载 .pth 文件。`
+  /// `本地模型文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。\n\nRWKV Chat 支持本地 .pth 文件和 RWKV GGUF 文件。其他模型家族的 GGUF 文件不会显示为可加载模型。`
   String get what_is_pth_file_message {
     return Intl.message(
-      '.pth 文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。\n\n通常通过 Pytorch 训练的模型会保存为 .pth 文件。\n\nRWKV Chat 支持加载 .pth 文件。',
+      '本地模型文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。\n\nRWKV Chat 支持本地 .pth 文件和 RWKV GGUF 文件。其他模型家族的 GGUF 文件不会显示为可加载模型。',
       name: 'what_is_pth_file_message',
       desc: '',
       args: [],
     );
   }
 
-  /// `选择本地 .pth 文件`
+  /// `选择本地模型文件`
   String get select_local_pth_file_button {
     return Intl.message(
-      '选择本地 .pth 文件',
+      '选择本地模型文件',
       name: 'select_local_pth_file_button',
       desc: '',
       args: [],
@@ -5393,21 +5393,31 @@ class S {
     );
   }
 
-  /// `你还没有添加包含有 .pth 文件的本地文件夹`
+  /// `你还没有添加包含模型文件的本地文件夹`
   String get no_local_folders {
     return Intl.message(
-      '你还没有添加包含有 .pth 文件的本地文件夹',
+      '你还没有添加包含模型文件的本地文件夹',
       name: 'no_local_folders',
       desc: '',
       args: [],
     );
   }
 
-  /// `点击 + 添加本地文件夹, RWKV Chat 会扫描该文件夹下的 .pth 文件, 并将其作为可加载的权重`
+  /// `点击 + 添加本地文件夹，RWKV Chat 会扫描该文件夹下的 .pth 文件和 RWKV .gguf 文件，并将其作为可加载的权重`
   String get click_plus_add_local_folder {
     return Intl.message(
-      '点击 + 添加本地文件夹, RWKV Chat 会扫描该文件夹下的 .pth 文件, 并将其作为可加载的权重',
+      '点击 + 添加本地文件夹，RWKV Chat 会扫描该文件夹下的 .pth 文件和 RWKV .gguf 文件，并将其作为可加载的权重',
       name: 'click_plus_add_local_folder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `也可以把 .pth 文件、RWKV .gguf 文件或文件夹拖到这里，应用会把对应文件夹加入扫描路径`
+  String get drag_local_model_file_to_add_folder {
+    return Intl.message(
+      '也可以把 .pth 文件、RWKV .gguf 文件或文件夹拖到这里，应用会把对应文件夹加入扫描路径',
+      name: 'drag_local_model_file_to_add_folder',
       desc: '',
       args: [],
     );
@@ -5428,10 +5438,10 @@ class S {
     );
   }
 
-  /// `正在扫描该文件夹中的 .pth 文件`
+  /// `正在扫描该文件夹中的 .pth 文件和 RWKV .gguf 文件`
   String get scanning_folder_for_pth {
     return Intl.message(
-      '正在扫描该文件夹中的 .pth 文件',
+      '正在扫描该文件夹中的 .pth 文件和 RWKV .gguf 文件',
       name: 'scanning_folder_for_pth',
       desc: '',
       args: [],

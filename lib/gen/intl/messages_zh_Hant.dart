@@ -410,7 +410,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "點擊此處開始新聊天",
     ),
     "click_plus_add_local_folder": MessageLookupByLibrary.simpleMessage(
-      "點擊 + 新增本機資料夾, RWKV Chat 會掃描該資料夾下的 .pth 檔案, 並將其作為可載入的權重",
+      "點擊 + 新增本機資料夾，RWKV Chat 會掃描該資料夾下的 .pth 檔案和 RWKV .gguf 檔案，並將其作為可載入的權重",
     ),
     "click_plus_to_add_more_folders": MessageLookupByLibrary.simpleMessage(
       "點擊 + 號新增更多本機資料夾",
@@ -472,9 +472,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "current_model": m21,
     "current_model_from_latest_json_not_pth":
-        MessageLookupByLibrary.simpleMessage(
-          "目前載入的是 latest.json 中的配置，不是本機 .pth 檔案",
-        ),
+        MessageLookupByLibrary.simpleMessage("目前模型來自 latest.json 設定，未載入本機模型檔案"),
     "current_progress": m22,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("目前任務分頁 ID"),
     "current_task_text_length": MessageLookupByLibrary.simpleMessage(
@@ -568,6 +566,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "download_server_": MessageLookupByLibrary.simpleMessage("下載伺服器(請試試哪個快)"),
     "download_source": MessageLookupByLibrary.simpleMessage("下載來源"),
     "downloading": MessageLookupByLibrary.simpleMessage("下載中"),
+    "drag_local_model_file_to_add_folder": MessageLookupByLibrary.simpleMessage(
+      "也可以把 .pth 檔案、RWKV .gguf 檔案或資料夾拖到這裡，應用會把對應資料夾加入掃描路徑",
+    ),
     "draw": MessageLookupByLibrary.simpleMessage("平局！"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("自動 Dump 訊息記錄"),
     "dump_see_files_alert_message": m25,
@@ -764,16 +765,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading_progress_percent": m34,
     "local_folder_name": m35,
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
-      "本機 .pth 檔案",
+      "本機模型檔案",
     ),
     "local_pth_option_files_in_config": MessageLookupByLibrary.simpleMessage(
       "設定檔中的權重",
     ),
     "local_pth_option_local_pth_files": MessageLookupByLibrary.simpleMessage(
-      "本機 .pth 檔案",
+      "本機模型檔案",
     ),
     "local_pth_you_can_select": MessageLookupByLibrary.simpleMessage(
-      "你可以選擇本機的 .pth 檔案進行載入",
+      "你可以選擇本機 .pth 檔案或 RWKV .gguf 檔案進行載入",
     ),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
     "memory_used": m36,
@@ -842,10 +843,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "no_latest_version_info": MessageLookupByLibrary.simpleMessage("沒有最新版本資訊"),
     "no_local_folders": MessageLookupByLibrary.simpleMessage(
-      "你還沒有新增包含 .pth 檔案的本機資料夾",
+      "你還沒有新增包含模型檔案的本機資料夾",
     ),
     "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
-      "暫無已載入的本機 .pth 檔案",
+      "暫無已載入的本機模型檔案",
     ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage("沒有可匯出的訊息"),
     "no_model_selected": MessageLookupByLibrary.simpleMessage("未選擇模型"),
@@ -1110,7 +1111,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("儲存"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("掃描二維碼"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
-      "正在掃描該資料夾中的 .pth 檔案",
+      "正在掃描該資料夾中的 .pth 檔案和 RWKV .gguf 檔案",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("螢幕寬度"),
     "search": MessageLookupByLibrary.simpleMessage("搜尋"),
@@ -1126,14 +1127,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_from_library": MessageLookupByLibrary.simpleMessage("從相簿選擇"),
     "select_image": MessageLookupByLibrary.simpleMessage("選擇圖片"),
     "select_local_pth_file_button": MessageLookupByLibrary.simpleMessage(
-      "選擇本機 .pth 檔案",
+      "選擇本機模型檔案",
     ),
     "select_model": MessageLookupByLibrary.simpleMessage("選擇模型"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("選擇圖片"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage("請從下方選擇預設參數，或點擊「自定義」進行手動配置"),
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
-      "選擇設定檔中的權重或本機 .pth 檔案",
+      "選擇設定檔中的權重或本機模型檔案",
     ),
     "selected_count": m53,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage("傳送訊息給 RWKV"),
@@ -1349,10 +1350,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage("歡迎使用 RWKV"),
     "what_is_pth_file_message": MessageLookupByLibrary.simpleMessage(
-      ".pth 檔案是直接從本機檔案系統載入的權重檔案，不需透過下載伺服器下載。\n\n通常透過 Pytorch 訓練的模型會儲存為 .pth 檔案。\n\nRWKV Chat 支援載入 .pth 檔案。",
+      "本機模型檔案是直接從本機檔案系統載入的權重檔案，不需透過下載伺服器下載。\n\nRWKV Chat 支援本機 .pth 檔案和 RWKV GGUF 檔案。其他模型家族的 GGUF 檔案不會顯示為可載入模型。",
     ),
     "what_is_pth_file_title": MessageLookupByLibrary.simpleMessage(
-      "什麼是 .pth 檔案？",
+      "什麼是本機模型檔案？",
     ),
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),

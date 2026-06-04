@@ -11,7 +11,7 @@ class _RWKVModel {
 
     if (loadedModels.isEmpty) return null;
 
-    if (loadedModels.keys.any((e) => e.fromPthFile)) {
+    if (loadedModels.keys.any((e) => e.fromLocalModelFile)) {
       return true;
     }
 
@@ -91,7 +91,7 @@ extension $RWKVModel on _RWKVModel {
 
     String modelPath;
 
-    if (fileInfo.fromPthFile) {
+    if (fileInfo.fromLocalModelFile) {
       modelPath = fileInfo.raw;
     } else {
       final localFile = P.remote.locals(fileInfo).q;
@@ -391,9 +391,9 @@ extension $RWKVModel on _RWKVModel {
     P.rwkvBridge.send(to_rwkv.ClearStates(modelID: modelID));
   }
 
-  /// 加载指定 pth 权重并完成聊天用配置（角色、batch、thinkingMode、GetSupportedBatchSizes）。
+  /// 加载指定本地模型文件并完成聊天用配置（角色、batch、thinkingMode、GetSupportedBatchSizes）。
   /// 供 UI 在「Start to Chat」时调用；成功/失败在内部用 Alert.success / Alert.error 处理。
-  Future<void> startPthForChat(FileInfo fileInfo) async {
+  Future<void> startLocalModelForChat(FileInfo fileInfo) async {
     qq;
     if (fileInfo.backend == null) {
       Alert.error("Backend is null");
@@ -401,6 +401,7 @@ extension $RWKVModel on _RWKVModel {
     }
     try {
       await P.rwkvGeneration.clearStates();
+      P.rwkvParams.supportedBatchSizes.q = [];
       await loadChat(fileInfo: fileInfo);
     } catch (e) {
       Alert.error(e.toString());
@@ -451,6 +452,10 @@ extension $RWKVModel on _RWKVModel {
       );
     }
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+  }
+
+  Future<void> startPthForChat(FileInfo fileInfo) async {
+    await startLocalModelForChat(fileInfo);
   }
 
   int? findModelIDByWeightType({required WeightType weightType}) {

@@ -431,7 +431,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "여기를 클릭하여 새 채팅 시작",
     ),
     "click_plus_add_local_folder": MessageLookupByLibrary.simpleMessage(
-      "+ 를 클릭하여 로컬 폴더를 추가하세요. RWKV Chat 이 해당 폴더의 .pth 파일을 스캔하여 로드 가능한 가중치로 표시합니다",
+      "+ 를 클릭하여 로컬 폴더를 추가하세요. RWKV Chat 이 해당 폴더의 .pth 파일과 RWKV .gguf 파일을 스캔하여 로드 가능한 가중치로 표시합니다",
     ),
     "click_plus_to_add_more_folders": MessageLookupByLibrary.simpleMessage(
       "+ 를 클릭하여 로컬 폴더 추가",
@@ -500,7 +500,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_model": m21,
     "current_model_from_latest_json_not_pth":
         MessageLookupByLibrary.simpleMessage(
-          "현재 로드된 모델은 latest.json 설정에서 가져온 것이며 로컬 .pth 파일이 아닙니다",
+          "현재 모델은 latest.json 설정에서 로드되었으며 로컬 모델 파일은 로드되지 않았습니다",
         ),
     "current_progress": m22,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("현재 작업 탭 ID"),
@@ -609,6 +609,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "download_source": MessageLookupByLibrary.simpleMessage("다운로드 소스"),
     "downloading": MessageLookupByLibrary.simpleMessage("다운로드 중"),
+    "drag_local_model_file_to_add_folder": MessageLookupByLibrary.simpleMessage(
+      ".pth 파일, RWKV .gguf 파일 또는 폴더를 여기로 드래그하면 해당 폴더를 스캔 경로에 추가합니다",
+    ),
     "draw": MessageLookupByLibrary.simpleMessage("무승부!"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("자동 덤프 메시지 기록"),
     "dump_see_files_alert_message": m25,
@@ -831,16 +834,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading_progress_percent": m34,
     "local_folder_name": m35,
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
-      "로컬 .pth 파일",
+      "로컬 모델 파일",
     ),
     "local_pth_option_files_in_config": MessageLookupByLibrary.simpleMessage(
       "설정 파일의 가중치",
     ),
     "local_pth_option_local_pth_files": MessageLookupByLibrary.simpleMessage(
-      "로컬 .pth 파일",
+      "로컬 모델 파일",
     ),
     "local_pth_you_can_select": MessageLookupByLibrary.simpleMessage(
-      "로컬 .pth 파일을 선택하여 로드할 수 있습니다",
+      "로컬 .pth 파일 또는 RWKV .gguf 파일을 선택하여 로드할 수 있습니다",
     ),
     "medium": MessageLookupByLibrary.simpleMessage("중간 (110%)"),
     "memory_used": m36,
@@ -913,10 +916,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "최신 버전 정보가 없습니다",
     ),
     "no_local_folders": MessageLookupByLibrary.simpleMessage(
-      ".pth 파일이 포함된 로컬 폴더를 아직 추가하지 않았습니다",
+      "모델 파일이 포함된 로컬 폴더를 아직 추가하지 않았습니다",
     ),
     "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
-      "로드된 로컬 .pth 파일이 없습니다",
+      "로드된 로컬 모델 파일이 없습니다",
     ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage("내보낼 메시지 없음"),
     "no_model_selected": MessageLookupByLibrary.simpleMessage("선택된 모델 없음"),
@@ -1209,7 +1212,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("저장"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("QR 코드 스캔"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
-      "이 폴더에서 .pth 파일 스캔 중",
+      "이 폴더에서 .pth 파일과 RWKV .gguf 파일 스캔 중",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("화면 너비"),
     "search": MessageLookupByLibrary.simpleMessage("검색"),
@@ -1225,7 +1228,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_from_library": MessageLookupByLibrary.simpleMessage("갤러리에서 선택"),
     "select_image": MessageLookupByLibrary.simpleMessage("이미지 선택"),
     "select_local_pth_file_button": MessageLookupByLibrary.simpleMessage(
-      "로컬 .pth 파일 선택",
+      "로컬 모델 파일 선택",
     ),
     "select_model": MessageLookupByLibrary.simpleMessage("모델 선택"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("이미지 선택"),
@@ -1234,7 +1237,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "아래에서 사전 설정을 선택하거나 \'사용자 지정\'을 탭하여 수동으로 구성하세요",
         ),
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
-      "설정 파일의 가중치 또는 로컬 .pth 파일 선택",
+      "설정 파일의 가중치 또는 로컬 모델 파일 선택",
     ),
     "selected_count": m53,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
@@ -1476,10 +1479,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "RWKV 사용을 환영합니다",
     ),
     "what_is_pth_file_message": MessageLookupByLibrary.simpleMessage(
-      ".pth 파일은 다운로드 서버 없이 로컬 파일 시스템에서 직접 로드하는 가중치 파일입니다.\n\nPyTorch로 학습한 모델은 일반적으로 .pth 파일로 저장됩니다.\n\nRWKV Chat은 .pth 파일 로드를 지원합니다.",
+      "로컬 모델 파일은 다운로드 서버 없이 로컬 파일 시스템에서 직접 로드하는 가중치 파일입니다.\n\nRWKV Chat은 로컬 .pth 파일과 RWKV GGUF 파일 로드를 지원합니다. 다른 모델 계열의 GGUF 파일은 로드 가능한 모델로 표시되지 않습니다.",
     ),
     "what_is_pth_file_title": MessageLookupByLibrary.simpleMessage(
-      ".pth 파일이란?",
+      "로컬 모델 파일이란?",
     ),
     "white": MessageLookupByLibrary.simpleMessage("백"),
     "white_score": MessageLookupByLibrary.simpleMessage("백 점수"),

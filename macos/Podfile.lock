@@ -4,6 +4,8 @@ PODS:
   - audioplayers_darwin (0.0.1):
     - Flutter
     - FlutterMacOS
+  - desktop_drop (0.0.1):
+    - FlutterMacOS
   - device_info_plus (0.0.1):
     - FlutterMacOS
   - dynamic_color (0.0.2):
@@ -78,6 +80,7 @@ PODS:
 DEPENDENCIES:
   - appkit_ui_element_colors (from `Flutter/ephemeral/.symlinks/plugins/appkit_ui_element_colors/macos`)
   - audioplayers_darwin (from `Flutter/ephemeral/.symlinks/plugins/audioplayers_darwin/darwin`)
+  - desktop_drop (from `Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos`)
   - device_info_plus (from `Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos`)
   - dynamic_color (from `Flutter/ephemeral/.symlinks/plugins/dynamic_color/macos`)
   - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
@@ -110,6 +113,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/appkit_ui_element_colors/macos
   audioplayers_darwin:
     :path: Flutter/ephemeral/.symlinks/plugins/audioplayers_darwin/darwin
+  desktop_drop:
+    :path: Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos
   device_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos
   dynamic_color:
@@ -156,6 +161,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   appkit_ui_element_colors: c8e13c23cbd781e0f5d9b75cad686e6a4bb958da
   audioplayers_darwin: 835ced6edd4c9fc8ebb0a7cc9e294a91d99917d5
+  desktop_drop: 10a3e6a7fa9dbe350541f2574092fecfa345a07b
   device_info_plus: 4fb280989f669696856f8b129e4a5e3cd6c48f76
   dynamic_color: cb7c2a300ee67ed3bd96c3e852df3af0300bf610
   file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a

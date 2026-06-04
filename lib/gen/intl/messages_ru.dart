@@ -525,7 +525,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Нажмите здесь, чтобы начать новый чат",
     ),
     "click_plus_add_local_folder": MessageLookupByLibrary.simpleMessage(
-      "Нажмите +, чтобы добавить локальную папку. RWKV Chat просканирует папку на наличие .pth файлов и покажет их как загружаемые веса",
+      "Нажмите +, чтобы добавить локальную папку. RWKV Chat просканирует папку на наличие .pth файлов и RWKV .gguf файлов и покажет их как загружаемые веса",
     ),
     "click_plus_to_add_more_folders": MessageLookupByLibrary.simpleMessage(
       "Нажмите +, чтобы добавить локальные папки",
@@ -605,7 +605,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "current_model": m21,
     "current_model_from_latest_json_not_pth": MessageLookupByLibrary.simpleMessage(
-      "Текущая модель загружена из конфигурации latest.json, а не из локального .pth файла",
+      "Текущая модель загружена из конфигурации latest.json, локальный файл модели не загружен",
     ),
     "current_progress": m22,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
@@ -745,6 +745,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Источник загрузки",
     ),
     "downloading": MessageLookupByLibrary.simpleMessage("Загрузка"),
+    "drag_local_model_file_to_add_folder": MessageLookupByLibrary.simpleMessage(
+      "Перетащите сюда файл .pth, файл RWKV .gguf или папку, чтобы добавить эту папку в список сканирования",
+    ),
     "draw": MessageLookupByLibrary.simpleMessage("Ничья!"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage(
       "Записи сообщений автоматического дампа",
@@ -1017,16 +1020,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading_progress_percent": m34,
     "local_folder_name": m35,
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
-      "Локальный .pth файл",
+      "Локальные файлы моделей",
     ),
     "local_pth_option_files_in_config": MessageLookupByLibrary.simpleMessage(
       "Веса из конфигурации",
     ),
     "local_pth_option_local_pth_files": MessageLookupByLibrary.simpleMessage(
-      "Локальный .pth файл",
+      "Локальные файлы моделей",
     ),
     "local_pth_you_can_select": MessageLookupByLibrary.simpleMessage(
-      "Вы можете выбрать и загрузить локальный .pth файл",
+      "Вы можете выбрать и загрузить локальный .pth файл или RWKV .gguf файл",
     ),
     "medium": MessageLookupByLibrary.simpleMessage("Средний (110%)"),
     "memory_used": m36,
@@ -1127,10 +1130,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Нет информации о последней версии",
     ),
     "no_local_folders": MessageLookupByLibrary.simpleMessage(
-      "Вы ещё не добавили локальную папку с файлами .pth",
+      "Вы ещё не добавили локальную папку с файлами моделей",
     ),
     "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
-      "Локальные .pth файлы ещё не загружены",
+      "Локальный файл модели ещё не загружен",
     ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage(
       "Нет сообщений для экспорта",
@@ -1483,7 +1486,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("Сканировать QR-код"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
-      "Сканирование папки на наличие .pth файлов",
+      "Сканирование папки на наличие .pth файлов и RWKV .gguf файлов",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("Ширина экрана"),
     "search": MessageLookupByLibrary.simpleMessage("Поиск"),
@@ -1505,7 +1508,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "select_image": MessageLookupByLibrary.simpleMessage("Выбрать изображение"),
     "select_local_pth_file_button": MessageLookupByLibrary.simpleMessage(
-      "Выбрать локальный .pth файл",
+      "Выбрать локальный файл модели",
     ),
     "select_model": MessageLookupByLibrary.simpleMessage("Выбрать модель"),
     "select_new_image": MessageLookupByLibrary.simpleMessage(
@@ -1516,7 +1519,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Выберите предустановку ниже или нажмите «Пользовательский», чтобы настроить вручную",
         ),
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
-      "Выберите веса из конфигурации или локальный .pth файл",
+      "Выберите веса из конфигурации или локальные файлы моделей",
     ),
     "selected_count": m53,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
@@ -1808,10 +1811,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Добро пожаловать в RWKV",
     ),
     "what_is_pth_file_message": MessageLookupByLibrary.simpleMessage(
-      ".pth файлы — это файлы весов, загружаемые напрямую из локальной файловой системы, без загрузки с сервера.\n\nМодели, обученные в PyTorch, часто сохраняются как .pth файлы.\n\nRWKV Chat поддерживает загрузку .pth файлов.",
+      "Локальные файлы моделей — это файлы весов, загружаемые напрямую из локальной файловой системы, без загрузки с сервера.\n\nRWKV Chat поддерживает локальные .pth файлы и RWKV GGUF файлы. GGUF файлы других семейств моделей не отображаются как загружаемые модели.",
     ),
     "what_is_pth_file_title": MessageLookupByLibrary.simpleMessage(
-      "Что такое .pth файл?",
+      "Что такое локальные файлы моделей?",
     ),
     "white": MessageLookupByLibrary.simpleMessage("Белые"),
     "white_score": MessageLookupByLibrary.simpleMessage("Счет белых"),

@@ -94,6 +94,26 @@ class FileInfo extends Equatable {
 
   final bool fromPthFile;
 
+  final bool fromLocalGgufFile;
+
+  final String? ggufArchitecture;
+
+  final Object? ggufFileType;
+
+  final String? ggufSizeLabel;
+
+  final int? ggufQuantizationVersion;
+
+  final int? ggufArchitectureVersion;
+
+  final int? ggufContextLength;
+
+  final int? ggufBlockCount;
+
+  final int? ggufEmbeddingLength;
+
+  final int? ggufFeedForwardLength;
+
   const FileInfo({
     required this.name,
     required this.fileName,
@@ -115,6 +135,16 @@ class FileInfo extends Equatable {
     this.unsupportedSocBrand = const {},
     this.state = const [],
     this.fromPthFile = false,
+    this.fromLocalGgufFile = false,
+    this.ggufArchitecture,
+    this.ggufFileType,
+    this.ggufSizeLabel,
+    this.ggufQuantizationVersion,
+    this.ggufArchitectureVersion,
+    this.ggufContextLength,
+    this.ggufBlockCount,
+    this.ggufEmbeddingLength,
+    this.ggufFeedForwardLength,
   });
 
   factory FileInfo.fromJSON(Map<String, dynamic> json) {
@@ -195,7 +225,7 @@ class FileInfo extends Equatable {
     if (!_shouldTreatLlamacppGpuAsCpuOnAndroidPhone) return tags;
 
     final result = <String>[];
-    var insertedCpu = false;
+    bool insertedCpu = false;
 
     for (final tag in tags) {
       final lowerTag = tag.toLowerCase();
@@ -234,6 +264,59 @@ class FileInfo extends Equatable {
   bool get supportsBatchInference => hasEffectiveTag("batch");
 
   bool get isReasoning => tags.contains(Config.reasonTag);
+
+  bool get fromLocalModelFile => fromPthFile || fromLocalGgufFile;
+
+  String? get ggufArchitectureDisplayTag {
+    if (!fromLocalGgufFile) return null;
+    final version = ggufArchitectureVersion;
+    if (version != null && version > 0) return "RWKV$version";
+    final architecture = ggufArchitecture?.trim();
+    if (architecture == null || architecture.isEmpty) return "RWKV";
+    return architecture.toUpperCase();
+  }
+
+  String? get modelSizeDisplayTag {
+    if (ggufSizeLabel != null && ggufSizeLabel!.trim().isNotEmpty) return ggufSizeLabel!.trim().toUpperCase();
+    final size = modelSize;
+    if (size == null || size <= 0) return null;
+    if (size >= 1) return "${size.toStringAsFixed(size.truncateToDouble() == size ? 0 : 1)}B";
+    return "${(size * 1000).round()}M";
+  }
+
+  String? get contextLengthDisplayTag {
+    final contextLength = ggufContextLength;
+    if (contextLength != null && contextLength > 0) return "ctx$contextLength";
+    final legacyContextLength = ctxLength;
+    if (legacyContextLength == null || legacyContextLength.isEmpty) return null;
+    return "ctx$legacyContextLength";
+  }
+
+  List<String> get localModelStaticTags {
+    if (fromPthFile) return const ["PTH"];
+    if (!fromLocalGgufFile) return const [];
+
+    final result = <String>["GGUF"];
+    final architectureTag = ggufArchitectureDisplayTag;
+    if (architectureTag != null) result.add(architectureTag);
+
+    final sizeTag = modelSizeDisplayTag;
+    if (sizeTag != null) result.add(sizeTag);
+
+    final quantizationTag = quantization?.trim().toUpperCase();
+    if (quantizationTag != null && quantizationTag.isNotEmpty) result.add(quantizationTag);
+
+    final contextTag = contextLengthDisplayTag;
+    if (contextTag != null) result.add(contextTag);
+
+    final blockCount = ggufBlockCount;
+    if (blockCount != null && blockCount > 0) result.add("L$blockCount");
+
+    final embeddingLength = ggufEmbeddingLength;
+    if (embeddingLength != null && embeddingLength > 0) result.add("E$embeddingLength");
+
+    return result;
+  }
 
   WorldType? get worldType => switch (fileName) {
     "RWKV7-0.4B-G1-SigLIP2-ColdStart-Q8_0.gguf" => .reasoningQA,
@@ -312,6 +395,7 @@ class FileInfo extends Equatable {
 
   WeightType? get weightType => switch (fileType) {
     FileType.weights => () {
+      if (fromLocalModelFile) return WeightType.chat;
       if (P.remote.chatWeights.q.contains(this)) return WeightType.chat;
       if (P.remote.seeWeights.q.contains(this)) return WeightType.see;
       if (P.remote.ttsWeights.q.contains(this)) return WeightType.tts;
@@ -349,6 +433,17 @@ FileInfo($name,
   tags: $tags,
   socLimitations: $socLimitations,
   unsupportedSocBrand: $unsupportedSocBrand,
+  fromPthFile: $fromPthFile,
+  fromLocalGgufFile: $fromLocalGgufFile,
+  ggufArchitecture: $ggufArchitecture,
+  ggufFileType: $ggufFileType,
+  ggufSizeLabel: $ggufSizeLabel,
+  ggufQuantizationVersion: $ggufQuantizationVersion,
+  ggufArchitectureVersion: $ggufArchitectureVersion,
+  ggufContextLength: $ggufContextLength,
+  ggufBlockCount: $ggufBlockCount,
+  ggufEmbeddingLength: $ggufEmbeddingLength,
+  ggufFeedForwardLength: $ggufFeedForwardLength,
 )''';
   }
 }

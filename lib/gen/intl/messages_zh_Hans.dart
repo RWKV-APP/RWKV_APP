@@ -412,7 +412,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "点击此处开始新聊天",
     ),
     "click_plus_add_local_folder": MessageLookupByLibrary.simpleMessage(
-      "点击 + 添加本地文件夹, RWKV Chat 会扫描该文件夹下的 .pth 文件, 并将其作为可加载的权重",
+      "点击 + 添加本地文件夹，RWKV Chat 会扫描该文件夹下的 .pth 文件和 RWKV .gguf 文件，并将其作为可加载的权重",
     ),
     "click_plus_to_add_more_folders": MessageLookupByLibrary.simpleMessage(
       "点击 + 号添加更多本地文件夹",
@@ -475,9 +475,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "current_model": m21,
     "current_model_from_latest_json_not_pth":
-        MessageLookupByLibrary.simpleMessage(
-          "当前加载的是 latest.json 中的配置，不是本地 .pth 文件",
-        ),
+        MessageLookupByLibrary.simpleMessage("当前模型来自 latest.json 配置，未加载本地模型文件"),
     "current_progress": m22,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("当前任务标签页 ID"),
     "current_task_text_length": MessageLookupByLibrary.simpleMessage(
@@ -571,6 +569,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "download_server_": MessageLookupByLibrary.simpleMessage("下载服务器(请试试哪个快)"),
     "download_source": MessageLookupByLibrary.simpleMessage("下载源"),
     "downloading": MessageLookupByLibrary.simpleMessage("下载中"),
+    "drag_local_model_file_to_add_folder": MessageLookupByLibrary.simpleMessage(
+      "也可以把 .pth 文件、RWKV .gguf 文件或文件夹拖到这里，应用会把对应文件夹加入扫描路径",
+    ),
     "draw": MessageLookupByLibrary.simpleMessage("平局！"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("自动 Dump 消息记录"),
     "dump_see_files_alert_message": m25,
@@ -767,16 +768,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading_progress_percent": m34,
     "local_folder_name": m35,
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
-      "本地 .pth 文件",
+      "本地模型文件",
     ),
     "local_pth_option_files_in_config": MessageLookupByLibrary.simpleMessage(
       "配置文件中的权重",
     ),
     "local_pth_option_local_pth_files": MessageLookupByLibrary.simpleMessage(
-      "本地 .pth 文件",
+      "本地模型文件",
     ),
     "local_pth_you_can_select": MessageLookupByLibrary.simpleMessage(
-      "你可以选择本地的 .pth 文件进行加载",
+      "你可以选择本地 .pth 文件或 RWKV .gguf 文件进行加载",
     ),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
     "memory_used": m36,
@@ -845,10 +846,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "no_latest_version_info": MessageLookupByLibrary.simpleMessage("没有最新版本信息"),
     "no_local_folders": MessageLookupByLibrary.simpleMessage(
-      "你还没有添加包含有 .pth 文件的本地文件夹",
+      "你还没有添加包含模型文件的本地文件夹",
     ),
     "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
-      "暂无已加载的本地 .pth 文件",
+      "暂无已加载的本地模型文件",
     ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage("没有消息可导出"),
     "no_model_selected": MessageLookupByLibrary.simpleMessage("未选择模型"),
@@ -1117,7 +1118,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("扫描二维码"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
-      "正在扫描该文件夹中的 .pth 文件",
+      "正在扫描该文件夹中的 .pth 文件和 RWKV .gguf 文件",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("屏幕宽度"),
     "search": MessageLookupByLibrary.simpleMessage("搜索"),
@@ -1133,14 +1134,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_from_library": MessageLookupByLibrary.simpleMessage("从相册选择"),
     "select_image": MessageLookupByLibrary.simpleMessage("选择图片"),
     "select_local_pth_file_button": MessageLookupByLibrary.simpleMessage(
-      "选择本地 .pth 文件",
+      "选择本地模型文件",
     ),
     "select_model": MessageLookupByLibrary.simpleMessage("选择模型"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("选择图片"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage("请从下方选择预设参数，或点击“自定义”进行手动配置"),
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
-      "选择配置文件中的权重或者本地 .pth 文件",
+      "选择配置文件中的权重或者本地模型文件",
     ),
     "selected_count": m53,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage("发送消息给 RWKV"),
@@ -1359,10 +1360,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage("欢迎使用 RWKV"),
     "what_is_pth_file_message": MessageLookupByLibrary.simpleMessage(
-      ".pth 文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。\n\n通常通过 Pytorch 训练的模型会保存为 .pth 文件。\n\nRWKV Chat 支持加载 .pth 文件。",
+      "本地模型文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。\n\nRWKV Chat 支持本地 .pth 文件和 RWKV GGUF 文件。其他模型家族的 GGUF 文件不会显示为可加载模型。",
     ),
     "what_is_pth_file_title": MessageLookupByLibrary.simpleMessage(
-      "什么是 .pth 文件？",
+      "什么是本地模型文件？",
     ),
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
