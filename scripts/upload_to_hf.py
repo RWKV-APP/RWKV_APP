@@ -9,8 +9,7 @@ import os
 import sys
 import argparse
 import logging
-from pathlib import Path
-from huggingface_hub import login, HfApi, logout
+from huggingface_hub import HfApi
 from typing import Optional
 
 # Configure logging
@@ -41,26 +40,10 @@ class HFUploader:
         os.environ["HF_ENDPOINT"] = self.hf_endpoint
         os.environ["HUGGINGFACE_HUB_ENDPOINT"] = self.hf_endpoint
         
-        self.api = None
-        self._login()
-    
-    def _login(self):
-        """Login to HuggingFace"""
-        try:
-            # Check if already logged in
-            api = HfApi(endpoint=self.hf_endpoint)
-            user_info = api.whoami(token=self.hf_token)
-            logger.info(f"✅ Logged in as: {user_info.get('name', 'Unknown')}")
-        except Exception as e:
-            logger.warning(f"Login check failed, attempting login: {e}")
-        
-        try:
-            login(token=self.hf_token)
-            self.api = HfApi(endpoint=self.hf_endpoint, token=self.hf_token)
-            logger.info(f"✅ Successfully logged in to {self.hf_endpoint}")
-        except Exception as e:
-            logger.error(f"❌ Login failed: {e}")
-            raise
+        # Avoid whoami/login here because HuggingFace rate-limits /whoami-v2
+        # aggressively. The upload request below validates the token directly.
+        self.api = HfApi(endpoint=self.hf_endpoint, token=self.hf_token)
+        logger.info(f"✅ Configured HuggingFace API client for {self.hf_endpoint}")
     
     def upload_file(self, repo_id: str, local_path: str, path_in_repo: Optional[str] = None):
         """
@@ -153,13 +136,7 @@ def main():
     except Exception as e:
         logger.error(f"❌ Upload failed: {e}")
         sys.exit(1)
-    finally:
-        try:
-            logout()
-        except:
-            pass
 
 
 if __name__ == "__main__":
     main()
-
