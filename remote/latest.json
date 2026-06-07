@@ -1103,26 +1103,26 @@
       {
         "name": "RWKV7-G1g 2.9B (X Elite)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-nocustomop-xelite-batch.rmpack",
-        "fileSize": 2206363648,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-xelite-nocustomop-batch.rmpack",
+        "fileSize": 2292051968,
         "quantization": "w4a16",
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X Elite", "X Plus", "X1"],
-        "date": 1776956002
+        "date": 1780837427
       },
       {
         "name": "RWKV7-G1g 2.9B (X2 Elite)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-nocustomop-x2elite-batch.rmpack",
-        "fileSize": 2223874048,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-x2elite-nocustomop-batch.rmpack",
+        "fileSize": 2308595712,
         "quantization": "w4a16",
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X2 Elite Extreme", "X2 Elite", "X2 Plus"],
-        "date": 1777765537
+        "date": 1780837139
       },
       {
         "name": "RWKV7-G1g 2.9B (8 Elite Gen5)",
@@ -1187,14 +1187,14 @@
       {
         "name": "RWKV7-G1g 2.9B (8 Gen 2)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-8gen2.rmpack",
-        "fileSize": 2023620608,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-8gen2-batch.rmpack",
+        "fileSize": 2123427840,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["reason", "npu"],
+        "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1776956769
+        "date": 1780834862
       },
       {
         "name": "RWKV7-G1g 2.9B (8+ Gen 1)",
