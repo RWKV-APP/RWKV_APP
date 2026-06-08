@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -49,6 +50,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     super.initState();
     _portController = TextEditingController(text: P.apiServer.port.q.toString());
     _chatController = TextEditingController();
+    unawaited(P.apiServer.refreshTranslationCacheStats());
   }
 
   @override
@@ -154,6 +156,31 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     return logs.join('\n');
   }
 
+  String _formatBytes(num value) {
+    if (value <= 0) return '0 B';
+    const units = ['B', 'KB', 'MB', 'GB'];
+    var size = value.toDouble();
+    var unitIndex = 0;
+    while (size >= 1024 && unitIndex < units.length - 1) {
+      size = size / 1024;
+      unitIndex++;
+    }
+    return '${size.toStringAsFixed(unitIndex == 0 ? 0 : 1)} ${units[unitIndex]}';
+  }
+
+  int _cacheInt(Map<String, dynamic> stats, String key) {
+    final value = stats[key];
+    return value is int ? value : 0;
+  }
+
+  String _cacheHitLabel(dynamic value) {
+    return switch (value) {
+      'memory' => '内存',
+      'disk' => '硬盘',
+      _ => '无',
+    };
+  }
+
   Future<void> _copyAllLogs(S s, List<String> logs) async {
     if (logs.isEmpty) {
       Alert.warning(s.no_data);
@@ -214,6 +241,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     final isRunning = serverState == BackendState.running;
     final logs = ref.watch(P.apiServer.logs);
     final accessibleUrls = ref.watch(P.apiServer.accessibleUrls);
+    final translationCacheStats = ref.watch(P.apiServer.translationCacheStats);
 
     final loopbackUrl = 'http://127.0.0.1:$serverPort';
     final lanUrl = accessibleUrls.isEmpty ? null : accessibleUrls.first;
@@ -238,6 +266,8 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
           const SizedBox(height: 16),
           if (isRunning) ...[
             _buildStatusSection(s, loopbackUrl, accessibleUrls, reqCount, activeRequest, showLanAddresses),
+            const SizedBox(height: 16),
+            _buildTranslationCacheSection(translationCacheStats),
             const SizedBox(height: 16),
             _buildChatSection(s, theme, activeRequest),
             const SizedBox(height: 16),
@@ -533,6 +563,75 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
               onPressed: activeRequest ? _stopChatMessage : null,
               style: FilledButton.styleFrom(backgroundColor: Colors.red),
               child: Text(s.stop),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTranslationCacheSection(Map<String, dynamic> stats) {
+    final memoryEntries = _cacheInt(stats, 'memoryEntries');
+    final memoryBytes = _cacheInt(stats, 'memoryBytes');
+    final diskEntries = _cacheInt(stats, 'diskEntries');
+    final diskBytes = _cacheInt(stats, 'diskBytes');
+    final maxEntries = _cacheInt(stats, 'maxEntries');
+    final maxBytes = _cacheInt(stats, 'maxBytes');
+    final ttlDays = _cacheInt(stats, 'ttlDays');
+    final memoryHits = _cacheInt(stats, 'sessionMemoryHits');
+    final diskHits = _cacheInt(stats, 'sessionDiskHits');
+    final misses = _cacheInt(stats, 'sessionMisses');
+
+    return _buildSectionCard(
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.cached, size: 18),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Text(
+                '翻译缓存',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh, size: 18),
+              onPressed: () => unawaited(P.apiServer.refreshTranslationCacheStats()),
+              tooltip: S.current.refresh,
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text('过期时间：写入后 $ttlDays 天', style: const TextStyle(fontSize: 13, color: Colors.grey)),
+        const SizedBox(height: 8),
+        Text('内存：$memoryEntries 条 / ${_formatBytes(memoryBytes)}', style: const TextStyle(fontSize: 14)),
+        const SizedBox(height: 4),
+        Text('硬盘：$diskEntries 条 / ${_formatBytes(diskBytes)}', style: const TextStyle(fontSize: 14)),
+        const SizedBox(height: 4),
+        Text('上限：$maxEntries 条 / ${_formatBytes(maxBytes)}', style: const TextStyle(fontSize: 14)),
+        const SizedBox(height: 4),
+        Text('本轮命中：内存 $memoryHits / 硬盘 $diskHits / 未命中 $misses', style: const TextStyle(fontSize: 14)),
+        const SizedBox(height: 4),
+        Text('最近命中：${_cacheHitLabel(stats['lastHitLevel'])}', style: const TextStyle(fontSize: 14)),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            OutlinedButton.icon(
+              onPressed: () => unawaited(P.apiServer.clearTranslationCache('memory')),
+              icon: const Icon(Icons.memory, size: 16),
+              label: const Text('清内存'),
+            ),
+            OutlinedButton.icon(
+              onPressed: () => unawaited(P.apiServer.clearTranslationCache('disk')),
+              icon: const Icon(Icons.storage, size: 16),
+              label: const Text('清硬盘'),
+            ),
+            OutlinedButton.icon(
+              onPressed: () => unawaited(P.apiServer.clearTranslationCache('all')),
+              icon: const Icon(Icons.delete_sweep, size: 16),
+              label: const Text('清全部'),
             ),
           ],
         ),

@@ -3,6 +3,12 @@ part of 'p.dart';
 const _apiServerDefaultPort = 52345;
 const _apiServerStreamingFirstChunkDelay = Duration(milliseconds: 220);
 const _apiServerFinalBufferTimeout = Duration(milliseconds: 500);
+const _apiServerTranslationCachePolicyVersion = 'offline-reader-translation-v1';
+const _apiServerTranslationCacheFileName = 'api_server_translation_cache.json';
+const _apiServerTranslationCacheTtlMs = 30 * 24 * 60 * 60 * 1000;
+const _apiServerTranslationCacheTtlDays = 30;
+const _apiServerTranslationCacheMaxEntries = 20000;
+const _apiServerTranslationCacheMaxBytes = 200 * 1024 * 1024;
 
 const _apiServerHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,6 +17,97 @@ const _apiServerHeaders = {
 };
 
 class _ApiServerStoppingException implements Exception {}
+
+class _ApiServerTranslationCacheRecord {
+  _ApiServerTranslationCacheRecord({
+    required this.key,
+    required this.source,
+    required this.translation,
+    required this.modelFingerprint,
+    required this.policyVersion,
+    required this.createdAt,
+    required this.lastAccessedAt,
+    required this.byteSize,
+  });
+
+  final String key;
+  final String source;
+  final String translation;
+  final String modelFingerprint;
+  final String policyVersion;
+  final int createdAt;
+  int lastAccessedAt;
+  final int byteSize;
+
+  bool get isExpired => DateTime.now().millisecondsSinceEpoch - createdAt >= _apiServerTranslationCacheTtlMs;
+
+  Map<String, dynamic> toJson() => {
+    'key': key,
+    'source': source,
+    'translation': translation,
+    'modelFingerprint': modelFingerprint,
+    'policyVersion': policyVersion,
+    'createdAt': createdAt,
+    'lastAccessedAt': lastAccessedAt,
+    'byteSize': byteSize,
+  };
+
+  static _ApiServerTranslationCacheRecord? fromJson(dynamic value) {
+    if (value is! Map) return null;
+    final key = value['key'];
+    final source = value['source'];
+    final translation = value['translation'];
+    final modelFingerprint = value['modelFingerprint'];
+    final policyVersion = value['policyVersion'];
+    final createdAt = value['createdAt'];
+    final lastAccessedAt = value['lastAccessedAt'];
+    final byteSize = value['byteSize'];
+
+    if (key is! String ||
+        source is! String ||
+        translation is! String ||
+        modelFingerprint is! String ||
+        policyVersion is! String ||
+        createdAt is! int ||
+        lastAccessedAt is! int ||
+        byteSize is! int) {
+      return null;
+    }
+
+    return _ApiServerTranslationCacheRecord(
+      key: key,
+      source: source,
+      translation: translation,
+      modelFingerprint: modelFingerprint,
+      policyVersion: policyVersion,
+      createdAt: createdAt,
+      lastAccessedAt: lastAccessedAt,
+      byteSize: byteSize,
+    );
+  }
+}
+
+class _ApiServerTranslationCacheHit {
+  _ApiServerTranslationCacheHit({required this.translation, required this.level});
+
+  final String translation;
+  final String level;
+}
+
+Map<String, dynamic> _emptyTranslationCacheStats() => {
+  'ttlDays': _apiServerTranslationCacheTtlDays,
+  'maxEntries': _apiServerTranslationCacheMaxEntries,
+  'maxBytes': _apiServerTranslationCacheMaxBytes,
+  'memoryEntries': 0,
+  'memoryBytes': 0,
+  'diskEntries': 0,
+  'diskBytes': 0,
+  'sessionMemoryHits': 0,
+  'sessionDiskHits': 0,
+  'sessionMisses': 0,
+  'lastHitLevel': null,
+  'lastUpdatedAt': null,
+};
 
 class _ApiServerResponseBufferGate {
   _ApiServerResponseBufferGate({
@@ -59,6 +156,11 @@ class _ApiServer {
   Completer<void>? _activeInferenceCompleter;
   int? _activeModelID;
   String? _activeInferenceId;
+  final _translationCacheMemory = <String, _ApiServerTranslationCacheRecord>{};
+  int _translationCacheMemoryHits = 0;
+  int _translationCacheDiskHits = 0;
+  int _translationCacheMisses = 0;
+  String? _translationCacheLastHitLevel;
 
   // ===========================================================================
   // StateProvider
@@ -71,6 +173,7 @@ class _ApiServer {
   late final activeRequest = qs(false);
   late final logs = qs<List<String>>([]);
   late final accessibleUrls = qs<List<String>>([]);
+  late final translationCacheStats = qs<Map<String, dynamic>>(_emptyTranslationCacheStats());
 }
 
 extension _$ApiServer on _ApiServer {
@@ -103,6 +206,273 @@ extension _$ApiServer on _ApiServer {
   }
 
   String _modelId(FileInfo info) => info.fileName.replaceAll('.gguf', '');
+
+  int _translationCacheByteSize(Map<String, dynamic> value) => utf8.encode(jsonEncode(value)).length;
+
+  int _translationCacheRecordBytes({
+    required String key,
+    required String source,
+    required String translation,
+    required String modelFingerprint,
+    required int createdAt,
+    required int lastAccessedAt,
+  }) {
+    return _translationCacheByteSize({
+      'key': key,
+      'source': source,
+      'translation': translation,
+      'modelFingerprint': modelFingerprint,
+      'policyVersion': _apiServerTranslationCachePolicyVersion,
+      'createdAt': createdAt,
+      'lastAccessedAt': lastAccessedAt,
+    });
+  }
+
+  String _translationCacheKey({
+    required String source,
+    required String modelFingerprint,
+  }) {
+    final input = jsonEncode({
+      'source': source,
+      'modelFingerprint': modelFingerprint,
+      'policyVersion': _apiServerTranslationCachePolicyVersion,
+    });
+    return crypto.sha256.convert(utf8.encode(input)).toString();
+  }
+
+  bool _isExtensionTranslationCacheRequest(Map<String, dynamic> json, {required bool stream}) {
+    if (stream) return false;
+    final metadata = json['metadata'];
+    if (metadata is! Map) return false;
+    final marker = metadata['rwkvOfflineReader'];
+    if (marker is! Map) return false;
+    return marker['kind'] == 'web_translation' &&
+        marker['cachePolicyVersion'] == _apiServerTranslationCachePolicyVersion;
+  }
+
+  Future<File> _translationCacheFile() async {
+    final documentsDir = await getApplicationDocumentsDirectory();
+    return File(join(documentsDir.path, _apiServerTranslationCacheFileName));
+  }
+
+  Future<Map<String, _ApiServerTranslationCacheRecord>> _readTranslationCacheDiskRecords() async {
+    try {
+      final file = await _translationCacheFile();
+      if (!await file.exists()) return {};
+      final content = await file.readAsString();
+      if (content.trim().isEmpty) return {};
+      final decoded = jsonDecode(content);
+      final recordsValue = decoded is Map ? decoded['records'] : null;
+      if (recordsValue is! List) return {};
+
+      final records = <String, _ApiServerTranslationCacheRecord>{};
+      for (final item in recordsValue) {
+        final record = _ApiServerTranslationCacheRecord.fromJson(item);
+        if (record == null) continue;
+        records[record.key] = record;
+      }
+      return records;
+    } catch (e) {
+      qqw('Failed to read API server translation cache: $e');
+      return {};
+    }
+  }
+
+  List<_ApiServerTranslationCacheRecord> _pruneTranslationCacheRecords(
+    Iterable<_ApiServerTranslationCacheRecord> records,
+  ) {
+    final active = records.where((record) => !record.isExpired).toList();
+    var totalBytes = active.fold<int>(0, (sum, record) => sum + record.byteSize);
+
+    if (active.length <= _apiServerTranslationCacheMaxEntries && totalBytes <= _apiServerTranslationCacheMaxBytes) {
+      return active;
+    }
+
+    active.sort((a, b) => a.lastAccessedAt.compareTo(b.lastAccessedAt));
+    while (active.length > _apiServerTranslationCacheMaxEntries || totalBytes > _apiServerTranslationCacheMaxBytes) {
+      if (active.isEmpty) break;
+      final removed = active.removeAt(0);
+      totalBytes -= removed.byteSize;
+    }
+    return active;
+  }
+
+  void _pruneTranslationCacheMemory() {
+    final pruned = _pruneTranslationCacheRecords(_translationCacheMemory.values);
+    _translationCacheMemory
+      ..clear()
+      ..addEntries(pruned.map((record) => MapEntry(record.key, record)));
+  }
+
+  Future<Map<String, _ApiServerTranslationCacheRecord>> _writeTranslationCacheDiskRecords(
+    Map<String, _ApiServerTranslationCacheRecord> records,
+  ) async {
+    final pruned = _pruneTranslationCacheRecords(records.values);
+    final prunedRecords = Map.fromEntries(pruned.map((record) => MapEntry(record.key, record)));
+
+    try {
+      final file = await _translationCacheFile();
+      if (!await file.parent.exists()) {
+        await file.parent.create(recursive: true);
+      }
+
+      final payload = {
+        'version': 1,
+        'policyVersion': _apiServerTranslationCachePolicyVersion,
+        'records': pruned.map((record) => record.toJson()).toList(),
+      };
+      await file.writeAsString(jsonEncode(payload));
+    } catch (e) {
+      qqw('Failed to write API server translation cache: $e');
+    }
+
+    return prunedRecords;
+  }
+
+  Map<String, dynamic> _buildTranslationCacheStats(Map<String, _ApiServerTranslationCacheRecord> diskRecords) {
+    final memoryRecords = _translationCacheMemory.values.where((record) => !record.isExpired).toList();
+    final activeDiskRecords = diskRecords.values.where((record) => !record.isExpired).toList();
+    return {
+      'ttlDays': _apiServerTranslationCacheTtlDays,
+      'maxEntries': _apiServerTranslationCacheMaxEntries,
+      'maxBytes': _apiServerTranslationCacheMaxBytes,
+      'memoryEntries': memoryRecords.length,
+      'memoryBytes': memoryRecords.fold<int>(0, (sum, record) => sum + record.byteSize),
+      'diskEntries': activeDiskRecords.length,
+      'diskBytes': activeDiskRecords.fold<int>(0, (sum, record) => sum + record.byteSize),
+      'sessionMemoryHits': _translationCacheMemoryHits,
+      'sessionDiskHits': _translationCacheDiskHits,
+      'sessionMisses': _translationCacheMisses,
+      'lastHitLevel': _translationCacheLastHitLevel,
+      'lastUpdatedAt': DateTime.now().toIso8601String(),
+    };
+  }
+
+  void _publishTranslationCacheStats({Map<String, _ApiServerTranslationCacheRecord>? diskRecords}) {
+    if (diskRecords == null) {
+      final current = translationCacheStats.q;
+      final memoryRecords = _translationCacheMemory.values.where((record) => !record.isExpired).toList();
+      translationCacheStats.q = {
+        ...current,
+        'memoryEntries': memoryRecords.length,
+        'memoryBytes': memoryRecords.fold<int>(0, (sum, record) => sum + record.byteSize),
+        'sessionMemoryHits': _translationCacheMemoryHits,
+        'sessionDiskHits': _translationCacheDiskHits,
+        'sessionMisses': _translationCacheMisses,
+        'lastHitLevel': _translationCacheLastHitLevel,
+        'lastUpdatedAt': DateTime.now().toIso8601String(),
+      };
+      return;
+    }
+
+    translationCacheStats.q = _buildTranslationCacheStats(diskRecords);
+  }
+
+  Future<Map<String, dynamic>> _refreshTranslationCacheStats() async {
+    final diskRecords = await _readTranslationCacheDiskRecords();
+    final pruned = Map.fromEntries(
+      _pruneTranslationCacheRecords(diskRecords.values).map((record) => MapEntry(record.key, record)),
+    );
+    if (pruned.length != diskRecords.length) {
+      await _writeTranslationCacheDiskRecords(pruned);
+    }
+    _publishTranslationCacheStats(diskRecords: pruned);
+    return translationCacheStats.q;
+  }
+
+  Future<_ApiServerTranslationCacheHit?> _getTranslationCache({
+    required String key,
+  }) async {
+    final memoryRecord = _translationCacheMemory[key];
+    if (memoryRecord != null) {
+      if (memoryRecord.isExpired) {
+        _translationCacheMemory.remove(key);
+      } else {
+        memoryRecord.lastAccessedAt = DateTime.now().millisecondsSinceEpoch;
+        _translationCacheMemoryHits++;
+        _translationCacheLastHitLevel = 'memory';
+        _publishTranslationCacheStats();
+        return _ApiServerTranslationCacheHit(translation: memoryRecord.translation, level: 'memory');
+      }
+    }
+
+    final diskRecords = await _readTranslationCacheDiskRecords();
+    final diskRecord = diskRecords[key];
+    if (diskRecord == null) {
+      _translationCacheMisses++;
+      _translationCacheLastHitLevel = null;
+      _publishTranslationCacheStats(diskRecords: diskRecords);
+      return null;
+    }
+
+    if (diskRecord.isExpired) {
+      diskRecords.remove(key);
+      final pruned = await _writeTranslationCacheDiskRecords(diskRecords);
+      _translationCacheMisses++;
+      _translationCacheLastHitLevel = null;
+      _publishTranslationCacheStats(diskRecords: pruned);
+      return null;
+    }
+
+    diskRecord.lastAccessedAt = DateTime.now().millisecondsSinceEpoch;
+    _translationCacheMemory[key] = diskRecord;
+    diskRecords[key] = diskRecord;
+    final pruned = await _writeTranslationCacheDiskRecords(diskRecords);
+    _translationCacheDiskHits++;
+    _translationCacheLastHitLevel = 'disk';
+    _publishTranslationCacheStats(diskRecords: pruned);
+    return _ApiServerTranslationCacheHit(translation: diskRecord.translation, level: 'disk');
+  }
+
+  Future<void> _setTranslationCache({
+    required String key,
+    required String source,
+    required String translation,
+    required String modelFingerprint,
+  }) async {
+    if (translation.trim().isEmpty) return;
+
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final record = _ApiServerTranslationCacheRecord(
+      key: key,
+      source: source,
+      translation: translation,
+      modelFingerprint: modelFingerprint,
+      policyVersion: _apiServerTranslationCachePolicyVersion,
+      createdAt: now,
+      lastAccessedAt: now,
+      byteSize: _translationCacheRecordBytes(
+        key: key,
+        source: source,
+        translation: translation,
+        modelFingerprint: modelFingerprint,
+        createdAt: now,
+        lastAccessedAt: now,
+      ),
+    );
+    final diskRecords = await _readTranslationCacheDiskRecords();
+    diskRecords[key] = record;
+    _translationCacheMemory[key] = record;
+    final pruned = await _writeTranslationCacheDiskRecords(diskRecords);
+    _pruneTranslationCacheMemory();
+    _publishTranslationCacheStats(diskRecords: pruned);
+  }
+
+  Future<void> _clearTranslationCache(String scope) async {
+    if (scope == 'memory' || scope == 'all') {
+      _translationCacheMemory.clear();
+    }
+
+    if (scope == 'disk' || scope == 'all') {
+      final file = await _translationCacheFile();
+      if (await file.exists()) {
+        await file.delete();
+      }
+    }
+
+    final diskRecords = scope == 'disk' || scope == 'all' ? <String, _ApiServerTranslationCacheRecord>{} : null;
+    _publishTranslationCacheStats(diskRecords: diskRecords);
+  }
 
   bool _isPreferredLanIpv4(String host) {
     if (host.startsWith('10.')) return true;
@@ -287,6 +657,7 @@ extension _$ApiServer on _ApiServer {
     final loaded = P.rwkvModel.allLoaded.q;
     final modelNames = loaded.keys.where((e) => e.weightType == .chat).map((e) => _modelId(e)).toList();
     final uptime = _startTime != null ? DateTime.now().difference(_startTime!).inSeconds : 0;
+    final cacheStats = translationCacheStats.q;
 
     return _jsonResponse({
       'status': state.q == BackendState.running ? 'running' : 'stopped',
@@ -296,6 +667,7 @@ extension _$ApiServer on _ApiServer {
       'active': activeRequest.q,
       'uptime_seconds': uptime,
       'urls': accessibleUrls.q,
+      'translation_cache': cacheStats,
     });
   }
 
@@ -360,15 +732,72 @@ extension _$ApiServer on _ApiServer {
 
     final reqId = 'chatcmpl-${DateTime.now().millisecondsSinceEpoch}';
     final modelName = P.rwkvModel.latest.q != null ? _modelId(P.rwkvModel.latest.q!) : 'rwkv';
+    final modelFingerprint = modelName;
+    final cacheEnabled = _isExtensionTranslationCacheRequest(json, stream: stream);
+    final cacheSource = messages.join('\n');
+    final cacheKey = cacheEnabled
+        ? _translationCacheKey(
+            source: cacheSource,
+            modelFingerprint: modelFingerprint,
+          )
+        : null;
 
-    _addLog('POST /v1/chat/completions (stream=$stream, messages=${messagesRaw.length})');
     requestCount.q++;
+
+    if (cacheEnabled && cacheKey != null) {
+      final cacheHit = await _getTranslationCache(key: cacheKey);
+      if (cacheHit != null) {
+        _addLog('POST /v1/chat/completions cache hit (${cacheHit.level}, messages=${messagesRaw.length})');
+        return _chatCompletionResponse(
+          reqId: reqId,
+          modelName: modelName,
+          content: cacheHit.translation,
+        );
+      }
+      _addLog('POST /v1/chat/completions cache miss (messages=${messagesRaw.length})');
+    } else {
+      _addLog('POST /v1/chat/completions (stream=$stream, messages=${messagesRaw.length})');
+    }
 
     if (stream) {
       return _streamingChatCompletion(messages, reqId, modelName, modelID, maxTokens);
     } else {
-      return _blockingChatCompletion(messages, reqId, modelName, modelID, maxTokens);
+      return _blockingChatCompletion(
+        messages,
+        reqId,
+        modelName,
+        modelID,
+        maxTokens,
+        translationCacheKey: cacheKey,
+        translationCacheSource: cacheSource,
+        translationCacheModelFingerprint: modelFingerprint,
+      );
     }
+  }
+
+  shelf.Response _chatCompletionResponse({
+    required String reqId,
+    required String modelName,
+    required String content,
+  }) {
+    return _jsonResponse({
+      'id': reqId,
+      'object': 'chat.completion',
+      'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      'model': modelName,
+      'choices': [
+        {
+          'index': 0,
+          'message': {'role': 'assistant', 'content': content},
+          'finish_reason': 'stop',
+        },
+      ],
+      'usage': {
+        'prompt_tokens': 0,
+        'completion_tokens': 0,
+        'total_tokens': 0,
+      },
+    });
   }
 
   Future<shelf.Response> _streamingChatCompletion(
@@ -632,8 +1061,11 @@ extension _$ApiServer on _ApiServer {
     String reqId,
     String modelName,
     int modelID,
-    int? maxTokens,
-  ) async {
+    int? maxTokens, {
+    String? translationCacheKey,
+    String? translationCacheSource,
+    String? translationCacheModelFingerprint,
+  }) async {
     final resultCompleter = Completer<String>();
 
     try {
@@ -743,24 +1175,20 @@ extension _$ApiServer on _ApiServer {
 
     final content = await resultCompleter.future;
 
-    return _jsonResponse({
-      'id': reqId,
-      'object': 'chat.completion',
-      'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      'model': modelName,
-      'choices': [
-        {
-          'index': 0,
-          'message': {'role': 'assistant', 'content': content},
-          'finish_reason': 'stop',
-        },
-      ],
-      'usage': {
-        'prompt_tokens': 0,
-        'completion_tokens': 0,
-        'total_tokens': 0,
-      },
-    });
+    if (translationCacheKey != null && translationCacheSource != null && translationCacheModelFingerprint != null) {
+      await _setTranslationCache(
+        key: translationCacheKey,
+        source: translationCacheSource,
+        translation: content,
+        modelFingerprint: translationCacheModelFingerprint,
+      );
+    }
+
+    return _chatCompletionResponse(
+      reqId: reqId,
+      modelName: modelName,
+      content: content,
+    );
   }
 
   Future<shelf.Response> _handleCompletions(shelf.Request request) async {
@@ -1307,6 +1735,7 @@ extension $ApiServer on _ApiServer {
       _startTime = DateTime.now();
       requestCount.q = 0;
       logs.q = [];
+      await _refreshTranslationCacheStats();
       await _refreshAccessibleUrls(portOverride: p);
       _addLog('Server started on port $p');
       final urls = accessibleUrls.q;
@@ -1372,5 +1801,14 @@ extension $ApiServer on _ApiServer {
 
   void clearLogs() {
     logs.q = [];
+  }
+
+  Future<void> refreshTranslationCacheStats() async {
+    await _refreshTranslationCacheStats();
+  }
+
+  Future<void> clearTranslationCache(String scope) async {
+    await _clearTranslationCache(scope);
+    Alert.success(S.current.all_done);
   }
 }

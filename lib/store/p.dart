@@ -17,6 +17,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:archive/archive_io.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:collection/collection.dart';
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:detect_proxy_setting/detect_proxy_setting.dart';
 import 'package:desktop_drop/desktop_drop.dart' as desktop_drop;
 import 'package:device_info_plus/device_info_plus.dart';
