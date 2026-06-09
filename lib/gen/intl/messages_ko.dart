@@ -495,7 +495,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "creative_recommended_short": MessageLookupByLibrary.simpleMessage("창의적"),
     "ctx_length_label": m20,
     "current_folder_has_no_local_models": MessageLookupByLibrary.simpleMessage(
-      "이 폴더에 로컬 모델이 없습니다",
+      "이 폴더에 Chat에서 사용할 수 있는 로컬 모델이 없습니다",
     ),
     "current_model": m21,
     "current_model_from_latest_json_not_pth":

@@ -72,6 +72,7 @@ import 'package:zone/func/extensions/string.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/func/is_chinese.dart';
+import 'package:zone/func/local_chat_model_filter.dart';
 import 'package:zone/func/local_model_discovery.dart';
 import 'package:zone/func/open_folder.dart';
 import 'package:zone/func/save_asset_to_file.dart';

@@ -103,6 +103,11 @@ class _Remote {
     return result;
   });
 
+  late final localChatExcludedConfigFileNames = qp<Set<String>>((ref) {
+    final config = ref.watch(P.app._config);
+    return localChatExcludedConfigFileNamesFromConfig(config);
+  });
+
   late final hasActiveDownload = qp<bool>((ref) {
     final allWeights = ref.watch(this.allWeights);
     for (final fileInfo in allWeights) {

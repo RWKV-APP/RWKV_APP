@@ -693,7 +693,7 @@
   "open_folder": "Open folder",
   "forget_this_location": "Forget this location",
   "scanning_folder_for_pth": "Scanning this folder for .pth files and RWKV .gguf files",
-  "current_folder_has_no_local_models": "This folder has no local models",
+  "current_folder_has_no_local_models": "This folder has no local models for Chat",
   "folder_not_found_on_device": "This folder was not found on your device",
   "folder_not_accessible_check_permission": "This folder is not accessible. Please check folder permissions",
   "path_label": "Path: {path}",

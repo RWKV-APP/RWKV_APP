@@ -471,7 +471,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "creative_recommended_short": MessageLookupByLibrary.simpleMessage("创意"),
     "ctx_length_label": m20,
     "current_folder_has_no_local_models": MessageLookupByLibrary.simpleMessage(
-      "当前文件夹没有本地模型",
+      "当前文件夹没有可用于 Chat 的本地模型",
     ),
     "current_model": m21,
     "current_model_from_latest_json_not_pth":

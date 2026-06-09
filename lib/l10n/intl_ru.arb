@@ -687,7 +687,7 @@
   "open_folder": "Открыть папку",
   "forget_this_location": "Забыть это расположение",
   "scanning_folder_for_pth": "Сканирование папки на наличие .pth файлов и RWKV .gguf файлов",
-  "current_folder_has_no_local_models": "В этой папке нет локальных моделей",
+  "current_folder_has_no_local_models": "В этой папке нет локальных моделей для Chat",
   "folder_not_found_on_device": "Эта папка не найдена на вашем устройстве",
   "folder_not_accessible_check_permission": "К этой папке нет доступа. Проверьте права доступа",
   "path_label": "Путь: {path}",

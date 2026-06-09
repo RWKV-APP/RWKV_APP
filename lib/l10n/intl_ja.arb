@@ -687,7 +687,7 @@
   "open_folder": "フォルダを開く",
   "forget_this_location": "この場所を忘れる",
   "scanning_folder_for_pth": "このフォルダ内の .pth ファイルと RWKV .gguf ファイルをスキャン中",
-  "current_folder_has_no_local_models": "このフォルダにローカルモデルはありません",
+  "current_folder_has_no_local_models": "このフォルダに Chat で使用できるローカルモデルはありません",
   "folder_not_found_on_device": "お使いのデバイスでこのフォルダが見つかりませんでした",
   "folder_not_accessible_check_permission": "このフォルダにアクセスできません。フォルダの権限を確認してください",
   "path_label": "パス：{path}",

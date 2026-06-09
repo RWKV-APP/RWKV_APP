@@ -687,7 +687,7 @@
   "open_folder": "폴더 열기",
   "forget_this_location": "이 위치 잊기",
   "scanning_folder_for_pth": "이 폴더에서 .pth 파일과 RWKV .gguf 파일 스캔 중",
-  "current_folder_has_no_local_models": "이 폴더에 로컬 모델이 없습니다",
+  "current_folder_has_no_local_models": "이 폴더에 Chat에서 사용할 수 있는 로컬 모델이 없습니다",
   "folder_not_found_on_device": "기기에서 이 폴더를 찾을 수 없습니다",
   "folder_not_accessible_check_permission": "이 폴더에 액세스할 수 없습니다. 폴더 권한을 확인하세요",
   "path_label": "경로: {path}",

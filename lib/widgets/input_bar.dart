@@ -59,7 +59,6 @@ class InputBar extends ConsumerWidget {
             ),
           ),
           child: _InputBarWidthLimit(
-            preferredDemoType: preferredDemoType,
             child: AnimatedSize(
               duration: 250.ms,
               child: Column(
@@ -80,11 +79,9 @@ class InputBar extends ConsumerWidget {
 }
 
 class _InputBarWidthLimit extends StatelessWidget {
-  final DemoType preferredDemoType;
   final Widget child;
 
   const _InputBarWidthLimit({
-    required this.preferredDemoType,
     required this.child,
   });
 
@@ -92,7 +89,6 @@ class _InputBarWidthLimit extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final _ = theme;
-    if (preferredDemoType != .chat) return child;
 
     return Center(
       child: ConstrainedBox(

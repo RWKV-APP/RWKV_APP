@@ -5448,10 +5448,10 @@ class S {
     );
   }
 
-  /// `当前文件夹没有本地模型`
+  /// `当前文件夹没有可用于 Chat 的本地模型`
   String get current_folder_has_no_local_models {
     return Intl.message(
-      '当前文件夹没有本地模型',
+      '当前文件夹没有可用于 Chat 的本地模型',
       name: 'current_folder_has_no_local_models',
       desc: '',
       args: [],

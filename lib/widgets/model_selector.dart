@@ -16,6 +16,7 @@ import 'package:rwkv_mobile_flutter/rwkv.dart';
 
 // Project imports:
 import 'package:zone/func/format_bytes.dart';
+import 'package:zone/func/local_chat_model_filter.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_download_source.dart';
@@ -1001,13 +1002,22 @@ class _LocalPthFolder extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
+    final excludedConfigFileNames = ref.watch(P.remote.localChatExcludedConfigFileNames);
     final folderName = path.basename(folder.path);
     final state = folder.state;
     final folderPath = folder.path;
     final folderPathDisplay = _truncatePath(folderPath);
-    final files = folder.files;
+    final files = folder.files
+        .where(
+          (file) => shouldShowLocalChatModelFile(
+            fileInfo: file,
+            excludedConfigFileNames: excludedConfigFileNames,
+          ),
+        )
+        .toList();
     return Container(
       decoration: BoxDecoration(
         color: appTheme.settingItem,
@@ -1030,7 +1040,7 @@ class _LocalPthFolder extends ConsumerWidget {
                     const SizedBox(height: 2),
                     Text(
                       S.current.path_label(folderPathDisplay),
-                      style: TS(c: qb.q(.8), s: 12),
+                      style: theme.textTheme.bodySmall?.copyWith(color: qb.q(.8), fontSize: 12),
                     ),
                   ],
                 ),

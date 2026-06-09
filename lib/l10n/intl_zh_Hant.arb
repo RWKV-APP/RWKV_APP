@@ -687,7 +687,7 @@
   "open_folder": "開啟資料夾",
   "forget_this_location": "忘記該位置",
   "scanning_folder_for_pth": "正在掃描該資料夾中的 .pth 檔案和 RWKV .gguf 檔案",
-  "current_folder_has_no_local_models": "目前資料夾沒有本機模型",
+  "current_folder_has_no_local_models": "目前資料夾沒有可用於 Chat 的本機模型",
   "folder_not_found_on_device": "未在您的電腦上發現該資料夾",
   "folder_not_accessible_check_permission": "該資料夾無法存取，請檢查資料夾權限",
   "path_label": "路徑：{path}",

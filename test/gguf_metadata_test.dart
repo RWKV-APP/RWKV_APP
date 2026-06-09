@@ -8,7 +8,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 // Project imports:
 import 'package:zone/func/gguf_metadata.dart';
+import 'package:zone/func/local_chat_model_filter.dart';
 import 'package:zone/func/local_model_discovery.dart';
+import 'package:zone/model/file_info.dart';
 
 void main() {
   group('GgufMetadataReader', () {
@@ -137,12 +139,134 @@ void main() {
       expect(rwkvFile.ggufBlockCount, 12);
     });
   });
+
+  group('local chat model filter', () {
+    test('extracts known See and Talk file names from config including state files', () {
+      final config = <String, dynamic>{
+        "chat": {
+          "model_config": [
+            {
+              "name": "Chat Model",
+              "url": "owner/repo/resolve/main/gguf/chat.gguf",
+              "fileSize": 1,
+              "platforms": ["macos"],
+            },
+          ],
+        },
+        "tts": {
+          "model_config": [
+            {
+              "name": "Talk Core",
+              "url": "owner/repo/resolve/main/multimodal/sparktts/talk.gguf",
+              "fileSize": 1,
+              "platforms": ["macos"],
+              "state": [
+                {
+                  "name": "Talk State",
+                  "fileName": "talk-state.st",
+                  "url": "owner/repo/resolve/main/multimodal/sparktts/talk-state.st",
+                  "fileSize": 1,
+                },
+              ],
+            },
+          ],
+        },
+        "world": {
+          "model_config": [
+            {
+              "name": "See Model",
+              "url": "owner/repo/resolve/main/multimodal/model/rwkv-vl/see.gguf",
+              "fileSize": 1,
+              "platforms": ["macos"],
+              "state": [
+                {
+                  "name": "See State",
+                  "fileName": "see-state.gguf",
+                  "url": "owner/repo/resolve/main/multimodal/model/rwkv-vl/see-state.gguf",
+                  "fileSize": 1,
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      final fileNames = localChatExcludedConfigFileNamesFromConfig(config);
+
+      expect(fileNames, containsAll(<String>["talk.gguf", "talk-state.st", "see.gguf", "see-state.gguf"]));
+      expect(fileNames, isNot(contains("chat.gguf")));
+    });
+
+    test('hides known See and Talk local GGUF files only', () {
+      final excludedFileNames = <String>{"see.gguf", "talk.gguf", "same-name.pth"};
+
+      expect(
+        shouldShowLocalChatModelFile(
+          fileInfo: _localGgufFile("chat.gguf"),
+          excludedConfigFileNames: excludedFileNames,
+        ),
+        isTrue,
+      );
+      expect(
+        shouldShowLocalChatModelFile(
+          fileInfo: _localGgufFile("see.gguf"),
+          excludedConfigFileNames: excludedFileNames,
+        ),
+        isFalse,
+      );
+      expect(
+        shouldShowLocalChatModelFile(
+          fileInfo: _localGgufFile("talk.gguf"),
+          excludedConfigFileNames: excludedFileNames,
+        ),
+        isFalse,
+      );
+      expect(
+        shouldShowLocalChatModelFile(
+          fileInfo: _localPthFile("same-name.pth"),
+          excludedConfigFileNames: excludedFileNames,
+        ),
+        isTrue,
+      );
+    });
+  });
 }
 
 Future<File> _writeBytes(Directory directory, String fileName, List<int> bytes) async {
   final file = File('${directory.path}${Platform.pathSeparator}$fileName');
   await file.writeAsBytes(bytes);
   return file;
+}
+
+FileInfo _localGgufFile(String fileName) {
+  return _localFile(fileName: fileName, fromLocalGgufFile: true);
+}
+
+FileInfo _localPthFile(String fileName) {
+  return _localFile(fileName: fileName, fromLocalGgufFile: false);
+}
+
+FileInfo _localFile({
+  required String fileName,
+  required bool fromLocalGgufFile,
+}) {
+  return FileInfo(
+    name: fileName,
+    fileName: fileName,
+    fileType: FileType.weights,
+    fileSize: 1,
+    raw: "/tmp/$fileName",
+    isDebug: false,
+    backend: null,
+    sha256: null,
+    modelSize: null,
+    quantization: null,
+    updatedAt: null,
+    timestamp: null,
+    date: null,
+    fromPthFile: !fromLocalGgufFile,
+    fromLocalGgufFile: fromLocalGgufFile,
+  );
 }
 
 List<int> _buildGgufBytes({

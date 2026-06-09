@@ -693,7 +693,7 @@
   "open_folder": "打开文件夹",
   "forget_this_location": "忘记该位置",
   "scanning_folder_for_pth": "正在扫描该文件夹中的 .pth 文件和 RWKV .gguf 文件",
-  "current_folder_has_no_local_models": "当前文件夹没有本地模型",
+  "current_folder_has_no_local_models": "当前文件夹没有可用于 Chat 的本地模型",
   "folder_not_found_on_device": "未在您的电脑上发现该文件夹",
   "folder_not_accessible_check_permission": "该文件夹无法访问，请检查文件夹权限",
   "path_label": "路径：{path}",

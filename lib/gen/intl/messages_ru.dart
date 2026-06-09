@@ -601,7 +601,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "ctx_length_label": m20,
     "current_folder_has_no_local_models": MessageLookupByLibrary.simpleMessage(
-      "В этой папке нет локальных моделей",
+      "В этой папке нет локальных моделей для Chat",
     ),
     "current_model": m21,
     "current_model_from_latest_json_not_pth": MessageLookupByLibrary.simpleMessage(
