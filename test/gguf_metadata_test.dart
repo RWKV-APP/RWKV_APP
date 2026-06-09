@@ -141,7 +141,7 @@ void main() {
   });
 
   group('local chat model filter', () {
-    test('extracts known See and Talk file names from config including state files', () {
+    test('extracts known Chat, See, and Talk file names from config including state files', () {
       final config = <String, dynamic>{
         "chat": {
           "model_config": [
@@ -150,6 +150,14 @@ void main() {
               "url": "owner/repo/resolve/main/gguf/chat.gguf",
               "fileSize": 1,
               "platforms": ["macos"],
+              "state": [
+                {
+                  "name": "Chat State",
+                  "fileName": "chat-state.gguf",
+                  "url": "owner/repo/resolve/main/gguf/chat-state.gguf",
+                  "fileSize": 1,
+                },
+              ],
             },
           ],
         },
@@ -193,19 +201,25 @@ void main() {
 
       final fileNames = localChatExcludedConfigFileNamesFromConfig(config);
 
-      expect(fileNames, containsAll(<String>["talk.gguf", "talk-state.st", "see.gguf", "see-state.gguf"]));
-      expect(fileNames, isNot(contains("chat.gguf")));
+      expect(fileNames, containsAll(<String>["chat.gguf", "chat-state.gguf", "talk.gguf", "talk-state.st", "see.gguf", "see-state.gguf"]));
     });
 
-    test('hides known See and Talk local GGUF files only', () {
-      final excludedFileNames = <String>{"see.gguf", "talk.gguf", "same-name.pth"};
+    test('hides known Chat, See, and Talk local GGUF files only', () {
+      final excludedFileNames = <String>{"chat.gguf", "see.gguf", "talk.gguf", "same-name.pth"};
 
+      expect(
+        shouldShowLocalChatModelFile(
+          fileInfo: _localGgufFile("custom.gguf"),
+          excludedConfigFileNames: excludedFileNames,
+        ),
+        isTrue,
+      );
       expect(
         shouldShowLocalChatModelFile(
           fileInfo: _localGgufFile("chat.gguf"),
           excludedConfigFileNames: excludedFileNames,
         ),
-        isTrue,
+        isFalse,
       );
       expect(
         shouldShowLocalChatModelFile(
