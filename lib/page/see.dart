@@ -36,7 +36,9 @@ class PageSee extends ConsumerWidget {
             bottom: inputHeight,
             right: 0,
             left: 0,
-            child: const FloatingSuggestions(),
+            child: const InputBarWidthLimit(
+              child: FloatingSuggestions(),
+            ),
           ),
           const InputBar(preferredDemoType: .see),
         ],

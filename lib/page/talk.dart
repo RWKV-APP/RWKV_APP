@@ -36,7 +36,9 @@ class PageTalk extends ConsumerWidget {
             bottom: inputHeight + 8,
             right: 0,
             left: 0,
-            child: const Suggestions(),
+            child: const InputBarWidthLimit(
+              child: Suggestions(),
+            ),
           ),
           const InputBar(preferredDemoType: .tts),
         ],

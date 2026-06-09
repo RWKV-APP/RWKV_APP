@@ -58,7 +58,7 @@ class InputBar extends ConsumerWidget {
               end: Alignment(0, gradientForInputBar),
             ),
           ),
-          child: _InputBarWidthLimit(
+          child: InputBarWidthLimit(
             child: AnimatedSize(
               duration: 250.ms,
               child: Column(
@@ -78,10 +78,11 @@ class InputBar extends ConsumerWidget {
   }
 }
 
-class _InputBarWidthLimit extends StatelessWidget {
+class InputBarWidthLimit extends StatelessWidget {
   final Widget child;
 
-  const _InputBarWidthLimit({
+  const InputBarWidthLimit({
+    super.key,
     required this.child,
   });
 
