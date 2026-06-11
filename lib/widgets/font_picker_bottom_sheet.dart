@@ -199,7 +199,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
                 ),
               ],
             ),
-            const Divider(),
+            Container(height: 0.5, color: qb.q(.2)),
             // 字体列表
             if (_isLoading)
               const Expanded(
@@ -390,6 +390,7 @@ class _FontPreviewItemState extends State<_FontPreviewItem> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     // 当选择"默认字体"（System）时，只显示"默认"，不显示系统字体名称
     // 因为"默认字体"指的是 Flutter 的默认字体（Roboto），而不是系统的默认字体
     final displayName = widget.font == 'System' ? S.of(context).default_font : widget.font;
@@ -397,26 +398,41 @@ class _FontPreviewItemState extends State<_FontPreviewItem> {
     // 当选择"默认字体"（System）时，不设置 fontFamily，让 Flutter 使用其自带的默认字体（Roboto）
     final fontFamily = (widget.font == 'System' || !_isLoaded) ? null : widget.font;
 
-    return ListTile(
-      title: Text(
-        displayName,
-        style: TextStyle(
-          fontFamily: fontFamily,
-          fontSize: 16,
-          fontWeight: widget.isSelected ? .w600 : .normal,
-        ),
-      ),
-      subtitle: Text(
-        '示例文本 The quick brown fox',
-        style: TextStyle(
-          fontFamily: fontFamily,
-          fontSize: 12,
-          color: widget.qb.q(.6),
-        ),
-      ),
-      trailing: widget.isSelected ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary) : null,
-      selected: widget.isSelected,
+    return InkWell(
       onTap: widget.onTap,
+      child: Container(
+        color: widget.isSelected ? theme.colorScheme.primaryContainer.q(.25) : null,
+        padding: const .symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  Text(
+                    displayName,
+                    style: TextStyle(
+                      fontFamily: fontFamily,
+                      fontSize: 16,
+                      fontWeight: widget.isSelected ? .w600 : .normal,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '示例文本 The quick brown fox',
+                    style: TextStyle(
+                      fontFamily: fontFamily,
+                      fontSize: 12,
+                      color: widget.qb.q(.6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (widget.isSelected) Icon(Icons.check, color: theme.colorScheme.primary),
+          ],
+        ),
+      ),
     );
   }
 }

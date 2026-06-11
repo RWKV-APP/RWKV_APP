@@ -340,12 +340,18 @@ class _PreviewState extends ConsumerState<_Preview> {
             children: [
               const SizedBox(height: 12),
               _buildHeader(),
-              const Divider(height: 28, indent: 16, endIndent: 16, thickness: 0.5),
-              for (var msg in widget.messages) Message(msg, 1, selectMode: true),
+              Padding(
+                padding: const .symmetric(horizontal: 16, vertical: 14),
+                child: Container(height: 0.5, color: theme.dividerColor),
+              ),
+              for (final msg in widget.messages) Message(msg, 1, selectMode: true),
               const SizedBox(height: 24),
               Stack(
                 children: [
-                  const Divider(indent: 16, endIndent: 16, thickness: 0.5),
+                  Padding(
+                    padding: const .symmetric(horizontal: 16),
+                    child: Container(height: 0.5, color: theme.dividerColor),
+                  ),
                   Center(
                     child: Container(
                       width: 50,

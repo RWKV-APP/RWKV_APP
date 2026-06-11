@@ -155,11 +155,11 @@ extension $App on _App {
 
   void deleteOutdatedConfigInPreference() async {
     final sp = await SharedPreferences.getInstance();
-    sp.getKeys().forEach((key) {
+    for (final key in sp.getKeys()) {
       if (key.startsWith("configForAllDemosKey_") && key != _configForAllDemosKey) {
-        sp.remove(key);
+        await sp.remove(key);
       }
-    });
+    }
   }
 
   void hapticLight() {

@@ -59,6 +59,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
     final theme = Theme.of(context);
     final local = ref.watch(P.remote.locals(widget.file));
     final appTheme = ref.watch(P.app.theme);
+    final qb = ref.watch(P.app.qb);
 
     final noState = widget.file.state.isEmpty;
 
@@ -109,11 +110,11 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
                       onSelectTap: currentStateFile?.fileName == state.fileName ? null : () => onLoadTap(state),
                     ),
                     if (state != widget.file.state.last)
-                      const Divider(
+                      Container(
                         height: 8,
-                        thickness: 0.4,
-                        indent: 2,
-                        endIndent: 2,
+                        padding: const .symmetric(horizontal: 2),
+                        alignment: .center,
+                        child: Container(height: 0.5, color: qb.q(.4)),
                       ),
                   ],
                 ],

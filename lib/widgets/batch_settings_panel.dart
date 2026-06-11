@@ -388,7 +388,7 @@ class _DecodeParams extends ConsumerWidget {
           children: [
             const SizedBox(height: 4),
             ...rows,
-            Divider(color: qb.q(.2)),
+            Container(height: 0.5, color: qb.q(.2)),
             const Align(
               alignment: .centerLeft,
               child: _DecodeParam(
