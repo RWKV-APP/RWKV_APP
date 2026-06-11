@@ -183,6 +183,67 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "add_local_folder": MessageLookupByLibrary.simpleMessage("新增本機資料夾"),
     "advance_settings": MessageLookupByLibrary.simpleMessage("進階設定"),
+    "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
+      "目前 Albatross 後端暫不支援此功能",
+    ),
+    "albatross_binary": MessageLookupByLibrary.simpleMessage("程式"),
+    "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
+      "缺少 Albatross 程式下載設定",
+    ),
+    "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
+      "請先選擇或下載 Albatross 程式",
+    ),
+    "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
+    "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
+      "使用本機 Albatross CUDA 後端聊天",
+    ),
+    "albatross_connected": MessageLookupByLibrary.simpleMessage(
+      "已連線 Albatross",
+    ),
+    "albatross_connecting": MessageLookupByLibrary.simpleMessage("連線中"),
+    "albatross_download_binary": MessageLookupByLibrary.simpleMessage("下載程式"),
+    "albatross_download_tokenizer": MessageLookupByLibrary.simpleMessage(
+      "下載詞表",
+    ),
+    "albatross_drop_files": MessageLookupByLibrary.simpleMessage(
+      "拖入 exe、PTH、詞表或模型資料夾",
+    ),
+    "albatross_host": MessageLookupByLibrary.simpleMessage("Host"),
+    "albatross_model": MessageLookupByLibrary.simpleMessage("模型"),
+    "albatross_model_required": MessageLookupByLibrary.simpleMessage(
+      "請先選擇 PTH 模型",
+    ),
+    "albatross_no_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "沒有已下載的 PTH 模型",
+    ),
+    "albatross_not_connected": MessageLookupByLibrary.simpleMessage(
+      "未連線 Albatross",
+    ),
+    "albatross_not_selected": MessageLookupByLibrary.simpleMessage("未選擇"),
+    "albatross_pick_binary": MessageLookupByLibrary.simpleMessage("選擇程式"),
+    "albatross_pick_model_folder": MessageLookupByLibrary.simpleMessage(
+      "選擇模型資料夾",
+    ),
+    "albatross_pick_pth": MessageLookupByLibrary.simpleMessage("選擇 PTH"),
+    "albatross_pick_tokenizer": MessageLookupByLibrary.simpleMessage("選擇詞表"),
+    "albatross_port": MessageLookupByLibrary.simpleMessage("連接埠"),
+    "albatross_select_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "選擇已下載 PTH",
+    ),
+    "albatross_service_not_running": MessageLookupByLibrary.simpleMessage(
+      "Albatross 服務未執行",
+    ),
+    "albatross_start_chat": MessageLookupByLibrary.simpleMessage("啟動並進入聊天"),
+    "albatross_tokenizer": MessageLookupByLibrary.simpleMessage("詞表"),
+    "albatross_tokenizer_config_missing": MessageLookupByLibrary.simpleMessage(
+      "缺少 Albatross 詞表下載設定",
+    ),
+    "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
+      "請先選擇或下載詞表",
+    ),
+    "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "使用已下載 PTH",
+    ),
     "all": MessageLookupByLibrary.simpleMessage("全部"),
     "all_done": MessageLookupByLibrary.simpleMessage("全部完成"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("全部提示詞"),

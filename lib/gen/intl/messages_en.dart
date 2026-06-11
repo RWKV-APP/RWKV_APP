@@ -199,6 +199,75 @@ class MessageLookup extends MessageLookupByLibrary {
     "advance_settings": MessageLookupByLibrary.simpleMessage(
       "Advanced Settings",
     ),
+    "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
+      "This feature is not supported by the current Albatross backend",
+    ),
+    "albatross_binary": MessageLookupByLibrary.simpleMessage("Binary"),
+    "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
+      "Missing Albatross binary download config",
+    ),
+    "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
+      "Choose or download the Albatross binary first",
+    ),
+    "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
+    "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
+      "Chat through the local Albatross CUDA backend",
+    ),
+    "albatross_connected": MessageLookupByLibrary.simpleMessage(
+      "Albatross Connected",
+    ),
+    "albatross_connecting": MessageLookupByLibrary.simpleMessage("Connecting"),
+    "albatross_download_binary": MessageLookupByLibrary.simpleMessage(
+      "Download Binary",
+    ),
+    "albatross_download_tokenizer": MessageLookupByLibrary.simpleMessage(
+      "Download Tokenizer",
+    ),
+    "albatross_drop_files": MessageLookupByLibrary.simpleMessage(
+      "Drop exe, PTH, tokenizer, or model folder",
+    ),
+    "albatross_host": MessageLookupByLibrary.simpleMessage("Host"),
+    "albatross_model": MessageLookupByLibrary.simpleMessage("Model"),
+    "albatross_model_required": MessageLookupByLibrary.simpleMessage(
+      "Choose a PTH model first",
+    ),
+    "albatross_no_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "No downloaded PTH model",
+    ),
+    "albatross_not_connected": MessageLookupByLibrary.simpleMessage(
+      "Albatross Not Connected",
+    ),
+    "albatross_not_selected": MessageLookupByLibrary.simpleMessage(
+      "Not Selected",
+    ),
+    "albatross_pick_binary": MessageLookupByLibrary.simpleMessage(
+      "Pick Binary",
+    ),
+    "albatross_pick_model_folder": MessageLookupByLibrary.simpleMessage(
+      "Pick Model Folder",
+    ),
+    "albatross_pick_pth": MessageLookupByLibrary.simpleMessage("Pick PTH"),
+    "albatross_pick_tokenizer": MessageLookupByLibrary.simpleMessage(
+      "Pick Tokenizer",
+    ),
+    "albatross_port": MessageLookupByLibrary.simpleMessage("Port"),
+    "albatross_select_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "Select Downloaded PTH",
+    ),
+    "albatross_service_not_running": MessageLookupByLibrary.simpleMessage(
+      "Albatross service is not running",
+    ),
+    "albatross_start_chat": MessageLookupByLibrary.simpleMessage("Start Chat"),
+    "albatross_tokenizer": MessageLookupByLibrary.simpleMessage("Tokenizer"),
+    "albatross_tokenizer_config_missing": MessageLookupByLibrary.simpleMessage(
+      "Missing Albatross tokenizer download config",
+    ),
+    "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
+      "Choose or download a tokenizer first",
+    ),
+    "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "Use Downloaded PTH",
+    ),
     "all": MessageLookupByLibrary.simpleMessage("All"),
     "all_done": MessageLookupByLibrary.simpleMessage("All Done"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("All Prompts"),

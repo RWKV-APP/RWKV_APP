@@ -48,15 +48,15 @@ class _ItemList extends ConsumerWidget {
     final features = ref.watch(P.app.featureRollout);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final currentModelIsBefore20250922 = ref.watch(P.rwkvParams.currentModelIsBefore20250922);
-    final isAlbatrossLoaded = ref.watch(P.rwkvContext.isAlbatrossLoaded);
+    final isLegacyAlbatrossLoaded = ref.watch(P.rwkvContext.isLegacyAlbatrossLoaded);
 
     final children = [
       if (features.webSearch && preferredDemoType == .chat) const WebSearchModeButton(),
-      if (!isAlbatrossLoaded && preferredDemoType == .chat) const DecodeParamButton(),
-      if (!isAlbatrossLoaded && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922)
+      if (!isLegacyAlbatrossLoaded && preferredDemoType == .chat) const DecodeParamButton(),
+      if (!isLegacyAlbatrossLoaded && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922)
         const SecondaryOptionsButton(),
       if (preferredDemoType == .chat) const ThinkingModeButton(),
-      if (!isAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
+      if (!isLegacyAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
       if (preferredDemoType == .chat && currentLangIsZh) const ResponseStyleButton(),
       if (preferredDemoType == .chat) const AskQuestionButton(),
     ];

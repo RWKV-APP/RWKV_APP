@@ -6,6 +6,12 @@ class _RWKVContext {
   late final currentGroupInfo = qs<GroupInfo?>(null);
 
   late final isAlbatrossLoaded = qp<bool>((ref) {
+    if (ref.watch(P.albatrossRuntime.enabled)) return true;
+    final currentModel = ref.watch(P.rwkvModel.latest);
+    return currentModel?.tags.contains('albatross') ?? false;
+  });
+
+  late final isLegacyAlbatrossLoaded = qp<bool>((ref) {
     final currentModel = ref.watch(P.rwkvModel.latest);
     return currentModel?.tags.contains('albatross') ?? false;
   });

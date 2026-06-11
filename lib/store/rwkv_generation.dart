@@ -43,7 +43,33 @@ extension $RWKVGeneration on _RWKVGeneration {
     decodeSpeed.q = 0;
     P.telemetry.resetPeakDecodeSpeed();
 
-    if (P.rwkvContext.isAlbatrossLoaded.q) {
+    if (P.albatrossRuntime.enabled.q) {
+      final Stream<from_rwkv.FromRWKV> stream;
+      if (overrideBatchSlotConfigs != null && overrideBatchSlotConfigs.isNotEmpty) {
+        stream = P.albatrossRuntime.chatSlots(
+          overrideBatchSlotConfigs.map((slot) => slot.messages).toList(),
+        );
+      } else if (overrideBatchMessages != null && overrideBatchMessages.isNotEmpty) {
+        stream = P.albatrossRuntime.chatSlots(overrideBatchMessages);
+      } else {
+        stream = P.albatrossRuntime.chat(messages, batchSize: batchSize);
+      }
+      try {
+        await for (final event in stream) {
+          P.rwkvBridge.emitFromRWKV(event);
+        }
+
+        /// NOTE: downstream requires this delay
+        unawaited(_emitGenerateStopLater());
+      } catch (e) {
+        unawaited(_emitGenerateStopLater(error: e.toString()));
+      } finally {
+        P.rwkvBridge.emitOldEvent(const LLMEvent(type: _RWKVMessageType.isGenerating, content: 'false'));
+      }
+      return;
+    }
+
+    if (P.rwkvContext.isLegacyAlbatrossLoaded.q) {
       final stream = Albatross.instance.chat(messages, batchSize: 1);
       try {
         await for (final event in stream) {
@@ -158,7 +184,11 @@ extension $RWKVGeneration on _RWKVGeneration {
     prefillProgress.q = 0;
     P.telemetry.resetPeakDecodeSpeed();
 
-    if (P.rwkvContext.isAlbatrossLoaded.q) {
+    if (P.albatrossRuntime.enabled.q) {
+      return P.albatrossRuntime.completion(prompt, batchSize: batchSize);
+    }
+
+    if (P.rwkvContext.isLegacyAlbatrossLoaded.q) {
       return Albatross.instance.completion(prompt, batchSize: batchSize);
     }
 
@@ -307,7 +337,8 @@ extension $RWKVGeneration on _RWKVGeneration {
   }
 
   Future<void> stop() async {
-    if (P.rwkvContext.isAlbatrossLoaded.q) return Albatross.instance.stop();
+    if (P.albatrossRuntime.enabled.q) return P.albatrossRuntime.stop();
+    if (P.rwkvContext.isLegacyAlbatrossLoaded.q) return Albatross.instance.stop();
     for (final entry in P.rwkvModel.allLoaded.q.entries) {
       final modelID = entry.value;
       P.rwkvBridge.send(to_rwkv.Stop(modelID: modelID));

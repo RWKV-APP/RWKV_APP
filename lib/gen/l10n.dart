@@ -6285,6 +6285,271 @@ class S {
       args: [],
     );
   }
+
+  /// `Albatross Chat`
+  String get albatross_chat {
+    return Intl.message(
+      'Albatross Chat',
+      name: 'albatross_chat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `使用本地 Albatross CUDA 后端聊天`
+  String get albatross_chat_description {
+    return Intl.message(
+      '使用本地 Albatross CUDA 后端聊天',
+      name: 'albatross_chat_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Host`
+  String get albatross_host {
+    return Intl.message('Host', name: 'albatross_host', desc: '', args: []);
+  }
+
+  /// `端口`
+  String get albatross_port {
+    return Intl.message('端口', name: 'albatross_port', desc: '', args: []);
+  }
+
+  /// `程序`
+  String get albatross_binary {
+    return Intl.message('程序', name: 'albatross_binary', desc: '', args: []);
+  }
+
+  /// `模型`
+  String get albatross_model {
+    return Intl.message('模型', name: 'albatross_model', desc: '', args: []);
+  }
+
+  /// `词表`
+  String get albatross_tokenizer {
+    return Intl.message('词表', name: 'albatross_tokenizer', desc: '', args: []);
+  }
+
+  /// `拖入 exe、PTH、词表或模型文件夹`
+  String get albatross_drop_files {
+    return Intl.message(
+      '拖入 exe、PTH、词表或模型文件夹',
+      name: 'albatross_drop_files',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `下载程序`
+  String get albatross_download_binary {
+    return Intl.message(
+      '下载程序',
+      name: 'albatross_download_binary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择程序`
+  String get albatross_pick_binary {
+    return Intl.message(
+      '选择程序',
+      name: 'albatross_pick_binary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `使用已下载 PTH`
+  String get albatross_use_downloaded_pth {
+    return Intl.message(
+      '使用已下载 PTH',
+      name: 'albatross_use_downloaded_pth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择 PTH`
+  String get albatross_pick_pth {
+    return Intl.message(
+      '选择 PTH',
+      name: 'albatross_pick_pth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择模型文件夹`
+  String get albatross_pick_model_folder {
+    return Intl.message(
+      '选择模型文件夹',
+      name: 'albatross_pick_model_folder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `下载词表`
+  String get albatross_download_tokenizer {
+    return Intl.message(
+      '下载词表',
+      name: 'albatross_download_tokenizer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择词表`
+  String get albatross_pick_tokenizer {
+    return Intl.message(
+      '选择词表',
+      name: 'albatross_pick_tokenizer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `启动并进入聊天`
+  String get albatross_start_chat {
+    return Intl.message(
+      '启动并进入聊天',
+      name: 'albatross_start_chat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `连接中`
+  String get albatross_connecting {
+    return Intl.message(
+      '连接中',
+      name: 'albatross_connecting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已连接 Albatross`
+  String get albatross_connected {
+    return Intl.message(
+      '已连接 Albatross',
+      name: 'albatross_connected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未连接 Albatross`
+  String get albatross_not_connected {
+    return Intl.message(
+      '未连接 Albatross',
+      name: 'albatross_not_connected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未选择`
+  String get albatross_not_selected {
+    return Intl.message(
+      '未选择',
+      name: 'albatross_not_selected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `没有已下载的 PTH 模型`
+  String get albatross_no_downloaded_pth {
+    return Intl.message(
+      '没有已下载的 PTH 模型',
+      name: 'albatross_no_downloaded_pth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择已下载 PTH`
+  String get albatross_select_downloaded_pth {
+    return Intl.message(
+      '选择已下载 PTH',
+      name: 'albatross_select_downloaded_pth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缺少 Albatross 程序下载配置`
+  String get albatross_binary_config_missing {
+    return Intl.message(
+      '缺少 Albatross 程序下载配置',
+      name: 'albatross_binary_config_missing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缺少 Albatross 词表下载配置`
+  String get albatross_tokenizer_config_missing {
+    return Intl.message(
+      '缺少 Albatross 词表下载配置',
+      name: 'albatross_tokenizer_config_missing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请先选择或下载 Albatross 程序`
+  String get albatross_binary_required {
+    return Intl.message(
+      '请先选择或下载 Albatross 程序',
+      name: 'albatross_binary_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请先选择 PTH 模型`
+  String get albatross_model_required {
+    return Intl.message(
+      '请先选择 PTH 模型',
+      name: 'albatross_model_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请先选择或下载词表`
+  String get albatross_tokenizer_required {
+    return Intl.message(
+      '请先选择或下载词表',
+      name: 'albatross_tokenizer_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Albatross 服务未运行`
+  String get albatross_service_not_running {
+    return Intl.message(
+      'Albatross 服务未运行',
+      name: 'albatross_service_not_running',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前 Albatross 后端暂不支持此功能`
+  String get albatross_backend_unsupported {
+    return Intl.message(
+      '当前 Albatross 后端暂不支持此功能',
+      name: 'albatross_backend_unsupported',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

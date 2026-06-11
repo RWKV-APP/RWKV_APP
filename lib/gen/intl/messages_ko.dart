@@ -184,6 +184,73 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "add_local_folder": MessageLookupByLibrary.simpleMessage("로컬 폴더 추가"),
     "advance_settings": MessageLookupByLibrary.simpleMessage("고급 설정"),
+    "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
+      "현재 Albatross 백엔드는 이 기능을 지원하지 않습니다",
+    ),
+    "albatross_binary": MessageLookupByLibrary.simpleMessage("바이너리"),
+    "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
+      "Albatross 바이너리 다운로드 설정이 없습니다",
+    ),
+    "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
+      "먼저 Albatross 바이너리를 선택하거나 다운로드하세요",
+    ),
+    "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
+    "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
+      "로컬 Albatross CUDA 백엔드로 채팅",
+    ),
+    "albatross_connected": MessageLookupByLibrary.simpleMessage(
+      "Albatross 연결됨",
+    ),
+    "albatross_connecting": MessageLookupByLibrary.simpleMessage("연결 중"),
+    "albatross_download_binary": MessageLookupByLibrary.simpleMessage(
+      "바이너리 다운로드",
+    ),
+    "albatross_download_tokenizer": MessageLookupByLibrary.simpleMessage(
+      "토크나이저 다운로드",
+    ),
+    "albatross_drop_files": MessageLookupByLibrary.simpleMessage(
+      "exe, PTH, 토크나이저 또는 모델 폴더를 끌어오세요",
+    ),
+    "albatross_host": MessageLookupByLibrary.simpleMessage("Host"),
+    "albatross_model": MessageLookupByLibrary.simpleMessage("모델"),
+    "albatross_model_required": MessageLookupByLibrary.simpleMessage(
+      "먼저 PTH 모델을 선택하세요",
+    ),
+    "albatross_no_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "다운로드한 PTH 모델이 없습니다",
+    ),
+    "albatross_not_connected": MessageLookupByLibrary.simpleMessage(
+      "Albatross 연결 안 됨",
+    ),
+    "albatross_not_selected": MessageLookupByLibrary.simpleMessage("선택 안 됨"),
+    "albatross_pick_binary": MessageLookupByLibrary.simpleMessage("바이너리 선택"),
+    "albatross_pick_model_folder": MessageLookupByLibrary.simpleMessage(
+      "모델 폴더 선택",
+    ),
+    "albatross_pick_pth": MessageLookupByLibrary.simpleMessage("PTH 선택"),
+    "albatross_pick_tokenizer": MessageLookupByLibrary.simpleMessage(
+      "토크나이저 선택",
+    ),
+    "albatross_port": MessageLookupByLibrary.simpleMessage("포트"),
+    "albatross_select_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "다운로드한 PTH 선택",
+    ),
+    "albatross_service_not_running": MessageLookupByLibrary.simpleMessage(
+      "Albatross 서비스가 실행 중이 아닙니다",
+    ),
+    "albatross_start_chat": MessageLookupByLibrary.simpleMessage(
+      "시작하고 채팅으로 이동",
+    ),
+    "albatross_tokenizer": MessageLookupByLibrary.simpleMessage("토크나이저"),
+    "albatross_tokenizer_config_missing": MessageLookupByLibrary.simpleMessage(
+      "Albatross 토크나이저 다운로드 설정이 없습니다",
+    ),
+    "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
+      "먼저 토크나이저를 선택하거나 다운로드하세요",
+    ),
+    "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "다운로드한 PTH 사용",
+    ),
     "all": MessageLookupByLibrary.simpleMessage("모두"),
     "all_done": MessageLookupByLibrary.simpleMessage("모두 완료"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("모든 프롬프트"),

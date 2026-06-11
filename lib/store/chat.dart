@@ -426,7 +426,7 @@ extension $Chat on _Chat {
     }
 
     final model = P.rwkvModel.latest.q;
-    if (model == null) {
+    if (model == null && !P.albatrossRuntime.enabled.q) {
       ModelSelector.show();
       return;
     }
@@ -502,6 +502,11 @@ extension $Chat on _Chat {
     }
 
     if (!checkModelSelection(preferredDemoType: .chat)) return;
+
+    if (P.albatrossRuntime.enabled.q) {
+      Alert.info(S.current.albatross_backend_unsupported);
+      return;
+    }
 
     final model = P.rwkvModel.latest.q;
     if (model == null) {
@@ -1643,7 +1648,12 @@ extension $Chat on _Chat {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
     _clearResponseStyleSequentialState();
 
-    final currentModel = P.rwkvModel.latest.q!;
+    final currentModel = P.rwkvModel.latest.q;
+    final modelName = P.albatrossRuntime.enabled.q ? "Albatross" : currentModel?.name;
+    if (modelName == null) {
+      Alert.info(S.current.please_load_model_first);
+      return;
+    }
 
     final thinkingMode = P.rwkvParams.thinkingMode.q;
 
@@ -1781,7 +1791,7 @@ extension $Chat on _Chat {
       isMine: false,
       changing: true,
       paused: false,
-      modelName: currentModel.name,
+      modelName: modelName,
       runningMode: thinkingMode.toString(),
       rawDecodeParams: _resolveDecodeParamsSnapshotRaw(),
       batchSlotLabels: P.app.pageKey.q == .chat && responseStyle.q.activeCount > 1 ? responseStyle.q.enabledLabelsInOrder : null,
@@ -2642,7 +2652,9 @@ extension _$Chat on _Chat {
 
   Future<String> _readPausedFinalContent(_PausedGenerationSnapshot snapshot) async {
     try {
-      final finalContent = snapshot.isBatchInference //
+      final finalContent =
+          snapshot
+              .isBatchInference //
           ? await _requestPausedFinalBatchContent(snapshot)
           : await _requestPausedFinalSingleContent(snapshot);
       if (finalContent.isNotEmpty) return finalContent;

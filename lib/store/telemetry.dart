@@ -18,6 +18,8 @@ class _Telemetry {
   late final _totalVramMb = qs<int>(0);
   late final _peakDecodeSpeed = qs<double>(0);
 
+  late final gpuName = qp<String>((ref) => ref.watch(_gpuName));
+
   late final peakDecodeSpeed = qp<double>((ref) => ref.watch(_peakDecodeSpeed));
 
   late final benchmarkDeviceInfo = qp<Map<String, String>>((ref) {
@@ -106,7 +108,7 @@ extension $Telemetry on _Telemetry {
       final FileInfo? model = P.rwkvModel.latest.q;
       if (model == null) return;
 
-      // sha256 可能为空（部分权重没有），用 fileName 兜底
+      // sha256 可能为空（部分权重没有），此时使用 fileName
       final String modelId = (model.sha256 != null && model.sha256!.isNotEmpty) ? model.sha256! : model.fileName;
       if (modelId.isEmpty) return;
 

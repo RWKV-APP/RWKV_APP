@@ -200,6 +200,77 @@ class MessageLookup extends MessageLookupByLibrary {
     "advance_settings": MessageLookupByLibrary.simpleMessage(
       "Расширенные настройки",
     ),
+    "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
+      "Эта функция не поддерживается текущим бэкендом Albatross",
+    ),
+    "albatross_binary": MessageLookupByLibrary.simpleMessage("Бинарный файл"),
+    "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
+      "Нет конфигурации загрузки бинарного файла Albatross",
+    ),
+    "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
+      "Сначала выберите или скачайте бинарный файл Albatross",
+    ),
+    "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
+    "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
+      "Чат через локальный CUDA-бэкенд Albatross",
+    ),
+    "albatross_connected": MessageLookupByLibrary.simpleMessage(
+      "Albatross подключен",
+    ),
+    "albatross_connecting": MessageLookupByLibrary.simpleMessage("Подключение"),
+    "albatross_download_binary": MessageLookupByLibrary.simpleMessage(
+      "Скачать бинарный файл",
+    ),
+    "albatross_download_tokenizer": MessageLookupByLibrary.simpleMessage(
+      "Скачать токенизатор",
+    ),
+    "albatross_drop_files": MessageLookupByLibrary.simpleMessage(
+      "Перетащите exe, PTH, токенизатор или папку модели",
+    ),
+    "albatross_host": MessageLookupByLibrary.simpleMessage("Host"),
+    "albatross_model": MessageLookupByLibrary.simpleMessage("Модель"),
+    "albatross_model_required": MessageLookupByLibrary.simpleMessage(
+      "Сначала выберите PTH-модель",
+    ),
+    "albatross_no_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "Нет скачанной PTH-модели",
+    ),
+    "albatross_not_connected": MessageLookupByLibrary.simpleMessage(
+      "Albatross не подключен",
+    ),
+    "albatross_not_selected": MessageLookupByLibrary.simpleMessage(
+      "Не выбрано",
+    ),
+    "albatross_pick_binary": MessageLookupByLibrary.simpleMessage(
+      "Выбрать бинарный файл",
+    ),
+    "albatross_pick_model_folder": MessageLookupByLibrary.simpleMessage(
+      "Выбрать папку модели",
+    ),
+    "albatross_pick_pth": MessageLookupByLibrary.simpleMessage("Выбрать PTH"),
+    "albatross_pick_tokenizer": MessageLookupByLibrary.simpleMessage(
+      "Выбрать токенизатор",
+    ),
+    "albatross_port": MessageLookupByLibrary.simpleMessage("Порт"),
+    "albatross_select_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "Выбрать скачанный PTH",
+    ),
+    "albatross_service_not_running": MessageLookupByLibrary.simpleMessage(
+      "Сервис Albatross не запущен",
+    ),
+    "albatross_start_chat": MessageLookupByLibrary.simpleMessage(
+      "Запустить чат",
+    ),
+    "albatross_tokenizer": MessageLookupByLibrary.simpleMessage("Токенизатор"),
+    "albatross_tokenizer_config_missing": MessageLookupByLibrary.simpleMessage(
+      "Нет конфигурации загрузки токенизатора Albatross",
+    ),
+    "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
+      "Сначала выберите или скачайте токенизатор",
+    ),
+    "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "Использовать скачанный PTH",
+    ),
     "all": MessageLookupByLibrary.simpleMessage("Все"),
     "all_done": MessageLookupByLibrary.simpleMessage("Все готово"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("Все промпты"),

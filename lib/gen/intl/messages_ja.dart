@@ -184,6 +184,71 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "add_local_folder": MessageLookupByLibrary.simpleMessage("ローカルフォルダを追加"),
     "advance_settings": MessageLookupByLibrary.simpleMessage("詳細設定"),
+    "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
+      "現在の Albatross バックエンドではこの機能はサポートされていません",
+    ),
+    "albatross_binary": MessageLookupByLibrary.simpleMessage("バイナリ"),
+    "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
+      "Albatross バイナリのダウンロード設定がありません",
+    ),
+    "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
+      "先に Albatross バイナリを選択またはダウンロードしてください",
+    ),
+    "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
+    "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
+      "ローカル Albatross CUDA バックエンドでチャット",
+    ),
+    "albatross_connected": MessageLookupByLibrary.simpleMessage(
+      "Albatross に接続済み",
+    ),
+    "albatross_connecting": MessageLookupByLibrary.simpleMessage("接続中"),
+    "albatross_download_binary": MessageLookupByLibrary.simpleMessage(
+      "バイナリをダウンロード",
+    ),
+    "albatross_download_tokenizer": MessageLookupByLibrary.simpleMessage(
+      "トークナイザーをダウンロード",
+    ),
+    "albatross_drop_files": MessageLookupByLibrary.simpleMessage(
+      "exe、PTH、トークナイザー、モデルフォルダをドロップ",
+    ),
+    "albatross_host": MessageLookupByLibrary.simpleMessage("Host"),
+    "albatross_model": MessageLookupByLibrary.simpleMessage("モデル"),
+    "albatross_model_required": MessageLookupByLibrary.simpleMessage(
+      "先に PTH モデルを選択してください",
+    ),
+    "albatross_no_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "ダウンロード済み PTH モデルがありません",
+    ),
+    "albatross_not_connected": MessageLookupByLibrary.simpleMessage(
+      "Albatross 未接続",
+    ),
+    "albatross_not_selected": MessageLookupByLibrary.simpleMessage("未選択"),
+    "albatross_pick_binary": MessageLookupByLibrary.simpleMessage("バイナリを選択"),
+    "albatross_pick_model_folder": MessageLookupByLibrary.simpleMessage(
+      "モデルフォルダを選択",
+    ),
+    "albatross_pick_pth": MessageLookupByLibrary.simpleMessage("PTH を選択"),
+    "albatross_pick_tokenizer": MessageLookupByLibrary.simpleMessage(
+      "トークナイザーを選択",
+    ),
+    "albatross_port": MessageLookupByLibrary.simpleMessage("ポート"),
+    "albatross_select_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "ダウンロード済み PTH を選択",
+    ),
+    "albatross_service_not_running": MessageLookupByLibrary.simpleMessage(
+      "Albatross サービスは実行されていません",
+    ),
+    "albatross_start_chat": MessageLookupByLibrary.simpleMessage("起動してチャットへ"),
+    "albatross_tokenizer": MessageLookupByLibrary.simpleMessage("トークナイザー"),
+    "albatross_tokenizer_config_missing": MessageLookupByLibrary.simpleMessage(
+      "Albatross トークナイザーのダウンロード設定がありません",
+    ),
+    "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
+      "先にトークナイザーを選択またはダウンロードしてください",
+    ),
+    "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "ダウンロード済み PTH を使用",
+    ),
     "all": MessageLookupByLibrary.simpleMessage("すべて"),
     "all_done": MessageLookupByLibrary.simpleMessage("すべて完了"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("すべてのプロンプト"),
