@@ -16,7 +16,6 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/albatross_setup_sheet.dart';
 
 class PageHome extends ConsumerWidget {
   const PageHome({super.key});
@@ -54,7 +53,6 @@ class PageHome extends ConsumerWidget {
 
     final widgets = [
       const _ChatButton(),
-      if (showAlbatross) const _AlbatrossButton(),
       const _CompletionButton(),
       const _VisualButton(),
       const _TTSButton(),
@@ -63,6 +61,7 @@ class PageHome extends ConsumerWidget {
       const _NekoButton(),
       const _BenchmarkButton(),
       if (showApiServer) const _ApiServerButton(),
+      if (showAlbatross) const _AlbatrossButton(),
     ];
 
     return Scaffold(
@@ -277,11 +276,8 @@ class _AlbatrossButton extends ConsumerWidget {
 
     return _HomeCard(
       heightsKey: 'albatrossChat',
-      onTap: () async {
-        final ok = await AlbatrossSetupSheet.show(context);
-        if (!ok) return;
-        P.chat.startNewChat();
-        push(.chat);
+      onTap: () {
+        push(.albatross);
       },
       color: theme.colorScheme.primary,
       icon: const Icon(Icons.bolt, color: Colors.white),

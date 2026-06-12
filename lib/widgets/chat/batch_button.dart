@@ -24,12 +24,10 @@ class BatchButton extends ConsumerWidget {
     final height = InputInteractions.calculateButtonHeight(context);
     final loading = ref.watch(P.rwkvModel.loading);
     final generating = ref.watch(P.rwkvGeneration.generating);
-    final loaded = ref.watch(P.rwkvModel.loaded);
-    final latestModel = ref.watch(P.rwkvModel.latest);
-    final batchAllowed = latestModel?.supportsBatchInference ?? false;
+    final batchAllowed = ref.watch(P.chat.batchInferenceAvailable);
     final batchEnabled = ref.watch(P.chat.effectiveBatchEnabled);
     final batchCount = ref.watch(P.chat.effectiveBatchCount);
-    final canEnable = loaded && !loading && !generating && batchAllowed;
+    final canEnable = !loading && !generating && batchAllowed;
 
     final InteractionVisualState interactionState = switch ((batchEnabled, canEnable)) {
       (true, _) => .enabled,

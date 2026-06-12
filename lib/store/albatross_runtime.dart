@@ -1,5 +1,12 @@
 part of 'p.dart';
 
+const String _albatrossHostPreferenceKey = "halo_state.albatross.host";
+const String _albatrossPortPreferenceKey = "halo_state.albatross.port";
+const String _albatrossExecutablePathPreferenceKey = "halo_state.albatross.executablePath";
+const String _albatrossModelPathPreferenceKey = "halo_state.albatross.modelPath";
+const String _albatrossTokenizerPathPreferenceKey = "halo_state.albatross.tokenizerPath";
+const int _albatrossLogLimit = 400;
+
 class _AlbatrossRuntime {
   static const String _defaultHost = "127.0.0.1";
   static const int _defaultPort = 9527;
@@ -8,11 +15,15 @@ class _AlbatrossRuntime {
 
   Process? _process;
   http.Client? _client;
+  StreamSubscription<String>? _stdoutSub;
+  StreamSubscription<String>? _stderrSub;
+  bool _detachedRuntimeLaunched = false;
   // ignore: unused_field
   AppLifecycleListener? _lifecycleListener;
 
   late final enabled = qs(false);
   late final connecting = qs(false);
+  late final checkingService = qs(false);
   late final running = qs(false);
   late final downloading = qs(false);
   late final launchedByApp = qs(false);
@@ -22,6 +33,20 @@ class _AlbatrossRuntime {
   late final modelPath = qs("");
   late final tokenizerPath = qs("");
   late final lastError = qs("");
+  late final processId = qs<int?>(null);
+  late final processExitCode = qs<int?>(null);
+  late final logs = qs<List<String>>([]);
+  late final cudaInfo = qs<Map<String, String>>({});
+
+  late final displaySystemInfo = qp<Map<String, String>>((ref) {
+    final telemetryInfo = ref.watch(P.telemetry.benchmarkDeviceInfo);
+    final cudaInfo = ref.watch(this.cudaInfo);
+    return buildAlbatrossDisplaySystemInfo(
+      telemetryInfo: telemetryInfo,
+      cudaInfo: cudaInfo,
+      isDesktop: Platform.isWindows || Platform.isLinux,
+    );
+  });
 
   late final baseUrl = qp<String>((ref) {
     final host = ref.watch(this.host).trim();
@@ -43,11 +68,59 @@ class _AlbatrossRuntime {
     final running = ref.watch(this.running);
     return enabled && running;
   });
+
+  late final launchCommand = qp<String>((ref) {
+    final executablePath = ref.watch(this.executablePath);
+    final modelPath = ref.watch(this.modelPath);
+    final tokenizerPath = ref.watch(this.tokenizerPath);
+    final host = ref.watch(this.host);
+    final port = ref.watch(this.port);
+    if (executablePath.isEmpty) return "";
+    final args = _launchArgsFor(
+      modelPath: modelPath,
+      tokenizerPath: tokenizerPath,
+      host: host,
+      port: port,
+    );
+    return buildAlbatrossLaunchCommand(executablePath: executablePath, args: args);
+  });
+
+  late final pthCandidates = qp<List<FileInfo>>((ref) {
+    final remoteWeights = ref.watch(P.remote.chatWeights);
+    final folders = ref.watch(P.pth.folders);
+    final result = <FileInfo>[];
+    final seen = <String>{};
+
+    void add(FileInfo fileInfo) {
+      final key = normalize(fileInfo.raw);
+      if (seen.contains(key)) return;
+      seen.add(key);
+      result.add(fileInfo);
+    }
+
+    for (final fileInfo in remoteWeights) {
+      final fileName = fileInfo.fileName.toLowerCase();
+      if (!fileName.endsWith(".pth") && !fileInfo.isAlbatross) continue;
+      add(fileInfo);
+    }
+
+    for (final folder in folders) {
+      for (final fileInfo in folder.files) {
+        if (!fileInfo.fromPthFile) continue;
+        add(fileInfo);
+      }
+    }
+
+    result.sort((a, b) => b.fileSize.compareTo(a.fileSize));
+    return result;
+  });
 }
 
 extension $AlbatrossRuntime on _AlbatrossRuntime {
   Future<void> _init() async {
     _applyConfigDefaults();
+    await _loadPreferences();
+    unawaited(refreshCudaInfo());
     _lifecycleListener = AppLifecycleListener(
       onStateChange: (state) {
         if (state != AppLifecycleState.detached) return;
@@ -63,6 +136,53 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
 
   void disableExternalMode() {
     enabled.q = false;
+  }
+
+  Future<void> _loadPreferences() async {
+    final sp = await SharedPreferences.getInstance();
+    host.q = sp.getString(_albatrossHostPreferenceKey) ?? host.q;
+    port.q = sp.getInt(_albatrossPortPreferenceKey) ?? port.q;
+    executablePath.q = sp.getString(_albatrossExecutablePathPreferenceKey) ?? executablePath.q;
+    modelPath.q = sp.getString(_albatrossModelPathPreferenceKey) ?? modelPath.q;
+    tokenizerPath.q = sp.getString(_albatrossTokenizerPathPreferenceKey) ?? tokenizerPath.q;
+  }
+
+  Future<void> setHost(String value) async {
+    final next = value.trim().isEmpty ? _AlbatrossRuntime._defaultHost : value.trim();
+    host.q = next;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setString(_albatrossHostPreferenceKey, next);
+  }
+
+  Future<void> setPortFromText(String value) async {
+    final next = int.tryParse(value.trim());
+    if (next == null) return;
+    await setPort(next);
+  }
+
+  Future<void> setPort(int value) async {
+    if (value <= 0 || value > 65535) return;
+    port.q = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setInt(_albatrossPortPreferenceKey, value);
+  }
+
+  Future<void> setExecutablePath(String value) async {
+    executablePath.q = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setString(_albatrossExecutablePathPreferenceKey, value);
+  }
+
+  Future<void> setModelPath(String value) async {
+    modelPath.q = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setString(_albatrossModelPathPreferenceKey, value);
+  }
+
+  Future<void> setTokenizerPath(String value) async {
+    tokenizerPath.q = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setString(_albatrossTokenizerPathPreferenceKey, value);
   }
 
   void _applyConfigDefaults() {
@@ -81,15 +201,21 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     enableExternalMode();
     connecting.q = true;
     lastError.q = "";
+    processExitCode.q = null;
     try {
+      _addLog("prepare for chat");
       final connected = await probe();
-      if (connected) return true;
+      if (connected) {
+        _addLog("service already running at ${baseUrl.q}");
+        return true;
+      }
 
       await _ensureConfiguredAssets();
       await _startProcess();
       return await _waitUntilRunning();
     } catch (e) {
       lastError.q = e.toString();
+      _addLog("error: $e");
       Alert.error(e.toString());
       return false;
     } finally {
@@ -100,34 +226,55 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   Future<bool> probe() async {
     final client = http.Client();
     try {
-      final uri = Uri.parse("${baseUrl.q}/status");
-      final response = await client.get(uri).timeout(const Duration(seconds: 2));
-      running.q = response.statusCode >= 200 && response.statusCode < 300;
-      return running.q;
-    } catch (_) {
-      try {
-        final uri = Uri.parse("${baseUrl.q}/v1/server/status");
-        final response = await client.get(uri).timeout(const Duration(seconds: 2));
-        running.q = response.statusCode >= 200 && response.statusCode < 300;
-        return running.q;
-      } catch (_) {
-        running.q = false;
-        return false;
+      for (final path in albatrossProbePaths) {
+        try {
+          final uri = Uri.parse("${baseUrl.q}$path");
+          final response = await client.get(uri).timeout(const Duration(seconds: 2));
+          final ok = response.statusCode >= 200 && response.statusCode < 300;
+          _addLog("probe $path: ${response.statusCode}");
+          if (!ok) continue;
+          running.q = true;
+          return true;
+        } catch (e) {
+          _addLog("probe $path failed: $e");
+        }
       }
+      running.q = false;
+      _addLog("probe failed");
+      return false;
     } finally {
       client.close();
+    }
+  }
+
+  Future<void> probeAndNotify() async {
+    if (checkingService.q) return;
+
+    checkingService.q = true;
+    try {
+      final ok = await probe();
+      if (ok) {
+        Alert.success(S.current.albatross_connected);
+        return;
+      }
+      Alert.warning(S.current.albatross_service_not_running);
+    } finally {
+      checkingService.q = false;
     }
   }
 
   Future<void> downloadConfiguredBinary() async {
     final fileInfo = _fileInfoFromConfig(_binaryConfig);
     if (fileInfo == null) {
-      throw S.current.albatross_binary_config_missing;
+      Alert.error(S.current.albatross_binary_config_missing);
+      _addLog("binary config missing");
+      return;
     }
     downloading.q = true;
     try {
+      _addLog("download binary: ${fileInfo.fileName}");
       await P.remote.getFile(fileInfo: fileInfo);
-      executablePath.q = P.remote.locals(fileInfo).q.targetPath;
+      await setExecutablePath(P.remote.locals(fileInfo).q.targetPath);
     } finally {
       downloading.q = false;
     }
@@ -136,12 +283,15 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   Future<void> downloadConfiguredTokenizer() async {
     final fileInfo = _fileInfoFromConfig(_tokenizerConfig);
     if (fileInfo == null) {
-      throw S.current.albatross_tokenizer_config_missing;
+      Alert.error(S.current.albatross_tokenizer_config_missing);
+      _addLog("tokenizer config missing");
+      return;
     }
     downloading.q = true;
     try {
+      _addLog("download tokenizer: ${fileInfo.fileName}");
       await P.remote.getFile(fileInfo: fileInfo);
-      tokenizerPath.q = P.remote.locals(fileInfo).q.targetPath;
+      await setTokenizerPath(P.remote.locals(fileInfo).q.targetPath);
     } finally {
       downloading.q = false;
     }
@@ -154,7 +304,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     );
     final path = result?.files.firstOrNull?.path;
     if (path == null || path.isEmpty) return;
-    executablePath.q = path;
+    await setExecutablePath(path);
   }
 
   Future<void> pickModelPth() async {
@@ -164,7 +314,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     );
     final path = result?.files.firstOrNull?.path;
     if (path == null || path.isEmpty) return;
-    modelPath.q = path;
+    await setModelPath(path);
   }
 
   Future<void> pickTokenizer() async {
@@ -174,7 +324,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     );
     final path = result?.files.firstOrNull?.path;
     if (path == null || path.isEmpty) return;
-    tokenizerPath.q = path;
+    await setTokenizerPath(path);
   }
 
   Future<void> pickModelFolder() async {
@@ -189,7 +339,24 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
       Alert.info(S.current.chat_you_need_download_model_if_you_want_to_use_it);
       return;
     }
-    modelPath.q = local.targetPath;
+    await setModelPath(local.targetPath);
+  }
+
+  Future<void> selectPthModel(FileInfo fileInfo) async {
+    if (fileInfo.fromPthFile) {
+      await setModelPath(fileInfo.raw);
+      return;
+    }
+    final local = P.remote.locals(fileInfo).q;
+    if (local.hasFile) {
+      await setModelPath(local.targetPath);
+      return;
+    }
+    await downloadPthModel(fileInfo);
+  }
+
+  Future<void> downloadPthModel(FileInfo fileInfo) async {
+    await P.remote.getFile(fileInfo: fileInfo);
   }
 
   Future<void> selectModelFolder(String path) async {
@@ -209,8 +376,8 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
         nextTokenizerPath = entity.path;
       }
     }
-    modelPath.q = nextModelPath;
-    tokenizerPath.q = nextTokenizerPath;
+    await setModelPath(nextModelPath);
+    await setTokenizerPath(nextTokenizerPath);
   }
 
   Future<void> handleDroppedPath(String path) async {
@@ -221,15 +388,21 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     }
     final lower = path.toLowerCase();
     if (lower.endsWith(".pth")) {
-      modelPath.q = path;
+      await setModelPath(path);
       return;
     }
     if (lower.endsWith(".txt") || lower.endsWith(".json") || lower.endsWith(".model")) {
-      tokenizerPath.q = path;
+      await setTokenizerPath(path);
       return;
     }
     if (lower.endsWith(".exe")) {
-      executablePath.q = path;
+      await setExecutablePath(path);
+    }
+  }
+
+  Future<void> handleDroppedItems(List<desktop_drop.DropItem> items) async {
+    for (final item in items) {
+      await handleDroppedPath(item.path);
     }
   }
 
@@ -330,21 +503,187 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     try {
       final uri = Uri.parse("${baseUrl.q}/v1/server/stop");
       await http.post(uri).timeout(const Duration(seconds: 2));
+      _addLog("stop active request");
     } catch (e) {
       qqw("Albatross stop failed: $e");
+      _addLog("stop active request failed: $e");
     } finally {
       P.rwkvGeneration.generating.q = false;
     }
   }
 
-  Future<void> shutdown() async {
+  Future<void> shutdown({bool terminateRuntime = false}) async {
     _client?.close();
     _client = null;
-    if (!launchedByApp.q) return;
-    _process?.kill();
+    await _stdoutSub?.cancel();
+    await _stderrSub?.cancel();
+    _stdoutSub = null;
+    _stderrSub = null;
+
+    final pid = processId.q;
+    if (terminateRuntime && launchedByApp.q && pid != null) {
+      _addLog("terminate process: $pid");
+      final killed = Process.killPid(pid);
+      _addLog("terminate process signal sent: $killed");
+    } else if (terminateRuntime && launchedByApp.q && !_detachedRuntimeLaunched) {
+      _addLog("kill process");
+      _process?.kill();
+    } else if (launchedByApp.q && _detachedRuntimeLaunched) {
+      _addLog("keep detached process running");
+    }
+
     _process = null;
+    _detachedRuntimeLaunched = false;
     launchedByApp.q = false;
     running.q = false;
+    processId.q = null;
+  }
+
+  Future<void> stopRuntime() async {
+    await stop();
+    await shutdown(terminateRuntime: true);
+    disableExternalMode();
+  }
+
+  Future<void> restartRuntime() async {
+    await stopRuntime();
+    await prepareForChat();
+  }
+
+  Future<void> startChat() async {
+    final ok = await prepareForChat();
+    if (!ok) return;
+    P.chat.startNewChat();
+    await push(.chat);
+  }
+
+  void clearLogs() {
+    logs.q = [];
+  }
+
+  Future<void> copyLogsToClipboard() async {
+    final content = _buildLogsExportContent();
+    if (content.isEmpty) {
+      Alert.warning(S.current.no_data);
+      return;
+    }
+    await Clipboard.setData(ClipboardData(text: content));
+    Alert.success(S.current.chat_copied_to_clipboard);
+  }
+
+  Future<void> exportLogsToTxt() async {
+    final content = _buildLogsExportContent();
+    if (content.isEmpty) {
+      Alert.warning(S.current.no_data);
+      return;
+    }
+
+    try {
+      if (_shouldSaveLogsExportFile()) {
+        await _saveLogsExportFile(content);
+        return;
+      }
+
+      await _shareLogsExportFile(content);
+    } catch (e, stackTrace) {
+      qqe("Export Albatross logs failed: $e");
+      Sentry.captureException(e, stackTrace: stackTrace);
+      Alert.error(S.current.export_failed);
+    }
+  }
+
+  Future<void> refreshCudaInfo() async {
+    final info = <String, String>{};
+
+    if (!Platform.isWindows && !Platform.isLinux) {
+      cudaInfo.q = info;
+      return;
+    }
+
+    try {
+      final queryResult = Platform.isWindows
+          ? await Process.run("cmd", [
+              "/c",
+              "nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader,nounits 2>nul",
+            ])
+          : await Process.run("bash", [
+              "-c",
+              "nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader,nounits 2>/dev/null | head -1",
+            ]);
+      final output = queryResult.stdout.toString().trim();
+      final firstLine = output.split(RegExp(r'[\r\n]+')).firstOrNull?.trim() ?? "";
+      final parts = firstLine.split(",").map((part) => part.trim()).toList();
+      if (parts.isNotEmpty && parts[0].isNotEmpty) info["NVIDIA GPU"] = parts[0];
+      if (parts.length > 1 && parts[1].isNotEmpty) info["NVIDIA Driver"] = parts[1];
+      if (parts.length > 2 && parts[2].isNotEmpty) info["NVIDIA VRAM"] = "${parts[2]} MB";
+
+      final smiResult = Platform.isWindows
+          ? await Process.run("cmd", ["/c", "nvidia-smi 2>nul"])
+          : await Process.run("bash", ["-c", "nvidia-smi 2>/dev/null | head -5"]);
+      final smiOutput = smiResult.stdout.toString();
+      final cudaMatch = RegExp(r'CUDA Version:\s*([^\s|]+)').firstMatch(smiOutput);
+      final cudaVersion = cudaMatch?.group(1);
+      if (cudaVersion != null && cudaVersion.isNotEmpty) {
+        info["CUDA Driver API"] = cudaVersion;
+      }
+    } catch (e) {
+      _addLog("cuda info failed: $e");
+    }
+
+    cudaInfo.q = info;
+  }
+
+  String _buildLogsExportContent() {
+    return buildAlbatrossRuntimeLogExportContent(
+      launchCommandTitle: S.current.albatross_launch_command,
+      runtimeLogsTitle: S.current.albatross_runtime_logs,
+      launchCommand: launchCommand.q,
+      logs: logs.q,
+    );
+  }
+
+  bool _shouldSaveLogsExportFile() {
+    if (Platform.isWindows) return true;
+    if (Platform.isMacOS) return true;
+    if (Platform.isLinux) return true;
+    return false;
+  }
+
+  Future<void> _saveLogsExportFile(String content) async {
+    final fileName = buildAlbatrossRuntimeLogExportFileName(now: DateTime.now());
+    final targetPath = await file_picker.FilePicker.saveFile(
+      dialogTitle: S.current.albatross_export_logs_txt,
+      fileName: fileName,
+      type: file_picker.FileType.custom,
+      allowedExtensions: const <String>['txt'],
+      lockParentWindow: true,
+    );
+    if (targetPath == null) return;
+
+    final outputPath = _ensureTxtPath(targetPath);
+    await File(outputPath).writeAsString(content, encoding: utf8);
+    Alert.success("${S.current.export_success}\n\n$outputPath");
+  }
+
+  Future<void> _shareLogsExportFile(String content) async {
+    final tempDir = await getTemporaryDirectory();
+    final fileName = buildAlbatrossRuntimeLogExportFileName(now: DateTime.now());
+    final file = File(join(tempDir.path, fileName));
+    await file.writeAsString(content, encoding: utf8);
+
+    final xFile = XFile(file.path, mimeType: 'text/plain');
+    await SharePlus.instance.share(
+      ShareParams(
+        files: <XFile>[xFile],
+        subject: fileName,
+        title: S.current.albatross_export_logs_txt,
+      ),
+    );
+  }
+
+  String _ensureTxtPath(String targetPath) {
+    if (extension(targetPath).isNotEmpty) return targetPath;
+    return "$targetPath.txt";
   }
 
   Map<String, Object?> _decodeParams() {
@@ -379,19 +718,50 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     if (tokenizerPath.q.isEmpty || !await File(tokenizerPath.q).exists()) {
       throw S.current.albatross_tokenizer_required;
     }
+    final missingDlls = missingAlbatrossRuntimeDlls(
+      executablePath: executablePath.q,
+      isWindows: Platform.isWindows,
+      fileExists: (filePath) => File(filePath).existsSync(),
+    );
+    if (missingDlls.isEmpty) return;
+
+    final missingText = missingDlls.join(", ");
+    _addLog("missing runtime DLLs: $missingText");
+    throw S.current.albatross_missing_runtime_dlls(missingText);
   }
 
   Future<void> _startProcess() async {
-    if (_process != null) return;
+    if (_process != null) {
+      if (!_detachedRuntimeLaunched || running.q) return;
+      _process = null;
+      launchedByApp.q = false;
+      processId.q = null;
+    }
     final args = _launchArgs();
-    _process = await Process.start(
+    _addLog("start: ${[executablePath.q, ...args].join(" ")}");
+    final process = await Process.start(
       executablePath.q,
       args,
       workingDirectory: dirname(executablePath.q),
+      environment: _launchEnvironment(),
+      mode: ProcessStartMode.detached,
     );
+    _process = process;
+    _detachedRuntimeLaunched = true;
     launchedByApp.q = true;
-    unawaited(_process!.stdout.transform(utf8.decoder).listen((text) => qqq("Albatross: $text")).asFuture<void>());
-    unawaited(_process!.stderr.transform(utf8.decoder).listen((text) => qqw("Albatross: $text")).asFuture<void>());
+    processId.q = process.pid;
+    _addLog("detached process started: ${process.pid}");
+    if (_detachedRuntimeLaunched) return;
+
+    _stdoutSub = process.stdout.transform(utf8.decoder).transform(const LineSplitter()).listen((line) {
+      qqq("Albatross: $line");
+      _addLog("stdout: $line");
+    });
+    _stderrSub = process.stderr.transform(utf8.decoder).transform(const LineSplitter()).listen((line) {
+      qqw("Albatross: $line");
+      _addLog("stderr: $line");
+    });
+    unawaited(_watchProcessExit(process));
   }
 
   Future<bool> _waitUntilRunning() async {
@@ -403,39 +773,39 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   }
 
   List<String> _launchArgs() {
-    final binaryConfig = _binaryConfig;
-    final rawArgs = binaryConfig?["launch_args"] ?? binaryConfig?["args"];
-    final replacements = {
-      "{model_path}": modelPath.q,
-      "{tokenizer_path}": tokenizerPath.q,
-      "{port}": port.q.toString(),
-      "{host}": host.q,
-    };
-
-    if (rawArgs is List) {
-      return rawArgs.map((entry) => _replaceLaunchArg(entry.toString(), replacements)).toList();
-    }
-    if (rawArgs is String && rawArgs.trim().isNotEmpty) {
-      return rawArgs.split(RegExp(r'\s+')).map((entry) => _replaceLaunchArg(entry, replacements)).toList();
-    }
-    return <String>[
-      "--model",
-      modelPath.q,
-      "--tokenizer",
-      tokenizerPath.q,
-      "--host",
-      host.q,
-      "--port",
-      port.q.toString(),
-    ];
+    return _launchArgsFor(
+      modelPath: modelPath.q,
+      tokenizerPath: tokenizerPath.q,
+      host: host.q,
+      port: port.q,
+    );
   }
 
-  String _replaceLaunchArg(String value, Map<String, String> replacements) {
-    String result = value;
-    for (final entry in replacements.entries) {
-      result = result.replaceAll(entry.key, entry.value);
-    }
-    return result;
+  List<String> _launchArgsFor({
+    required String modelPath,
+    required String tokenizerPath,
+    required String host,
+    required int port,
+  }) {
+    final binaryConfig = _binaryConfig;
+    final rawArgs = binaryConfig?["launch_args"] ?? binaryConfig?["args"];
+    return buildAlbatrossLaunchArgs(
+      modelPath: modelPath,
+      tokenizerPath: tokenizerPath,
+      host: host,
+      port: port,
+      rawArgs: rawArgs,
+    );
+  }
+
+  Map<String, String>? _launchEnvironment() {
+    if (!Platform.isWindows) return null;
+    return <String, String>{
+      "PATH": buildAlbatrossWindowsPath(
+        executablePath: executablePath.q,
+        existingPath: Platform.environment["PATH"] ?? "",
+      ),
+    };
   }
 
   Map<String, dynamic>? get _binaryConfig {
@@ -479,5 +849,33 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     if (value is int) return value;
     if (value is String) return int.tryParse(value);
     return null;
+  }
+
+  Future<void> _watchProcessExit(Process process) async {
+    final code = await process.exitCode;
+    if (_process != process) return;
+    processExitCode.q = code;
+    _addLog("process exited: $code");
+    _process = null;
+    launchedByApp.q = false;
+    running.q = false;
+    processId.q = null;
+  }
+
+  String _twoDigits(int value) {
+    return value.toString().padLeft(2, "0");
+  }
+
+  String _formatLogTime(DateTime time) {
+    final hour = _twoDigits(time.hour);
+    final minute = _twoDigits(time.minute);
+    final second = _twoDigits(time.second);
+    return "$hour:$minute:$second";
+  }
+
+  void _addLog(String message) {
+    final entry = "[${_formatLogTime(DateTime.now())}] $message";
+    final current = logs.q;
+    logs.q = [...current.length > _albatrossLogLimit ? current.sublist(current.length - _albatrossLogLimit) : current, entry];
   }
 }

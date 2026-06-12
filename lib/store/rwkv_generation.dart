@@ -44,6 +44,11 @@ extension $RWKVGeneration on _RWKVGeneration {
     P.telemetry.resetPeakDecodeSpeed();
 
     if (P.albatrossRuntime.enabled.q) {
+      if (maxLength == 0) {
+        hiddenPrefilling.q = false;
+        generating.q = false;
+        return;
+      }
       final Stream<from_rwkv.FromRWKV> stream;
       if (overrideBatchSlotConfigs != null && overrideBatchSlotConfigs.isNotEmpty) {
         stream = P.albatrossRuntime.chatSlots(
@@ -70,7 +75,12 @@ extension $RWKVGeneration on _RWKVGeneration {
     }
 
     if (P.rwkvContext.isLegacyAlbatrossLoaded.q) {
-      final stream = Albatross.instance.chat(messages, batchSize: 1);
+      if (maxLength == 0) {
+        hiddenPrefilling.q = false;
+        generating.q = false;
+        return;
+      }
+      final stream = Albatross.instance.chat(messages, batchSize: batchSize);
       try {
         await for (final event in stream) {
           P.rwkvBridge.emitFromRWKV(event);

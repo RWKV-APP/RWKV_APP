@@ -6541,6 +6541,311 @@ class S {
     );
   }
 
+  /// `Runtime 管理`
+  String get albatross_runtime_management {
+    return Intl.message(
+      'Runtime 管理',
+      name: 'albatross_runtime_management',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `由 RWKV Chat 启动`
+  String get albatross_launched_by_app {
+    return Intl.message(
+      '由 RWKV Chat 启动',
+      name: 'albatross_launched_by_app',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `外部服务`
+  String get albatross_external_service {
+    return Intl.message(
+      '外部服务',
+      name: 'albatross_external_service',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `退出码`
+  String get albatross_exit_code {
+    return Intl.message('退出码', name: 'albatross_exit_code', desc: '', args: []);
+  }
+
+  /// `服务地址`
+  String get albatross_endpoint {
+    return Intl.message('服务地址', name: 'albatross_endpoint', desc: '', args: []);
+  }
+
+  /// `最近错误`
+  String get albatross_last_error {
+    return Intl.message(
+      '最近错误',
+      name: 'albatross_last_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `进入聊天`
+  String get albatross_enter_chat {
+    return Intl.message(
+      '进入聊天',
+      name: 'albatross_enter_chat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `检查服务`
+  String get albatross_probe_service {
+    return Intl.message(
+      '检查服务',
+      name: 'albatross_probe_service',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `重启 Runtime`
+  String get albatross_restart_runtime {
+    return Intl.message(
+      '重启 Runtime',
+      name: 'albatross_restart_runtime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `停止 Runtime`
+  String get albatross_stop_runtime {
+    return Intl.message(
+      '停止 Runtime',
+      name: 'albatross_stop_runtime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前电脑`
+  String get albatross_system_info {
+    return Intl.message(
+      '当前电脑',
+      name: 'albatross_system_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CUDA 后端可用`
+  String get albatross_compatibility_ok {
+    return Intl.message(
+      'CUDA 后端可用',
+      name: 'albatross_compatibility_ok',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未确认 CUDA 兼容性`
+  String get albatross_compatibility_warning {
+    return Intl.message(
+      '未确认 CUDA 兼容性',
+      name: 'albatross_compatibility_warning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `刷新 CUDA 信息`
+  String get albatross_refresh_cuda_info {
+    return Intl.message(
+      '刷新 CUDA 信息',
+      name: 'albatross_refresh_cuda_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂未检测到 CUDA 信息`
+  String get albatross_cuda_not_detected {
+    return Intl.message(
+      '暂未检测到 CUDA 信息',
+      name: 'albatross_cuda_not_detected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `启动配置`
+  String get albatross_launch_config {
+    return Intl.message(
+      '启动配置',
+      name: 'albatross_launch_config',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Host 和端口会用于连接本地 Albatross 服务，运行中不可修改`
+  String get albatross_launch_config_hint {
+    return Intl.message(
+      'Host 和端口会用于连接本地 Albatross 服务，运行中不可修改',
+      name: 'albatross_launch_config_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Runtime 与词表`
+  String get albatross_runtime_assets {
+    return Intl.message(
+      'Runtime 与词表',
+      name: 'albatross_runtime_assets',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `可以下载配置中的 Runtime，也可以选择本地已有的 exe 与词表文件`
+  String get albatross_runtime_assets_hint {
+    return Intl.message(
+      '可以下载配置中的 Runtime，也可以选择本地已有的 exe 与词表文件',
+      name: 'albatross_runtime_assets_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PTH 模型`
+  String get albatross_model_management {
+    return Intl.message(
+      'PTH 模型',
+      name: 'albatross_model_management',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂无可用 PTH 模型，可选择本地 PTH 文件`
+  String get albatross_no_pth_candidates {
+    return Intl.message(
+      '暂无可用 PTH 模型，可选择本地 PTH 文件',
+      name: 'albatross_no_pth_candidates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已选择`
+  String get albatross_selected_model {
+    return Intl.message(
+      '已选择',
+      name: 'albatross_selected_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择此模型`
+  String get albatross_select_this_model {
+    return Intl.message(
+      '选择此模型',
+      name: 'albatross_select_this_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `运行参数`
+  String get albatross_parameters {
+    return Intl.message(
+      '运行参数',
+      name: 'albatross_parameters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Albatross 当前沿用聊天页的采样参数`
+  String get albatross_parameter_hint {
+    return Intl.message(
+      'Albatross 当前沿用聊天页的采样参数',
+      name: 'albatross_parameter_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `运行日志`
+  String get albatross_runtime_logs {
+    return Intl.message(
+      '运行日志',
+      name: 'albatross_runtime_logs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `启动命令`
+  String get albatross_launch_command {
+    return Intl.message(
+      '启动命令',
+      name: 'albatross_launch_command',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂无日志`
+  String get albatross_no_logs {
+    return Intl.message('暂无日志', name: 'albatross_no_logs', desc: '', args: []);
+  }
+
+  /// `检查中`
+  String get albatross_checking_service {
+    return Intl.message(
+      '检查中',
+      name: 'albatross_checking_service',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `复制全部日志`
+  String get albatross_copy_all_logs {
+    return Intl.message(
+      '复制全部日志',
+      name: 'albatross_copy_all_logs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导出日志为 .txt`
+  String get albatross_export_logs_txt {
+    return Intl.message(
+      '导出日志为 .txt',
+      name: 'albatross_export_logs_txt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缺少运行时 DLL：{dlls}\n请使用完整的 Albatross bundle，并确保 lib 文件夹与程序在同一目录下`
+  String albatross_missing_runtime_dlls(Object dlls) {
+    return Intl.message(
+      '缺少运行时 DLL：$dlls\n请使用完整的 Albatross bundle，并确保 lib 文件夹与程序在同一目录下',
+      name: 'albatross_missing_runtime_dlls',
+      desc: '',
+      args: [dlls],
+    );
+  }
+
   /// `当前 Albatross 后端暂不支持此功能`
   String get albatross_backend_unsupported {
     return Intl.message(

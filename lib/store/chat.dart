@@ -106,6 +106,9 @@ class _Chat {
   Map<int, int> _fakeBatchInferenceBenchmarkFixedTargetsBySlot = const <int, int>{};
   String _latestVisibleReceivedTokens = "";
   int? _pauseFinalizingMessageId;
+  bool _sensitiveCheckRunning = false;
+  String? _pendingSensitiveContent;
+  int? _pendingSensitiveReceiveId;
   final math.Random _fakeBatchInferenceBenchmarkRandom = math.Random();
 
   // ===========================================================================
@@ -196,11 +199,20 @@ class _Chat {
     return textInInput.trim().isNotEmpty;
   });
 
-  late final effectiveBatchEnabled = qp((ref) {
+  late final batchInferenceAvailable = qp((ref) {
+    final albatrossCanUse = ref.watch(P.albatrossRuntime.canUse);
+    if (albatrossCanUse) return true;
+
+    final isLegacyAlbatrossLoaded = ref.watch(P.rwkvContext.isLegacyAlbatrossLoaded);
+    if (isLegacyAlbatrossLoaded) return true;
+
     final currentModel = ref.watch(P.rwkvModel.latest);
-    if (!(currentModel?.supportsBatchInference ?? false)) {
-      return false;
-    }
+    return currentModel?.supportsBatchInference ?? false;
+  });
+
+  late final effectiveBatchEnabled = qp((ref) {
+    final batchInferenceAvailable = ref.watch(this.batchInferenceAvailable);
+    if (!batchInferenceAvailable) return false;
 
     final responseStyle = ref.watch(this.responseStyle);
     if (responseStyle.activeCount > 1) {
@@ -210,10 +222,8 @@ class _Chat {
   });
 
   late final effectiveBatchCount = qp((ref) {
-    final currentModel = ref.watch(P.rwkvModel.latest);
-    if (!(currentModel?.supportsBatchInference ?? false)) {
-      return 1;
-    }
+    final batchInferenceAvailable = ref.watch(this.batchInferenceAvailable);
+    if (!batchInferenceAvailable) return 1;
 
     final responseStyle = ref.watch(this.responseStyle);
     if (responseStyle.activeCount > 1) {
@@ -573,12 +583,8 @@ extension $Chat on _Chat {
     if (activeCount <= 0) {
       return false;
     }
-    final model = P.rwkvModel.latest.q;
-    if (model == null) {
-      return false;
-    }
     if (activeCount <= 1) {
-      return true;
+      return _hasChatGenerationTarget();
     }
     return _supportsResponseStyleBatchExecution(activeCount);
   }
@@ -587,13 +593,7 @@ extension $Chat on _Chat {
     if (activeCount <= 1) {
       return false;
     }
-    final model = P.rwkvModel.latest.q;
-    if (model == null) {
-      return false;
-    }
-    if (!model.supportsBatchInference) {
-      return false;
-    }
+    if (!_canUseBatchInferenceNow()) return false;
 
     final supportedBatchSizes = P.rwkvParams.supportedBatchSizes.q;
     if (supportedBatchSizes.isEmpty) {
@@ -605,6 +605,17 @@ extension $Chat on _Chat {
 
   bool _shouldUseResponseStyleBatchExecution(int activeCount) {
     return _supportsResponseStyleBatchExecution(activeCount);
+  }
+
+  bool _hasChatGenerationTarget() {
+    if (P.albatrossRuntime.canUse.q) return true;
+    return P.rwkvModel.latest.q != null;
+  }
+
+  bool _canUseBatchInferenceNow() {
+    if (P.albatrossRuntime.canUse.q) return true;
+    if (P.rwkvContext.isLegacyAlbatrossLoaded.q) return true;
+    return P.rwkvModel.latest.q?.supportsBatchInference ?? false;
   }
 
   MsgNode? _prepareParentNodeForNewChatMessage() {
@@ -1938,8 +1949,7 @@ extension $Chat on _Chat {
       }
     }
 
-    final currentModel = P.rwkvModel.latest.q;
-    if (value && !(currentModel?.supportsBatchInference ?? false)) {
+    if (value && !_canUseBatchInferenceNow()) {
       batchEnabled.q = false;
       batchCount.q = Argument.batchCount.defaults.toInt();
       if (triggeredByResponseStyle && responseStyle.q.activeCount > 1) {
@@ -2215,6 +2225,24 @@ extension _$Chat on _Chat {
   }
 
   void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {
+    if (P.albatrossRuntime.canUse.q || P.rwkvContext.isLegacyAlbatrossLoaded.q) {
+      if (supportedBatchSizes.isEmpty) {
+        batchEnabled.q = false;
+        batchCount.q = Argument.batchCount.defaults.toInt();
+        if (responseStyle.q.activeCount > 1) {
+          responseStyle.q = const ResponseStyleState();
+        }
+        return;
+      }
+      final max = supportedBatchSizes.max;
+      if (responseStyle.q.activeCount > 1 && max < responseStyle.q.activeCount) {
+        resetResponseStyle();
+        return;
+      }
+      if (max < batchCount.q) batchCount.q = max;
+      return;
+    }
+
     final currentModel = P.rwkvModel.latest.q;
     if (currentModel != null && !currentModel.supportsBatchInference) {
       batchEnabled.q = false;
@@ -2430,18 +2458,49 @@ extension _$Chat on _Chat {
   }
 
   Future<void> _checkSensitive(String content) async {
-    final isSensitive = await P.guard.isSensitive(content);
-    if (!isSensitive) return;
-
     final id = receiveId.q;
-    if (id == null) {
-      qqe("receiveId is null");
-      return;
+    if (!_shouldCheckSensitiveForReceiveId(id)) return;
+
+    _pendingSensitiveContent = content;
+    _pendingSensitiveReceiveId = id;
+    if (_sensitiveCheckRunning) return;
+
+    unawaited(_drainSensitiveChecks());
+  }
+
+  bool _shouldCheckSensitiveForReceiveId(int? id) {
+    if (id == null) return false;
+    if (id == Config.chatPrefillId) return false;
+    if (id == Config.seePrefillId) return false;
+    return true;
+  }
+
+  Future<void> _drainSensitiveChecks() async {
+    _sensitiveCheckRunning = true;
+    try {
+      while (_pendingSensitiveContent != null) {
+        final content = _pendingSensitiveContent;
+        final id = _pendingSensitiveReceiveId;
+        _pendingSensitiveContent = null;
+        _pendingSensitiveReceiveId = null;
+        if (content == null) continue;
+        if (!_shouldCheckSensitiveForReceiveId(id)) continue;
+
+        final isSensitive = await P.guard.isSensitive(content);
+        if (!isSensitive) continue;
+        if (receiveId.q != id) continue;
+
+        await 1.msLater;
+        if (receiveId.q != id) continue;
+
+        _pendingSensitiveContent = null;
+        _pendingSensitiveReceiveId = null;
+        _pauseMessageById(id: id!, isSensitive: true);
+        return;
+      }
+    } finally {
+      _sensitiveCheckRunning = false;
     }
-
-    await 1.msLater;
-
-    _pauseMessageById(id: id, isSensitive: true);
   }
 
   void _onLifecycleStateChanged(AppLifecycleState? previous, AppLifecycleState next) {
@@ -2887,6 +2946,8 @@ extension _$Chat on _Chat {
   void _prefillAfterReply() {
     final pageKey = P.app.pageKey.q;
     if (pageKey != .chat) return;
+    if (P.albatrossRuntime.enabled.q) return;
+    if (P.rwkvContext.isLegacyAlbatrossLoaded.q) return;
 
     final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text).toList();
     if (messages.isEmpty) return;
@@ -3181,15 +3242,15 @@ extension _$Chat on _Chat {
         _setReceivedTokens(res.responseBufferContent);
         if (completionMode.q) return;
         final currentReceiveId = receiveId.q;
-        if (currentReceiveId != null) {
+        if (currentReceiveId != null && _shouldCheckSensitiveForReceiveId(currentReceiveId)) {
           _scheduleRefreshLiveTokenCounts(
             messageId: currentReceiveId,
             liveBotContent: res.responseBufferContent,
           );
+          _sensitiveThrottler.call(() {
+            _checkSensitive(res.responseBufferContent);
+          });
         }
-        _sensitiveThrottler.call(() {
-          _checkSensitive(res.responseBufferContent);
-        });
         break;
 
       case from_rwkv.ResponseBatchBufferContent res:
@@ -3197,15 +3258,15 @@ extension _$Chat on _Chat {
         _setReceivedTokens(responseBufferContent);
         if (completionMode.q) return;
         final currentReceiveId = receiveId.q;
-        if (currentReceiveId != null) {
+        if (currentReceiveId != null && _shouldCheckSensitiveForReceiveId(currentReceiveId)) {
           _scheduleRefreshLiveTokenCounts(
             messageId: currentReceiveId,
             liveBotContent: responseBufferContent,
           );
+          _sensitiveThrottler.call(() {
+            _checkSensitive(responseBufferContent);
+          });
         }
-        _sensitiveThrottler.call(() {
-          _checkSensitive(responseBufferContent);
-        });
         break;
 
       case from_rwkv.GenerateStop _:

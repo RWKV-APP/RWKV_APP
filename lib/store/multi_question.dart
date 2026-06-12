@@ -77,8 +77,7 @@ extension $MultiQuestion on _MultiQuestion {
     ];
     if (nonEmpty.isEmpty) return;
 
-    final currentModel = P.rwkvModel.latest.q;
-    if (currentModel == null || !currentModel.supportsBatchInference) {
+    if (!P.chat.batchInferenceAvailable.q) {
       Alert.warning(S.current.this_model_does_not_support_batch_inference, position: AlertPosition.bottom);
       return;
     }
@@ -122,7 +121,8 @@ extension $MultiQuestion on _MultiQuestion {
     }
 
     final currentModel = P.rwkvModel.latest.q;
-    if (currentModel == null || !currentModel.supportsBatchInference) {
+    final bool albatrossCanUse = P.albatrossRuntime.canUse.q;
+    if (!P.chat.batchInferenceAvailable.q) {
       Alert.warning(S.current.this_model_does_not_support_batch_inference, position: AlertPosition.bottom);
       return;
     }
@@ -206,7 +206,7 @@ extension $MultiQuestion on _MultiQuestion {
       isMine: false,
       changing: true,
       paused: false,
-      modelName: currentModel.name,
+      modelName: albatrossCanUse ? "Albatross" : currentModel?.name,
       runningMode: thinkingMode.toString(),
       rawDecodeParams: P.chat._resolveDecodeParamsSnapshotRaw(),
     );

@@ -336,16 +336,7 @@ extension $RWKVParams on _RWKVParams {
 
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
-    if (P.albatrossRuntime.enabled.q) {
-      await BatchSettingsPanel.show();
-      return;
-    }
-
-    final currentModel = P.rwkvModel.latest.q;
-
-    final batchAllowed = currentModel!.supportsBatchInference;
-
-    if (!batchAllowed) {
+    if (!P.chat.batchInferenceAvailable.q) {
       Alert.info(S.current.this_model_does_not_support_batch_inference);
       await 500.msLater;
       ModelSelector.show();

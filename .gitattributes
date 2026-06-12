@@ -1,6 +1,8 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+* text=auto eol=lf
 *.dart text eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
 
 /**/*.freezed.dart linguist-generated=true
 /**/*.g.dart linguist-generated=true
