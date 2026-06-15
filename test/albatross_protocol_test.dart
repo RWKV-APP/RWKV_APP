@@ -32,10 +32,10 @@ void main() {
   });
 
   group('albatrossProbePaths', () {
-    test('uses the current server models endpoint as primary readiness check', () {
-      expect(albatrossProbePaths.first, '/v1/models');
+    test('uses the current server status endpoint as primary readiness check', () {
+      expect(albatrossProbePaths.first, '/v1/server/status');
+      expect(albatrossProbePaths, contains('/v1/models'));
       expect(albatrossProbePaths, contains('/status'));
-      expect(albatrossProbePaths, contains('/v1/server/status'));
     });
   });
 
@@ -193,9 +193,131 @@ void main() {
       final prompt = buildAlbatrossCompletionPrompt(const <String>[
         'Solve it',
         '<think>hidden</think>\nVisible answer',
+        'Next',
       ]);
 
-      expect(prompt, 'User: Solve it\n\nAssistant: Visible answer\n\nAssistant:');
+      expect(prompt, 'User: Solve it\n\nAssistant: Visible answer\n\nUser: Next\n\nAssistant:');
+    });
+
+    test('adds system prompt and thinking prefix for a new assistant turn', () {
+      final prompt = buildAlbatrossCompletionPrompt(
+        const <String>['Solve it'],
+        systemPrompt: 'System prompt',
+        assistantPrefix: '<think>\n</think',
+      );
+
+      expect(prompt, 'System: System prompt\n\nUser: Solve it\n\nAssistant: <think>\n</think');
+    });
+
+    test('continues from assistant partial without adding a new assistant turn', () {
+      final prompt = buildAlbatrossCompletionPrompt(
+        const <String>[
+          'Solve it',
+          '<think>partial reason',
+        ],
+        assistantPrefix: '<think>\n</think',
+      );
+
+      expect(prompt, 'User: Solve it\n\nAssistant: <think>partial reason');
+    });
+
+    test('restores fast thinking prefix before a legacy assistant tail', () {
+      final prompt = buildAlbatrossCompletionPrompt(
+        const <String>[
+          'Solve it',
+          '>\nanswer',
+        ],
+        assistantPrefix: '<think>\n</think',
+      );
+
+      expect(prompt, 'User: Solve it\n\nAssistant: <think>\n</think>\nanswer');
+    });
+
+    test('uses thinking prefix when assistant partial is empty', () {
+      final prompt = buildAlbatrossCompletionPrompt(
+        const <String>[
+          'Solve it',
+          '',
+        ],
+        assistantPrefix: '<think>\n</think',
+      );
+
+      expect(prompt, 'User: Solve it\n\nAssistant: <think>\n</think');
+    });
+  });
+
+  group('buildAlbatrossChatMessages', () {
+    test('renders structured user and assistant messages', () {
+      final messages = buildAlbatrossChatMessages(const <String>[
+        'Hello',
+        'Hi',
+        'How are you?',
+      ]);
+
+      expect(messages, <Map<String, String>>[
+        <String, String>{'role': 'user', 'content': 'Hello'},
+        <String, String>{'role': 'assistant', 'content': 'Hi'},
+        <String, String>{'role': 'user', 'content': 'How are you?'},
+      ]);
+    });
+
+    test('strips thinking content from assistant history', () {
+      final messages = buildAlbatrossChatMessages(const <String>[
+        'Solve it',
+        '<think>hidden</think>\nVisible answer',
+      ]);
+
+      expect(messages, <Map<String, String>>[
+        <String, String>{'role': 'user', 'content': 'Solve it'},
+        <String, String>{'role': 'assistant', 'content': 'Visible answer'},
+      ]);
+    });
+  });
+
+  group('buildAlbatrossChatRequestMessages', () {
+    test('adds system prompt but not assistant prefix for a new assistant turn', () {
+      final messages = buildAlbatrossChatRequestMessages(
+        const <String>['Solve it'],
+        systemPrompt: 'System prompt',
+        assistantPrefix: '<think>\n</think',
+      );
+
+      expect(messages, <Map<String, String>>[
+        <String, String>{'role': 'system', 'content': 'System prompt'},
+        <String, String>{'role': 'user', 'content': 'Solve it'},
+      ]);
+    });
+
+    test('continues from assistant partial without adding another assistant message', () {
+      final messages = buildAlbatrossChatRequestMessages(
+        const <String>[
+          'Solve it',
+          '<think>partial reason',
+        ],
+        assistantPrefix: '<think>\n</think',
+      );
+
+      expect(messages, <Map<String, String>>[
+        <String, String>{'role': 'user', 'content': 'Solve it'},
+        <String, String>{'role': 'assistant', 'content': '<think>partial reason'},
+      ]);
+    });
+
+    test('strips thinking content from historical assistant messages', () {
+      final messages = buildAlbatrossChatRequestMessages(
+        const <String>[
+          'First',
+          '<think>hidden</think>\nVisible answer',
+          'Second',
+        ],
+        assistantPrefix: '<think',
+      );
+
+      expect(messages, <Map<String, String>>[
+        <String, String>{'role': 'user', 'content': 'First'},
+        <String, String>{'role': 'assistant', 'content': 'Visible answer'},
+        <String, String>{'role': 'user', 'content': 'Second'},
+      ]);
     });
   });
 

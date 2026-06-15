@@ -29,10 +29,12 @@ class WebSearchModeButton extends ConsumerWidget {
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final loading = ref.watch(P.rwkvModel.loading);
     final loaded = ref.watch(P.rwkvModel.loaded);
+    final albatrossCanUse = ref.watch(P.albatrossRuntime.canUse);
     final generating = ref.watch(P.rwkvGeneration.generating);
     final webSearchMode = ref.watch(P.chat.webSearchMode);
 
-    final canEnable = loaded && !loading && !generating;
+    final canUseChatBackend = loaded || albatrossCanUse;
+    final canEnable = canUseChatBackend && !loading && !generating;
     final interactionState = switch ((canEnable, webSearchMode)) {
       (false, _) => InteractionVisualState.unavailable,
       (true, .off) => InteractionVisualState.idleInteractive,

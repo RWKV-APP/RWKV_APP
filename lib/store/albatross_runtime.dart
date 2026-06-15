@@ -17,6 +17,10 @@ class _AlbatrossRuntime {
   http.Client? _client;
   StreamSubscription<String>? _stdoutSub;
   StreamSubscription<String>? _stderrSub;
+  Timer? _metricsTimer;
+  bool _metricsPollInFlight = false;
+  int? _lastMetricGeneratedTokens;
+  DateTime? _lastMetricAt;
   bool _detachedRuntimeLaunched = false;
   // ignore: unused_field
   AppLifecycleListener? _lifecycleListener;
@@ -407,10 +411,17 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   }
 
   Stream<from_rwkv.FromRWKV> chat(List<String> messages, {int batchSize = 1}) async* {
-    final prompt = buildAlbatrossCompletionPrompt(messages);
+    if (batchSize <= 1 && messages.length.isOdd) {
+      yield* _streamChatMessages(messages);
+      return;
+    }
+
+    final prompt = _buildChatCompletionPrompt(messages);
+    final initialOutput = _initialChatOutput(messages);
     await for (final event in _streamContents(
       contents: List<String>.filled(batchSize, prompt),
       includePromptInOutput: false,
+      initialOutputs: List<String>.filled(batchSize, initialOutput),
     )) {
       if (batchSize == 1) {
         yield from_rwkv.ResponseBufferContent(
@@ -423,9 +434,72 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     }
   }
 
+  Stream<from_rwkv.FromRWKV> _streamChatMessages(List<String> messages) async* {
+    final requestMessages = _buildChatRequestMessages(messages);
+    final thinkingMode = P.rwkvParams.thinkingMode.q;
+    final enableThink = thinkingMode.hasThinkTag;
+    final initialOutput = enableThink ? _assistantPrefix().trim() : "";
+    String result = initialOutput;
+    final parser = AlbatrossSseParser();
+
+    P.rwkvGeneration.generating.q = true;
+    _client?.close();
+    _client = http.Client();
+    _startMetricsPolling();
+    try {
+      final request = http.Request("POST", Uri.parse("${baseUrl.q}/v1/chat/completions"));
+      request.headers["Content-Type"] = "application/json";
+      request.body = jsonEncode({
+        "model": "albatross",
+        "messages": requestMessages,
+        "stop_tokens": _AlbatrossRuntime._defaultStopTokens,
+        "chunk_size": _AlbatrossRuntime._chunkSize,
+        "stream": true,
+        "enable_think": enableThink,
+        ..._decodeParams(),
+      });
+      final response = await _client!.send(request);
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        final body = await response.stream.bytesToString();
+        throw "${response.statusCode}: $body";
+      }
+
+      await for (final rawChunk in response.stream.transform(utf8.decoder)) {
+        final events = parser.add(rawChunk);
+        for (final event in events) {
+          if (event.done) {
+            yield from_rwkv.ResponseBufferContent(
+              responseBufferContent: result,
+              eosFound: true,
+            );
+            return;
+          }
+          for (final choice in event.choices) {
+            if (choice.index != 0) continue;
+            result = result + choice.content;
+            _markPrefillComplete();
+            yield from_rwkv.ResponseBufferContent(
+              responseBufferContent: result,
+              eosFound: choice.finishReason != null,
+            );
+          }
+        }
+      }
+    } finally {
+      _stopMetricsPolling();
+      _client?.close();
+      _client = null;
+    }
+  }
+
   Stream<from_rwkv.ResponseBatchBufferContent> chatSlots(List<List<String>> batchMessages) {
-    final contents = batchMessages.map(buildAlbatrossCompletionPrompt).toList();
-    return _streamContents(contents: contents, includePromptInOutput: false);
+    final contents = batchMessages.map(_buildChatCompletionPrompt).toList();
+    final initialOutputs = batchMessages.map(_initialChatOutput).toList();
+    return _streamContents(
+      contents: contents,
+      includePromptInOutput: false,
+      initialOutputs: initialOutputs,
+    );
   }
 
   Stream<from_rwkv.ResponseBatchBufferContent> completion(
@@ -439,18 +513,59 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     );
   }
 
+  Future<int?> countTextTokens(String text) {
+    if (text.isEmpty) return Future.value(0);
+    return _countTokens(<String, Object?>{"text": text});
+  }
+
+  Future<int?> countMessageTokens(List<String> messages) {
+    if (messages.isEmpty) return Future.value(0);
+    return _countTokens(<String, Object?>{"text": _buildChatCompletionPrompt(messages)});
+  }
+
+  Future<int?> _countTokens(Map<String, Object?> body) async {
+    try {
+      final uri = Uri.parse("${baseUrl.q}/v1/tokens/count");
+      final response = await http
+          .post(
+            uri,
+            headers: <String, String>{"Content-Type": "application/json"},
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 3));
+      if (response.statusCode < 200 || response.statusCode >= 300) return null;
+
+      final decoded = jsonDecode(response.body);
+      if (decoded is! Map) return null;
+      final tokens = decoded["tokens"];
+      if (tokens is int) return tokens;
+      return null;
+    } catch (e) {
+      _addLog("count tokens failed: $e");
+      return null;
+    }
+  }
+
   Stream<from_rwkv.ResponseBatchBufferContent> _streamContents({
     required List<String> contents,
     required bool includePromptInOutput,
+    List<String>? initialOutputs,
   }) async* {
     final batchSize = contents.length;
-    final result = includePromptInOutput ? List<String>.from(contents) : List<String>.filled(batchSize, "");
+    final result = includePromptInOutput
+        ? List<String>.from(contents)
+        : List<String>.generate(batchSize, (index) {
+            if (initialOutputs == null) return "";
+            if (index >= initialOutputs.length) return "";
+            return initialOutputs[index];
+          });
     final eosFound = List<bool>.filled(batchSize, false);
     final parser = AlbatrossSseParser();
 
     P.rwkvGeneration.generating.q = true;
     _client?.close();
     _client = http.Client();
+    _startMetricsPolling();
     try {
       final request = http.Request("POST", Uri.parse("${baseUrl.q}/v1/batch/completions"));
       request.headers["Content-Type"] = "application/json";
@@ -482,6 +597,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
             if (choice.index < 0 || choice.index >= batchSize) continue;
             result[choice.index] = result[choice.index] + choice.content;
             eosFound[choice.index] = choice.finishReason != null;
+            _markPrefillComplete();
           }
           yield from_rwkv.ResponseBatchBufferContent(
             responseBufferContent: List<String>.from(result),
@@ -491,6 +607,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
         }
       }
     } finally {
+      _stopMetricsPolling();
       P.rwkvGeneration.generating.q = false;
       _client?.close();
       _client = null;
@@ -500,6 +617,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   Future<void> stop() async {
     _client?.close();
     _client = null;
+    _stopMetricsPolling();
     try {
       final uri = Uri.parse("${baseUrl.q}/v1/server/stop");
       await http.post(uri).timeout(const Duration(seconds: 2));
@@ -515,6 +633,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   Future<void> shutdown({bool terminateRuntime = false}) async {
     _client?.close();
     _client = null;
+    _stopMetricsPolling();
     await _stdoutSub?.cancel();
     await _stderrSub?.cancel();
     _stdoutSub = null;
@@ -686,6 +805,35 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     return "$targetPath.txt";
   }
 
+  String _buildChatCompletionPrompt(List<String> messages) {
+    final assistantPrefix = _assistantPrefix();
+    return buildAlbatrossCompletionPrompt(
+      messages,
+      systemPrompt: P.preference.promptTemplate.formatedSystemPrompt().trim(),
+      assistantPrefix: assistantPrefix,
+    );
+  }
+
+  List<Map<String, String>> _buildChatRequestMessages(List<String> messages) {
+    final assistantPrefix = _assistantPrefix();
+    return buildAlbatrossChatRequestMessages(
+      messages,
+      systemPrompt: P.preference.promptTemplate.formatedSystemPrompt().trim(),
+      assistantPrefix: assistantPrefix,
+    );
+  }
+
+  String _initialChatOutput(List<String> messages) {
+    final assistantPrefix = _assistantPrefix();
+    if (messages.isEmpty) return assistantPrefix.trim();
+    if (messages.length.isOdd) return assistantPrefix.trim();
+    return normalizeAlbatrossAssistantOutput(messages.last, assistantPrefix);
+  }
+
+  String _assistantPrefix() {
+    return P.preference.promptTemplate.apply(P.rwkvParams.thinkingMode.q);
+  }
+
   Map<String, Object?> _decodeParams() {
     return {
       "temperature": P.rwkvParams.arguments(Argument.temperature).q,
@@ -696,6 +844,96 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
       "alpha_decay": P.rwkvParams.arguments(Argument.penaltyDecay).q,
       "max_tokens": P.rwkvParams.arguments(Argument.maxLength).q,
     };
+  }
+
+  void _startMetricsPolling() {
+    _stopMetricsPolling();
+    _lastMetricGeneratedTokens = null;
+    _lastMetricAt = null;
+    unawaited(_pollMetricsOnce());
+    _metricsTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
+      unawaited(_pollMetricsOnce());
+    });
+  }
+
+  void _stopMetricsPolling() {
+    _metricsTimer?.cancel();
+    _metricsTimer = null;
+    _metricsPollInFlight = false;
+    _lastMetricGeneratedTokens = null;
+    _lastMetricAt = null;
+  }
+
+  Future<void> _pollMetricsOnce() async {
+    if (_metricsPollInFlight) return;
+    _metricsPollInFlight = true;
+    try {
+      final uri = Uri.parse("${baseUrl.q}/v1/server/status");
+      final response = await http.get(uri).timeout(const Duration(seconds: 1));
+      if (response.statusCode < 200 || response.statusCode >= 300) return;
+
+      final decoded = jsonDecode(response.body);
+      if (decoded is! Map) return;
+      final activeRequest = decoded["active_request"];
+      if (activeRequest is! Map) return;
+
+      final prefillSpeed = _jsonDouble(activeRequest["prefill_speed"]);
+      final decodeSpeed = _jsonDouble(activeRequest["decode_speed"]);
+      final generatedTokens = _jsonInt(activeRequest["generated_tokens"]);
+      final now = DateTime.now();
+
+      if (prefillSpeed != null && prefillSpeed > 0) {
+        P.rwkvGeneration.prefillSpeed.q = prefillSpeed;
+        _markPrefillComplete();
+      }
+
+      final effectiveDecodeSpeed = decodeSpeed != null && decodeSpeed > 0
+          ? decodeSpeed
+          : _estimateDecodeSpeed(generatedTokens: generatedTokens, now: now);
+      if (effectiveDecodeSpeed != null && effectiveDecodeSpeed > 0) {
+        P.rwkvGeneration.decodeSpeed.q = effectiveDecodeSpeed;
+        P.telemetry.trackDecodeSpeed(effectiveDecodeSpeed);
+      }
+
+      _lastMetricGeneratedTokens = generatedTokens;
+      _lastMetricAt = now;
+    } catch (_) {
+      //
+    } finally {
+      _metricsPollInFlight = false;
+    }
+  }
+
+  double? _estimateDecodeSpeed({required int? generatedTokens, required DateTime now}) {
+    if (generatedTokens == null) return null;
+    final lastGeneratedTokens = _lastMetricGeneratedTokens;
+    final lastMetricAt = _lastMetricAt;
+    if (lastGeneratedTokens == null || lastMetricAt == null) return null;
+    if (generatedTokens <= lastGeneratedTokens) return null;
+
+    final elapsedMicroseconds = now.difference(lastMetricAt).inMicroseconds;
+    if (elapsedMicroseconds <= 0) return null;
+
+    final deltaTokens = generatedTokens - lastGeneratedTokens;
+    return deltaTokens * Duration.microsecondsPerSecond / elapsedMicroseconds;
+  }
+
+  void _markPrefillComplete() {
+    if (P.rwkvGeneration.prefillProgress.q >= 1) return;
+    P.rwkvGeneration.prefillProgress.q = 1;
+  }
+
+  double? _jsonDouble(Object? value) {
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value);
+    return null;
+  }
+
+  int? _jsonInt(Object? value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value);
+    return null;
   }
 
   Future<void> _ensureConfiguredAssets() async {

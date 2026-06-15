@@ -45,10 +45,12 @@ class AskQuestionButton extends ConsumerWidget {
     final loading = ref.watch(P.rwkvModel.loading);
     final generating = ref.watch(P.rwkvGeneration.generating);
     final loaded = ref.watch(P.rwkvModel.loaded);
-    final canEnable = loaded && !loading && !generating;
+    final albatrossCanUse = ref.watch(P.albatrossRuntime.canUse);
+    final canUseChatBackend = loaded || albatrossCanUse;
+    final canEnable = canUseChatBackend && !loading && !generating;
 
     InteractionVisualState interactionState = canEnable ? .available : .idleInteractive;
-    if (generating || !loaded) interactionState = .unavailable;
+    if (generating || !canUseChatBackend) interactionState = .unavailable;
 
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final color = colors.background;

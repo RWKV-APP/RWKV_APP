@@ -245,8 +245,9 @@ extension $RWKVParams on _RWKVParams {
     P.app.hapticLight();
 
     final s = S.current;
+    final albatrossCanUse = P.albatrossRuntime.canUse.q;
 
-    if (P.rwkvContext.isAlbatrossLoaded.q) {
+    if (!albatrossCanUse && P.rwkvContext.isLegacyAlbatrossLoaded.q) {
       final current = thinkingMode.q;
       if (current != .none) {
         setModelConfig(thinkingMode: .none, rememberThinkingMode: true);
@@ -258,7 +259,7 @@ extension $RWKVParams on _RWKVParams {
 
     final currentModelIsBefore20250922 = P.rwkvParams.currentModelIsBefore20250922.q;
     qqr("currentModelIsBefore20250922: $currentModelIsBefore20250922");
-    if (currentModelIsBefore20250922) {
+    if (!albatrossCanUse && currentModelIsBefore20250922) {
       final current = thinkingMode.q;
       switch (current) {
         case .lighting:

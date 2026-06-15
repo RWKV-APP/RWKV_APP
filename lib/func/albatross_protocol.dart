@@ -18,9 +18,9 @@ const List<String> albatrossWindowsRuntimeDlls = <String>[
 ];
 
 const List<String> albatrossProbePaths = <String>[
+  "/v1/server/status",
   "/v1/models",
   "/status",
-  "/v1/server/status",
 ];
 
 class AlbatrossSseChoice {
@@ -242,17 +242,111 @@ String buildAlbatrossRuntimeLogExportFileName({required DateTime now}) {
   return "rwkv_albatross_logs_${_formatAlbatrossTimestamp(now)}.txt";
 }
 
-String buildAlbatrossCompletionPrompt(List<String> messages) {
-  final buffer = StringBuffer();
+String buildAlbatrossCompletionPrompt(
+  List<String> messages, {
+  String systemPrompt = "",
+  String assistantPrefix = "",
+}) {
+  final entries = <String>[];
+  final normalizedSystemPrompt = systemPrompt.trim();
+  if (normalizedSystemPrompt.isNotEmpty) {
+    entries.add("System: $normalizedSystemPrompt");
+  }
+
+  final lastAssistantIndex = messages.length.isEven ? messages.length - 1 : null;
   for (int i = 0; i < messages.length; i++) {
     final role = i.isEven ? "User" : "Assistant";
+    final preserveAssistantPrefix = i == lastAssistantIndex;
+    final content = i.isEven
+        ? messages[i].trim()
+        : preserveAssistantPrefix
+        ? messages[i].trim().isEmpty
+              ? ""
+              : normalizeAlbatrossAssistantOutput(messages[i], assistantPrefix)
+        : stripAlbatrossThinking(messages[i]).trim();
+    if (content.isEmpty) {
+      continue;
+    }
+    entries.add("$role: $content");
+  }
+
+  if (messages.length.isOdd || entries.isEmpty) {
+    entries.add(_albatrossAssistantLine(assistantPrefix));
+    return entries.join("\n\n");
+  }
+
+  final lastMessage = messages.isEmpty ? "" : messages.last.trim();
+  if (lastMessage.isEmpty) {
+    entries.add(_albatrossAssistantLine(assistantPrefix));
+  }
+  return entries.join("\n\n");
+}
+
+String _albatrossAssistantLine(String assistantPrefix) {
+  final normalizedAssistantPrefix = assistantPrefix.trim();
+  if (normalizedAssistantPrefix.isEmpty) return "Assistant:";
+  return "Assistant: $normalizedAssistantPrefix";
+}
+
+String normalizeAlbatrossAssistantOutput(String value, String assistantPrefix) {
+  final normalizedValue = value.trim();
+  final normalizedAssistantPrefix = assistantPrefix.trim();
+  if (normalizedValue.isEmpty) return normalizedAssistantPrefix;
+  if (normalizedAssistantPrefix.isEmpty) return normalizedValue;
+  if (normalizedValue.startsWith(normalizedAssistantPrefix)) return normalizedValue;
+  if (normalizedValue.startsWith(">") && !normalizedAssistantPrefix.endsWith(">")) {
+    return "$normalizedAssistantPrefix$normalizedValue";
+  }
+  return normalizedValue;
+}
+
+List<Map<String, String>> buildAlbatrossChatMessages(List<String> messages) {
+  final result = <Map<String, String>>[];
+  for (int i = 0; i < messages.length; i++) {
+    final role = i.isEven ? "user" : "assistant";
     final content = i.isEven ? messages[i].trim() : stripAlbatrossThinking(messages[i]).trim();
     if (content.isEmpty) continue;
-    buffer.writeln("$role: $content");
-    buffer.writeln();
+    result.add(<String, String>{
+      "role": role,
+      "content": content,
+    });
   }
-  buffer.write("Assistant:");
-  return buffer.toString();
+  return result;
+}
+
+List<Map<String, String>> buildAlbatrossChatRequestMessages(
+  List<String> messages, {
+  String systemPrompt = "",
+  String assistantPrefix = "",
+}) {
+  final result = <Map<String, String>>[];
+  final normalizedSystemPrompt = systemPrompt.trim();
+  if (normalizedSystemPrompt.isNotEmpty) {
+    result.add(<String, String>{
+      "role": "system",
+      "content": normalizedSystemPrompt,
+    });
+  }
+
+  final lastAssistantIndex = messages.length.isEven ? messages.length - 1 : null;
+  for (int i = 0; i < messages.length; i++) {
+    final role = i.isEven ? "user" : "assistant";
+    final preserveAssistantPrefix = i == lastAssistantIndex;
+    final content = i.isEven
+        ? messages[i].trim()
+        : preserveAssistantPrefix
+        ? messages[i].trim().isEmpty
+              ? ""
+              : normalizeAlbatrossAssistantOutput(messages[i], assistantPrefix)
+        : stripAlbatrossThinking(messages[i]).trim();
+    if (content.isEmpty) continue;
+    result.add(<String, String>{
+      "role": role,
+      "content": content,
+    });
+  }
+
+  return result;
 }
 
 String stripAlbatrossThinking(String value) {

@@ -41,6 +41,7 @@ extension $RWKVGeneration on _RWKVGeneration {
   }) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
+    prefillProgress.q = 0;
     P.telemetry.resetPeakDecodeSpeed();
 
     if (P.albatrossRuntime.enabled.q) {
@@ -294,6 +295,7 @@ extension $RWKVGeneration on _RWKVGeneration {
     WeightType? preferredWeightType,
   }) async {
     if (text.isEmpty) return 0;
+    if (P.albatrossRuntime.enabled.q) return P.albatrossRuntime.countTextTokens(text);
     if (P.rwkvBridge.sendPort == null) return null;
     final weightType = _resolveWeightTypeForTokenCount(preferredWeightType: preferredWeightType);
     final modelID = P.rwkvModel.findModelIDByWeightType(weightType: weightType);
@@ -319,6 +321,7 @@ extension $RWKVGeneration on _RWKVGeneration {
     WeightType? preferredWeightType,
   }) async {
     if (messages.isEmpty) return 0;
+    if (P.albatrossRuntime.enabled.q) return P.albatrossRuntime.countMessageTokens(messages);
     if (P.rwkvBridge.sendPort == null) return null;
     final weightType = _resolveWeightTypeForTokenCount(preferredWeightType: preferredWeightType);
     final modelID = P.rwkvModel.findModelIDByWeightType(weightType: weightType);

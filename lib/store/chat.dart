@@ -1567,7 +1567,7 @@ extension $Chat on _Chat {
 
   Future<void> onTapEditInBotMessageBubble({required int index}) async {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
-    final content = P.msg.list.q[index].content;
+    final content = P.msg.list.q[index].getContentForEditing();
     textEditingController.value = TextEditingValue(text: content);
     focusNode.requestFocus();
     P.msg.editingOrRegeneratingIndex.q = index;
@@ -1898,6 +1898,10 @@ extension $Chat on _Chat {
     if (withHaptic) P.app.hapticLight();
     _clearResponseStyleSequentialState();
     receiveId.q = id;
+    final currentMessage = P.msg.pool.q[id];
+    if (currentMessage != null && currentMessage.content.isNotEmpty) {
+      _setReceivedTokens(currentMessage.content, immediateUi: true);
+    }
     _updateMessageById(
       id: id,
       changing: true,
