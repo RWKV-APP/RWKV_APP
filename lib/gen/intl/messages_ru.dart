@@ -245,6 +245,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "albatross_drop_files": MessageLookupByLibrary.simpleMessage(
       "Перетащите exe, PTH, токенизатор или папку модели",
     ),
+    "albatross_early_stage_notice": MessageLookupByLibrary.simpleMessage(
+      "Albatross сейчас находится на очень раннем этапе итеративной разработки. Внешний вид страницы и доступные функции будут продолжать меняться; на некоторых платформах пока доступны только вспомогательные возможности, такие как настройка, просмотр и журналы.",
+    ),
     "albatross_endpoint": MessageLookupByLibrary.simpleMessage("Адрес сервиса"),
     "albatross_enter_chat": MessageLookupByLibrary.simpleMessage(
       "Перейти в чат",

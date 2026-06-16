@@ -840,5 +840,6 @@
   "albatross_copy_all_logs": "전체 로그 복사",
   "albatross_export_logs_txt": "로그를 .txt로 내보내기",
   "albatross_missing_runtime_dlls": "누락된 런타임 DLL: {dlls}\n완전한 Albatross bundle을 사용하고 lib 폴더를 실행 파일과 같은 디렉터리에 두세요",
+  "albatross_early_stage_notice": "Albatross는 현재 매우 초기의 반복 개발 단계에 있습니다. 화면 표시와 사용 가능한 기능은 계속 조정될 수 있으며, 일부 플랫폼에서는 설정, 확인, 로그 같은 보조 기능만 제공합니다.",
   "albatross_backend_unsupported": "현재 Albatross 백엔드는 이 기능을 지원하지 않습니다"
 }

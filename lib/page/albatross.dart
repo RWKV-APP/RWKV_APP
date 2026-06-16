@@ -165,6 +165,23 @@ class _AlbatrossOverviewSection extends ConsumerWidget {
       icon: Icons.bolt,
       title: s.albatross_runtime_management,
       children: [
+        Row(
+          crossAxisAlignment: .start,
+          children: [
+            Icon(Icons.info_outline, size: 18, color: theme.colorScheme.primary),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                s.albatross_early_stage_notice,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  height: 1.45,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 8,
           runSpacing: 8,

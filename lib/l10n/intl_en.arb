@@ -848,5 +848,6 @@
   "albatross_copy_all_logs": "Copy all logs",
   "albatross_export_logs_txt": "Export logs to .txt",
   "albatross_missing_runtime_dlls": "Missing runtime DLLs: {dlls}\nPlease use the complete Albatross bundle and keep its lib folder next to the executable",
+  "albatross_early_stage_notice": "Albatross is in a very early iterative development stage. The UI and available features may keep changing; on some platforms it currently only provides supporting tools such as configuration, inspection, and logs.",
   "albatross_backend_unsupported": "This feature is not supported by the current Albatross backend"
 }

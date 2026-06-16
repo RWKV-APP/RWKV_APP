@@ -222,6 +222,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "albatross_drop_files": MessageLookupByLibrary.simpleMessage(
       "拖入 exe、PTH、词表或模型文件夹",
     ),
+    "albatross_early_stage_notice": MessageLookupByLibrary.simpleMessage(
+      "Albatross 目前处于非常早期的迭代开发阶段。页面展示与可用功能会持续调整，部分平台暂时仅提供配置、查看和日志等辅助能力。",
+    ),
     "albatross_endpoint": MessageLookupByLibrary.simpleMessage("服务地址"),
     "albatross_enter_chat": MessageLookupByLibrary.simpleMessage("进入聊天"),
     "albatross_exit_code": MessageLookupByLibrary.simpleMessage("退出码"),

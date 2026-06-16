@@ -244,6 +244,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "albatross_drop_files": MessageLookupByLibrary.simpleMessage(
       "Drop exe, PTH, tokenizer, or model folder",
     ),
+    "albatross_early_stage_notice": MessageLookupByLibrary.simpleMessage(
+      "Albatross is in a very early iterative development stage. The UI and available features may keep changing; on some platforms it currently only provides supporting tools such as configuration, inspection, and logs.",
+    ),
     "albatross_endpoint": MessageLookupByLibrary.simpleMessage("Endpoint"),
     "albatross_enter_chat": MessageLookupByLibrary.simpleMessage("Enter Chat"),
     "albatross_exit_code": MessageLookupByLibrary.simpleMessage("Exit Code"),

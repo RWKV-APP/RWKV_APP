@@ -6856,6 +6856,16 @@ class S {
     );
   }
 
+  /// `Albatross 目前处于非常早期的迭代开发阶段。页面展示与可用功能会持续调整，部分平台暂时仅提供配置、查看和日志等辅助能力。`
+  String get albatross_early_stage_notice {
+    return Intl.message(
+      'Albatross 目前处于非常早期的迭代开发阶段。页面展示与可用功能会持续调整，部分平台暂时仅提供配置、查看和日志等辅助能力。',
+      name: 'albatross_early_stage_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `当前 Albatross 后端暂不支持此功能`
   String get albatross_backend_unsupported {
     return Intl.message(

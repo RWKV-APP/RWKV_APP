@@ -840,5 +840,6 @@
   "albatross_copy_all_logs": "すべてのログをコピー",
   "albatross_export_logs_txt": "ログを .txt にエクスポート",
   "albatross_missing_runtime_dlls": "不足しているランタイム DLL: {dlls}\n完全な Albatross bundle を使用し、lib フォルダを実行ファイルと同じディレクトリに置いてください",
+  "albatross_early_stage_notice": "Albatross は現在、非常に初期の反復開発段階にあります。画面表示と利用可能な機能は今後も調整され、一部のプラットフォームでは設定、確認、ログなどの補助機能のみを提供します。",
   "albatross_backend_unsupported": "現在の Albatross バックエンドではこの機能はサポートされていません"
 }

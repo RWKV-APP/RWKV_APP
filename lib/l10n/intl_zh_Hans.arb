@@ -848,5 +848,6 @@
   "albatross_copy_all_logs": "复制全部日志",
   "albatross_export_logs_txt": "导出日志为 .txt",
   "albatross_missing_runtime_dlls": "缺少运行时 DLL：{dlls}\n请使用完整的 Albatross bundle，并确保 lib 文件夹与程序在同一目录下",
+  "albatross_early_stage_notice": "Albatross 目前处于非常早期的迭代开发阶段。页面展示与可用功能会持续调整，部分平台暂时仅提供配置、查看和日志等辅助能力。",
   "albatross_backend_unsupported": "当前 Albatross 后端暂不支持此功能"
 }

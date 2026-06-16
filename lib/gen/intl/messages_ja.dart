@@ -227,6 +227,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "albatross_drop_files": MessageLookupByLibrary.simpleMessage(
       "exe、PTH、トークナイザー、モデルフォルダをドロップ",
     ),
+    "albatross_early_stage_notice": MessageLookupByLibrary.simpleMessage(
+      "Albatross は現在、非常に初期の反復開発段階にあります。画面表示と利用可能な機能は今後も調整され、一部のプラットフォームでは設定、確認、ログなどの補助機能のみを提供します。",
+    ),
     "albatross_endpoint": MessageLookupByLibrary.simpleMessage("エンドポイント"),
     "albatross_enter_chat": MessageLookupByLibrary.simpleMessage("チャットへ"),
     "albatross_exit_code": MessageLookupByLibrary.simpleMessage("終了コード"),
