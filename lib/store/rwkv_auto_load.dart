@@ -79,6 +79,7 @@ extension $RWKVAutoLoad on _RWKVAutoLoad {
   }
 
   Future<bool> restoreForPage(PageKey pageKey) async {
+    if (pageKey == .chat && P.albatrossRuntime.enabled.q) return true;
     return switch (pageKey) {
       .chat => await _restoreChatScene(scene: .chat, pageKey: pageKey, showSelectorOnFailure: true),
       .neko => await _restoreNeko(pageKey: pageKey),
@@ -515,6 +516,7 @@ extension _$RWKVAutoLoad on _RWKVAutoLoad {
     required PageKey pageKey,
     required bool showSelectorOnFailure,
   }) async {
+    if (scene == .chat && P.albatrossRuntime.enabled.q) return true;
     final sceneKey = _sceneKey(scene);
     return await _runOnce(sceneKey, () async {
       if (P.app.pageKey.q != pageKey) return false;
@@ -602,6 +604,7 @@ extension _$RWKVAutoLoad on _RWKVAutoLoad {
     if (P.app.pageKey.q != pageKey) return;
     switch (scene) {
       case .chat:
+        if (P.albatrossRuntime.enabled.q) return;
         ModelSelector.show();
         break;
       case .neko:

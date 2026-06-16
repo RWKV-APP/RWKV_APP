@@ -978,6 +978,11 @@ extension $AskQuestion on _AskQuestion {
   Future<void> generateFromCurrentChat() async {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
+    if (P.albatrossRuntime.enabled.q) {
+      Alert.info(S.current.albatross_backend_unsupported);
+      return;
+    }
+
     final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       Alert.info(S.current.please_load_model_first);
@@ -1014,6 +1019,11 @@ extension $AskQuestion on _AskQuestion {
 
   Future<void> generateFromMessages(List<String> historyMessages) async {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
+
+    if (P.albatrossRuntime.enabled.q) {
+      Alert.info(S.current.albatross_backend_unsupported);
+      return;
+    }
 
     final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {

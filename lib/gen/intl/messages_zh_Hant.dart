@@ -20,157 +20,160 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_Hant';
 
-  static String m0(error) => "錯誤: ${error}";
+  static String m0(dlls) =>
+      "缺少執行時 DLL：${dlls}\n請使用完整的 Albatross bundle，並確保 lib 資料夾與程式在同一目錄下";
 
-  static String m1(error) => "API 伺服器啟動失敗: ${error}";
+  static String m1(error) => "錯誤: ${error}";
 
-  static String m2(port) => "API 伺服器已在連接埠 ${port} 啟動";
+  static String m2(error) => "API 伺服器啟動失敗: ${error}";
 
-  static String m3(count) => "並行 × ${count}";
+  static String m3(port) => "API 伺服器已在連接埠 ${port} 啟動";
 
-  static String m4(count) => "每次推理將生成 ${count} 則訊息";
+  static String m4(count) => "並行 × ${count}";
 
-  static String m5(count) => "每次生成 ${count} 條結果";
+  static String m5(count) => "每次推理將生成 ${count} 則訊息";
 
-  static String m6(count) => "並行推理：${count} 則輸出";
+  static String m6(count) => "每次生成 ${count} 條結果";
 
-  static String m7(index) => "已選擇第 ${index} 則輸出";
+  static String m7(count) => "並行推理：${count} 則輸出";
 
-  static String m8(batch) => "Batch ${batch}";
+  static String m8(index) => "已選擇第 ${index} 則輸出";
 
-  static String m9(first, last, count) =>
+  static String m9(batch) => "Batch ${batch}";
+
+  static String m10(first, last, count) =>
       "Batch ${first}-${last}（共 ${count} 次）";
 
-  static String m10(batch) => "Batch ${batch}";
+  static String m11(batch) => "Batch ${batch}";
 
-  static String m11(count) => "最高支援 Batch ${count}";
+  static String m12(count) => "最高支援 Batch ${count}";
 
-  static String m12(batch, current, total) =>
+  static String m13(batch, current, total) =>
       "Batch ${batch} · ${current}/${total}";
 
-  static String m13(current, total, speed) =>
+  static String m14(current, total, speed) =>
       "${current}/${total} · ${speed} t/s";
 
-  static String m14(speed) => "Decode 峰值: ${speed} t/s";
+  static String m15(speed) => "Decode 峰值: ${speed} t/s";
 
-  static String m15(progress, speed) => "${progress}% · ${speed} t/s";
+  static String m16(progress, speed) => "${progress}% · ${speed} t/s";
 
-  static String m16(prefillSpeed, decodeSpeed) =>
+  static String m17(prefillSpeed, decodeSpeed) =>
       "Prefill ${prefillSpeed} t/s · Decode ${decodeSpeed} t/s";
 
-  static String m17(current, total, phase) => "${current}/${total} · ${phase}";
+  static String m18(current, total, phase) => "${current}/${total} · ${phase}";
 
-  static String m18(demoName) => "歡迎探索 ${demoName}";
+  static String m19(demoName) => "歡迎探索 ${demoName}";
 
-  static String m19(maxLength) => "對話名稱不能超過${maxLength}個字元";
+  static String m20(maxLength) => "對話名稱不能超過${maxLength}個字元";
 
-  static String m20(length) => "ctx ${length}";
+  static String m21(length) => "ctx ${length}";
 
-  static String m21(modelName) => "目前模型: ${modelName}";
+  static String m22(modelName) => "目前模型: ${modelName}";
 
-  static String m22(current, total) => "目前進度: ${current}/${total}";
+  static String m23(current, total) => "目前進度: ${current}/${total}";
 
-  static String m23(current, total) => "目前測試項 (${current}/${total})";
+  static String m24(current, total) => "目前測試項 (${current}/${total})";
 
-  static String m24(count) => "確定要刪除 ${count} 個對話嗎？";
+  static String m25(count) => "確定要刪除 ${count} 個對話嗎？";
 
-  static String m25(path) => "訊息記錄會儲存在該資料夾下\n ${path}";
+  static String m26(path) => "訊息記錄會儲存在該資料夾下\n ${path}";
 
-  static String m26(error) => "刪除檔案失敗：${error}";
+  static String m27(error) => "刪除檔案失敗：${error}";
 
-  static String m27(successCount, failCount) =>
+  static String m28(successCount, failCount) =>
       "${successCount} 個檔案已移動，${failCount} 個失敗";
 
-  static String m28(value) => "Frequency Penalty: ${value}";
+  static String m29(value) => "Frequency Penalty: ${value}";
 
-  static String m29(port) => "HTTP 服務 (連接埠: ${port})";
+  static String m30(port) => "HTTP 服務 (連接埠: ${port})";
 
-  static String m30(flag, nameCN, nameEN) =>
+  static String m31(flag, nameCN, nameEN) =>
       "模仿 ${flag} ${nameCN}(${nameEN}) 的聲音";
 
-  static String m31(fileName) => "模仿 ${fileName}";
+  static String m32(fileName) => "模仿 ${fileName}";
 
-  static String m32(count) => "匯入成功：已匯入 ${count} 個檔案";
+  static String m33(count) => "匯入成功：已匯入 ${count} 個檔案";
 
-  static String m33(commitId) => "推理引擎版本：${commitId}";
+  static String m34(commitId) => "推理引擎版本：${commitId}";
 
-  static String m34(percent) => "載入${percent}%";
+  static String m35(percent) => "載入${percent}%";
 
-  static String m35(folderName) => "本機資料夾：${folderName}";
+  static String m36(folderName) => "本機資料夾：${folderName}";
 
-  static String m36(memUsed, memFree) => "已用記憶體：${memUsed}，剩餘記憶體：${memFree}";
+  static String m37(memUsed, memFree) => "已用記憶體：${memUsed}，剩餘記憶體：${memFree}";
 
-  static String m37(count) => "${count} 則訊息正在佇列中";
+  static String m38(count) => "${count} 則訊息正在佇列中";
 
-  static String m38(text) => "模型輸出: ${text}";
+  static String m39(text) => "模型輸出: ${text}";
 
-  static String m39(socName) => "暫未支持您的芯片 ${socName} 的 NPU 加速";
+  static String m40(socName) => "暫未支持您的芯片 ${socName} 的 NPU 加速";
 
-  static String m40(takePhoto) => "點擊 ${takePhoto}。RWKV 將翻譯圖片中的文本。";
+  static String m41(takePhoto) => "點擊 ${takePhoto}。RWKV 將翻譯圖片中的文本。";
 
-  static String m41(error) => "空資料夾建立失敗：${error}";
+  static String m42(error) => "空資料夾建立失敗：${error}";
 
-  static String m42(os) => "目前作業系統(${os})不支援開啟資料夾的操作。";
+  static String m43(os) => "目前作業系統(${os})不支援開啟資料夾的操作。";
 
-  static String m43(path) => "路徑：${path}";
+  static String m44(path) => "路徑：${path}";
 
-  static String m44(value) => "Penalty Decay: ${value}";
+  static String m45(value) => "Penalty Decay: ${value}";
 
-  static String m45(index) => "請選擇要為第 ${index} 條消息設定的取樣和懲罰參數";
+  static String m46(index) => "請選擇要為第 ${index} 條消息設定的取樣和懲罰參數";
 
-  static String m46(percent) => "預填充進度 ${percent}";
+  static String m47(percent) => "預填充進度 ${percent}";
 
-  static String m47(value) => "Presence Penalty: ${value}";
+  static String m48(value) => "Presence Penalty: ${value}";
 
-  static String m48(count) => "點一下產生，RWKV 會順著你選好的開頭，幫你想出最多 ${count} 個問題。";
+  static String m49(count) => "點一下產生，RWKV 會順著你選好的開頭，幫你想出最多 ${count} 個問題。";
 
-  static String m49(count) => "排隊中: ${count}";
+  static String m50(count) => "排隊中: ${count}";
 
-  static String m50(count) => "當前模型不支援 ${count} 種表達風格";
+  static String m51(count) => "當前模型不支援 ${count} 種表達風格";
 
-  static String m51(count) => "同時回答 ${count} 個隨機問題";
+  static String m52(count) => "同時回答 ${count} 個隨機問題";
 
-  static String m52(count) => "預製問題不足，無法發起 ${count} 個隨機問題";
+  static String m53(count) => "預製問題不足，無法發起 ${count} 個隨機問題";
 
-  static String m53(count) => "已選擇 ${count}";
+  static String m54(count) => "已選擇 ${count}";
 
-  static String m54(text) => "來源文字: ${text}";
+  static String m55(text) => "來源文字: ${text}";
 
-  static String m55(text) => "目標文字: ${text}";
+  static String m56(text) => "目標文字: ${text}";
 
-  static String m56(value) => "Temperature: ${value}";
+  static String m57(value) => "Temperature: ${value}";
 
-  static String m57(footer) => "推理${footer}-英";
+  static String m58(footer) => "推理${footer}-英";
 
-  static String m58(footer) => "推理${footer}-英長";
+  static String m59(footer) => "推理${footer}-英長";
 
-  static String m59(footer) => "推理${footer}-英短";
+  static String m60(footer) => "推理${footer}-英短";
 
-  static String m60(footer) => "推理${footer}-快";
+  static String m61(footer) => "推理${footer}-快";
 
-  static String m61(footer) => "推理${footer}-中";
+  static String m62(footer) => "推理${footer}-中";
 
-  static String m62(footer) => "推理${footer}-高";
+  static String m63(footer) => "推理${footer}-高";
 
-  static String m63(footer) => "推理${footer}-笨";
+  static String m64(footer) => "推理${footer}-笨";
 
-  static String m64(value) => "Top P: ${value}";
+  static String m65(value) => "Top P: ${value}";
 
-  static String m65(count) => "總測試項: ${count}";
+  static String m66(count) => "總測試項: ${count}";
 
-  static String m66(port) => "WebSocket 服務 (連接埠: ${port})";
+  static String m67(port) => "WebSocket 服務 (連接埠: ${port})";
 
-  static String m67(id) => "視窗 ${id}";
-
-  static String m68(buildArchitecture, operatingSystemArchitecture, url) =>
-      "目前應用程式 Build Architecture 為 ${buildArchitecture}，但 Windows Operating System 為 ${operatingSystemArchitecture}。\n\n請前往官方下載頁下載相符架構的可執行檔：\n${url}";
+  static String m68(id) => "視窗 ${id}";
 
   static String m69(buildArchitecture, operatingSystemArchitecture, url) =>
+      "目前應用程式 Build Architecture 為 ${buildArchitecture}，但 Windows Operating System 為 ${operatingSystemArchitecture}。\n\n請前往官方下載頁下載相符架構的可執行檔：\n${url}";
+
+  static String m70(buildArchitecture, operatingSystemArchitecture, url) =>
       "偵測到架構不相符：目前應用程式 Build Architecture 為 ${buildArchitecture}，但 Windows Operating System 為 ${operatingSystemArchitecture}。請前往官方下載頁下載相符版本：${url}";
 
-  static String m70(count) => "${count} 個分頁";
+  static String m71(count) => "${count} 個分頁";
 
-  static String m71(modelName) => "您目前正在使用 ${modelName}";
+  static String m72(modelName) => "您目前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -183,6 +186,131 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "add_local_folder": MessageLookupByLibrary.simpleMessage("新增本機資料夾"),
     "advance_settings": MessageLookupByLibrary.simpleMessage("進階設定"),
+    "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
+      "目前 Albatross 後端暫不支援此功能",
+    ),
+    "albatross_binary": MessageLookupByLibrary.simpleMessage("程式"),
+    "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
+      "缺少 Albatross 程式下載設定",
+    ),
+    "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
+      "請先選擇或下載 Albatross 程式",
+    ),
+    "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
+    "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
+      "使用本機 Albatross CUDA 後端聊天",
+    ),
+    "albatross_checking_service": MessageLookupByLibrary.simpleMessage("檢查中"),
+    "albatross_compatibility_ok": MessageLookupByLibrary.simpleMessage(
+      "CUDA 後端可用",
+    ),
+    "albatross_compatibility_warning": MessageLookupByLibrary.simpleMessage(
+      "尚未確認 CUDA 相容性",
+    ),
+    "albatross_connected": MessageLookupByLibrary.simpleMessage(
+      "已連線 Albatross",
+    ),
+    "albatross_connecting": MessageLookupByLibrary.simpleMessage("連線中"),
+    "albatross_copy_all_logs": MessageLookupByLibrary.simpleMessage("複製全部日誌"),
+    "albatross_cuda_not_detected": MessageLookupByLibrary.simpleMessage(
+      "尚未偵測到 CUDA 資訊",
+    ),
+    "albatross_download_binary": MessageLookupByLibrary.simpleMessage("下載程式"),
+    "albatross_download_tokenizer": MessageLookupByLibrary.simpleMessage(
+      "下載詞表",
+    ),
+    "albatross_drop_files": MessageLookupByLibrary.simpleMessage(
+      "拖入 exe、PTH、詞表或模型資料夾",
+    ),
+    "albatross_endpoint": MessageLookupByLibrary.simpleMessage("服務位址"),
+    "albatross_enter_chat": MessageLookupByLibrary.simpleMessage("進入聊天"),
+    "albatross_exit_code": MessageLookupByLibrary.simpleMessage("退出碼"),
+    "albatross_export_logs_txt": MessageLookupByLibrary.simpleMessage(
+      "匯出日誌為 .txt",
+    ),
+    "albatross_external_service": MessageLookupByLibrary.simpleMessage("外部服務"),
+    "albatross_host": MessageLookupByLibrary.simpleMessage("Host"),
+    "albatross_last_error": MessageLookupByLibrary.simpleMessage("最近錯誤"),
+    "albatross_launch_command": MessageLookupByLibrary.simpleMessage("啟動命令"),
+    "albatross_launch_config": MessageLookupByLibrary.simpleMessage("啟動設定"),
+    "albatross_launch_config_hint": MessageLookupByLibrary.simpleMessage(
+      "Host 和連接埠會用於連接本機 Albatross 服務，執行中不可修改",
+    ),
+    "albatross_launched_by_app": MessageLookupByLibrary.simpleMessage(
+      "由 RWKV Chat 啟動",
+    ),
+    "albatross_missing_runtime_dlls": m0,
+    "albatross_model": MessageLookupByLibrary.simpleMessage("模型"),
+    "albatross_model_management": MessageLookupByLibrary.simpleMessage(
+      "PTH 模型",
+    ),
+    "albatross_model_required": MessageLookupByLibrary.simpleMessage(
+      "請先選擇 PTH 模型",
+    ),
+    "albatross_no_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "沒有已下載的 PTH 模型",
+    ),
+    "albatross_no_logs": MessageLookupByLibrary.simpleMessage("暫無日誌"),
+    "albatross_no_pth_candidates": MessageLookupByLibrary.simpleMessage(
+      "暫無可用 PTH 模型，可選擇本機 PTH 檔案",
+    ),
+    "albatross_not_connected": MessageLookupByLibrary.simpleMessage(
+      "未連線 Albatross",
+    ),
+    "albatross_not_selected": MessageLookupByLibrary.simpleMessage("未選擇"),
+    "albatross_parameter_hint": MessageLookupByLibrary.simpleMessage(
+      "Albatross 目前沿用聊天頁的取樣參數",
+    ),
+    "albatross_parameters": MessageLookupByLibrary.simpleMessage("執行參數"),
+    "albatross_pick_binary": MessageLookupByLibrary.simpleMessage("選擇程式"),
+    "albatross_pick_model_folder": MessageLookupByLibrary.simpleMessage(
+      "選擇模型資料夾",
+    ),
+    "albatross_pick_pth": MessageLookupByLibrary.simpleMessage("選擇 PTH"),
+    "albatross_pick_tokenizer": MessageLookupByLibrary.simpleMessage("選擇詞表"),
+    "albatross_port": MessageLookupByLibrary.simpleMessage("連接埠"),
+    "albatross_probe_service": MessageLookupByLibrary.simpleMessage("檢查服務"),
+    "albatross_refresh_cuda_info": MessageLookupByLibrary.simpleMessage(
+      "重新整理 CUDA 資訊",
+    ),
+    "albatross_restart_runtime": MessageLookupByLibrary.simpleMessage(
+      "重新啟動 Runtime",
+    ),
+    "albatross_runtime_assets": MessageLookupByLibrary.simpleMessage(
+      "Runtime 與詞表",
+    ),
+    "albatross_runtime_assets_hint": MessageLookupByLibrary.simpleMessage(
+      "可以下載設定中的 Runtime，也可以選擇本機已有的 exe 與詞表檔案",
+    ),
+    "albatross_runtime_logs": MessageLookupByLibrary.simpleMessage("執行日誌"),
+    "albatross_runtime_management": MessageLookupByLibrary.simpleMessage(
+      "Runtime 管理",
+    ),
+    "albatross_select_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "選擇已下載 PTH",
+    ),
+    "albatross_select_this_model": MessageLookupByLibrary.simpleMessage(
+      "選擇此模型",
+    ),
+    "albatross_selected_model": MessageLookupByLibrary.simpleMessage("已選擇"),
+    "albatross_service_not_running": MessageLookupByLibrary.simpleMessage(
+      "Albatross 服務未執行",
+    ),
+    "albatross_start_chat": MessageLookupByLibrary.simpleMessage("啟動並進入聊天"),
+    "albatross_stop_runtime": MessageLookupByLibrary.simpleMessage(
+      "停止 Runtime",
+    ),
+    "albatross_system_info": MessageLookupByLibrary.simpleMessage("目前電腦"),
+    "albatross_tokenizer": MessageLookupByLibrary.simpleMessage("詞表"),
+    "albatross_tokenizer_config_missing": MessageLookupByLibrary.simpleMessage(
+      "缺少 Albatross 詞表下載設定",
+    ),
+    "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
+      "請先選擇或下載詞表",
+    ),
+    "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
+      "使用已下載 PTH",
+    ),
     "all": MessageLookupByLibrary.simpleMessage("全部"),
     "all_done": MessageLookupByLibrary.simpleMessage("全部完成"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("全部提示詞"),
@@ -210,7 +338,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_chat_empty_hint": MessageLookupByLibrary.simpleMessage(
       "傳送一則訊息來測試 API",
     ),
-    "api_server_chat_error": m0,
+    "api_server_chat_error": m1,
     "api_server_chat_input_hint": MessageLookupByLibrary.simpleMessage(
       "輸入訊息...",
     ),
@@ -220,7 +348,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "啟動 OpenAI 相容的本機伺服器",
     ),
     "api_server_docs": MessageLookupByLibrary.simpleMessage("API 文件"),
-    "api_server_failed_to_start": m1,
+    "api_server_failed_to_start": m2,
     "api_server_logs": MessageLookupByLibrary.simpleMessage("請求日誌"),
     "api_server_no_active_request": MessageLookupByLibrary.simpleMessage(
       "目前沒有進行中的請求",
@@ -238,7 +366,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "api_server_send": MessageLookupByLibrary.simpleMessage("傳送"),
     "api_server_start": MessageLookupByLibrary.simpleMessage("啟動伺服器"),
-    "api_server_started_on_port": m2,
+    "api_server_started_on_port": m3,
     "api_server_starting": MessageLookupByLibrary.simpleMessage("伺服器啟動中"),
     "api_server_stop": MessageLookupByLibrary.simpleMessage("停止伺服器"),
     "api_server_stopped": MessageLookupByLibrary.simpleMessage("伺服器已停止"),
@@ -265,18 +393,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_completion": MessageLookupByLibrary.simpleMessage("並行續寫"),
     "batch_completion_settings": MessageLookupByLibrary.simpleMessage("並行續寫設定"),
     "batch_inference": MessageLookupByLibrary.simpleMessage("並行推理"),
-    "batch_inference_button": m3,
+    "batch_inference_button": m4,
     "batch_inference_count": MessageLookupByLibrary.simpleMessage("並行推理數量"),
-    "batch_inference_count_detail": m4,
-    "batch_inference_count_detail_2": m5,
+    "batch_inference_count_detail": m5,
+    "batch_inference_count_detail_2": m6,
     "batch_inference_detail": MessageLookupByLibrary.simpleMessage(
       "開啟並行推理後，RWKV 可以同時生成多個答案",
     ),
     "batch_inference_enable_or_not": MessageLookupByLibrary.simpleMessage(
       "開啟或關閉並行推理",
     ),
-    "batch_inference_running": m6,
-    "batch_inference_selected": m7,
+    "batch_inference_running": m7,
+    "batch_inference_selected": m8,
     "batch_inference_settings": MessageLookupByLibrary.simpleMessage("並行推理設定"),
     "batch_inference_short": MessageLookupByLibrary.simpleMessage("並行"),
     "batch_inference_width": MessageLookupByLibrary.simpleMessage("訊息顯示寬度"),
@@ -292,15 +420,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "以下是您本機的資料夾",
     ),
     "benchmark": MessageLookupByLibrary.simpleMessage("基準測試"),
-    "benchmark_batch": m8,
+    "benchmark_batch": m9,
     "benchmark_batch_not_supported_by_model":
         MessageLookupByLibrary.simpleMessage("模型不支援"),
-    "benchmark_batch_plan_range": m9,
+    "benchmark_batch_plan_range": m10,
     "benchmark_batch_plan_single": MessageLookupByLibrary.simpleMessage(
       "Batch 1",
     ),
-    "benchmark_batch_result": m10,
-    "benchmark_batch_supported_up_to": m11,
+    "benchmark_batch_result": m11,
+    "benchmark_batch_supported_up_to": m12,
     "benchmark_batch_waiting_for_backend": MessageLookupByLibrary.simpleMessage(
       "等待後端能力資訊",
     ),
@@ -311,11 +439,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "benchmark_best_flops": MessageLookupByLibrary.simpleMessage("最佳 FLOPS"),
     "benchmark_current": MessageLookupByLibrary.simpleMessage("目前測試"),
-    "benchmark_current_batch": m12,
+    "benchmark_current_batch": m13,
     "benchmark_decode_per_batch": MessageLookupByLibrary.simpleMessage(
       "Decode / Batch",
     ),
-    "benchmark_decode_progress_speed": m13,
+    "benchmark_decode_progress_speed": m14,
     "benchmark_info_app_version": MessageLookupByLibrary.simpleMessage("應用版本"),
     "benchmark_info_backend": MessageLookupByLibrary.simpleMessage("後端"),
     "benchmark_info_build_mode": MessageLookupByLibrary.simpleMessage("建置模式"),
@@ -329,14 +457,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "benchmark_info_soc_name": MessageLookupByLibrary.simpleMessage("SoC 名稱"),
     "benchmark_info_total_memory": MessageLookupByLibrary.simpleMessage("總記憶體"),
     "benchmark_info_total_vram": MessageLookupByLibrary.simpleMessage("總顯存"),
-    "benchmark_peak_decode": m14,
+    "benchmark_peak_decode": m15,
     "benchmark_plan": MessageLookupByLibrary.simpleMessage("測試計畫"),
     "benchmark_progress": MessageLookupByLibrary.simpleMessage("基準測試進度"),
-    "benchmark_progress_speed": m15,
+    "benchmark_progress_speed": m16,
     "benchmark_result": MessageLookupByLibrary.simpleMessage("基準測試結果"),
-    "benchmark_result_speed_line": m16,
+    "benchmark_result_speed_line": m17,
     "benchmark_run": MessageLookupByLibrary.simpleMessage("輪次"),
-    "benchmark_run_status": m17,
+    "benchmark_run_status": m18,
     "benchmark_support": MessageLookupByLibrary.simpleMessage("支援狀態"),
     "benchmark_total_decode": MessageLookupByLibrary.simpleMessage("總 Decode"),
     "black": MessageLookupByLibrary.simpleMessage("黑方"),
@@ -383,7 +511,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "chat_resume": MessageLookupByLibrary.simpleMessage("繼續"),
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKV 聊天"),
-    "chat_welcome_to_use": m18,
+    "chat_welcome_to_use": m19,
     "chat_with_rwkv_model": MessageLookupByLibrary.simpleMessage("與 RWKV 模型對話"),
     "chat_you_need_download_model_if_you_want_to_use_it":
         MessageLookupByLibrary.simpleMessage("您需要先下載模型才能使用"),
@@ -448,7 +576,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "對話名稱不能為空",
     ),
-    "conversation_name_cannot_be_longer_than_30_characters": m19,
+    "conversation_name_cannot_be_longer_than_30_characters": m20,
     "conversation_token_count": MessageLookupByLibrary.simpleMessage(
       "目前對話 Token 數量",
     ),
@@ -466,20 +594,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "created_at": MessageLookupByLibrary.simpleMessage("建立時間"),
     "creative_recommended": MessageLookupByLibrary.simpleMessage("創意 (推薦)"),
     "creative_recommended_short": MessageLookupByLibrary.simpleMessage("創意"),
-    "ctx_length_label": m20,
+    "ctx_length_label": m21,
     "current_folder_has_no_local_models": MessageLookupByLibrary.simpleMessage(
       "目前資料夾沒有可用於 Chat 的本機模型",
     ),
-    "current_model": m21,
+    "current_model": m22,
     "current_model_from_latest_json_not_pth":
         MessageLookupByLibrary.simpleMessage("目前模型來自 latest.json 設定，未載入本機模型檔案"),
-    "current_progress": m22,
+    "current_progress": m23,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("目前任務分頁 ID"),
     "current_task_text_length": MessageLookupByLibrary.simpleMessage(
       "目前任務文字長度",
     ),
     "current_task_url": MessageLookupByLibrary.simpleMessage("目前任務 URL"),
-    "current_test_item": m23,
+    "current_test_item": m24,
     "current_turn": MessageLookupByLibrary.simpleMessage("目前回合"),
     "current_version": MessageLookupByLibrary.simpleMessage("當前版本"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("自定義難度"),
@@ -539,7 +667,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete_conversations_failed": MessageLookupByLibrary.simpleMessage(
       "刪除對話失敗",
     ),
-    "delete_conversations_message": m24,
+    "delete_conversations_message": m25,
     "delete_current_branch": MessageLookupByLibrary.simpleMessage("刪除目前訊息"),
     "delete_finished": MessageLookupByLibrary.simpleMessage("刪除完成"),
     "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
@@ -571,7 +699,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "draw": MessageLookupByLibrary.simpleMessage("平局！"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("自動 Dump 訊息記錄"),
-    "dump_see_files_alert_message": m25,
+    "dump_see_files_alert_message": m26,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage(
       "協助我們改進演算法",
     ),
@@ -628,7 +756,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "failed_to_create_directory": MessageLookupByLibrary.simpleMessage(
       "建立目錄失敗",
     ),
-    "failed_to_delete_file": m26,
+    "failed_to_delete_file": m27,
     "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
       "並行推理 UI Benchmark",
     ),
@@ -640,7 +768,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "file_path_not_found": MessageLookupByLibrary.simpleMessage("檔案路徑未找到"),
     "files": MessageLookupByLibrary.simpleMessage("個檔案"),
-    "files_moved_with_failures": m27,
+    "files_moved_with_failures": m28,
     "filter": MessageLookupByLibrary.simpleMessage(
       "你好，這個問題我暫時無法回答，讓我們換個話題再聊聊吧。",
     ),
@@ -672,7 +800,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "found_new_version_available": MessageLookupByLibrary.simpleMessage(
       "發現新版本可用",
     ),
-    "frequency_penalty_with_value": m28,
+    "frequency_penalty_with_value": m29,
     "from_model": MessageLookupByLibrary.simpleMessage("來自模型: %s"),
     "gallery": MessageLookupByLibrary.simpleMessage("相冊"),
     "game_over": MessageLookupByLibrary.simpleMessage("遊戲結束！"),
@@ -703,26 +831,26 @@ class MessageLookup extends MessageLookupByLibrary {
       "按住錄音，鬆開發送",
     ),
     "home": MessageLookupByLibrary.simpleMessage("主頁"),
-    "http_service_port": m29,
+    "http_service_port": m30,
     "human": MessageLookupByLibrary.simpleMessage("人類"),
     "hyphen": MessageLookupByLibrary.simpleMessage("-"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage("我想讓 RWKV 說..."),
     "idle": MessageLookupByLibrary.simpleMessage("閒置"),
-    "imitate": m30,
-    "imitate_fle": m31,
+    "imitate": m31,
+    "imitate_fle": m32,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
     "import_all_weight_files": MessageLookupByLibrary.simpleMessage("匯入全部權重檔案"),
     "import_all_weight_files_description": MessageLookupByLibrary.simpleMessage(
       "選擇從此應用匯出的 ZIP 檔案。ZIP 檔案中的所有權重檔案將被匯入。如果檔案名稱相同，現有檔案將被覆蓋。",
     ),
-    "import_all_weight_files_success": m32,
+    "import_all_weight_files_success": m33,
     "import_failed": MessageLookupByLibrary.simpleMessage("匯入失敗"),
     "import_success": MessageLookupByLibrary.simpleMessage("匯入成功"),
     "import_weight_file": MessageLookupByLibrary.simpleMessage("匯入權重檔案"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage("當搜尋深度和寬度都大於 2 時，將啟用上下文搜尋"),
     "inference_engine": MessageLookupByLibrary.simpleMessage("推理引擎"),
-    "inference_engine_version": m33,
+    "inference_engine_version": m34,
     "inference_is_done": MessageLookupByLibrary.simpleMessage("🎉 推理完成"),
     "inference_is_running": MessageLookupByLibrary.simpleMessage("推理中"),
     "input_chinese_text_here": MessageLookupByLibrary.simpleMessage("輸入中文文字"),
@@ -762,8 +890,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "load_data": MessageLookupByLibrary.simpleMessage("載入資料"),
     "loaded": MessageLookupByLibrary.simpleMessage("已載入"),
     "loading": MessageLookupByLibrary.simpleMessage("載入中..."),
-    "loading_progress_percent": m34,
-    "local_folder_name": m35,
+    "loading_progress_percent": m35,
+    "local_folder_name": m36,
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
       "本機模型檔案",
     ),
@@ -777,9 +905,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "你可以選擇本機 .pth 檔案或 RWKV .gguf 檔案進行載入",
     ),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m36,
+    "memory_used": m37,
     "message_content": MessageLookupByLibrary.simpleMessage("訊息內容"),
-    "message_in_queue": m37,
+    "message_in_queue": m38,
     "message_line_height": MessageLookupByLibrary.simpleMessage("訊息行距"),
     "message_line_height_default_hint": MessageLookupByLibrary.simpleMessage(
       "預設會使用字體與渲染器本身的行高，不是固定 1.0x。這裡的自訂範圍是 1.0x 到 2.0x。",
@@ -798,7 +926,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "升級 iOS 18+ 可使用這款權重，更快更省電",
     ),
     "model_loading": MessageLookupByLibrary.simpleMessage("模型載入中..."),
-    "model_output": m38,
+    "model_output": m39,
     "model_settings": MessageLookupByLibrary.simpleMessage("模型設定"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage("模型大小增加，請開啟一個新的對話，以提升對話品質"),
@@ -862,13 +990,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "not_all_the_same": MessageLookupByLibrary.simpleMessage("不完全相同"),
     "not_syncing": MessageLookupByLibrary.simpleMessage("未同步"),
-    "npu_not_supported_title": m39,
+    "npu_not_supported_title": m40,
     "npu_recommendation_divider": MessageLookupByLibrary.simpleMessage(
       "推薦選擇上方 NPU 模型",
     ),
     "number": MessageLookupByLibrary.simpleMessage("數字"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
-    "ocr_guide_text": m40,
+    "ocr_guide_text": m41,
     "ocr_title": MessageLookupByLibrary.simpleMessage("OCR"),
     "off": MessageLookupByLibrary.simpleMessage("關閉"),
     "offline_translator": MessageLookupByLibrary.simpleMessage("離線翻譯"),
@@ -881,7 +1009,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_database_folder": MessageLookupByLibrary.simpleMessage("開啟資料庫資料夾"),
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage("打開調試日誌面板"),
     "open_folder": MessageLookupByLibrary.simpleMessage("開啟資料夾"),
-    "open_folder_create_failed": m41,
+    "open_folder_create_failed": m42,
     "open_folder_created_success": MessageLookupByLibrary.simpleMessage(
       "空資料夾建立成功。",
     ),
@@ -891,7 +1019,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_folder_path_is_null": MessageLookupByLibrary.simpleMessage(
       "資料夾路徑為空。",
     ),
-    "open_folder_unsupported_on_platform": m42,
+    "open_folder_unsupported_on_platform": m43,
     "open_official_download_page": MessageLookupByLibrary.simpleMessage(
       "開啟官方下載頁",
     ),
@@ -915,9 +1043,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "parameter_description_detail": MessageLookupByLibrary.simpleMessage(
       "Temperature: 控制輸出的隨機性。較高的值（如 0.8）使輸出更具創意和隨機性；較低的值（如 0.2）使輸出更集中和確定。\n\nTop P: 控制輸出的多樣性。模型僅考慮累積機率達到 Top P 的 token。較低的值（如 0.5）會忽略低機率的詞，使輸出更相關。\n\nPresence Penalty: 根據 token 是否已在文字中出現來懲罰它們。正值會增加模型談論新主題的可能性。\n\nFrequency Penalty: 根據 token 在文字中出現的頻率來懲罰它們。正值會減少模型逐字重複同一行的可能性。\n\nPenalty Decay: 控制懲罰隨距離的衰減程度。",
     ),
-    "path_label": m43,
+    "path_label": m44,
     "pause": MessageLookupByLibrary.simpleMessage("暫停"),
-    "penalty_decay_with_value": m44,
+    "penalty_decay_with_value": m45,
     "performance_test": MessageLookupByLibrary.simpleMessage("效能測試"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
       "測試速度和準確率",
@@ -968,7 +1096,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "請選擇難度",
     ),
     "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m45,
+        m46,
     "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
         MessageLookupByLibrary.simpleMessage("請選擇要為所有消息設定的取樣和懲罰參數"),
     "please_wait_for_it_to_finish": MessageLookupByLibrary.simpleMessage(
@@ -990,13 +1118,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("使用中文推理"),
     "prefill": MessageLookupByLibrary.simpleMessage("預填充"),
-    "prefill_progress_percent": m46,
+    "prefill_progress_percent": m47,
     "prefill_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "預填充速度（tokens 每秒）",
     ),
     "prefix_bank": MessageLookupByLibrary.simpleMessage("前綴組"),
     "prefix_examples": MessageLookupByLibrary.simpleMessage("前綴示例"),
-    "presence_penalty_with_value": m47,
+    "presence_penalty_with_value": m48,
     "preview": MessageLookupByLibrary.simpleMessage("預覽"),
     "prompt": MessageLookupByLibrary.simpleMessage("提示詞"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt 範本"),
@@ -1035,11 +1163,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator_prefixes": MessageLookupByLibrary.simpleMessage("問題前綴"),
     "question_generator_question_action_guide":
         MessageLookupByLibrary.simpleMessage("點擊已產生的問題，即可貼到對話輸入框。"),
-    "question_generator_tap_generate_hint": m48,
+    "question_generator_tap_generate_hint": m49,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "我想讓 RWKV 以這種語言提問...",
     ),
-    "queued_x": m49,
+    "queued_x": m50,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已經開啟"),
     "reached_bottom": MessageLookupByLibrary.simpleMessage("敬請期待"),
@@ -1069,14 +1197,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_auto_switched_to_jin": MessageLookupByLibrary.simpleMessage(
       "已自動切換為今風格",
     ),
-    "response_style_batch_not_supported": m50,
+    "response_style_batch_not_supported": m51,
     "response_style_button": MessageLookupByLibrary.simpleMessage("風格"),
     "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
       "至少保留一種表達風格",
     ),
     "response_style_many": MessageLookupByLibrary.simpleMessage("多種風格"),
-    "response_style_random_questions": m51,
-    "response_style_random_questions_not_enough": m52,
+    "response_style_random_questions": m52,
+    "response_style_random_questions_not_enough": m53,
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
       "只用英文",
     ),
@@ -1136,7 +1264,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
       "選擇設定檔中的權重或本機模型檔案",
     ),
-    "selected_count": m53,
+    "selected_count": m54,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage("傳送訊息給 RWKV"),
     "server_error": MessageLookupByLibrary.simpleMessage("伺服器錯誤"),
     "session_configuration": MessageLookupByLibrary.simpleMessage("會話組態"),
@@ -1161,7 +1289,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "skip_this_version": MessageLookupByLibrary.simpleMessage("跳過此版本"),
     "small": MessageLookupByLibrary.simpleMessage("小 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("原始碼"),
-    "source_text": m54,
+    "source_text": m55,
     "space_rendered": MessageLookupByLibrary.simpleMessage("已渲染空格"),
     "space_symbol_settings": MessageLookupByLibrary.simpleMessage("空格符設置"),
     "space_symbol_style": MessageLookupByLibrary.simpleMessage("空格符樣式"),
@@ -1218,9 +1346,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "system_mode": MessageLookupByLibrary.simpleMessage("跟隨系統"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("系統提示詞"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
-    "target_text": m55,
+    "target_text": m56,
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技術研發群"),
-    "temperature_with_value": m56,
+    "temperature_with_value": m57,
     "test_data": MessageLookupByLibrary.simpleMessage("測試資料"),
     "test_result": MessageLookupByLibrary.simpleMessage("測試結果"),
     "test_results": MessageLookupByLibrary.simpleMessage("測試結果"),
@@ -1234,10 +1362,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然後您就可以開始與 RWKV 對話了"),
-    "think_button_mode_en": m57,
-    "think_button_mode_en_long": m58,
-    "think_button_mode_en_short": m59,
-    "think_button_mode_fast": m60,
+    "think_button_mode_en": m58,
+    "think_button_mode_en_long": m59,
+    "think_button_mode_en_short": m60,
+    "think_button_mode_fast": m61,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推理模式會影響模型在推理時的表現",
     ),
@@ -1249,9 +1377,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("模式"),
-    "thinking_mode_auto": m61,
-    "thinking_mode_high": m62,
-    "thinking_mode_off": m63,
+    "thinking_mode_auto": m62,
+    "thinking_mode_high": m63,
+    "thinking_mode_off": m64,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式範本"),
     "thinking_tag_preview": MessageLookupByLibrary.simpleMessage("壓縮展示思考過程"),
     "thinking_tag_preview_subtitle": MessageLookupByLibrary.simpleMessage(
@@ -1263,10 +1391,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "this_model_does_not_support_batch_inference":
         MessageLookupByLibrary.simpleMessage("此模型不支援並行推理，請選擇帶有 batch 標籤的模型"),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考結果"),
-    "top_p_with_value": m64,
+    "top_p_with_value": m65,
     "total_count": MessageLookupByLibrary.simpleMessage("總數"),
     "total_disk_usage": MessageLookupByLibrary.simpleMessage("儲存空間佔用量"),
-    "total_test_items": m65,
+    "total_test_items": m66,
     "translate": MessageLookupByLibrary.simpleMessage("翻譯"),
     "translating": MessageLookupByLibrary.simpleMessage("翻譯中..."),
     "translation": MessageLookupByLibrary.simpleMessage("翻譯結果"),
@@ -1340,7 +1468,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search": MessageLookupByLibrary.simpleMessage("網路搜尋"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("網路搜尋範本"),
-    "websocket_service_port": m66,
+    "websocket_service_port": m67,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("權重檔案管理"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "權重文件保存目錄",
@@ -1358,16 +1486,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方獲勝！"),
-    "window_id": m67,
-    "windows_architecture_mismatch_dialog_message": m68,
+    "window_id": m68,
+    "windows_architecture_mismatch_dialog_message": m69,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("架構不相符"),
-    "windows_architecture_mismatch_warning": m69,
+    "windows_architecture_mismatch_warning": m70,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 個相關網頁"),
-    "x_tabs": m70,
-    "you_are_now_using": m71,
+    "x_tabs": m71,
+    "you_are_now_using": m72,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "現在可以開始與 RWKV 聊天了",
     ),

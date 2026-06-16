@@ -85,8 +85,10 @@ class DecodeParamButton extends ConsumerWidget {
     final loading = ref.watch(P.rwkvModel.loading);
     final generating = ref.watch(P.rwkvGeneration.generating);
     final loaded = ref.watch(P.rwkvModel.loaded);
+    final albatrossCanUse = ref.watch(P.albatrossRuntime.canUse);
     final decodeParamType = ref.watch(P.rwkvParams.decodeParamType);
-    final canEnable = loaded && !loading && !generating;
+    final canUseChatBackend = loaded || albatrossCanUse;
+    final canEnable = canUseChatBackend && !loading && !generating;
     final interactionState = canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable;
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final bgColor = colors.background;

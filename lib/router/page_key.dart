@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 // Project imports:
 import 'package:zone/page/advanced_sesttings.dart';
+import 'package:zone/page/albatross.dart';
 import 'package:zone/page/api_server.dart';
 import 'package:zone/page/batch_slot_preview.dart';
 import 'package:zone/page/benchmark.dart';
@@ -51,6 +52,7 @@ enum PageKey {
   see,
   ocr,
   weightManager,
+  albatross,
   test,
   test2,
   apiServer,
@@ -71,6 +73,7 @@ enum PageKey {
     conversation => const PageConversation(),
     settings => const PageSettings(),
     weightManager => const PageWeightManager(),
+    albatross => const PageAlbatross(),
     translator => const PageTranslator(),
     benchmark => const PageBenchmark(),
     batchSlotPreview => const PageBatchSlotPreview(),

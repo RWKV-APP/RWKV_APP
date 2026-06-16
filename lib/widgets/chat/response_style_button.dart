@@ -30,11 +30,13 @@ class ResponseStyleButton extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final responseStyle = ref.watch(P.chat.responseStyle);
     final model = ref.watch(P.rwkvModel.latest);
+    final albatrossCanUse = ref.watch(P.albatrossRuntime.canUse);
     final loading = ref.watch(P.rwkvModel.loading);
     final generating = ref.watch(P.rwkvGeneration.generating);
 
     final height = InputInteractions.calculateButtonHeight(context);
-    final canEnable = model != null && !loading && !generating;
+    final canUseChatBackend = model != null || albatrossCanUse;
+    final canEnable = canUseChatBackend && !loading && !generating;
     final buttonLabel = responseStyle.buttonLabel(
       baseLabel: s.response_style_button,
       manyLabel: s.response_style_many,

@@ -1196,9 +1196,9 @@ class _AskAllAsBatchButton extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final generating = ref.watch(P.rwkvGeneration.generating);
-    final latestModel = ref.watch(P.rwkvModel.latest);
     final supportedBatchSizes = ref.watch(P.rwkvParams.supportedBatchSizes);
-    final bool supported = (latestModel?.supportsBatchInference ?? false) && supportedBatchSizes.isNotEmpty && questions.length >= 2;
+    final batchInferenceAvailable = ref.watch(P.chat.batchInferenceAvailable);
+    final bool supported = batchInferenceAvailable && supportedBatchSizes.isNotEmpty && questions.length >= 2;
 
     return Padding(
       padding: const .only(top: 12),

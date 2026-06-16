@@ -49,6 +49,7 @@ class PageHome extends ConsumerWidget {
 
     final isDesktop = ref.watch(P.app.isDesktop);
     final showApiServer = isDesktop || Platform.isAndroid;
+    final showAlbatross = ref.watch(P.albatrossRuntime.canShowHomeEntry);
 
     final widgets = [
       const _ChatButton(),
@@ -60,6 +61,7 @@ class PageHome extends ConsumerWidget {
       const _NekoButton(),
       const _BenchmarkButton(),
       if (showApiServer) const _ApiServerButton(),
+      if (showAlbatross) const _AlbatrossButton(),
     ];
 
     return Scaffold(
@@ -252,6 +254,7 @@ class _ChatButton extends ConsumerWidget {
     return _HomeCard(
       heightsKey: 'chat',
       onTap: () {
+        P.albatrossRuntime.disableExternalMode();
         P.chat.startNewChat();
         push(.chat);
       },
@@ -259,6 +262,27 @@ class _ChatButton extends ConsumerWidget {
       icon: const FaIcon(FontAwesomeIcons.comments, color: Colors.white),
       title: s.chat,
       description: s.chat_with_rwkv_model,
+    );
+  }
+}
+
+class _AlbatrossButton extends ConsumerWidget {
+  const _AlbatrossButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+
+    return _HomeCard(
+      heightsKey: 'albatrossChat',
+      onTap: () {
+        push(.albatross);
+      },
+      color: theme.colorScheme.primary,
+      icon: const Icon(Icons.bolt, color: Colors.white),
+      title: s.albatross_chat,
+      description: s.albatross_chat_description,
     );
   }
 }

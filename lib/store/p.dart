@@ -63,6 +63,7 @@ import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/db/db.dart' as db;
 import 'package:zone/db/db.dart';
+import 'package:zone/func/albatross_protocol.dart';
 import 'package:zone/func/build_chat_history.dart';
 import 'package:zone/func/calculate_total_size_of_dir.dart';
 import 'package:zone/func/check_model_selection.dart';
@@ -134,6 +135,7 @@ import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/version_info_panel.dart';
 
 part "adapter.dart";
+part "albatross_runtime.dart";
 part "ask_question.dart";
 part "app.dart";
 part "backend.dart";
@@ -175,6 +177,7 @@ part "telemetry.dart";
 
 abstract class P {
   static final adapter = _Adapter();
+  static final albatrossRuntime = _AlbatrossRuntime();
   static final askQuestion = _AskQuestion();
   static final app = _App();
   static final backend = _Backend();
@@ -235,6 +238,7 @@ abstract class P {
   static Future<void> _unorderedInit() async {
     await Future.wait([
       _safeInit(() => askQuestion._init(), mark: "askQuestion"),
+      _safeInit(() => albatrossRuntime._init(), mark: "albatrossRuntime"),
       _safeInit(() => rwkvBridge._init(), mark: "rwkvBridge"),
       _safeInit(() => rwkvAutoLoad._init(), mark: "rwkvAutoLoad"),
       _safeInit(() => chat._init(), mark: "chat"),

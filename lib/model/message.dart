@@ -10,6 +10,7 @@ import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/model/message_type.dart';
 import 'package:zone/model/ref_info.dart';
 import 'package:zone/model/sampler_and_penalty_param.dart';
+import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 
 @immutable
 final class Message extends Equatable {
@@ -287,6 +288,39 @@ extension MessageX on Message {
     );
     if (cotResult.length <= 200) return content;
     return cotResult;
+  }
+
+  String getContentForEditing() {
+    if (isMine) return contentAndTails.first;
+
+    final quickThinkingResult = _quickThinkingResultForEditing();
+    if (quickThinkingResult != null) return quickThinkingResult;
+
+    return _stripLegacyFastThinkingTailForEditing(content);
+  }
+
+  String? _quickThinkingResultForEditing() {
+    if (!isCotFormat) return null;
+
+    const thinkStartTagLength = 7;
+    const thinkEndTag = "</think>";
+    final endIndex = content.indexOf(thinkEndTag);
+    if (endIndex < 0) return null;
+
+    final thinkingContent = content.substring(thinkStartTagLength, endIndex);
+    if (thinkingContent.trim().isNotEmpty) return null;
+
+    final resultStart = endIndex + thinkEndTag.length;
+    if (resultStart >= content.length) return "";
+    return content.substring(resultStart).trimLeft();
+  }
+
+  String _stripLegacyFastThinkingTailForEditing(String value) {
+    if (thinking_mode.ThinkingMode.fromString(runningMode) != .fast) return value;
+
+    final trimmedLeft = value.trimLeft();
+    if (!trimmedLeft.startsWith(">")) return value;
+    return trimmedLeft.substring(1).trimLeft();
   }
 
   (String cotContent, String cotResult) _getCotContentAndResult({bool appendThinkTagInThinkingTagIsEmpty = false}) {

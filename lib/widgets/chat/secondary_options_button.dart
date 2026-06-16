@@ -29,9 +29,11 @@ class SecondaryOptionsButton extends ConsumerWidget {
     final loading = ref.watch(P.rwkvModel.loading);
     final generating = ref.watch(P.rwkvGeneration.generating);
     final loaded = ref.watch(P.rwkvModel.loaded);
+    final albatrossCanUse = ref.watch(P.albatrossRuntime.canUse);
     final thinkingMode = ref.watch(P.rwkvParams.thinkingMode);
 
-    final canEnable = loaded && !loading && !generating;
+    final canUseChatBackend = loaded || albatrossCanUse;
+    final canEnable = canUseChatBackend && !loading && !generating;
     final interactionState = switch (thinkingMode) {
       .preferChinese => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
       .free => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,

@@ -50,6 +50,7 @@ class InputTextField extends ConsumerWidget {
     final selectedSpkDisplay = hasSelectedSpk ? _buildSpkDisplay(selectedSpkName) : "";
     final selectedVoiceDisplayName = hasSourceWav ? sourceWavName : selectedSpkDisplay;
     final hasSelectedVoice = selectedVoiceDisplayName.isNotEmpty;
+    final albatrossCanUse = isChat && ref.watch(P.albatrossRuntime.canUse);
 
     String hintText;
     switch (demoType) {
@@ -65,7 +66,7 @@ class InputTextField extends ConsumerWidget {
         hintText = s.i_want_rwkv_to_say;
     }
 
-    final textFieldEnabled = loaded && !loading;
+    final textFieldEnabled = (loaded || albatrossCanUse) && !loading;
     final qw = ref.watch(P.app.qw);
     final isDesktop = ref.watch(P.app.isDesktop);
     final appTheme = ref.watch(P.app.theme);

@@ -32,6 +32,7 @@ class ModelSelectButton extends ConsumerWidget {
     final batchEnabled = ref.watch(P.chat.effectiveBatchEnabled);
     final pageKey = ref.watch(P.app.pageKey);
     final screenWidth = ref.watch(P.app.screenWidth);
+    final albatrossCanUse = preferredDemoType == .chat && ref.watch(P.albatrossRuntime.canUse);
     final currentModel = P.rwkvAutoLoad.visibleCurrentModelForPage(
       fileInfo: rawCurrentModel,
       pageKey: pageKey,
@@ -48,16 +49,21 @@ class ModelSelectButton extends ConsumerWidget {
       preferredDemoType: preferredDemoType,
     );
 
-    String modelDisplay = activeLoadingFile?.name ?? currentGroupInfo?.displayName ?? currentModel?.name ?? s.click_to_select_model;
+    String modelDisplay =
+        activeLoadingFile?.name ??
+        currentGroupInfo?.displayName ??
+        currentModel?.name ??
+        (albatrossCanUse ? "Albatross" : s.click_to_select_model);
     final isLoadingModel = activeLoadingFile != null;
-    final hasSelectedModel = isLoadingModel || currentGroupInfo != null || currentModel != null;
+    final hasSelectedModel = isLoadingModel || currentGroupInfo != null || currentModel != null || albatrossCanUse;
 
     if (screenWidth < 350) {
       modelDisplay = modelDisplay.replaceAll(RegExp(r"\([^)]*\)"), "");
     }
 
     final qb = ref.watch(P.app.qb);
-    final rawMaxButtonWidth = currentModel != null && batchEnabled && preferredDemoType == .chat ? screenWidth * .46 : screenWidth * .62;
+    final showBatchShortcut = (currentModel != null || albatrossCanUse) && batchEnabled && preferredDemoType == .chat;
+    final rawMaxButtonWidth = showBatchShortcut ? screenWidth * .46 : screenWidth * .62;
     final maxButtonWidth = rawMaxButtonWidth.clamp(180.0, 360.0).toDouble();
 
     return ConstrainedBox(
@@ -109,7 +115,7 @@ class ModelSelectButton extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
               ],
-              if (currentModel != null && batchEnabled && preferredDemoType == .chat) ...[
+              if (showBatchShortcut) ...[
                 Container(
                   width: 0.5,
                   color: qb.q(.1),

@@ -14,6 +14,12 @@ bool checkModelSelection({
   bool showModelSelector = true,
   required DemoType preferredDemoType,
 }) {
+  if (preferredDemoType == .chat && P.albatrossRuntime.enabled.q) {
+    if (P.albatrossRuntime.running.q) return true;
+    if (showAlert) Alert.info(S.current.albatross_service_not_running);
+    return false;
+  }
+
   final loadedModelsCount = P.rwkvModel.loadedModelsCount.q;
 
   if (loadedModelsCount == 0) {
