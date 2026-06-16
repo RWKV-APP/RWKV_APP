@@ -802,6 +802,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Fixed (Most Conservative)",
     ),
     "decode_param_fixed_short": MessageLookupByLibrary.simpleMessage("Fixed"),
+    "decode_param_fixed_warning": MessageLookupByLibrary.simpleMessage(
+      "Fixed mode makes model outputs very conservative and low in diversity. Please make sure this matches your intent.",
+    ),
     "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
       "We can control RWKV\'s output style through decode parameters",
     ),

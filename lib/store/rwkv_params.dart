@@ -71,6 +71,37 @@ class _RWKVParams {
 }
 
 extension $RWKVParams on _RWKVParams {
+  SamplerAndPenaltyParam currentSamplerAndPenaltyParam() {
+    return SamplerAndPenaltyParam(
+      temperature: arguments(Argument.temperature).q,
+      topP: arguments(Argument.topP).q,
+      presencePenalty: arguments(Argument.presencePenalty).q,
+      frequencyPenalty: arguments(Argument.frequencyPenalty).q,
+      penaltyDecay: arguments(Argument.penaltyDecay).q,
+    );
+  }
+
+  bool isCurrentDecodeParamFixed() {
+    return decodeParamType.q == DecodeParamType.fixed;
+  }
+
+  bool isSamplerAndPenaltyParamFixed(SamplerAndPenaltyParam? param) {
+    return param?.decodeParamType == DecodeParamType.fixed;
+  }
+
+  bool areFrontendBatchParamsFixed({required int count}) {
+    final params = frontendBatchParams.q.take(count);
+    if (params.isEmpty) return false;
+    for (final param in params) {
+      if (!isSamplerAndPenaltyParamFixed(param)) return false;
+    }
+    return true;
+  }
+
+  void showFixedDecodeParamWarning() {
+    Alert.info(S.current.decode_param_fixed_warning, position: AlertPosition.top);
+  }
+
   void setGenerateMode(bool isGenerateMode) {
     if (isGenerateMode) {
       for (final entry in P.rwkvModel.allLoaded.q.entries) {

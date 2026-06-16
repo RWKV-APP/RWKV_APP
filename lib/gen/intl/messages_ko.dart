@@ -681,6 +681,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_param_default_short": MessageLookupByLibrary.simpleMessage("기본값"),
     "decode_param_fixed": MessageLookupByLibrary.simpleMessage("고정 (가장 보수적)"),
     "decode_param_fixed_short": MessageLookupByLibrary.simpleMessage("고정"),
+    "decode_param_fixed_warning": MessageLookupByLibrary.simpleMessage(
+      "고정 모드는 모델 출력을 매우 보수적으로 만들고 다양성을 낮춥니다. 의도에 맞는지 확인해 주세요.",
+    ),
     "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
       "디코딩 매개변수를 통해 RWKV의 출력 스타일을 제어할 수 있습니다",
     ),

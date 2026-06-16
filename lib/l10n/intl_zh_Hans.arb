@@ -549,6 +549,7 @@
   "decode_param": "解码参数",
   "decode_param_fixed": "固定（最保守）",
   "decode_param_fixed_short": "固定",
+  "decode_param_fixed_warning": "固定模式会让模型输出非常保守，缺乏多样性。请确认这符合你的意图。",
   "decode_param_creative": "创意（适合写作，减少重复）",
   "decode_param_creative_short": "创意",
   "creative_recommended": "创意 (推荐)",

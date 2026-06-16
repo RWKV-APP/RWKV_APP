@@ -26,6 +26,11 @@ class FormItem extends ConsumerWidget {
 
   final Widget? bottom;
 
+  final double? bottomLineLeft;
+  final double? bottomLineRight;
+  final double? bottomLineHeight;
+  final Color? bottomLineColor;
+
   const FormItem({
     super.key,
     required this.title,
@@ -42,6 +47,10 @@ class FormItem extends ConsumerWidget {
     this.subtitle,
     this.trailing,
     this.bottom,
+    this.bottomLineLeft = 44,
+    this.bottomLineRight = 0,
+    this.bottomLineHeight = 0.5,
+    this.bottomLineColor,
   }) : assert(infoText == null || infoWidget == null, "infoText and infoWidget cannot be provided at the same time");
 
   @override
@@ -119,12 +128,12 @@ class FormItem extends ConsumerWidget {
           if (autoShowBottomBorder && !isSectionEnd)
             Positioned(
               bottom: 0,
-              left: 44,
-              right: 0,
-              height: .5,
+              left: bottomLineLeft,
+              right: bottomLineRight,
+              height: bottomLineHeight,
               child: Container(
-                height: .5,
-                color: qb.q(.1),
+                height: bottomLineHeight,
+                color: bottomLineColor ?? qb.q(.1),
               ),
             ),
         ],

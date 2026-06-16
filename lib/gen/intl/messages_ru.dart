@@ -830,6 +830,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_param_fixed_short": MessageLookupByLibrary.simpleMessage(
       "Фиксированный",
     ),
+    "decode_param_fixed_warning": MessageLookupByLibrary.simpleMessage(
+      "Фиксированный режим делает ответы модели очень консервативными и снижает разнообразие. Убедитесь, что это соответствует вашему намерению.",
+    ),
     "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
       "Мы можем контролировать стиль вывода RWKV через параметры декодирования",
     ),

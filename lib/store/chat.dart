@@ -1971,20 +1971,19 @@ extension $Chat on _Chat {
       return;
     }
 
-    final temperature = P.rwkvParams.arguments(Argument.temperature).q;
-    final topP = P.rwkvParams.arguments(Argument.topP).q;
-    final presencePenalty = P.rwkvParams.arguments(Argument.presencePenalty).q;
-    final frequencyPenalty = P.rwkvParams.arguments(Argument.frequencyPenalty).q;
-    final penaltyDecay = P.rwkvParams.arguments(Argument.penaltyDecay).q;
+    final currentParam = P.rwkvParams.currentSamplerAndPenaltyParam();
+    final batchParam = currentParam.decodeParamType == DecodeParamType.fixed
+        ? SamplerAndPenaltyParam.fromDecodeParamType(DecodeParamType.conservative)
+        : currentParam;
 
     final newValue = List<SamplerAndPenaltyParam>.generate(
       100,
       (index) => SamplerAndPenaltyParam(
-        temperature: temperature,
-        topP: topP,
-        presencePenalty: presencePenalty,
-        frequencyPenalty: frequencyPenalty,
-        penaltyDecay: penaltyDecay,
+        temperature: batchParam.temperature,
+        topP: batchParam.topP,
+        presencePenalty: batchParam.presencePenalty,
+        frequencyPenalty: batchParam.frequencyPenalty,
+        penaltyDecay: batchParam.penaltyDecay,
       ),
     );
 
@@ -2844,6 +2843,9 @@ extension _$Chat on _Chat {
     final model = P.rwkvModel.latest.q;
     final isTTS = model?.isTTS ?? false;
     final isSee = model?.worldType != null;
+    if (pageKey == .chat) {
+      unawaited(_showFixedDecodeParamWarningAfterEnteringChat());
+    }
     switch (pageKey) {
       case .completion:
         final isTranslate = model?.tags.contains("translate") ?? false;
@@ -2872,6 +2874,13 @@ extension _$Chat on _Chat {
     textEditingController.text = "";
     focusNode.unfocus();
     hasFocus.q = false;
+  }
+
+  Future<void> _showFixedDecodeParamWarningAfterEnteringChat() async {
+    await 500.msLater;
+    if (P.app.pageKey.q != .chat) return;
+    if (!P.rwkvParams.isCurrentDecodeParamFixed()) return;
+    P.rwkvParams.showFixedDecodeParamWarning();
   }
 
   void _onTextEditingControllerValueChanged() {

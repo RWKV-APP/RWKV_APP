@@ -549,6 +549,7 @@
   "decode_param": "디코딩 매개변수",
   "decode_param_fixed": "고정 (가장 보수적)",
   "decode_param_fixed_short": "고정",
+  "decode_param_fixed_warning": "고정 모드는 모델 출력을 매우 보수적으로 만들고 다양성을 낮춥니다. 의도에 맞는지 확인해 주세요.",
   "decode_param_creative": "창의적 (글쓰기에 적합, 반복 감소)",
   "decode_param_creative_short": "창의적",
   "creative_recommended": "창의적 (추천)",

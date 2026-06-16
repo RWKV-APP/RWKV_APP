@@ -552,6 +552,7 @@
   "decode_param": "Decode Param",
   "decode_param_fixed": "Fixed (Most Conservative)",
   "decode_param_fixed_short": "Fixed",
+  "decode_param_fixed_warning": "Fixed mode makes model outputs very conservative and low in diversity. Please make sure this matches your intent.",
   "decode_param_creative": "Creative (Writing, Less Repetitive)",
   "decode_param_creative_short": "Creative",
   "creative_recommended": "Creative (Recommended)",

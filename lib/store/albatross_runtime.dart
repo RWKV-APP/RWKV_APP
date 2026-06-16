@@ -48,7 +48,7 @@ class _AlbatrossRuntime {
     return buildAlbatrossDisplaySystemInfo(
       telemetryInfo: telemetryInfo,
       cudaInfo: cudaInfo,
-      isDesktop: Platform.isWindows || Platform.isLinux,
+      isDesktop: Platform.isWindows || Platform.isLinux || Platform.isMacOS,
     );
   });
 
@@ -63,6 +63,8 @@ class _AlbatrossRuntime {
     return shouldShowAlbatrossEntry(
       isWindows: Platform.isWindows,
       isWindowsX64: ffi.Abi.current() == ffi.Abi.windowsX64,
+      isLinux: Platform.isLinux,
+      isMacOS: Platform.isMacOS,
       gpuName: gpuName,
     );
   });
@@ -202,6 +204,8 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   }
 
   Future<bool> prepareForChat() async {
+    if (!_canLaunchRuntime(showAlert: true)) return false;
+
     enableExternalMode();
     connecting.q = true;
     lastError.q = "";
@@ -302,10 +306,12 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   }
 
   Future<void> pickExecutable() async {
-    final result = await file_picker.FilePicker.pickFiles(
-      type: file_picker.FileType.custom,
-      allowedExtensions: const <String>["exe"],
-    );
+    final result = Platform.isWindows
+        ? await file_picker.FilePicker.pickFiles(
+            type: file_picker.FileType.custom,
+            allowedExtensions: const <String>["exe"],
+          )
+        : await file_picker.FilePicker.pickFiles();
     final path = result?.files.firstOrNull?.path;
     if (path == null || path.isEmpty) return;
     await setExecutablePath(path);
@@ -665,6 +671,8 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   }
 
   Future<void> restartRuntime() async {
+    if (!_canLaunchRuntime(showAlert: true)) return;
+
     await stopRuntime();
     await prepareForChat();
   }
@@ -803,6 +811,16 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   String _ensureTxtPath(String targetPath) {
     if (extension(targetPath).isNotEmpty) return targetPath;
     return "$targetPath.txt";
+  }
+
+  bool _canLaunchRuntime({required bool showAlert}) {
+    if (canLaunchAlbatrossRuntime(isMacOS: Platform.isMacOS)) return true;
+
+    final message = S.current.albatross_backend_unsupported;
+    lastError.q = message;
+    _addLog("runtime launch unsupported on this platform");
+    if (showAlert) Alert.info(message);
+    return false;
   }
 
   String _buildChatCompletionPrompt(List<String> messages) {

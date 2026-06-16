@@ -94,6 +94,7 @@ class BatchSettingsPanel extends ConsumerWidget {
     final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
     final featureRollout = ref.watch(P.app.featureRollout);
     final fakeBatchInferenceBenchmarkEnabled = ref.watch(P.chat.fakeBatchInferenceBenchmarkEnabled);
+    final qb = ref.watch(P.app.qb);
 
     return ClipRRect(
       borderRadius: const .only(
@@ -128,6 +129,9 @@ class BatchSettingsPanel extends ConsumerWidget {
               const SizedBox(height: 8),
             ],
             FormItem(
+              bottomLineLeft: 8,
+              bottomLineRight: 8,
+              bottomLineColor: qb.q(.2),
               isSectionStart: true,
               isSectionEnd: !batchInference,
               title: s.batch_inference,
@@ -147,6 +151,9 @@ class BatchSettingsPanel extends ConsumerWidget {
             DimmedWhenInactive(
               ignoring: !batchInference,
               child: FormItem(
+                bottomLineLeft: 8,
+                bottomLineRight: 8,
+                bottomLineColor: qb.q(.2),
                 showArrow: false,
                 isSectionStart: !batchInference,
                 title: s.batch_inference_count,
@@ -169,6 +176,9 @@ class BatchSettingsPanel extends ConsumerWidget {
             DimmedWhenInactive(
               ignoring: !batchInference,
               child: FormItem(
+                bottomLineLeft: 8,
+                bottomLineRight: 8,
+                bottomLineColor: qb.q(.2),
                 title: s.decode_params_for_each_message,
                 subtitle: s.decode_params_for_each_message_detail,
                 showArrow: false,
@@ -189,6 +199,9 @@ class BatchSettingsPanel extends ConsumerWidget {
               DimmedWhenInactive(
                 ignoring: !batchInference || batchCount < 2,
                 child: FormItem(
+                  bottomLineLeft: 8,
+                  bottomLineRight: 8,
+                  bottomLineColor: qb.q(.2),
                   isSectionEnd: false,
                   title: s.multi_question_title,
                   subtitle: s.multi_question_entry_detail,
@@ -202,6 +215,9 @@ class BatchSettingsPanel extends ConsumerWidget {
             DimmedWhenInactive(
               ignoring: !batchInference,
               child: FormItem(
+                bottomLineLeft: 8,
+                bottomLineRight: 8,
+                bottomLineColor: qb.q(.2),
                 showArrow: false,
                 isSectionEnd: true,
                 title: s.batch_inference_width,
@@ -388,7 +404,9 @@ class _DecodeParams extends ConsumerWidget {
           children: [
             const SizedBox(height: 4),
             ...rows,
+            const SizedBox(height: 8),
             Container(height: 0.5, color: qb.q(.2)),
+            const SizedBox(height: 8),
             const Align(
               alignment: .centerLeft,
               child: _DecodeParam(
@@ -414,10 +432,18 @@ class _DecodeParam extends ConsumerWidget {
     this.forAll = false,
   });
 
+  bool _currentSelectionIsFixed() {
+    if (!forAll) {
+      return P.rwkvParams.isSamplerAndPenaltyParamFixed(param);
+    }
+    return P.rwkvParams.areFrontendBatchParamsFixed(count: P.chat.batchCount.q);
+  }
+
   void _onTap() async {
     final context = getContext()!;
     final s = S.of(context);
     final selectedType = param?.decodeParamType;
+    final wasFixed = _currentSelectionIsFixed();
     final result = await showModalActionSheet<DecodeParamType>(
       context: context,
       title: forAll
@@ -451,7 +477,10 @@ class _DecodeParam extends ConsumerWidget {
       ],
     );
 
-    if (result == null) return;
+    if (result == null) {
+      if (wasFixed) P.rwkvParams.showFixedDecodeParamWarning();
+      return;
+    }
 
     late final SamplerAndPenaltyParam newParam;
 
@@ -465,7 +494,10 @@ class _DecodeParam extends ConsumerWidget {
         // 临时选用当前的 param
         temporarySamplerAndPenaltyParam: forAll ? SamplerAndPenaltyParam.fromDecodeParamType(DecodeParamType.defaults) : param,
       );
-      if (res == null) return;
+      if (res == null) {
+        if (wasFixed) P.rwkvParams.showFixedDecodeParamWarning();
+        return;
+      }
       newParam = res;
     } else {
       newParam = SamplerAndPenaltyParam.fromDecodeParamType(result);
@@ -497,6 +529,7 @@ class _DecodeParam extends ConsumerWidget {
       ),
     );
     P.rwkvBridge.send(GetSamplerAndPenaltyParams(batchSize: P.chat.batchCount.q, modelID: modelID));
+    if (P.rwkvParams.isSamplerAndPenaltyParamFixed(newParam)) P.rwkvParams.showFixedDecodeParamWarning();
   }
 
   String _fmt(double value) {

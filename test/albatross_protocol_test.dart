@@ -3,11 +3,13 @@ import 'package:zone/func/albatross_protocol.dart';
 
 void main() {
   group('shouldShowAlbatrossEntry', () {
-    test('requires Windows x64 and NVIDIA GPU name', () {
+    test('shows on Windows x64 NVIDIA, Linux, and macOS', () {
       expect(
         shouldShowAlbatrossEntry(
           isWindows: true,
           isWindowsX64: true,
+          isLinux: false,
+          isMacOS: false,
           gpuName: 'NVIDIA GeForce RTX 4090',
         ),
         isTrue,
@@ -16,6 +18,8 @@ void main() {
         shouldShowAlbatrossEntry(
           isWindows: true,
           isWindowsX64: false,
+          isLinux: false,
+          isMacOS: false,
           gpuName: 'NVIDIA GeForce RTX 4090',
         ),
         isFalse,
@@ -24,10 +28,49 @@ void main() {
         shouldShowAlbatrossEntry(
           isWindows: true,
           isWindowsX64: true,
+          isLinux: false,
+          isMacOS: false,
           gpuName: 'AMD Radeon',
         ),
         isFalse,
       );
+      expect(
+        shouldShowAlbatrossEntry(
+          isWindows: false,
+          isWindowsX64: false,
+          isLinux: true,
+          isMacOS: false,
+          gpuName: '',
+        ),
+        isTrue,
+      );
+      expect(
+        shouldShowAlbatrossEntry(
+          isWindows: false,
+          isWindowsX64: false,
+          isLinux: false,
+          isMacOS: true,
+          gpuName: '',
+        ),
+        isTrue,
+      );
+      expect(
+        shouldShowAlbatrossEntry(
+          isWindows: false,
+          isWindowsX64: false,
+          isLinux: false,
+          isMacOS: false,
+          gpuName: 'NVIDIA GeForce RTX 4090',
+        ),
+        isFalse,
+      );
+    });
+  });
+
+  group('canLaunchAlbatrossRuntime', () {
+    test('keeps macOS as UI-only until a runtime exists', () {
+      expect(canLaunchAlbatrossRuntime(isMacOS: false), isTrue);
+      expect(canLaunchAlbatrossRuntime(isMacOS: true), isFalse);
     });
   });
 

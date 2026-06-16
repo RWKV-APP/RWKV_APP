@@ -549,6 +549,7 @@
   "decode_param": "デコードパラメータ",
   "decode_param_fixed": "固定（最も保守的）",
   "decode_param_fixed_short": "固定",
+  "decode_param_fixed_warning": "固定モードではモデルの出力が非常に保守的になり、多様性が低くなります。意図に合っているか確認してください。",
   "decode_param_creative": "クリエイティブ（執筆向き、繰り返し少）",
   "decode_param_creative_short": "クリエイティブ",
   "creative_recommended": "クリエイティブ（推奨）",

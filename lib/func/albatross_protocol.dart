@@ -117,11 +117,19 @@ class AlbatrossSseParser {
 bool shouldShowAlbatrossEntry({
   required bool isWindows,
   required bool isWindowsX64,
+  required bool isLinux,
+  required bool isMacOS,
   required String gpuName,
 }) {
+  if (isMacOS) return true;
+  if (isLinux) return true;
   if (!isWindows) return false;
   if (!isWindowsX64) return false;
   return gpuName.toLowerCase().contains("nvidia");
+}
+
+bool canLaunchAlbatrossRuntime({required bool isMacOS}) {
+  return !isMacOS;
 }
 
 List<String> buildAlbatrossLaunchArgs({
@@ -189,12 +197,12 @@ List<String> missingAlbatrossRuntimeDlls({
   if (!isWindows) return const <String>[];
   if (executablePath.trim().isEmpty) return albatrossWindowsRuntimeDlls;
 
-  final executableDir = path.dirname(executablePath);
-  final libDir = path.join(executableDir, "lib");
+  final executableDir = path.windows.dirname(executablePath);
+  final libDir = path.windows.join(executableDir, "lib");
   final missing = <String>[];
   for (final dll in albatrossWindowsRuntimeDlls) {
-    final inExecutableDir = path.join(executableDir, dll);
-    final inLibDir = path.join(libDir, dll);
+    final inExecutableDir = path.windows.join(executableDir, dll);
+    final inLibDir = path.windows.join(libDir, dll);
     if (fileExists(inExecutableDir) || fileExists(inLibDir)) continue;
     missing.add(dll);
   }
@@ -205,8 +213,8 @@ String buildAlbatrossWindowsPath({
   required String executablePath,
   required String existingPath,
 }) {
-  final executableDir = path.dirname(executablePath);
-  final libDir = path.join(executableDir, "lib");
+  final executableDir = path.windows.dirname(executablePath);
+  final libDir = path.windows.join(executableDir, "lib");
   if (existingPath.trim().isEmpty) return libDir;
   return "$libDir;$existingPath";
 }

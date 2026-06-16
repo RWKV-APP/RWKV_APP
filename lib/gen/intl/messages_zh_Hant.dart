@@ -638,6 +638,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_param_default_short": MessageLookupByLibrary.simpleMessage("預設"),
     "decode_param_fixed": MessageLookupByLibrary.simpleMessage("固定（最保守）"),
     "decode_param_fixed_short": MessageLookupByLibrary.simpleMessage("固定"),
+    "decode_param_fixed_warning": MessageLookupByLibrary.simpleMessage(
+      "固定模式會讓模型輸出非常保守，缺乏多樣性。請確認這符合你的意圖。",
+    ),
     "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
       "我們可以透過解碼參數控制 RWKV 的輸出風格",
     ),

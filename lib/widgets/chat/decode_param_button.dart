@@ -65,7 +65,10 @@ class DecodeParamButton extends ConsumerWidget {
       actions: actions,
     );
 
-    if (res == null) return;
+    if (res == null) {
+      if (current == DecodeParamType.fixed) P.rwkvParams.showFixedDecodeParamWarning();
+      return;
+    }
 
     if (res == .custom) {
       await ArgumentsPanel.show(getContext()!);
@@ -74,6 +77,8 @@ class DecodeParamButton extends ConsumerWidget {
       await P.rwkvParams.syncSamplerParamsFromDefault(res);
       P.preference.saveDecodeParamType(res);
     }
+
+    if (P.rwkvParams.isCurrentDecodeParamFixed()) P.rwkvParams.showFixedDecodeParamWarning();
   }
 
   @override

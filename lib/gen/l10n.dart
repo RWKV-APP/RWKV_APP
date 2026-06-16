@@ -4232,6 +4232,16 @@ class S {
     );
   }
 
+  /// `固定模式会让模型输出非常保守，缺乏多样性。请确认这符合你的意图。`
+  String get decode_param_fixed_warning {
+    return Intl.message(
+      '固定模式会让模型输出非常保守，缺乏多样性。请确认这符合你的意图。',
+      name: 'decode_param_fixed_warning',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `创意（适合写作，减少重复）`
   String get decode_param_creative {
     return Intl.message(
