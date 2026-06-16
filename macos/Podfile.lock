@@ -35,7 +35,7 @@ PODS:
   - rwkv_mobile_flutter (0.0.1):
     - FlutterMacOS
   - Sentry/HybridSDK (8.58.3)
-  - sentry_flutter (9.21.0):
+  - sentry_flutter (9.22.0):
     - Flutter
     - FlutterMacOS
     - Sentry/HybridSDK (= 8.58.3)
@@ -177,7 +177,7 @@ SPEC CHECKSUMS:
   record_macos: 5d55909f9650314be6424ffd6b123ac75a08c3c1
   rwkv_mobile_flutter: 8ca6e2136af1082006740e7a3072448fd0f210e7
   Sentry: 108fdbb76299c4189af12246bf0308c09c278922
-  sentry_flutter: 32e67cb4756ce3de42bbd56581fa935922ff328f
+  sentry_flutter: fbb8a76a5a009ce7ba7bde295ee6b50b11916851
   share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
