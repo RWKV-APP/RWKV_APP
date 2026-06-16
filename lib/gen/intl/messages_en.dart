@@ -206,11 +206,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "This feature is not supported by the current Albatross backend",
     ),
     "albatross_binary": MessageLookupByLibrary.simpleMessage("Binary"),
+    "albatross_binary_compile_hint": MessageLookupByLibrary.simpleMessage(
+      "The Binary may need to be compiled for your machine. We recommend using a local AI Agent to build the matching binary.",
+    ),
     "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
       "Missing Albatross binary download config",
     ),
     "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
-      "Choose or download the Albatross binary first",
+      "Choose the Albatross binary first",
+    ),
+    "albatross_binary_tokenizer_source": MessageLookupByLibrary.simpleMessage(
+      "Binary and Tokenizer source",
     ),
     "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
     "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
@@ -291,6 +297,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "albatross_not_selected": MessageLookupByLibrary.simpleMessage(
       "Not Selected",
     ),
+    "albatross_open_resource_failed": MessageLookupByLibrary.simpleMessage(
+      "Failed to open the resource link",
+    ),
     "albatross_parameter_hint": MessageLookupByLibrary.simpleMessage(
       "Albatross currently uses the chat sampling parameters",
     ),
@@ -308,9 +317,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Pick Tokenizer",
     ),
     "albatross_port": MessageLookupByLibrary.simpleMessage("Port"),
+    "albatross_preflight_failed": MessageLookupByLibrary.simpleMessage(
+      "Please check the highlighted Albatross setup sections",
+    ),
     "albatross_probe_service": MessageLookupByLibrary.simpleMessage(
       "Check Service",
     ),
+    "albatross_pth_source": MessageLookupByLibrary.simpleMessage("PTH files"),
     "albatross_refresh_cuda_info": MessageLookupByLibrary.simpleMessage(
       "Refresh CUDA Info",
     ),
@@ -318,10 +331,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Restart Runtime",
     ),
     "albatross_runtime_assets": MessageLookupByLibrary.simpleMessage(
-      "Runtime and Tokenizer",
+      "Runtime, Tokenizer and Model",
     ),
     "albatross_runtime_assets_hint": MessageLookupByLibrary.simpleMessage(
-      "Download the configured runtime, or pick an existing exe and tokenizer from disk",
+      "Pick the local binary, tokenizer, and PTH model from disk",
     ),
     "albatross_runtime_logs": MessageLookupByLibrary.simpleMessage(
       "Runtime Logs",
@@ -353,7 +366,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Missing Albatross tokenizer download config",
     ),
     "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
-      "Choose or download a tokenizer first",
+      "Choose a tokenizer first",
     ),
     "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
       "Use Downloaded PTH",

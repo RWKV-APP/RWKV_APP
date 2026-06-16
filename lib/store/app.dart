@@ -109,6 +109,11 @@ class _App extends RawApp {
   late final isDesktop = qp((ref) => ref.watch(_isDesktop));
   late final isMobile = qp((ref) => ref.watch(_isMobile));
   late final keepingScreenAwake = qp((ref) => ref.watch(_keepScreenAwakeReasons).isNotEmpty);
+  late final useBottomTabBar = qp((ref) {
+    final screenWidth = ref.watch(this.screenWidth);
+    final screenHeight = ref.watch(this.screenHeight);
+    return screenWidth <= 600 || screenWidth <= screenHeight - 100;
+  });
 
   late final osVersionNumbers = qp<List<int>>((ref) {
     final osVersion = ref.watch(this.osVersion);

@@ -19,6 +19,7 @@ import 'package:zone/func/open_folder.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat_history_width_limit.dart';
 import 'package:zone/widgets/conversation_item.dart';
 
 final _roleplayConvList = qs<List<ConversationListItemData>>([]);
@@ -69,12 +70,14 @@ class _PageConversationState extends ConsumerState<PageConversation> {
 
     return Scaffold(
       backgroundColor: appTheme.settingBg,
-      body: Column(
-        children: [
-          const _ConversationAppBar(),
-          isEmpty ? const Expanded(child: _EmptyState()) : const Expanded(child: _ConversationList()),
-          if (isBatchMode) const _BatchActionBar(),
-        ],
+      body: ChatHistoryWidthLimit(
+        child: Column(
+          children: [
+            const _ConversationAppBar(),
+            isEmpty ? const Expanded(child: _EmptyState()) : const Expanded(child: _ConversationList()),
+            if (isBatchMode) const _BatchActionBar(),
+          ],
+        ),
       ),
     );
   }
@@ -161,8 +164,10 @@ class _ConversationList extends ConsumerWidget {
     final conversations = ref.watch(_compositedConversations);
     final appTheme = ref.watch(P.app.theme);
     final paddingBottom = ref.watch(P.app.paddingBottom);
+    final useBottomTabBar = ref.watch(P.app.useBottomTabBar);
+    final tabBarReservedHeight = useBottomTabBar ? appTheme.tabBarHeight : 0.0;
     return ListView.separated(
-      padding: .only(bottom: max(paddingBottom, 12) + appTheme.tabBarHeight + 12),
+      padding: .only(bottom: max(paddingBottom, 12) + tabBarReservedHeight + 12),
       itemCount: conversations.length,
       scrollCacheExtent: const ScrollCacheExtent.pixels(200),
       physics: const AlwaysScrollableScrollPhysics(),
@@ -297,8 +302,10 @@ class _BatchActionBar extends ConsumerWidget {
     final selectedConversations = ref.watch(P.conversation.selectedConversations);
     final selectedCount = selectedConversations.length;
     final hasSelection = selectedConversations.isNotEmpty;
+    final useBottomTabBar = ref.watch(P.app.useBottomTabBar);
+    final tabBarReservedHeight = useBottomTabBar ? appTheme.tabBarHeight : 0.0;
 
-    final bottomReserved = max(paddingBottom, 12) + appTheme.tabBarHeight + 24;
+    final bottomReserved = max(paddingBottom, 12) + tabBarReservedHeight + 24;
 
     return Container(
       padding: .only(

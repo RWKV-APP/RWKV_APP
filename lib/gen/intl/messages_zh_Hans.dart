@@ -190,11 +190,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "当前 Albatross 后端暂不支持此功能",
     ),
     "albatross_binary": MessageLookupByLibrary.simpleMessage("程序"),
+    "albatross_binary_compile_hint": MessageLookupByLibrary.simpleMessage(
+      "Binary 可能需要根据你的机器环境自行编译。我们推荐你使用本地 AI Agent 编译对应的 Binary。",
+    ),
     "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
       "缺少 Albatross 程序下载配置",
     ),
     "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
-      "请先选择或下载 Albatross 程序",
+      "请先选择 Albatross 程序",
+    ),
+    "albatross_binary_tokenizer_source": MessageLookupByLibrary.simpleMessage(
+      "Binary 和 Tokenizer 来源",
     ),
     "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
     "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
@@ -261,6 +267,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "未连接 Albatross",
     ),
     "albatross_not_selected": MessageLookupByLibrary.simpleMessage("未选择"),
+    "albatross_open_resource_failed": MessageLookupByLibrary.simpleMessage(
+      "无法打开资源链接",
+    ),
     "albatross_parameter_hint": MessageLookupByLibrary.simpleMessage(
       "Albatross 当前沿用聊天页的采样参数",
     ),
@@ -272,7 +281,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "albatross_pick_pth": MessageLookupByLibrary.simpleMessage("选择 PTH"),
     "albatross_pick_tokenizer": MessageLookupByLibrary.simpleMessage("选择词表"),
     "albatross_port": MessageLookupByLibrary.simpleMessage("端口"),
+    "albatross_preflight_failed": MessageLookupByLibrary.simpleMessage(
+      "请检查已高亮的 Albatross 设置区域",
+    ),
     "albatross_probe_service": MessageLookupByLibrary.simpleMessage("检查服务"),
+    "albatross_pth_source": MessageLookupByLibrary.simpleMessage("PTH 文件来源"),
     "albatross_refresh_cuda_info": MessageLookupByLibrary.simpleMessage(
       "刷新 CUDA 信息",
     ),
@@ -280,10 +293,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "重启 Runtime",
     ),
     "albatross_runtime_assets": MessageLookupByLibrary.simpleMessage(
-      "Runtime 与词表",
+      "Runtime、词表与 PTH 模型",
     ),
     "albatross_runtime_assets_hint": MessageLookupByLibrary.simpleMessage(
-      "可以下载配置中的 Runtime，也可以选择本地已有的 exe 与词表文件",
+      "请从本地选择程序、词表和 PTH 模型",
     ),
     "albatross_runtime_logs": MessageLookupByLibrary.simpleMessage("运行日志"),
     "albatross_runtime_management": MessageLookupByLibrary.simpleMessage(
@@ -309,7 +322,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "缺少 Albatross 词表下载配置",
     ),
     "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
-      "请先选择或下载词表",
+      "请先选择词表",
     ),
     "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
       "使用已下载 PTH",

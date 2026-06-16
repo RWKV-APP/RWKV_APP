@@ -207,11 +207,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Эта функция не поддерживается текущим бэкендом Albatross",
     ),
     "albatross_binary": MessageLookupByLibrary.simpleMessage("Бинарный файл"),
+    "albatross_binary_compile_hint": MessageLookupByLibrary.simpleMessage(
+      "Binary может потребовать сборки под вашу машину. Рекомендуем использовать локального AI Agent, чтобы собрать подходящий Binary.",
+    ),
     "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
       "Нет конфигурации загрузки бинарного файла Albatross",
     ),
     "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
-      "Сначала выберите или скачайте бинарный файл Albatross",
+      "Сначала выберите бинарный файл Albatross",
+    ),
+    "albatross_binary_tokenizer_source": MessageLookupByLibrary.simpleMessage(
+      "Источник Binary и Tokenizer",
     ),
     "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
     "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
@@ -298,6 +304,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "albatross_not_selected": MessageLookupByLibrary.simpleMessage(
       "Не выбрано",
     ),
+    "albatross_open_resource_failed": MessageLookupByLibrary.simpleMessage(
+      "Не удалось открыть ссылку на ресурс",
+    ),
     "albatross_parameter_hint": MessageLookupByLibrary.simpleMessage(
       "Albatross сейчас использует параметры сэмплирования чата",
     ),
@@ -315,9 +324,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Выбрать токенизатор",
     ),
     "albatross_port": MessageLookupByLibrary.simpleMessage("Порт"),
+    "albatross_preflight_failed": MessageLookupByLibrary.simpleMessage(
+      "Проверьте выделенные разделы настроек Albatross",
+    ),
     "albatross_probe_service": MessageLookupByLibrary.simpleMessage(
       "Проверить сервис",
     ),
+    "albatross_pth_source": MessageLookupByLibrary.simpleMessage("PTH-файлы"),
     "albatross_refresh_cuda_info": MessageLookupByLibrary.simpleMessage(
       "Обновить данные CUDA",
     ),
@@ -325,10 +338,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Перезапустить Runtime",
     ),
     "albatross_runtime_assets": MessageLookupByLibrary.simpleMessage(
-      "Runtime и токенизатор",
+      "Runtime, токенизатор и PTH-модель",
     ),
     "albatross_runtime_assets_hint": MessageLookupByLibrary.simpleMessage(
-      "Можно скачать настроенный Runtime или выбрать существующие exe и токенизатор на диске",
+      "Выберите локальный бинарный файл, токенизатор и PTH-модель",
     ),
     "albatross_runtime_logs": MessageLookupByLibrary.simpleMessage(
       "Журнал Runtime",
@@ -360,7 +373,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Нет конфигурации загрузки токенизатора Albatross",
     ),
     "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
-      "Сначала выберите или скачайте токенизатор",
+      "Сначала выберите токенизатор",
     ),
     "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
       "Использовать скачанный PTH",

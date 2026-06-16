@@ -191,11 +191,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "현재 Albatross 백엔드는 이 기능을 지원하지 않습니다",
     ),
     "albatross_binary": MessageLookupByLibrary.simpleMessage("바이너리"),
+    "albatross_binary_compile_hint": MessageLookupByLibrary.simpleMessage(
+      "Binary는 사용 중인 머신 환경에 맞게 직접 컴파일해야 할 수 있습니다. 로컬 AI Agent로 맞는 Binary를 빌드하는 것을 권장합니다.",
+    ),
     "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
       "Albatross 바이너리 다운로드 설정이 없습니다",
     ),
     "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
-      "먼저 Albatross 바이너리를 선택하거나 다운로드하세요",
+      "먼저 Albatross 바이너리를 선택하세요",
+    ),
+    "albatross_binary_tokenizer_source": MessageLookupByLibrary.simpleMessage(
+      "Binary 및 Tokenizer 소스",
     ),
     "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
     "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
@@ -266,6 +272,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Albatross 연결 안 됨",
     ),
     "albatross_not_selected": MessageLookupByLibrary.simpleMessage("선택 안 됨"),
+    "albatross_open_resource_failed": MessageLookupByLibrary.simpleMessage(
+      "리소스 링크를 열지 못했습니다",
+    ),
     "albatross_parameter_hint": MessageLookupByLibrary.simpleMessage(
       "Albatross는 현재 채팅 샘플링 설정을 사용합니다",
     ),
@@ -279,7 +288,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "토크나이저 선택",
     ),
     "albatross_port": MessageLookupByLibrary.simpleMessage("포트"),
+    "albatross_preflight_failed": MessageLookupByLibrary.simpleMessage(
+      "강조 표시된 Albatross 설정 영역을 확인하세요",
+    ),
     "albatross_probe_service": MessageLookupByLibrary.simpleMessage("서비스 확인"),
+    "albatross_pth_source": MessageLookupByLibrary.simpleMessage("PTH 파일"),
     "albatross_refresh_cuda_info": MessageLookupByLibrary.simpleMessage(
       "CUDA 정보 새로고침",
     ),
@@ -287,10 +300,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Runtime 재시작",
     ),
     "albatross_runtime_assets": MessageLookupByLibrary.simpleMessage(
-      "Runtime 및 토크나이저",
+      "Runtime, 토크나이저 및 PTH 모델",
     ),
     "albatross_runtime_assets_hint": MessageLookupByLibrary.simpleMessage(
-      "설정된 Runtime을 다운로드하거나 기존 exe와 토크나이저 파일을 선택할 수 있습니다",
+      "로컬 바이너리, 토크나이저, PTH 모델을 선택하세요",
     ),
     "albatross_runtime_logs": MessageLookupByLibrary.simpleMessage("실행 로그"),
     "albatross_runtime_management": MessageLookupByLibrary.simpleMessage(
@@ -318,7 +331,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Albatross 토크나이저 다운로드 설정이 없습니다",
     ),
     "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
-      "먼저 토크나이저를 선택하거나 다운로드하세요",
+      "먼저 토크나이저를 선택하세요",
     ),
     "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
       "다운로드한 PTH 사용",

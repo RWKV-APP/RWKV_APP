@@ -2,16 +2,14 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:desktop_drop/desktop_drop.dart' as desktop_drop;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 
 // Project imports:
+import 'package:zone/func/albatross_endpoint_input.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/file_info.dart';
 import 'package:zone/store/p.dart';
 
 class AlbatrossSetupSheet extends ConsumerStatefulWidget {
@@ -34,7 +32,6 @@ class AlbatrossSetupSheet extends ConsumerStatefulWidget {
 class _AlbatrossSetupSheetState extends ConsumerState<AlbatrossSetupSheet> {
   late final TextEditingController _hostController = TextEditingController(text: P.albatrossRuntime.host.q);
   late final TextEditingController _portController = TextEditingController(text: P.albatrossRuntime.port.q.toString());
-  bool _dragging = false;
 
   @override
   void dispose() {
@@ -48,28 +45,6 @@ class _AlbatrossSetupSheetState extends ConsumerState<AlbatrossSetupSheet> {
     final port = int.tryParse(_portController.text.trim());
     if (port == null || port <= 0) return;
     P.albatrossRuntime.port.q = port;
-  }
-
-  Future<void> _chooseDownloadedModel() async {
-    final candidates = <FileInfo>[];
-    for (final fileInfo in P.remote.chatWeights.q) {
-      if (!fileInfo.fileName.toLowerCase().endsWith(".pth")) continue;
-      final local = P.remote.locals(fileInfo).q;
-      if (!local.hasFile) continue;
-      candidates.add(fileInfo);
-    }
-    if (candidates.isEmpty) {
-      Alert.info(S.current.albatross_no_downloaded_pth);
-      return;
-    }
-    final selected = await showModalActionSheet<FileInfo>(
-      context: context,
-      title: S.current.albatross_select_downloaded_pth,
-      cancelLabel: S.current.cancel,
-      actions: candidates.map((fileInfo) => SheetAction(label: fileInfo.name, key: fileInfo)).toList(),
-    );
-    if (selected == null) return;
-    await P.albatrossRuntime.useDownloadedModel(selected);
   }
 
   Future<void> _prepare() async {
@@ -86,17 +61,13 @@ class _AlbatrossSetupSheetState extends ConsumerState<AlbatrossSetupSheet> {
     final qb = ref.watch(P.app.qb);
     final connecting = ref.watch(P.albatrossRuntime.connecting);
     final running = ref.watch(P.albatrossRuntime.running);
-    final downloading = ref.watch(P.albatrossRuntime.downloading);
     final executablePath = ref.watch(P.albatrossRuntime.executablePath);
     final modelPath = ref.watch(P.albatrossRuntime.modelPath);
     final tokenizerPath = ref.watch(P.albatrossRuntime.tokenizerPath);
     final lastError = ref.watch(P.albatrossRuntime.lastError);
 
     return desktop_drop.DropTarget(
-      onDragEntered: (_) => setState(() => _dragging = true),
-      onDragExited: (_) => setState(() => _dragging = false),
       onDragDone: (detail) async {
-        setState(() => _dragging = false);
         for (final item in detail.files) {
           await P.albatrossRuntime.handleDroppedPath(item.path);
         }
@@ -132,6 +103,7 @@ class _AlbatrossSetupSheetState extends ConsumerState<AlbatrossSetupSheet> {
                     flex: 3,
                     child: TextField(
                       controller: _hostController,
+                      inputFormatters: buildAlbatrossHostInputFormatters(),
                       decoration: InputDecoration(labelText: s.albatross_host),
                     ),
                   ),
@@ -141,13 +113,12 @@ class _AlbatrossSetupSheetState extends ConsumerState<AlbatrossSetupSheet> {
                     child: TextField(
                       controller: _portController,
                       keyboardType: TextInputType.number,
+                      inputFormatters: buildAlbatrossPortInputFormatters(),
                       decoration: InputDecoration(labelText: s.albatross_port),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              _DropPanel(dragging: _dragging),
               const SizedBox(height: 12),
               _PathRow(label: s.albatross_binary, value: executablePath),
               _PathRow(label: s.albatross_model, value: modelPath),
@@ -162,34 +133,14 @@ class _AlbatrossSetupSheetState extends ConsumerState<AlbatrossSetupSheet> {
                 runSpacing: 8,
                 children: [
                   OutlinedButton.icon(
-                    onPressed: downloading ? null : P.albatrossRuntime.downloadConfiguredBinary,
-                    icon: const Icon(Icons.download),
-                    label: Text(s.albatross_download_binary),
-                  ),
-                  OutlinedButton.icon(
                     onPressed: P.albatrossRuntime.pickExecutable,
                     icon: const Icon(Icons.file_open),
                     label: Text(s.albatross_pick_binary),
                   ),
                   OutlinedButton.icon(
-                    onPressed: _chooseDownloadedModel,
-                    icon: const Icon(Icons.folder_special_outlined),
-                    label: Text(s.albatross_use_downloaded_pth),
-                  ),
-                  OutlinedButton.icon(
                     onPressed: P.albatrossRuntime.pickModelPth,
                     icon: const Icon(Icons.description_outlined),
                     label: Text(s.albatross_pick_pth),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: P.albatrossRuntime.pickModelFolder,
-                    icon: const Icon(Icons.folder_open),
-                    label: Text(s.albatross_pick_model_folder),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: downloading ? null : P.albatrossRuntime.downloadConfiguredTokenizer,
-                    icon: const Icon(Icons.download),
-                    label: Text(s.albatross_download_tokenizer),
                   ),
                   OutlinedButton.icon(
                     onPressed: P.albatrossRuntime.pickTokenizer,
@@ -213,38 +164,6 @@ class _AlbatrossSetupSheetState extends ConsumerState<AlbatrossSetupSheet> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _DropPanel extends StatelessWidget {
-  final bool dragging;
-
-  const _DropPanel({required this.dragging});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-    return Container(
-      padding: const .symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary.q(dragging ? .14 : .07),
-        borderRadius: .circular(8),
-        border: .all(color: theme.colorScheme.primary.q(dragging ? .75 : .32), width: dragging ? 1 : 0.5),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.file_upload_outlined, color: theme.colorScheme.primary, size: 18),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              s.albatross_drop_files,
-              style: TS(c: theme.colorScheme.onSurface.q(.75), s: 12),
-            ),
-          ),
-        ],
       ),
     );
   }

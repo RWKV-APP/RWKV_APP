@@ -9,14 +9,15 @@ import 'package:desktop_drop/desktop_drop.dart' as desktop_drop;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:path/path.dart' as path;
+import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
-import 'package:zone/func/format_bytes.dart';
+import 'package:zone/func/albatross_endpoint_input.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/argument.dart';
-import 'package:zone/model/file_info.dart';
 import 'package:zone/store/p.dart';
+
+const String _albatrossRuntimeSourceUrl = "https://github.com/Alic-Li/rwkv_lightning_cuda";
+const String _albatrossPthSourceUrl = "https://huggingface.co/BlinkDL/rwkv7-g1/tree/main";
 
 class PageAlbatross extends ConsumerStatefulWidget {
   const PageAlbatross({super.key});
@@ -28,20 +29,18 @@ class PageAlbatross extends ConsumerStatefulWidget {
 class _PageAlbatrossState extends ConsumerState<PageAlbatross> {
   late final TextEditingController _hostController = TextEditingController(text: P.albatrossRuntime.host.q);
   late final TextEditingController _portController = TextEditingController(text: P.albatrossRuntime.port.q.toString());
-  bool _dragging = false;
+
+  @override
+  void initState() {
+    super.initState();
+    P.albatrossRuntime.clearSetupHighlights();
+  }
 
   @override
   void dispose() {
     _hostController.dispose();
     _portController.dispose();
     super.dispose();
-  }
-
-  void _setDragging(bool dragging) {
-    if (_dragging == dragging) return;
-    setState(() {
-      _dragging = dragging;
-    });
   }
 
   @override
@@ -59,17 +58,19 @@ class _PageAlbatrossState extends ConsumerState<PageAlbatross> {
         surfaceTintColor: Colors.transparent,
       ),
       body: desktop_drop.DropTarget(
-        onDragEntered: (_) => _setDragging(true),
-        onDragUpdated: (_) => _setDragging(true),
-        onDragExited: (_) => _setDragging(false),
         onDragDone: (detail) async {
-          _setDragging(false);
           await P.albatrossRuntime.handleDroppedItems(detail.files);
         },
         child: ListView(
           padding: EdgeInsets.fromLTRB(20, 12, 20, paddingBottom + 24),
           children: [
-            _AlbatrossOverviewSection(theme: theme),
+            _AlbatrossOverviewSection(
+              theme: theme,
+              onStartChat: () => P.albatrossRuntime.startChat(
+                hostText: _hostController.text,
+                portText: _portController.text,
+              ),
+            ),
             const SizedBox(height: 16),
             _AlbatrossSystemInfoSection(theme: theme),
             const SizedBox(height: 16),
@@ -78,13 +79,7 @@ class _PageAlbatrossState extends ConsumerState<PageAlbatross> {
               portController: _portController,
             ),
             const SizedBox(height: 16),
-            _AlbatrossAssetsSection(theme: theme),
-            const SizedBox(height: 16),
-            _AlbatrossModelSection(theme: theme),
-            const SizedBox(height: 16),
-            _AlbatrossParametersSection(theme: theme),
-            const SizedBox(height: 16),
-            _AlbatrossDropSection(dragging: _dragging),
+            _AlbatrossRuntimeFilesSection(theme: theme),
             const SizedBox(height: 16),
             _AlbatrossLogsSection(theme: theme),
           ],
@@ -98,11 +93,13 @@ class _AlbatrossSection extends ConsumerWidget {
   final IconData icon;
   final String title;
   final List<Widget> children;
+  final bool highlighted;
 
   const _AlbatrossSection({
     required this.icon,
     required this.title,
     required this.children,
+    this.highlighted = false,
   });
 
   @override
@@ -110,11 +107,13 @@ class _AlbatrossSection extends ConsumerWidget {
     final theme = Theme.of(context);
     final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
+    final highlightColor = Colors.amber;
 
     return Container(
       decoration: BoxDecoration(
-        color: appTheme.settingItem,
+        color: highlighted ? Color.lerp(appTheme.settingItem, highlightColor, .08) : appTheme.settingItem,
         borderRadius: BorderRadius.circular(12),
+        border: highlighted ? Border.all(color: highlightColor.q(.8), width: 1.25) : null,
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -144,8 +143,12 @@ class _AlbatrossSection extends ConsumerWidget {
 
 class _AlbatrossOverviewSection extends ConsumerWidget {
   final ThemeData theme;
+  final Future<void> Function() onStartChat;
 
-  const _AlbatrossOverviewSection({required this.theme});
+  const _AlbatrossOverviewSection({
+    required this.theme,
+    required this.onStartChat,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -212,7 +215,7 @@ class _AlbatrossOverviewSection extends ConsumerWidget {
           runSpacing: 8,
           children: [
             FilledButton.icon(
-              onPressed: busy ? null : P.albatrossRuntime.startChat,
+              onPressed: busy ? null : () => unawaited(onStartChat()),
               icon: Icon(running ? Icons.chat_bubble_outline : Icons.play_arrow),
               label: Text(running ? s.albatross_enter_chat : s.albatross_start_chat),
             ),
@@ -245,6 +248,7 @@ class _AlbatrossOverviewSection extends ConsumerWidget {
 
 class _AlbatrossSystemInfoSection extends ConsumerWidget {
   final ThemeData theme;
+  static const double _controlHeight = 40;
 
   const _AlbatrossSystemInfoSection({required this.theme});
 
@@ -253,25 +257,38 @@ class _AlbatrossSystemInfoSection extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final info = ref.watch(P.albatrossRuntime.displaySystemInfo);
-    final canShow = ref.watch(P.albatrossRuntime.canShowHomeEntry);
+    final cudaBackendAvailable = ref.watch(P.albatrossRuntime.cudaBackendAvailable);
+    final highlighted = ref.watch(P.albatrossRuntime.highlightedSetupPanels).contains(AlbatrossSetupPanel.computer);
 
     return _AlbatrossSection(
       icon: Icons.memory,
       title: s.albatross_system_info,
+      highlighted: highlighted,
       children: [
         Wrap(
           spacing: 8,
           runSpacing: 8,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            _StatusChip(
-              color: canShow ? Colors.green : theme.colorScheme.error,
-              label: canShow ? s.albatross_compatibility_ok : s.albatross_compatibility_warning,
+            SizedBox(
+              height: _controlHeight,
+              child: _StatusChip(
+                color: cudaBackendAvailable ? Colors.green : theme.colorScheme.error,
+                label: cudaBackendAvailable ? s.albatross_compatibility_ok : s.albatross_compatibility_warning,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+              ),
             ),
-            OutlinedButton.icon(
-              onPressed: P.albatrossRuntime.refreshCudaInfo,
-              icon: const Icon(Icons.refresh),
-              label: Text(s.albatross_refresh_cuda_info),
+            SizedBox(
+              height: _controlHeight,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: P.albatrossRuntime.refreshCudaInfo,
+                icon: const Icon(Icons.refresh),
+                label: Text(s.albatross_refresh_cuda_info),
+              ),
             ),
           ],
         ),
@@ -302,10 +319,12 @@ class _AlbatrossEndpointSection extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final running = ref.watch(P.albatrossRuntime.running);
+    final highlighted = ref.watch(P.albatrossRuntime.highlightedSetupPanels).contains(AlbatrossSetupPanel.endpoint);
 
     return _AlbatrossSection(
       icon: Icons.settings_ethernet,
       title: s.albatross_launch_config,
+      highlighted: highlighted,
       children: [
         Row(
           crossAxisAlignment: .start,
@@ -315,6 +334,7 @@ class _AlbatrossEndpointSection extends ConsumerWidget {
               child: TextField(
                 controller: hostController,
                 enabled: !running,
+                inputFormatters: buildAlbatrossHostInputFormatters(),
                 decoration: InputDecoration(
                   labelText: s.albatross_host,
                   border: const OutlineInputBorder(),
@@ -329,6 +349,7 @@ class _AlbatrossEndpointSection extends ConsumerWidget {
                 controller: portController,
                 enabled: !running,
                 keyboardType: TextInputType.number,
+                inputFormatters: buildAlbatrossPortInputFormatters(),
                 decoration: InputDecoration(
                   labelText: s.albatross_port,
                   border: const OutlineInputBorder(),
@@ -348,10 +369,10 @@ class _AlbatrossEndpointSection extends ConsumerWidget {
   }
 }
 
-class _AlbatrossAssetsSection extends ConsumerWidget {
+class _AlbatrossRuntimeFilesSection extends ConsumerWidget {
   final ThemeData theme;
 
-  const _AlbatrossAssetsSection({required this.theme});
+  const _AlbatrossRuntimeFilesSection({required this.theme});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -359,67 +380,18 @@ class _AlbatrossAssetsSection extends ConsumerWidget {
     final s = S.of(context);
     final executablePath = ref.watch(P.albatrossRuntime.executablePath);
     final tokenizerPath = ref.watch(P.albatrossRuntime.tokenizerPath);
-    final downloading = ref.watch(P.albatrossRuntime.downloading);
+    final modelPath = ref.watch(P.albatrossRuntime.modelPath);
+    final highlightedPanels = ref.watch(P.albatrossRuntime.highlightedSetupPanels);
+    final highlighted =
+        highlightedPanels.contains(AlbatrossSetupPanel.runtimeAssets) || highlightedPanels.contains(AlbatrossSetupPanel.model);
 
     return _AlbatrossSection(
       icon: Icons.developer_board,
       title: s.albatross_runtime_assets,
+      highlighted: highlighted,
       children: [
         _PathRow(label: s.albatross_binary, value: executablePath),
         _PathRow(label: s.albatross_tokenizer, value: tokenizerPath),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            OutlinedButton.icon(
-              onPressed: downloading ? null : P.albatrossRuntime.downloadConfiguredBinary,
-              icon: const Icon(Icons.download),
-              label: Text(s.albatross_download_binary),
-            ),
-            OutlinedButton.icon(
-              onPressed: P.albatrossRuntime.pickExecutable,
-              icon: const Icon(Icons.file_open),
-              label: Text(s.albatross_pick_binary),
-            ),
-            OutlinedButton.icon(
-              onPressed: downloading ? null : P.albatrossRuntime.downloadConfiguredTokenizer,
-              icon: const Icon(Icons.download),
-              label: Text(s.albatross_download_tokenizer),
-            ),
-            OutlinedButton.icon(
-              onPressed: P.albatrossRuntime.pickTokenizer,
-              icon: const Icon(Icons.text_snippet_outlined),
-              label: Text(s.albatross_pick_tokenizer),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Text(
-          s.albatross_runtime_assets_hint,
-          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.6)),
-        ),
-      ],
-    );
-  }
-}
-
-class _AlbatrossModelSection extends ConsumerWidget {
-  final ThemeData theme;
-
-  const _AlbatrossModelSection({required this.theme});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-    final modelPath = ref.watch(P.albatrossRuntime.modelPath);
-    final candidates = ref.watch(P.albatrossRuntime.pthCandidates);
-
-    return _AlbatrossSection(
-      icon: Icons.storage,
-      title: s.albatross_model_management,
-      children: [
         _PathRow(label: s.albatross_model, value: modelPath),
         const SizedBox(height: 12),
         Wrap(
@@ -427,74 +399,97 @@ class _AlbatrossModelSection extends ConsumerWidget {
           runSpacing: 8,
           children: [
             OutlinedButton.icon(
+              onPressed: P.albatrossRuntime.pickExecutable,
+              icon: const Icon(Icons.file_open),
+              label: Text(s.albatross_pick_binary),
+            ),
+            OutlinedButton.icon(
+              onPressed: P.albatrossRuntime.pickTokenizer,
+              icon: const Icon(Icons.text_snippet_outlined),
+              label: Text(s.albatross_pick_tokenizer),
+            ),
+            OutlinedButton.icon(
               onPressed: P.albatrossRuntime.pickModelPth,
               icon: const Icon(Icons.description_outlined),
               label: Text(s.albatross_pick_pth),
             ),
-            OutlinedButton.icon(
-              onPressed: P.albatrossRuntime.pickModelFolder,
-              icon: const Icon(Icons.folder_open),
-              label: Text(s.albatross_pick_model_folder),
-            ),
           ],
         ),
         const SizedBox(height: 12),
-        if (candidates.isEmpty)
-          Text(
-            s.albatross_no_pth_candidates,
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.q(.62)),
-          )
-        else
-          ...candidates.map((fileInfo) => _PthCandidateRow(fileInfo: fileInfo)),
+        Text(
+          s.albatross_runtime_assets_hint,
+          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.6)),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          s.albatross_binary_compile_hint,
+          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.72), height: 1.35),
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _ExternalResourceLink(
+                icon: Icons.code,
+                label: s.albatross_binary_tokenizer_source,
+                url: _albatrossRuntimeSourceUrl,
+              ),
+              _ExternalResourceLink(
+                icon: Icons.cloud_outlined,
+                label: s.albatross_pth_source,
+                url: _albatrossPthSourceUrl,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
 }
 
-class _PthCandidateRow extends ConsumerWidget {
-  final FileInfo fileInfo;
+class _ExternalResourceLink extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String url;
 
-  const _PthCandidateRow({required this.fileInfo});
+  const _ExternalResourceLink({
+    required this.icon,
+    required this.label,
+    required this.url,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final s = S.of(context);
-    final qb = ref.watch(P.app.qb);
-    final selectedPath = ref.watch(P.albatrossRuntime.modelPath);
-    final localFile = fileInfo.fromPthFile ? null : ref.watch(P.remote.locals(fileInfo));
-    final effectivePath = fileInfo.fromPthFile ? fileInfo.raw : localFile?.targetPath ?? "";
-    final selected = selectedPath.isNotEmpty && path.equals(path.normalize(selectedPath), path.normalize(effectivePath));
-    final hasFile = fileInfo.fromPthFile || localFile?.hasFile == true;
-    final downloading = localFile?.downloading == true;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: qb.q(.14), width: 0.5)),
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
+      onPressed: () => unawaited(_openAlbatrossExternalUrl(context, url)),
       child: Row(
-        crossAxisAlignment: .start,
+        mainAxisSize: .min,
         children: [
-          Expanded(
+          Icon(icon, size: 18),
+          const SizedBox(width: 10),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 360),
             child: Column(
               crossAxisAlignment: .start,
+              mainAxisSize: .min,
               children: [
-                Text(fileInfo.name, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .w600)),
-                const SizedBox(height: 4),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    _SmallTag(text: formatBytes(fileInfo.fileSize)),
-                    if (fileInfo.fromPthFile) const _SmallTag(text: "LOCAL"),
-                    if (!fileInfo.fromPthFile) const _SmallTag(text: "REMOTE"),
-                    if (downloading) _SmallTag(text: "${(localFile?.progress ?? 0).toStringAsFixed(0)}%"),
-                  ],
-                ),
-                const SizedBox(height: 4),
                 Text(
-                  path.basename(effectivePath.isEmpty ? fileInfo.fileName : effectivePath),
+                  label,
+                  style: theme.textTheme.labelLarge?.copyWith(fontWeight: .w600),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  url,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.55)),
@@ -502,104 +497,27 @@ class _PthCandidateRow extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          if (selected)
-            FilledButton.icon(
-              onPressed: null,
-              icon: const Icon(Icons.check),
-              label: Text(s.albatross_selected_model),
-            )
-          else if (hasFile)
-            OutlinedButton.icon(
-              onPressed: () => P.albatrossRuntime.selectPthModel(fileInfo),
-              icon: const Icon(Icons.check_circle_outline),
-              label: Text(s.albatross_select_this_model),
-            )
-          else
-            OutlinedButton.icon(
-              onPressed: downloading ? null : () => P.albatrossRuntime.downloadPthModel(fileInfo),
-              icon: const Icon(Icons.download),
-              label: Text(s.download_model),
-            ),
+          const SizedBox(width: 10),
+          const Icon(Icons.open_in_new, size: 16),
         ],
       ),
     );
   }
 }
 
-class _AlbatrossParametersSection extends ConsumerWidget {
-  final ThemeData theme;
-
-  const _AlbatrossParametersSection({required this.theme});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-    final temperature = ref.watch(P.rwkvParams.arguments(Argument.temperature));
-    final topP = ref.watch(P.rwkvParams.arguments(Argument.topP));
-    final topK = ref.watch(P.rwkvParams.arguments(Argument.topK));
-    final presence = ref.watch(P.rwkvParams.arguments(Argument.presencePenalty));
-    final frequency = ref.watch(P.rwkvParams.arguments(Argument.frequencyPenalty));
-    final maxTokens = ref.watch(P.rwkvParams.arguments(Argument.maxLength));
-
-    return _AlbatrossSection(
-      icon: Icons.tune,
-      title: s.albatross_parameters,
-      children: [
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            _ParameterTag(label: "temperature", value: temperature.toStringAsFixed(2)),
-            _ParameterTag(label: "top_p", value: topP.toStringAsFixed(2)),
-            _ParameterTag(label: "top_k", value: topK.toStringAsFixed(0)),
-            _ParameterTag(label: "presence", value: presence.toStringAsFixed(2)),
-            _ParameterTag(label: "frequency", value: frequency.toStringAsFixed(2)),
-            _ParameterTag(label: "max_tokens", value: maxTokens.toStringAsFixed(0)),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Text(
-          s.albatross_parameter_hint,
-          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.6)),
-        ),
-      ],
-    );
+Future<void> _openAlbatrossExternalUrl(BuildContext context, String url) async {
+  final uri = Uri.parse(url);
+  try {
+    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (launched) return;
+  } catch (_) {
+    //
   }
-}
 
-class _AlbatrossDropSection extends ConsumerWidget {
-  final bool dragging;
-
-  const _AlbatrossDropSection({required this.dragging});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary.q(dragging ? .14 : .07),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: theme.colorScheme.primary.q(dragging ? .75 : .32), width: dragging ? 1 : 0.5),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.file_upload_outlined, color: theme.colorScheme.primary, size: 18),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              s.albatross_drop_files,
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.75)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  if (!context.mounted) return;
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(S.of(context).albatross_open_resource_failed)),
+  );
 }
 
 class _AlbatrossLogsSection extends ConsumerWidget {
@@ -809,10 +727,12 @@ class _PathRow extends StatelessWidget {
 class _StatusChip extends StatelessWidget {
   final Color color;
   final String label;
+  final EdgeInsetsGeometry padding;
 
   const _StatusChip({
     required this.color,
     required this.label,
+    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
   });
 
   @override
@@ -820,76 +740,20 @@ class _StatusChip extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      padding: padding,
       decoration: BoxDecoration(
         color: color.q(.12),
         borderRadius: BorderRadius.circular(999),
         border: Border.all(color: color.q(.55), width: 0.5),
       ),
-      child: Text(
-        label,
-        style: theme.textTheme.labelMedium?.copyWith(color: color, fontWeight: .w600),
-      ),
-    );
-  }
-}
-
-class _SmallTag extends StatelessWidget {
-  final String text;
-
-  const _SmallTag({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.onSurface.q(.08),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Text(
-        text,
-        style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurface.q(.68)),
-      ),
-    );
-  }
-}
-
-class _ParameterTag extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _ParameterTag({
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary.q(.08),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: theme.colorScheme.primary.q(.22), width: 0.5),
-      ),
-      child: Row(
-        mainAxisSize: .min,
-        children: [
-          Text(
-            label,
-            style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.primary, fontWeight: .w600),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            value,
-            style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurface.q(.75)),
-          ),
-        ],
+      child: Align(
+        alignment: Alignment.center,
+        widthFactor: 1,
+        heightFactor: 1,
+        child: Text(
+          label,
+          style: theme.textTheme.labelMedium?.copyWith(color: color, fontWeight: .w600),
+        ),
       ),
     );
   }

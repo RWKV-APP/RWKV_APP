@@ -191,11 +191,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "現在の Albatross バックエンドではこの機能はサポートされていません",
     ),
     "albatross_binary": MessageLookupByLibrary.simpleMessage("バイナリ"),
+    "albatross_binary_compile_hint": MessageLookupByLibrary.simpleMessage(
+      "Binary は使用するマシン環境に合わせてコンパイルが必要な場合があります。ローカル AI Agent で対応する Binary をビルドすることをおすすめします。",
+    ),
     "albatross_binary_config_missing": MessageLookupByLibrary.simpleMessage(
       "Albatross バイナリのダウンロード設定がありません",
     ),
     "albatross_binary_required": MessageLookupByLibrary.simpleMessage(
-      "先に Albatross バイナリを選択またはダウンロードしてください",
+      "先に Albatross バイナリを選択してください",
+    ),
+    "albatross_binary_tokenizer_source": MessageLookupByLibrary.simpleMessage(
+      "Binary と Tokenizer のソース",
     ),
     "albatross_chat": MessageLookupByLibrary.simpleMessage("Albatross Chat"),
     "albatross_chat_description": MessageLookupByLibrary.simpleMessage(
@@ -268,6 +274,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Albatross 未接続",
     ),
     "albatross_not_selected": MessageLookupByLibrary.simpleMessage("未選択"),
+    "albatross_open_resource_failed": MessageLookupByLibrary.simpleMessage(
+      "リソースリンクを開けませんでした",
+    ),
     "albatross_parameter_hint": MessageLookupByLibrary.simpleMessage(
       "Albatross は現在チャットのサンプリング設定を使用します",
     ),
@@ -281,7 +290,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "トークナイザーを選択",
     ),
     "albatross_port": MessageLookupByLibrary.simpleMessage("ポート"),
+    "albatross_preflight_failed": MessageLookupByLibrary.simpleMessage(
+      "ハイライトされた Albatross 設定セクションを確認してください",
+    ),
     "albatross_probe_service": MessageLookupByLibrary.simpleMessage("サービス確認"),
+    "albatross_pth_source": MessageLookupByLibrary.simpleMessage("PTH ファイル"),
     "albatross_refresh_cuda_info": MessageLookupByLibrary.simpleMessage(
       "CUDA 情報を更新",
     ),
@@ -289,10 +302,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Runtime を再起動",
     ),
     "albatross_runtime_assets": MessageLookupByLibrary.simpleMessage(
-      "Runtime とトークナイザー",
+      "Runtime、トークナイザー、PTH モデル",
     ),
     "albatross_runtime_assets_hint": MessageLookupByLibrary.simpleMessage(
-      "設定済み Runtime をダウンロードするか、既存の exe とトークナイザーを選択できます",
+      "ローカルのバイナリ、トークナイザー、PTH モデルを選択してください",
     ),
     "albatross_runtime_logs": MessageLookupByLibrary.simpleMessage("実行ログ"),
     "albatross_runtime_management": MessageLookupByLibrary.simpleMessage(
@@ -318,7 +331,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Albatross トークナイザーのダウンロード設定がありません",
     ),
     "albatross_tokenizer_required": MessageLookupByLibrary.simpleMessage(
-      "先にトークナイザーを選択またはダウンロードしてください",
+      "先にトークナイザーを選択してください",
     ),
     "albatross_use_downloaded_pth": MessageLookupByLibrary.simpleMessage(
       "ダウンロード済み PTH を使用",

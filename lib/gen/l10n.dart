@@ -6511,10 +6511,10 @@ class S {
     );
   }
 
-  /// `请先选择或下载 Albatross 程序`
+  /// `请先选择 Albatross 程序`
   String get albatross_binary_required {
     return Intl.message(
-      '请先选择或下载 Albatross 程序',
+      '请先选择 Albatross 程序',
       name: 'albatross_binary_required',
       desc: '',
       args: [],
@@ -6531,10 +6531,10 @@ class S {
     );
   }
 
-  /// `请先选择或下载词表`
+  /// `请先选择词表`
   String get albatross_tokenizer_required {
     return Intl.message(
-      '请先选择或下载词表',
+      '请先选择词表',
       name: 'albatross_tokenizer_required',
       desc: '',
       args: [],
@@ -6711,21 +6711,61 @@ class S {
     );
   }
 
-  /// `Runtime 与词表`
+  /// `Runtime、词表与 PTH 模型`
   String get albatross_runtime_assets {
     return Intl.message(
-      'Runtime 与词表',
+      'Runtime、词表与 PTH 模型',
       name: 'albatross_runtime_assets',
       desc: '',
       args: [],
     );
   }
 
-  /// `可以下载配置中的 Runtime，也可以选择本地已有的 exe 与词表文件`
+  /// `请从本地选择程序、词表和 PTH 模型`
   String get albatross_runtime_assets_hint {
     return Intl.message(
-      '可以下载配置中的 Runtime，也可以选择本地已有的 exe 与词表文件',
+      '请从本地选择程序、词表和 PTH 模型',
       name: 'albatross_runtime_assets_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Binary 可能需要根据你的机器环境自行编译。我们推荐你使用本地 AI Agent 编译对应的 Binary。`
+  String get albatross_binary_compile_hint {
+    return Intl.message(
+      'Binary 可能需要根据你的机器环境自行编译。我们推荐你使用本地 AI Agent 编译对应的 Binary。',
+      name: 'albatross_binary_compile_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Binary 和 Tokenizer 来源`
+  String get albatross_binary_tokenizer_source {
+    return Intl.message(
+      'Binary 和 Tokenizer 来源',
+      name: 'albatross_binary_tokenizer_source',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PTH 文件来源`
+  String get albatross_pth_source {
+    return Intl.message(
+      'PTH 文件来源',
+      name: 'albatross_pth_source',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无法打开资源链接`
+  String get albatross_open_resource_failed {
+    return Intl.message(
+      '无法打开资源链接',
+      name: 'albatross_open_resource_failed',
       desc: '',
       args: [],
     );
@@ -6853,6 +6893,16 @@ class S {
       name: 'albatross_missing_runtime_dlls',
       desc: '',
       args: [dlls],
+    );
+  }
+
+  /// `请检查已高亮的 Albatross 设置区域`
+  String get albatross_preflight_failed {
+    return Intl.message(
+      '请检查已高亮的 Albatross 设置区域',
+      name: 'albatross_preflight_failed',
+      desc: '',
+      args: [],
     );
   }
 

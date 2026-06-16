@@ -1,7 +1,39 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zone/func/albatross_endpoint_input.dart';
 import 'package:zone/func/albatross_protocol.dart';
 
 void main() {
+  String applyInputFormatters(List<TextInputFormatter> formatters, String value) {
+    var oldValue = TextEditingValue.empty;
+    var newValue = TextEditingValue(
+      text: value,
+      selection: TextSelection.collapsed(offset: value.length),
+    );
+    for (final formatter in formatters) {
+      newValue = formatter.formatEditUpdate(oldValue, newValue);
+      oldValue = newValue;
+    }
+    return newValue.text;
+  }
+
+  group('Albatross endpoint input formatters', () {
+    test('allow host characters but strip URL separators, spaces, and non-ASCII text', () {
+      final formatters = buildAlbatrossHostInputFormatters();
+
+      expect(applyInputFormatters(formatters, '127.0.0.1 /?中文'), '127.0.0.1');
+      expect(applyInputFormatters(formatters, 'localhost:9527'), 'localhost:9527');
+      expect(applyInputFormatters(formatters, '[::1]'), '[::1]');
+    });
+
+    test('allow only five port digits', () {
+      final formatters = buildAlbatrossPortInputFormatters();
+
+      expect(applyInputFormatters(formatters, '95a27!'), '9527');
+      expect(applyInputFormatters(formatters, '123456'), '12345');
+    });
+  });
+
   group('shouldShowAlbatrossEntry', () {
     test('shows on Windows x64 NVIDIA, Linux, and macOS', () {
       expect(
@@ -71,6 +103,80 @@ void main() {
     test('keeps macOS as UI-only until a runtime exists', () {
       expect(canLaunchAlbatrossRuntime(isMacOS: false), isTrue);
       expect(canLaunchAlbatrossRuntime(isMacOS: true), isFalse);
+    });
+  });
+
+  group('isAlbatrossCudaBackendAvailable', () {
+    test('requires a CUDA-capable NVIDIA desktop environment', () {
+      expect(
+        isAlbatrossCudaBackendAvailable(
+          isWindows: false,
+          isLinux: false,
+          isMacOS: true,
+          telemetryInfo: const <String, String>{
+            'OS': 'macos',
+            'CPUName': 'Apple M4 Pro',
+            'DeviceModel': 'Mac16,7',
+          },
+          cudaInfo: const <String, String>{},
+        ),
+        isFalse,
+      );
+      expect(
+        isAlbatrossCudaBackendAvailable(
+          isWindows: true,
+          isLinux: false,
+          isMacOS: false,
+          telemetryInfo: const <String, String>{
+            'GPUName': 'NVIDIA GeForce RTX 4090',
+          },
+          cudaInfo: const <String, String>{
+            'NVIDIA GPU': 'NVIDIA GeForce RTX 4090',
+            'CUDA Driver API': '12.9',
+          },
+        ),
+        isTrue,
+      );
+      expect(
+        isAlbatrossCudaBackendAvailable(
+          isWindows: false,
+          isLinux: true,
+          isMacOS: false,
+          telemetryInfo: const <String, String>{
+            'GPUName': 'NVIDIA GeForce RTX 4090',
+          },
+          cudaInfo: const <String, String>{
+            'CUDA Driver API': '12.9',
+          },
+        ),
+        isTrue,
+      );
+      expect(
+        isAlbatrossCudaBackendAvailable(
+          isWindows: true,
+          isLinux: false,
+          isMacOS: false,
+          telemetryInfo: const <String, String>{
+            'GPUName': 'AMD Radeon',
+          },
+          cudaInfo: const <String, String>{
+            'CUDA Driver API': '12.9',
+          },
+        ),
+        isFalse,
+      );
+      expect(
+        isAlbatrossCudaBackendAvailable(
+          isWindows: true,
+          isLinux: false,
+          isMacOS: false,
+          telemetryInfo: const <String, String>{
+            'GPUName': 'NVIDIA GeForce RTX 4090',
+          },
+          cudaInfo: const <String, String>{},
+        ),
+        isFalse,
+      );
     });
   });
 

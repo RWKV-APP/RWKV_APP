@@ -273,14 +273,26 @@ class _AlbatrossButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
+    final appTheme = ref.watch(P.app.theme);
+    final iconFillColor = appTheme.isLight ? theme.colorScheme.primary : appTheme.qb15;
+    final iconBorder = appTheme.isLight ? null : Border.all(color: Colors.white, width: 1);
 
     return _HomeCard(
       heightsKey: 'albatrossChat',
       onTap: () {
         push(.albatross);
       },
-      color: theme.colorScheme.primary,
-      icon: const Icon(Icons.bolt, color: Colors.white),
+      color: iconFillColor,
+      icon: Container(
+        height: 48,
+        width: 48,
+        decoration: BoxDecoration(
+          shape: .circle,
+          border: iconBorder,
+        ),
+        alignment: .center,
+        child: const Icon(Icons.bolt, color: Colors.white),
+      ),
       title: s.albatross_chat,
       description: s.albatross_chat_description,
     );

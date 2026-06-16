@@ -128,6 +128,25 @@ bool shouldShowAlbatrossEntry({
   return gpuName.toLowerCase().contains("nvidia");
 }
 
+bool isAlbatrossCudaBackendAvailable({
+  required bool isWindows,
+  required bool isLinux,
+  required bool isMacOS,
+  required Map<String, String> telemetryInfo,
+  required Map<String, String> cudaInfo,
+}) {
+  if (isMacOS) return false;
+  if (!isWindows && !isLinux) return false;
+
+  final gpuName = <String>[
+    cudaInfo["NVIDIA GPU"] ?? "",
+    telemetryInfo["GPUName"] ?? "",
+  ].join(" ").toLowerCase();
+  final hasNvidiaGpu = gpuName.contains("nvidia");
+  final hasCudaDriverApi = cudaInfo["CUDA Driver API"]?.trim().isNotEmpty ?? false;
+  return hasNvidiaGpu && hasCudaDriverApi;
+}
+
 bool canLaunchAlbatrossRuntime({required bool isMacOS}) {
   return !isMacOS;
 }

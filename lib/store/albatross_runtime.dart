@@ -7,6 +7,19 @@ const String _albatrossModelPathPreferenceKey = "halo_state.albatross.modelPath"
 const String _albatrossTokenizerPathPreferenceKey = "halo_state.albatross.tokenizerPath";
 const int _albatrossLogLimit = 400;
 
+enum AlbatrossSetupPanel {
+  computer,
+  endpoint,
+  runtimeAssets,
+  model,
+}
+
+enum _AlbatrossEndpointPreflight {
+  availableService,
+  launchablePort,
+  invalid,
+}
+
 class _AlbatrossRuntime {
   static const String _defaultHost = "127.0.0.1";
   static const int _defaultPort = 9527;
@@ -41,6 +54,7 @@ class _AlbatrossRuntime {
   late final processExitCode = qs<int?>(null);
   late final logs = qs<List<String>>([]);
   late final cudaInfo = qs<Map<String, String>>({});
+  late final highlightedSetupPanels = qs<Set<AlbatrossSetupPanel>>(const <AlbatrossSetupPanel>{});
 
   late final displaySystemInfo = qp<Map<String, String>>((ref) {
     final telemetryInfo = ref.watch(P.telemetry.benchmarkDeviceInfo);
@@ -49,6 +63,18 @@ class _AlbatrossRuntime {
       telemetryInfo: telemetryInfo,
       cudaInfo: cudaInfo,
       isDesktop: Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+    );
+  });
+
+  late final cudaBackendAvailable = qp<bool>((ref) {
+    final telemetryInfo = ref.watch(P.telemetry.benchmarkDeviceInfo);
+    final cudaInfo = ref.watch(this.cudaInfo);
+    return isAlbatrossCudaBackendAvailable(
+      isWindows: Platform.isWindows,
+      isLinux: Platform.isLinux,
+      isMacOS: Platform.isMacOS,
+      telemetryInfo: telemetryInfo,
+      cudaInfo: cudaInfo,
     );
   });
 
@@ -204,8 +230,6 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   }
 
   Future<bool> prepareForChat() async {
-    if (!_canLaunchRuntime(showAlert: true)) return false;
-
     enableExternalMode();
     connecting.q = true;
     lastError.q = "";
@@ -218,6 +242,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
         return true;
       }
 
+      if (!_canLaunchRuntime(showAlert: true)) return false;
       await _ensureConfiguredAssets();
       await _startProcess();
       return await _waitUntilRunning();
@@ -337,12 +362,6 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     await setTokenizerPath(path);
   }
 
-  Future<void> pickModelFolder() async {
-    final path = await file_picker.FilePicker.getDirectoryPath();
-    if (path == null || path.isEmpty) return;
-    await selectModelFolder(path);
-  }
-
   Future<void> useDownloadedModel(FileInfo fileInfo) async {
     final local = P.remote.locals(fileInfo).q;
     if (!local.hasFile) {
@@ -369,31 +388,9 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     await P.remote.getFile(fileInfo: fileInfo);
   }
 
-  Future<void> selectModelFolder(String path) async {
-    final directory = Directory(path);
-    if (!await directory.exists()) return;
-
-    String nextModelPath = modelPath.q;
-    String nextTokenizerPath = tokenizerPath.q;
-    await for (final entity in directory.list(recursive: false, followLinks: false)) {
-      if (entity is! File) continue;
-      final basename = basenameWithoutExtension(entity.path).toLowerCase();
-      final extension = entity.path.split('.').last.toLowerCase();
-      if (nextModelPath.isEmpty && extension == "pth") {
-        nextModelPath = entity.path;
-      }
-      if (nextTokenizerPath.isEmpty && (basename.contains("vocab") || basename.contains("tokenizer"))) {
-        nextTokenizerPath = entity.path;
-      }
-    }
-    await setModelPath(nextModelPath);
-    await setTokenizerPath(nextTokenizerPath);
-  }
-
   Future<void> handleDroppedPath(String path) async {
     final type = await FileSystemEntity.type(path);
     if (type == FileSystemEntityType.directory) {
-      await selectModelFolder(path);
       return;
     }
     final lower = path.toLowerCase();
@@ -677,7 +674,18 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     await prepareForChat();
   }
 
-  Future<void> startChat() async {
+  Future<void> startChat({
+    String? hostText,
+    String? portText,
+  }) async {
+    clearLogs();
+    clearSetupHighlights();
+    final passedPreflight = await _runStartChatPreflight(
+      hostText: hostText,
+      portText: portText,
+    );
+    if (!passedPreflight) return;
+
     final ok = await prepareForChat();
     if (!ok) return;
     P.chat.startNewChat();
@@ -686,6 +694,111 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
 
   void clearLogs() {
     logs.q = [];
+  }
+
+  void clearSetupHighlights() {
+    highlightedSetupPanels.q = const <AlbatrossSetupPanel>{};
+  }
+
+  Future<bool> _runStartChatPreflight({
+    required String? hostText,
+    required String? portText,
+  }) async {
+    final failedPanels = <AlbatrossSetupPanel>{};
+    final endpointStatus = await _checkEndpointForStart(
+      hostText: hostText,
+      portText: portText,
+    );
+
+    if (endpointStatus == _AlbatrossEndpointPreflight.invalid) {
+      failedPanels.add(AlbatrossSetupPanel.endpoint);
+    }
+
+    if (endpointStatus != _AlbatrossEndpointPreflight.availableService) {
+      if (!_canLaunchRuntime(showAlert: false) || !cudaBackendAvailable.q) {
+        failedPanels.add(AlbatrossSetupPanel.computer);
+      }
+      if (!await _runtimeAssetsReadyForStart()) {
+        failedPanels.add(AlbatrossSetupPanel.runtimeAssets);
+      }
+      if (!await _modelReadyForStart()) {
+        failedPanels.add(AlbatrossSetupPanel.model);
+      }
+    }
+
+    if (failedPanels.isEmpty) return true;
+
+    highlightedSetupPanels.q = Set<AlbatrossSetupPanel>.unmodifiable(failedPanels);
+    final message = S.current.albatross_preflight_failed;
+    lastError.q = message;
+    _addLog("preflight failed: ${failedPanels.map((panel) => panel.name).join(", ")}");
+    Alert.warning(message);
+    return false;
+  }
+
+  Future<_AlbatrossEndpointPreflight> _checkEndpointForStart({
+    required String? hostText,
+    required String? portText,
+  }) async {
+    final nextHost = (hostText ?? host.q).trim();
+    if (nextHost.isEmpty) {
+      _addLog("host missing");
+      return _AlbatrossEndpointPreflight.invalid;
+    }
+
+    final nextPort = int.tryParse((portText ?? port.q.toString()).trim());
+    if (nextPort == null || nextPort <= 0 || nextPort > 65535) {
+      _addLog("port invalid");
+      return _AlbatrossEndpointPreflight.invalid;
+    }
+
+    await setHost(nextHost);
+    await setPort(nextPort);
+
+    if (await probe()) return _AlbatrossEndpointPreflight.availableService;
+    if (await _endpointCanBind(nextHost, nextPort)) return _AlbatrossEndpointPreflight.launchablePort;
+    _addLog("endpoint unavailable: $nextHost:$nextPort");
+    return _AlbatrossEndpointPreflight.invalid;
+  }
+
+  Future<bool> _endpointCanBind(String host, int port) async {
+    try {
+      final server = await ServerSocket.bind(host, port);
+      await server.close();
+      return true;
+    } catch (e) {
+      _addLog("endpoint bind failed: $e");
+      return false;
+    }
+  }
+
+  Future<bool> _runtimeAssetsReadyForStart() async {
+    if (executablePath.q.isEmpty || !await File(executablePath.q).exists()) {
+      _addLog("binary missing");
+      return false;
+    }
+    if (tokenizerPath.q.isEmpty || !await File(tokenizerPath.q).exists()) {
+      _addLog("tokenizer missing");
+      return false;
+    }
+
+    final missingDlls = missingAlbatrossRuntimeDlls(
+      executablePath: executablePath.q,
+      isWindows: Platform.isWindows,
+      fileExists: (filePath) => File(filePath).existsSync(),
+    );
+    if (missingDlls.isEmpty) return true;
+
+    _addLog("missing runtime DLLs: ${missingDlls.join(", ")}");
+    return false;
+  }
+
+  Future<bool> _modelReadyForStart() async {
+    if (modelPath.q.isEmpty || !await File(modelPath.q).exists()) {
+      _addLog("pth model missing");
+      return false;
+    }
+    return true;
   }
 
   Future<void> copyLogsToClipboard() async {
@@ -955,16 +1068,6 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   }
 
   Future<void> _ensureConfiguredAssets() async {
-    if (executablePath.q.isEmpty) {
-      await downloadConfiguredBinary();
-    }
-    if (tokenizerPath.q.isEmpty) {
-      try {
-        await downloadConfiguredTokenizer();
-      } catch (_) {
-        //
-      }
-    }
     if (executablePath.q.isEmpty || !await File(executablePath.q).exists()) {
       throw S.current.albatross_binary_required;
     }

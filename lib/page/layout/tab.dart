@@ -22,9 +22,7 @@ class PageTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final screenWidth = ref.watch(P.app.screenWidth);
-    final screenHeight = ref.watch(P.app.screenHeight);
-    final useBottomNavigationBar = screenWidth <= 600 || screenWidth <= (screenHeight - 100);
+    final useBottomNavigationBar = ref.watch(P.app.useBottomTabBar);
     final tabIndex = ref.watch(P.app.tabIndex);
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
@@ -105,6 +103,7 @@ class PageTab extends ConsumerWidget {
     final isLight = appTheme.isLight;
     final hoverColor = isLight ? kW.q(.95) : kW.q(.15);
     final indicatorColor = isLight ? kW.q(.99) : kW.q(.2);
+    final railSelectedIndex = tabIndex == 2 ? null : tabIndex;
 
     final horizontalLayout = Row(
       children: <Widget>[
@@ -118,11 +117,17 @@ class PageTab extends ConsumerWidget {
             backgroundColor: appTheme.qb144,
             indicatorColor: indicatorColor,
             indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-            selectedIndex: tabIndex,
+            selectedIndex: railSelectedIndex,
             onDestinationSelected: P.app.onTabSelected,
             labelType: NavigationRailLabelType.all,
             leading: const SizedBox(height: 12),
-            trailing: const SizedBox(height: 12),
+            trailingAtBottom: true,
+            trailing: _SideRailSettingsItem(
+              label: s.settings,
+              selected: tabIndex == 2,
+              color: appTheme.qb3,
+              indicatorColor: indicatorColor,
+            ),
             destinations: <NavigationRailDestination>[
               NavigationRailDestination(
                 icon: Icon(Icons.home_outlined, color: appTheme.qb3),
@@ -133,11 +138,6 @@ class PageTab extends ConsumerWidget {
                 icon: Icon(Icons.chat_bubble_outline, color: appTheme.qb3),
                 selectedIcon: Icon(Icons.chat_bubble, color: appTheme.qb3),
                 label: Text(s.conversations, style: TextStyle(color: appTheme.qb3)),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.settings_outlined, color: appTheme.qb3),
-                selectedIcon: Icon(Icons.settings, color: appTheme.qb3),
-                label: Text(s.settings, style: TextStyle(color: appTheme.qb3)),
               ),
             ],
           ),
@@ -194,8 +194,8 @@ class _TabItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = ref.watch(P.app.tabIndex);
     final theme = Theme.of(context);
+    final selectedIndex = ref.watch(P.app.tabIndex);
     final qb = ref.watch(P.app.qb);
     final color = qb.q(selectedIndex == index ? 1 : .4);
 
@@ -217,6 +217,59 @@ class _TabItem extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SideRailSettingsItem extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final Color color;
+  final Color indicatorColor;
+
+  const _SideRailSettingsItem({
+    required this.label,
+    required this.selected,
+    required this.color,
+    required this.indicatorColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textStyle = theme.textTheme.labelMedium?.copyWith(color: color) ?? TextStyle(color: color);
+
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      child: Padding(
+        padding: const .only(bottom: 32),
+        child: InkWell(
+          onTap: () => P.app.onTabSelected(2),
+          borderRadius: BorderRadius.circular(4),
+          child: SizedBox(
+            width: 72,
+            child: Column(
+              mainAxisSize: .min,
+              children: [
+                AnimatedContainer(
+                  duration: 200.ms,
+                  width: 56,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: selected ? indicatorColor : Colors.transparent,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Icon(selected ? Icons.settings : Icons.settings_outlined, color: color),
+                ),
+                const SizedBox(height: 4),
+                Text(label, textAlign: TextAlign.center, style: textStyle),
+              ],
+            ),
+          ),
         ),
       ),
     );
