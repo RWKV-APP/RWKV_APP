@@ -570,6 +570,18 @@
         "date": 1779899103
       },
       {
+        "name": "RWKV7-G1g 2.9B (Dimensity 9500)",
+        "modelSize": 2.9,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1g-2.9b-20260526-ctx8192-MT6993-a16w4vec32scale8.rmpack",
+        "fileSize": 2207039488,
+        "quantization": "w4a16",
+        "platforms": ["android"],
+        "backends": ["mtk_np9"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["Dimensity 9500"],
+        "date": 1782040460
+      },
+      {
         "name": "RWKV7-G1d 0.1B (8 Elite)",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1d-0.1b-20260129-ctx8192-a16w8-8elite-batch.rmpack",
