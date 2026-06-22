@@ -446,7 +446,7 @@ class _SlotContent extends ConsumerWidget {
                           msg: msg,
                           slotIndex: slotIndex,
                           data: data,
-                          streaming: streaming && inferring,
+                          streaming: streaming,
                         ),
                       ),
                     ),
