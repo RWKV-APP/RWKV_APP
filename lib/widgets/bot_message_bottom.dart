@@ -2,6 +2,7 @@
 import 'dart:math' as math;
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -22,6 +23,28 @@ import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
+
+String? _lastBotMessagePrefillDebugLine;
+
+void _logBotMessagePrefillRender({
+  required int messageId,
+  required bool changing,
+  required double livePrefillSpeed,
+  required double effectiveLivePrefillSpeed,
+  required double? storedPrefillSpeed,
+  required String inlinePrefillText,
+  required String detailsPrefillText,
+  required bool showChangingPrefillProgress,
+}) {
+  if (!kDebugMode) return;
+  if (!changing && livePrefillSpeed <= 0 && storedPrefillSpeed == null) return;
+
+  final line =
+      "[BotMessagePrefillRender] messageId=$messageId changing=$changing livePrefillSpeed=$livePrefillSpeed effectiveLivePrefillSpeed=$effectiveLivePrefillSpeed storedPrefillSpeed=$storedPrefillSpeed inline=$inlinePrefillText details=$detailsPrefillText showProgress=$showChangingPrefillProgress";
+  if (_lastBotMessagePrefillDebugLine == line) return;
+  _lastBotMessagePrefillDebugLine = line;
+  P.albatrossRuntime.debugMetricRenderLog(line);
+}
 
 class BotMessageBottom extends ConsumerWidget {
   final model.Message msg;
@@ -279,6 +302,16 @@ class BotMessageBottom extends ConsumerWidget {
     final liveModelName = isTTSDemo ? (latestModel?.name ?? currentGroupInfo?.displayName) : null;
     final modelNameText = msg.modelName?.isNotEmpty == true ? msg.modelName! : (liveModelName ?? "--");
     final showChangingPrefillProgress = changing && !isTTSDemo;
+    _logBotMessagePrefillRender(
+      messageId: msg.id,
+      changing: changing,
+      livePrefillSpeed: livePrefillSpeed,
+      effectiveLivePrefillSpeed: effectiveLivePrefillSpeed,
+      storedPrefillSpeed: msg.prefillSpeed,
+      inlinePrefillText: changingInlinePrefillSpeedText,
+      detailsPrefillText: detailsPrefillSpeedDisplay,
+      showChangingPrefillProgress: showChangingPrefillProgress,
+    );
 
     final inlineConversationTokenEstimatedWidth = isTTSDemo ? .0 : _estimateInlineTokenWidth(text: inlineConversationTokenText);
     final showCopyInMain = showCopyButton;

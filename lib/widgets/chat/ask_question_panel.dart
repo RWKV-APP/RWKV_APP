@@ -2,6 +2,7 @@
 import 'dart:math' as math;
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +19,23 @@ import 'package:zone/store/p.dart';
 const _maxRadius = 12.0;
 const _generateBarButtonHeight = 56.0;
 const _questionCardRadius = 4.0;
+String? _lastPrefillNoticeDebugLine;
+
+void _logPrefillNoticeRender({
+  required bool generating,
+  required bool hiddenPrefilling,
+  required double prefillProgress,
+  required double prefillSpeed,
+  required bool showProgress,
+}) {
+  if (!kDebugMode) return;
+
+  final line =
+      "[PrefillNoticeRender] generating=$generating hiddenPrefilling=$hiddenPrefilling prefillProgress=$prefillProgress prefillSpeed=$prefillSpeed showProgress=$showProgress";
+  if (_lastPrefillNoticeDebugLine == line) return;
+  _lastPrefillNoticeDebugLine = line;
+  P.albatrossRuntime.debugMetricRenderLog(line);
+}
 
 class AskQuestionPanel extends ConsumerWidget {
   static const String panelKey = 'AskQuestionPanel';
@@ -393,7 +411,14 @@ class _PrefillProgressNotice extends ConsumerWidget {
     final hiddenPrefilling = ref.watch(P.rwkvGeneration.hiddenPrefilling);
     final prefillProgress = ref.watch(P.rwkvGeneration.prefillProgress).clamp(0, 1).toDouble();
     final prefillSpeed = ref.watch(P.rwkvGeneration.prefillSpeed);
-    final showProgress = generating && !hiddenPrefilling && prefillProgress > 0 && prefillProgress < 1;
+    final showProgress = generating && !hiddenPrefilling && ((prefillProgress > 0 && prefillProgress < 1) || prefillSpeed > 0);
+    _logPrefillNoticeRender(
+      generating: generating,
+      hiddenPrefilling: hiddenPrefilling,
+      prefillProgress: prefillProgress,
+      prefillSpeed: prefillSpeed,
+      showProgress: showProgress,
+    );
     final isDark = theme.brightness == Brightness.dark;
     final backgroundColor = qb.q(isDark ? .09 : .035);
     final borderColor = qb.q(isDark ? .18 : .1);

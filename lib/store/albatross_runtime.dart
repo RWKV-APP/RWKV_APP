@@ -6,6 +6,8 @@ const String _albatrossExecutablePathPreferenceKey = "halo_state.albatross.execu
 const String _albatrossModelPathPreferenceKey = "halo_state.albatross.modelPath";
 const String _albatrossTokenizerPathPreferenceKey = "halo_state.albatross.tokenizerPath";
 const int _albatrossLogLimit = 400;
+const int _albatrossStartupProbeAttempts = 180;
+const Duration _albatrossStartupProbeInterval = Duration(seconds: 1);
 
 enum AlbatrossSetupPanel {
   computer,
@@ -34,6 +36,7 @@ class _AlbatrossRuntime {
   bool _metricsPollInFlight = false;
   int? _lastMetricGeneratedTokens;
   DateTime? _lastMetricAt;
+  String? _lastMetricsDebugLine;
   bool _detachedRuntimeLaunched = false;
   // ignore: unused_field
   AppLifecycleListener? _lifecycleListener;
@@ -230,6 +233,11 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   }
 
   Future<bool> prepareForChat() async {
+    if (connecting.q) {
+      _addLog("start ignored: already connecting");
+      return false;
+    }
+
     enableExternalMode();
     connecting.q = true;
     lastError.q = "";
@@ -256,7 +264,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     }
   }
 
-  Future<bool> probe() async {
+  Future<bool> probe({bool verbose = true}) async {
     final client = http.Client();
     try {
       for (final path in albatrossProbePaths) {
@@ -264,16 +272,16 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
           final uri = Uri.parse("${baseUrl.q}$path");
           final response = await client.get(uri).timeout(const Duration(seconds: 2));
           final ok = response.statusCode >= 200 && response.statusCode < 300;
-          _addLog("probe $path: ${response.statusCode}");
+          if (verbose) _addLog("probe $path: ${response.statusCode}");
           if (!ok) continue;
           running.q = true;
           return true;
         } catch (e) {
-          _addLog("probe $path failed: $e");
+          if (verbose) _addLog("probe $path failed: $e");
         }
       }
       running.q = false;
-      _addLog("probe failed");
+      if (verbose) _addLog("probe failed");
       return false;
     } finally {
       client.close();
@@ -441,6 +449,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     final requestMessages = _buildChatRequestMessages(messages);
     final thinkingMode = P.rwkvParams.thinkingMode.q;
     final enableThink = thinkingMode.hasThinkTag;
+    final thinkType = thinkingMode.albatrossThinkType;
     final initialOutput = enableThink ? _assistantPrefix().trim() : "";
     String result = initialOutput;
     final parser = AlbatrossSseParser();
@@ -449,10 +458,11 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     _client?.close();
     _client = http.Client();
     _startMetricsPolling();
+    bool shouldPollFinalMetrics = false;
     try {
       final request = http.Request("POST", Uri.parse("${baseUrl.q}/v1/chat/completions"));
       request.headers["Content-Type"] = "application/json";
-      request.body = jsonEncode({
+      final requestBody = <String, Object?>{
         "model": "albatross",
         "messages": requestMessages,
         "stop_tokens": _AlbatrossRuntime._defaultStopTokens,
@@ -460,17 +470,24 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
         "stream": true,
         "enable_think": enableThink,
         ..._decodeParams(),
-      });
+      };
+      if (thinkType != null) {
+        requestBody["think_type"] = thinkType;
+      }
+      request.body = jsonEncode(requestBody);
       final response = await _client!.send(request);
       if (response.statusCode < 200 || response.statusCode >= 300) {
         final body = await response.stream.bytesToString();
         throw "${response.statusCode}: $body";
       }
+      shouldPollFinalMetrics = true;
 
       await for (final rawChunk in response.stream.transform(utf8.decoder)) {
         final events = parser.add(rawChunk);
         for (final event in events) {
           if (event.done) {
+            await _pollFinalMetricsOnce();
+            shouldPollFinalMetrics = false;
             yield from_rwkv.ResponseBufferContent(
               responseBufferContent: result,
               eosFound: true,
@@ -489,6 +506,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
         }
       }
     } finally {
+      if (shouldPollFinalMetrics) await _pollFinalMetricsOnce();
       _stopMetricsPolling();
       _client?.close();
       _client = null;
@@ -569,6 +587,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     _client?.close();
     _client = http.Client();
     _startMetricsPolling();
+    bool shouldPollFinalMetrics = false;
     try {
       final request = http.Request("POST", Uri.parse("${baseUrl.q}/v1/batch/completions"));
       request.headers["Content-Type"] = "application/json";
@@ -584,11 +603,14 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
         final body = await response.stream.bytesToString();
         throw "${response.statusCode}: $body";
       }
+      shouldPollFinalMetrics = true;
 
       await for (final rawChunk in response.stream.transform(utf8.decoder)) {
         final events = parser.add(rawChunk);
         for (final event in events) {
           if (event.done) {
+            await _pollFinalMetricsOnce();
+            shouldPollFinalMetrics = false;
             yield from_rwkv.ResponseBatchBufferContent(
               responseBufferContent: List<String>.from(result),
               eosFound: List<bool>.filled(batchSize, true),
@@ -610,6 +632,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
         }
       }
     } finally {
+      if (shouldPollFinalMetrics) await _pollFinalMetricsOnce();
       _stopMetricsPolling();
       P.rwkvGeneration.generating.q = false;
       _client?.close();
@@ -999,40 +1022,121 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     if (_metricsPollInFlight) return;
     _metricsPollInFlight = true;
     try {
-      final uri = Uri.parse("${baseUrl.q}/v1/server/status");
-      final response = await http.get(uri).timeout(const Duration(seconds: 1));
-      if (response.statusCode < 200 || response.statusCode >= 300) return;
-
-      final decoded = jsonDecode(response.body);
-      if (decoded is! Map) return;
-      final activeRequest = decoded["active_request"];
-      if (activeRequest is! Map) return;
-
-      final prefillSpeed = _jsonDouble(activeRequest["prefill_speed"]);
-      final decodeSpeed = _jsonDouble(activeRequest["decode_speed"]);
-      final generatedTokens = _jsonInt(activeRequest["generated_tokens"]);
-      final now = DateTime.now();
-
-      if (prefillSpeed != null && prefillSpeed > 0) {
-        P.rwkvGeneration.prefillSpeed.q = prefillSpeed;
-        _markPrefillComplete();
-      }
-
-      final effectiveDecodeSpeed = decodeSpeed != null && decodeSpeed > 0
-          ? decodeSpeed
-          : _estimateDecodeSpeed(generatedTokens: generatedTokens, now: now);
-      if (effectiveDecodeSpeed != null && effectiveDecodeSpeed > 0) {
-        P.rwkvGeneration.decodeSpeed.q = effectiveDecodeSpeed;
-        P.telemetry.trackDecodeSpeed(effectiveDecodeSpeed);
-      }
-
-      _lastMetricGeneratedTokens = generatedTokens;
-      _lastMetricAt = now;
-    } catch (_) {
-      //
+      await _readMetricsStatus(includeLastRequest: false);
+    } catch (e) {
+      _debugMetricLog("poll failed: $e");
     } finally {
       _metricsPollInFlight = false;
     }
+  }
+
+  Future<void> _pollFinalMetricsOnce() async {
+    try {
+      await _readMetricsStatus(includeLastRequest: true);
+    } catch (e) {
+      _debugMetricLog("final poll failed: $e");
+    }
+  }
+
+  Future<void> _readMetricsStatus({required bool includeLastRequest}) async {
+    final uri = Uri.parse("${baseUrl.q}/v1/server/status");
+    final response = await http.get(uri).timeout(const Duration(seconds: 1));
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      _debugMetricLog("status http ${response.statusCode}, includeLastRequest=$includeLastRequest");
+      return;
+    }
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is! Map<dynamic, dynamic>) return;
+    _debugMetricLog(
+      "status includeLastRequest=$includeLastRequest active=${_metricRequestSummary(decoded["active_request"])} last=${_metricRequestSummary(decoded["last_request"])}",
+    );
+    final metricSource = _metricRequestFromStatus(decoded, includeLastRequest: includeLastRequest);
+    if (metricSource == null) {
+      _debugMetricLog("skip no metric request, includeLastRequest=$includeLastRequest");
+      return;
+    }
+    final request = metricSource.request;
+
+    final prefillSpeed = _jsonDouble(request["prefill_speed"]);
+    final decodeSpeed = _jsonDouble(request["decode_speed"]);
+    final generatedTokens = _jsonInt(request["generated_tokens"]);
+    final prefillProgress = _jsonDouble(request["prefill_progress"]);
+    final now = DateTime.now();
+    _debugMetricLog(
+      "apply source=${metricSource.source} endpoint=${request["endpoint"]} prefillSpeed=$prefillSpeed decodeSpeed=$decodeSpeed prefillProgress=$prefillProgress generatedTokens=$generatedTokens",
+    );
+
+    if (prefillSpeed != null && prefillSpeed > 0) {
+      P.rwkvGeneration.prefillSpeed.q = prefillSpeed;
+      _markPrefillComplete();
+      _debugMetricLog(
+        "stored prefillSpeed=${P.rwkvGeneration.prefillSpeed.q} prefillProgress=${P.rwkvGeneration.prefillProgress.q}",
+      );
+    }
+
+    final effectiveDecodeSpeed = decodeSpeed != null && decodeSpeed > 0
+        ? decodeSpeed
+        : _estimateDecodeSpeed(generatedTokens: generatedTokens, now: now);
+    if (effectiveDecodeSpeed != null && effectiveDecodeSpeed > 0) {
+      P.rwkvGeneration.decodeSpeed.q = effectiveDecodeSpeed;
+      P.telemetry.trackDecodeSpeed(effectiveDecodeSpeed);
+      _debugMetricLog("stored decodeSpeed=${P.rwkvGeneration.decodeSpeed.q}");
+    }
+
+    _lastMetricGeneratedTokens = generatedTokens;
+    _lastMetricAt = now;
+  }
+
+  ({Map<dynamic, dynamic> request, String source})? _metricRequestFromStatus(
+    Map<dynamic, dynamic> decoded, {
+    required bool includeLastRequest,
+  }) {
+    final activeRequest = decoded["active_request"];
+    if (activeRequest is Map<dynamic, dynamic>) {
+      return (request: activeRequest, source: "active_request");
+    }
+    if (!includeLastRequest) return null;
+
+    final lastRequest = decoded["last_request"];
+    if (lastRequest is Map<dynamic, dynamic>) {
+      return (request: lastRequest, source: "last_request");
+    }
+    return null;
+  }
+
+  String _metricRequestSummary(Object? request) {
+    if (request == null) return "null";
+    if (request is! Map<dynamic, dynamic>) return request.runtimeType.toString();
+
+    final endpoint = request["endpoint"];
+    final prefillSpeed = request["prefill_speed"];
+    final decodeSpeed = request["decode_speed"];
+    final prefillProgress = request["prefill_progress"];
+    final generatedTokens = request["generated_tokens"];
+    return "{endpoint=$endpoint,prefill=$prefillSpeed,decode=$decodeSpeed,progress=$prefillProgress,generated=$generatedTokens}";
+  }
+
+  void _debugMetricLog(String message) {
+    if (!kDebugMode) return;
+
+    final line = "[AlbatrossMetrics] $message";
+    if (_lastMetricsDebugLine == line) return;
+    _lastMetricsDebugLine = line;
+    qqq(line);
+    _addLog(line);
+  }
+
+  void debugMetricRenderLog(String message) {
+    if (!kDebugMode) return;
+
+    final line = "[AlbatrossMetrics] $message";
+    if (_lastMetricsDebugLine == line) return;
+    _lastMetricsDebugLine = line;
+    qqq(line);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _addLog(line);
+    });
   }
 
   double? _estimateDecodeSpeed({required int? generatedTokens, required DateTime now}) {
@@ -1098,19 +1202,22 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     }
     final args = _launchArgs();
     _addLog("start: ${[executablePath.q, ...args].join(" ")}");
+    await _stdoutSub?.cancel();
+    await _stderrSub?.cancel();
+    _stdoutSub = null;
+    _stderrSub = null;
     final process = await Process.start(
       executablePath.q,
       args,
       workingDirectory: dirname(executablePath.q),
       environment: _launchEnvironment(),
-      mode: ProcessStartMode.detached,
+      mode: ProcessStartMode.normal,
     );
     _process = process;
-    _detachedRuntimeLaunched = true;
+    _detachedRuntimeLaunched = false;
     launchedByApp.q = true;
     processId.q = process.pid;
-    _addLog("detached process started: ${process.pid}");
-    if (_detachedRuntimeLaunched) return;
+    _addLog("process started: ${process.pid}");
 
     _stdoutSub = process.stdout.transform(utf8.decoder).transform(const LineSplitter()).listen((line) {
       qqq("Albatross: $line");
@@ -1124,9 +1231,21 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   }
 
   Future<bool> _waitUntilRunning() async {
-    for (int i = 0; i < 20; i++) {
-      await 500.msLater;
-      if (await probe()) return true;
+    for (int i = 0; i < _albatrossStartupProbeAttempts; i++) {
+      await Future<void>.delayed(_albatrossStartupProbeInterval);
+      if (await probe(verbose: false)) {
+        _addLog("service ready after ${i + 1}s");
+        return true;
+      }
+
+      final exitCode = processExitCode.q;
+      if (exitCode != null) {
+        throw "${S.current.albatross_service_not_running} (${S.current.albatross_exit_code}: $exitCode)";
+      }
+
+      if ((i + 1) % 10 == 0) {
+        _addLog("waiting for service: ${i + 1}s");
+      }
     }
     throw S.current.albatross_service_not_running;
   }
@@ -1216,6 +1335,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     processExitCode.q = code;
     _addLog("process exited: $code");
     _process = null;
+    _detachedRuntimeLaunched = false;
     launchedByApp.q = false;
     running.q = false;
     processId.q = null;

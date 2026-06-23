@@ -54,8 +54,7 @@ enum ThinkingMode {
     header: '<think',
     userMsgFooter: ' (think a lot)',
     forceReasoning: true,
-  )
-  ;
+  );
 
   const ThinkingMode({
     required this.header,
@@ -68,6 +67,17 @@ enum ThinkingMode {
   final bool forceReasoning;
 
   bool get hasThinkTag => header.startsWith('<think');
+
+  String? get albatrossThinkType => switch (this) {
+    .none => null,
+    .lighting => 'fast',
+    .fast => 'fast',
+    .free => 'free',
+    .preferChinese => 'preferChinese',
+    .en => 'en',
+    .enShort => 'enShort',
+    .enLong => 'enLong',
+  };
 
   /// 兼容旧字符串存储格式，例如 ".Fast"
   static ThinkingMode fromString(String? runningMode) {

@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zone/func/albatross_endpoint_input.dart';
 import 'package:zone/func/albatross_protocol.dart';
+import 'package:zone/model/thinking_mode.dart';
 
 void main() {
   String applyInputFormatters(List<TextInputFormatter> formatters, String value) {
@@ -467,6 +468,19 @@ void main() {
         <String, String>{'role': 'assistant', 'content': 'Visible answer'},
         <String, String>{'role': 'user', 'content': 'Second'},
       ]);
+    });
+  });
+
+  group('ThinkingMode albatrossThinkType', () {
+    test('maps app thinking modes to backend API names', () {
+      expect(ThinkingMode.none.albatrossThinkType, isNull);
+      expect(ThinkingMode.lighting.albatrossThinkType, 'fast');
+      expect(ThinkingMode.fast.albatrossThinkType, 'fast');
+      expect(ThinkingMode.free.albatrossThinkType, 'free');
+      expect(ThinkingMode.preferChinese.albatrossThinkType, 'preferChinese');
+      expect(ThinkingMode.en.albatrossThinkType, 'en');
+      expect(ThinkingMode.enShort.albatrossThinkType, 'enShort');
+      expect(ThinkingMode.enLong.albatrossThinkType, 'enLong');
     });
   });
 
