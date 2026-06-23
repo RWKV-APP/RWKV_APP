@@ -468,6 +468,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
         "stop_tokens": _AlbatrossRuntime._defaultStopTokens,
         "chunk_size": _AlbatrossRuntime._chunkSize,
         "stream": true,
+        "metrics": true,
         "enable_think": enableThink,
         ..._decodeParams(),
       };
@@ -596,6 +597,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
         "stop_tokens": _AlbatrossRuntime._defaultStopTokens,
         "chunk_size": _AlbatrossRuntime._chunkSize,
         "stream": true,
+        "metrics": true,
         ..._decodeParams(),
       });
       final response = await _client!.send(request);
