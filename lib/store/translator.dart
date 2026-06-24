@@ -6,6 +6,7 @@ const _initialSourceEn =
 So it's combining the best of RNN and transformer - great performance, linear time, constant space (no kv-cache), fast training, infinite ctx_len, and free sentence embedding.""";
 const _initialResult = "";
 const _endString = "hlcc_h2evlj_[END]_hlcc_j12hcnu2";
+const _translatorBackendBatchSlotLimit = 20;
 
 class _Translator {
   // ===========================================================================
@@ -20,6 +21,9 @@ class _Translator {
 
   /// 批量任务的定时器
   Timer? _batchTaskTimer;
+  int _batchCursor = 0;
+  int _batchActiveStartIndex = 0;
+  int _batchActiveSize = 0;
 
   // ===========================================================================
   // StateProvider
@@ -191,9 +195,9 @@ extension _$Translator on _Translator {
     if (source.q != textInController) source.q = textInController;
     // 根据输入是否为多行，自动联动批量开关（仅在 batchAuto 开启时）
     if (batchAuto.q) {
-      final lines = textInController.trim().split('\n').where((e) => e.trim().isNotEmpty).toList();
+      final lines = _translationLinesFromText(textInController);
       final isMulti = lines.length > 1;
-      if (isMulti && !batchEnabled.q) batchEnabled.q = true;
+      if (isMulti && !batchEnabled.q && _canUseBatchTranslation()) batchEnabled.q = true;
       if (!isMulti && batchEnabled.q) batchEnabled.q = false;
     }
   }
@@ -203,9 +207,9 @@ extension _$Translator on _Translator {
     if (next != textInController) textEditingController.text = next;
     // 根据输入是否为多行，自动联动批量开关（仅在 batchAuto 开启时）
     if (batchAuto.q) {
-      final lines = next.trim().split('\n').where((e) => e.trim().isNotEmpty).toList();
+      final lines = _translationLinesFromText(next);
       final isMulti = lines.length > 1;
-      if (isMulti && !batchEnabled.q) batchEnabled.q = true;
+      if (isMulti && !batchEnabled.q && _canUseBatchTranslation()) batchEnabled.q = true;
       if (!isMulti && batchEnabled.q) batchEnabled.q = false;
     }
   }
@@ -275,19 +279,19 @@ extension _$Translator on _Translator {
   }
 
   void _appendBatchEndString() {
-    qw;
     final batchLines = batchTaskLines.q;
     if (batchLines.isEmpty) return;
 
-    // 清理定时器
-    if (_batchTaskTimer != null) {
-      _batchTaskTimer!.cancel();
-      _batchTaskTimer = null;
+    _cancelBatchTaskTimer();
+
+    if (_batchCursor < batchLines.length) {
+      _startNextBatchChunk();
+      return;
     }
 
     // 将所有行的翻译结果用换行符连接起来
     final combinedResult = <String>[];
-    for (var i = 0; i < batchLines.length; i++) {
+    for (int i = 0; i < batchLines.length; i++) {
       final translation = batchTranslations.q[i] ?? "";
       combinedResult.add(translation);
     }
@@ -300,6 +304,9 @@ extension _$Translator on _Translator {
     batchTaskLines.q = [];
     batchTranslations.q = {};
     runningTaskKey.q = null;
+    _batchCursor = 0;
+    _batchActiveStartIndex = 0;
+    _batchActiveSize = 0;
   }
 
   void _appendEndStringAndStartNewTask() {
@@ -337,7 +344,12 @@ extension _$Translator on _Translator {
 
     final nextKey = _selectNextTaskKey();
     if (nextKey == null) return;
-    0.msLater.then((_) => _startNewTask(nextKey));
+    unawaited(_startNewTaskLater(nextKey));
+  }
+
+  Future<void> _startNewTaskLater(String source) async {
+    await 0.msLater;
+    _startNewTask(source);
   }
 
   String? _selectNextTaskKey() {
@@ -432,24 +444,49 @@ extension _$Translator on _Translator {
   }
 
   void _startBatchTask(List<String> lines) {
-    qq;
     P.rwkvGeneration.stop();
 
-    // 清理之前的定时器
-    if (_batchTaskTimer != null) {
-      _batchTaskTimer!.cancel();
-      _batchTaskTimer = null;
-    }
+    _cancelBatchTaskTimer();
 
     batchTranslations.q = {};
-    final batchSize = lines.length;
+    _batchCursor = 0;
+    _batchActiveStartIndex = 0;
+    _batchActiveSize = 0;
 
     // 设置 runningTaskKey 为整个输入文本，用于标识当前任务
     runningTaskKey.q = lines.join("\n");
 
+    _startNextBatchChunk();
+  }
+
+  void _startNextBatchChunk() {
+    final lines = batchTaskLines.q;
+    if (lines.isEmpty) return;
+
+    final batchSize = _resolveBatchChunkSize();
+    if (batchSize <= 1) {
+      batchTaskLines.q = [];
+      batchTranslations.q = {};
+      runningTaskKey.q = null;
+      _startNewTask(lines.join("\n"));
+      return;
+    }
+
+    final startIndex = _batchCursor;
+    if (startIndex >= lines.length) {
+      _appendBatchEndString();
+      return;
+    }
+
+    final endIndex = math.min(startIndex + batchSize, lines.length);
+    final chunkLines = lines.sublist(startIndex, endIndex);
+    _batchActiveStartIndex = startIndex;
+    _batchActiveSize = chunkLines.length;
+    _batchCursor = endIndex;
+
     // 为每一行创建消息列表
     final batchMessages = <List<String>>[];
-    for (var line in lines) {
+    for (final line in chunkLines) {
       batchMessages.add([line.trim()]);
     }
 
@@ -466,7 +503,7 @@ extension _$Translator on _Translator {
         enableReasoning: reasoning,
         forceReasoning: thinkingMode.forceReasoning,
         addGenerationPrompt: true,
-        batchSize: batchSize,
+        batchSize: chunkLines.length,
         modelID: modelID,
       ),
     );
@@ -480,6 +517,42 @@ extension _$Translator on _Translator {
     });
   }
 
+  void _cancelBatchTaskTimer() {
+    if (_batchTaskTimer == null) return;
+    _batchTaskTimer!.cancel();
+    _batchTaskTimer = null;
+  }
+
+  List<String> _translationLinesFromText(String text) {
+    final result = <String>[];
+    final lines = text.trim().split('\n');
+    for (final line in lines) {
+      final trimmed = line.trim();
+      if (trimmed.isEmpty) continue;
+      result.add(trimmed);
+    }
+    return result;
+  }
+
+  int _resolveBatchChunkSize() {
+    final supportedBatchSizes = P.rwkvParams.supportedBatchSizes.q;
+    if (supportedBatchSizes.isEmpty) return 1;
+
+    int maxSupportedBatchSize = 1;
+    for (final supportedBatchSize in supportedBatchSizes) {
+      if (supportedBatchSize > maxSupportedBatchSize) {
+        maxSupportedBatchSize = supportedBatchSize;
+      }
+    }
+    return math.min(maxSupportedBatchSize, _translatorBackendBatchSlotLimit);
+  }
+
+  bool _canUseBatchTranslation() {
+    final currentModel = P.rwkvModel.latest.q;
+    if (currentModel?.supportsBatchInference != true) return false;
+    return _resolveBatchChunkSize() > 1;
+  }
+
   void _handleBatchResponseBufferContent(from_rwkv.ResponseBatchBufferContent res) {
     final responseBufferContents = res.responseBufferContent;
     final batchLines = batchTaskLines.q;
@@ -490,15 +563,16 @@ extension _$Translator on _Translator {
 
     // 更新每一行的翻译结果
     final updatedTranslations = <int, String>{};
-    for (var i = 0; i < responseBufferContents.length && i < batchLines.length; i++) {
-      updatedTranslations[i] = responseBufferContents[i];
+    final activeSize = math.min(_batchActiveSize, batchLines.length - _batchActiveStartIndex);
+    for (int i = 0; i < responseBufferContents.length && i < activeSize; i++) {
+      updatedTranslations[_batchActiveStartIndex + i] = responseBufferContents[i];
     }
 
     batchTranslations.q = {...batchTranslations.q, ...updatedTranslations};
 
     // 将所有行的翻译结果用换行符连接起来
     final combinedResult = <String>[];
-    for (var i = 0; i < batchLines.length; i++) {
+    for (int i = 0; i < batchLines.length; i++) {
       final translation = batchTranslations.q[i] ?? "";
       combinedResult.add(translation);
     }
@@ -613,7 +687,7 @@ extension $Translator on _Translator {
     }
 
     // 批量开启的情况下才进行换行分割
-    final lines = sourceText.split('\n').where((line) => line.trim().isNotEmpty).toList();
+    final lines = _translationLinesFromText(sourceText);
     final isMulti = lines.length > 1;
 
     // 单行时强制关闭批量
@@ -625,6 +699,11 @@ extension $Translator on _Translator {
 
     if (isMulti) {
       // 多行 + 已启用批量
+      if (!_canUseBatchTranslation()) {
+        batchEnabled.q = false;
+        _startNewTask(sourceText);
+        return;
+      }
       batchTaskLines.q = lines;
       _startBatchTask(lines);
     } else {
@@ -672,10 +751,15 @@ extension $Translator on _Translator {
 
   void onBatchToggle(bool next) {
     final src = source.q;
-    final lines = src.trim().split('\n').where((e) => e.trim().isNotEmpty).toList();
+    final lines = _translationLinesFromText(src);
     final isMulti = lines.length > 1;
     if (!isMulti && next) {
       Alert.info(S.current.this_model_does_not_support_batch_inference); // 重用已有提示文案
+      batchEnabled.q = false;
+      return;
+    }
+    if (next && !_canUseBatchTranslation()) {
+      Alert.info(S.current.this_model_does_not_support_batch_inference);
       batchEnabled.q = false;
       return;
     }
