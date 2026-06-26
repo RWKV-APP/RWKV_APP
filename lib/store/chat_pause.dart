@@ -44,6 +44,9 @@ extension $ChatPause on _Chat {
     if (!P.rwkvGeneration.generating.q) {
       return;
     }
+    if (P.webDemo.active.q) {
+      await P.webDemo.stopActive();
+    }
     _pauseMessageById(id: id);
   }
 

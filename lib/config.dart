@@ -21,6 +21,10 @@ abstract class Config {
   static const suggestionsUrl = "$domain/suggestions.json";
   static const highScoreLanguagesUrl = "$domain/public-api/evals/high-score-languages";
   static const highScoreSamplesUrl = "$domain/public-api/evals/high-score-samples";
+  static const webDemoOfficialBaseUrl = Args.webDemoOfficialBaseUrl;
+  static const webDemoOfficialProtocol = Args.webDemoOfficialProtocol;
+  static const webDemoOfficialModel = Args.webDemoOfficialModel;
+  static const webDemoOfficialApiKey = Args.webDemoOfficialApiKey;
 
   static const timeout = Duration(seconds: 60);
 

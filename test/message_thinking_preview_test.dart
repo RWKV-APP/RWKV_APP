@@ -13,6 +13,7 @@ import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/message.dart';
 import 'package:zone/widgets/thinking_content_panel.dart';
+import 'package:zone/widgets/web_demo_preview.dart';
 
 const _thinkingPanelKey = ValueKey<String>("thinking-content-panel");
 const _thinkingScrollKey = ValueKey<String>("thinking-content-scroll");
@@ -209,6 +210,34 @@ void main() {
     final listView = tester.widget<ListView>(find.byKey(_thinkingScrollKey));
     final controller = listView.controller!;
     expect(controller.offset, controller.position.maxScrollExtent);
+  });
+
+  testWidgets('bot message with detected HTML renders the Web Demo preview', (tester) async {
+    const msg = model.Message(
+      id: 10,
+      content: '</think>\n<!doctype html><html><body><h1>Demo</h1></body></html>',
+      isMine: false,
+      paused: false,
+    );
+
+    await _pumpMessage(tester: tester, msg: msg);
+
+    expect(find.text("Web Demo"), findsOneWidget);
+    expect(find.textContaining("<!doctype html>"), findsWidgets);
+  });
+
+  testWidgets('bot message without detected HTML keeps the preview hidden', (tester) async {
+    const msg = model.Message(
+      id: 11,
+      content: "Plain answer",
+      isMine: false,
+      paused: false,
+    );
+
+    await _pumpMessage(tester: tester, msg: msg);
+
+    expect(find.text("Web Demo"), findsNothing);
+    expect(find.textContaining("Plain answer"), findsOneWidget);
   });
 
   testWidgets('manual scroll pauses auto scroll and the bottom button resumes it', (tester) async {
@@ -444,6 +473,7 @@ void _resetMessageUiState({required int messageId}) {
   P.preference.renderThinkingTagAsPreviewEnabled.q = true;
   P.rwkvContext.currentWorldType.q = null;
   P.rwkvGeneration.generating.q = false;
+  debugWebDemoInlinePreviewSupported = false;
 }
 
 String _thinkingResponse({required int lineCount}) {

@@ -21,6 +21,7 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat_layout_metrics.dart';
 import 'package:zone/widgets/markdown_render.dart';
 import 'package:zone/widgets/thinking_content_panel.dart';
+import 'package:zone/widgets/web_demo_preview.dart';
 
 const double _kSlotGap = 8.0;
 const double _kSlotScrollFadeHeight = 18.0;
@@ -903,6 +904,12 @@ class _MarkdownBody extends ConsumerWidget {
       return Column(
         crossAxisAlignment: .stretch,
         children: [
+          WebDemoPreviewPanel(
+            raw: output,
+            label: "Web ${slotIndex + 1}",
+            height: 180,
+            compact: true,
+          ),
           StreamingMarkdownRender(
             key: const ValueKey("batch-output"),
             raw: output,
@@ -958,6 +965,13 @@ class _MarkdownBody extends ConsumerWidget {
             ),
           ),
           if (output.isNotEmpty && cotContentExpanded) const SizedBox(height: 4),
+          if (output.isNotEmpty)
+            WebDemoPreviewPanel(
+              raw: output,
+              label: "Web ${slotIndex + 1}",
+              height: 180,
+              compact: true,
+            ),
           if (output.isNotEmpty)
             StreamingMarkdownRender(
               key: const ValueKey("batch-output"),
@@ -1016,6 +1030,13 @@ class _MarkdownBody extends ConsumerWidget {
           debugStableBlockTint: _kDebugBatchStableMarkdownTint,
         ),
         if (output.isNotEmpty) const SizedBox(height: _kBatchThinkingResultTopSpacing),
+        if (output.isNotEmpty)
+          WebDemoPreviewPanel(
+            raw: output,
+            label: "Web ${slotIndex + 1}",
+            height: 180,
+            compact: true,
+          ),
         if (output.isNotEmpty)
           StreamingMarkdownRender(
             key: const ValueKey("batch-output"),

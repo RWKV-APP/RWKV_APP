@@ -127,6 +127,7 @@ dependencies:
   wakelock_plus:
   web_socket_channel:
   detect_proxy_setting: ^0.0.9
+  flutter_inappwebview: ^6.1.5
 
 dependency_overrides:
   proxy_setting_android:

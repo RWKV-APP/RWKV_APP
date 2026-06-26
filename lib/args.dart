@@ -20,4 +20,11 @@ abstract class Args {
   static const useWindowsSandboxModels = bool.fromEnvironment("useWindowsSandboxModels", defaultValue: false);
   static const distributionChannel = String.fromEnvironment("distributionChannel", defaultValue: "default");
   static const domain = String.fromEnvironment("domain", defaultValue: "https://api.rwkv.halowang.cloud");
+  static const webDemoOfficialBaseUrl = String.fromEnvironment(
+    "webDemoOfficialBaseUrl",
+    defaultValue: "http://47.115.88.183:1801/v1/chat/completions",
+  );
+  static const webDemoOfficialProtocol = String.fromEnvironment("webDemoOfficialProtocol", defaultValue: "rwkv_lightning_v1");
+  static const webDemoOfficialModel = String.fromEnvironment("webDemoOfficialModel", defaultValue: "7b");
+  static const webDemoOfficialApiKey = String.fromEnvironment("webDemoOfficialApiKey", defaultValue: "");
 }

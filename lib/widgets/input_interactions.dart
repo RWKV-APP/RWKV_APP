@@ -13,6 +13,7 @@ import 'package:zone/widgets/chat/decode_param_button.dart';
 import 'package:zone/widgets/chat/response_style_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
+import 'package:zone/widgets/chat/web_demo_button.dart';
 import 'package:zone/widgets/chat/web_search_mode_button.dart';
 
 class InputInteractions extends ConsumerWidget {
@@ -53,6 +54,7 @@ class _ItemList extends ConsumerWidget {
       if (preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
       if (preferredDemoType == .chat) const ThinkingModeButton(),
       if (preferredDemoType == .chat) const BatchButton(),
+      if (preferredDemoType == .chat) const WebDemoButton(),
       if (preferredDemoType == .chat && currentLangIsZh) const ResponseStyleButton(),
       if (preferredDemoType == .chat) const AskQuestionButton(),
     ];

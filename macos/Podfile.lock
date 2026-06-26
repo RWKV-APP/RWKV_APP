@@ -14,6 +14,9 @@ PODS:
     - FlutterMacOS
   - file_selector_macos (0.0.1):
     - FlutterMacOS
+  - flutter_inappwebview_macos (0.0.1):
+    - FlutterMacOS
+    - OrderedSet (~> 6.0.3)
   - FlutterMacOS (1.0.0)
   - gal (1.0.0):
     - Flutter
@@ -26,6 +29,7 @@ PODS:
     - FlutterMacOS
   - mp_audio_stream (0.0.3):
     - FlutterMacOS
+  - OrderedSet (6.0.3)
   - package_info_plus (0.0.1):
     - FlutterMacOS
   - proxy_setting_macos (0.0.6):
@@ -85,6 +89,7 @@ DEPENDENCIES:
   - dynamic_color (from `Flutter/ephemeral/.symlinks/plugins/dynamic_color/macos`)
   - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
+  - flutter_inappwebview_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_inappwebview_macos/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - gal (from `Flutter/ephemeral/.symlinks/plugins/gal/darwin`)
   - macos_secure_bookmarks (from `Flutter/ephemeral/.symlinks/plugins/macos_secure_bookmarks/macos`)
@@ -105,6 +110,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - OrderedSet
     - Sentry
     - sqlite3
 
@@ -123,6 +129,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/file_picker/macos
   file_selector_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
+  flutter_inappwebview_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_inappwebview_macos/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   gal:
@@ -166,12 +174,14 @@ SPEC CHECKSUMS:
   dynamic_color: cb7c2a300ee67ed3bd96c3e852df3af0300bf610
   file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
   file_selector_macos: 9e9e068e90ebee155097d00e89ae91edb2374db7
+  flutter_inappwebview_macos: c2d68649f9f8f1831bfcd98d73fd6256366d9d1d
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
   gal: baecd024ebfd13c441269ca7404792a7152fde89
   macos_secure_bookmarks: e096d8ec49de2d25ea47e1061b85e5f2f1520fef
   macos_ui: ff29104a215c2e1b76f37aacdcbba648abb25faa
   macos_window_utils: 23f54331a0fd51eea9e0ed347253bf48fd379d1d
   mp_audio_stream: c140c6f5d79ea84f801878e5b89f05ab5f738bde
+  OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
   proxy_setting_macos: 38146ff7f48298b844111cc72138f2d047b9716d
   record_macos: 5d55909f9650314be6424ffd6b123ac75a08c3c1
