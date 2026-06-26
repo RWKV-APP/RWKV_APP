@@ -59,6 +59,10 @@ extension $ChatWebSearch on _Chat {
       ref = ref.copyWith(enable: true);
       try {
         final prompt = allMessage.last;
+        final promptParts = splitWebSearchPrompt(
+          prompt: prompt,
+          userMsgFooter: P.rwkvParams.thinkingMode.q.userMsgFooter,
+        );
         final deepSearch = webSearchMode.q == WebSearchMode.deepSearch;
         _updateMessageById(id: receiveId, reference: ref);
         final resp =
@@ -66,7 +70,7 @@ extension $ChatWebSearch on _Chat {
                   'https://auth.rwkvos.com/api/internet_search',
                   token: 'x8rYbL3KfGp2Nq1zT9wVvJ0iQ5sUoAeX7HcM4',
                   body: {
-                    "query": prompt,
+                    "query": promptParts.query,
                     "top_n": 3,
                     'is_deepsearch': deepSearch,
                   },
@@ -78,7 +82,9 @@ extension $ChatWebSearch on _Chat {
         final searchResult = refs.map((e) => e.summary).join("\n");
         allMessage.removeLast();
         final template = P.preference.promptTemplate;
-        final msg = sprintf(isZh ? template.webSearchChineseTemplate : template.webSearchTemplate, [searchResult, prompt]);
+        final msg =
+            sprintf(isZh ? template.webSearchChineseTemplate : template.webSearchTemplate, [searchResult, promptParts.query]) +
+            promptParts.footer;
         allMessage.add(msg);
       } catch (e) {
         ref = ref.copyWith(error: e.toString());

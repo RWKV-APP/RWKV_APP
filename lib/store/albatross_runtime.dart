@@ -135,7 +135,7 @@ class _AlbatrossRuntime {
 
     for (final fileInfo in remoteWeights) {
       final fileName = fileInfo.fileName.toLowerCase();
-      if (!fileName.endsWith(".pth") && !fileInfo.isAlbatross) continue;
+      if (!fileName.endsWith(".pth")) continue;
       add(fileInfo);
     }
 

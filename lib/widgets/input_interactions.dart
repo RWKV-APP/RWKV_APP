@@ -45,18 +45,15 @@ class _ItemList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final features = ref.watch(P.app.featureRollout);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final currentModelIsBefore20250922 = ref.watch(P.rwkvParams.currentModelIsBefore20250922);
-    final isLegacyAlbatrossLoaded = ref.watch(P.rwkvContext.isLegacyAlbatrossLoaded);
 
     final children = [
-      if (features.webSearch && preferredDemoType == .chat) const WebSearchModeButton(),
-      if (!isLegacyAlbatrossLoaded && preferredDemoType == .chat) const DecodeParamButton(),
-      if (!isLegacyAlbatrossLoaded && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922)
-        const SecondaryOptionsButton(),
+      if (preferredDemoType == .chat) const WebSearchModeButton(),
+      if (preferredDemoType == .chat) const DecodeParamButton(),
+      if (preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
       if (preferredDemoType == .chat) const ThinkingModeButton(),
-      if (!isLegacyAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
+      if (preferredDemoType == .chat) const BatchButton(),
       if (preferredDemoType == .chat && currentLangIsZh) const ResponseStyleButton(),
       if (preferredDemoType == .chat) const AskQuestionButton(),
     ];

@@ -111,9 +111,6 @@ class _Chat {
     final albatrossCanUse = ref.watch(P.albatrossRuntime.canUse);
     if (albatrossCanUse) return true;
 
-    final isLegacyAlbatrossLoaded = ref.watch(P.rwkvContext.isLegacyAlbatrossLoaded);
-    if (isLegacyAlbatrossLoaded) return true;
-
     final currentModel = ref.watch(P.rwkvModel.latest);
     return currentModel?.supportsBatchInference ?? false;
   });

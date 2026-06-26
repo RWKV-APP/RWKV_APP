@@ -30,8 +30,6 @@ class _Preference {
 
   bool _showBatteryOptimization = true;
 
-  var featureRollout = const FeatureRollout();
-
   bool fakeBatchInferenceBenchmarkEnabled = false;
   bool renderMarkdownAndLatex = true;
   bool renderThinkingTagAsPreview = true;
@@ -216,13 +214,6 @@ extension _$Preference on _Preference {
       if (this.preferredDarkCustomTheme.q == .light) {
         this.preferredDarkCustomTheme.q = .lightsOut;
       }
-    }
-
-    final ft = sp.getString('app.dev.feat');
-    if (ft != null && ft.isNotEmpty) {
-      try {
-        featureRollout = FeatureRollout.fromMap(jsonDecode(ft));
-      } catch (_) {}
     }
 
     fakeBatchInferenceBenchmarkEnabled = sp.getBool(_fakeBatchInferenceBenchmarkPreferenceKey) ?? false;
@@ -465,12 +456,6 @@ extension $Preference on _Preference {
         await sp.setBool("halo_state.showBatteryOptimizationDialog", false);
       }
     }
-  }
-
-  void setFeatureRollout(FeatureRollout featureRollout) async {
-    this.featureRollout = featureRollout;
-    final sp = await SharedPreferences.getInstance();
-    sp.setString('app.dev.feat', jsonEncode(featureRollout.toMap()));
   }
 
   Future<void> setFakeBatchInferenceBenchmarkEnabled(bool value) async {

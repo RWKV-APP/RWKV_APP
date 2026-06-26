@@ -187,7 +187,6 @@ extension $ChatResponseStyle on _Chat {
 
   bool _canUseBatchInferenceNow() {
     if (P.albatrossRuntime.canUse.q) return true;
-    if (P.rwkvContext.isLegacyAlbatrossLoaded.q) return true;
     return P.rwkvModel.latest.q?.supportsBatchInference ?? false;
   }
 

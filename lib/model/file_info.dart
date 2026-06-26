@@ -352,8 +352,6 @@ class FileInfo extends Equatable {
 
   bool get isTTS => name.toLowerCase().contains('tts');
 
-  bool get isAlbatross => tags.contains('albatross');
-
   String? get dateDisplayString {
     if (date != null) {
       final chinaTime = date!.toUtc().add(const Duration(hours: 8));

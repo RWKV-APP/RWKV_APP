@@ -92,7 +92,6 @@ class BatchSettingsPanel extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final batchInference = ref.watch(P.chat.effectiveBatchEnabled);
     final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
-    final featureRollout = ref.watch(P.app.featureRollout);
     final fakeBatchInferenceBenchmarkEnabled = ref.watch(P.chat.fakeBatchInferenceBenchmarkEnabled);
     final qb = ref.watch(P.app.qb);
 
@@ -195,23 +194,22 @@ class BatchSettingsPanel extends ConsumerWidget {
                 bottom: const _DecodeParams(),
               ),
             ),
-            if (featureRollout.parallelAnswering)
-              DimmedWhenInactive(
-                ignoring: !batchInference || batchCount < 2,
-                child: FormItem(
-                  bottomLineLeft: 8,
-                  bottomLineRight: 8,
-                  bottomLineColor: qb.q(.2),
-                  isSectionEnd: false,
-                  title: s.multi_question_title,
-                  subtitle: s.multi_question_entry_detail,
-                  icon: const Icon(Icons.question_answer_outlined, size: 20),
-                  onTap: () {
-                    pop();
-                    MultiQuestionPanel.show();
-                  },
-                ),
+            DimmedWhenInactive(
+              ignoring: !batchInference || batchCount < 2,
+              child: FormItem(
+                bottomLineLeft: 8,
+                bottomLineRight: 8,
+                bottomLineColor: qb.q(.2),
+                isSectionEnd: false,
+                title: s.multi_question_title,
+                subtitle: s.multi_question_entry_detail,
+                icon: const Icon(Icons.question_answer_outlined, size: 20),
+                onTap: () {
+                  pop();
+                  MultiQuestionPanel.show();
+                },
               ),
+            ),
             DimmedWhenInactive(
               ignoring: !batchInference,
               child: FormItem(

@@ -75,28 +75,6 @@ extension $RWKVGeneration on _RWKVGeneration {
       return;
     }
 
-    if (P.rwkvContext.isLegacyAlbatrossLoaded.q) {
-      if (maxLength == 0) {
-        hiddenPrefilling.q = false;
-        generating.q = false;
-        return;
-      }
-      final stream = Albatross.instance.chat(messages, batchSize: batchSize);
-      try {
-        await for (final event in stream) {
-          P.rwkvBridge.emitFromRWKV(event);
-        }
-
-        /// NOTE: downstream requires this delay
-        unawaited(_emitGenerateStopLater());
-      } catch (e) {
-        unawaited(_emitGenerateStopLater(error: e.toString()));
-      } finally {
-        P.rwkvBridge.emitOldEvent(const LLMEvent(type: _RWKVMessageType.isGenerating, content: 'false'));
-      }
-      return;
-    }
-
     final WeightType weightType = switch (P.app.demoType.q) {
       .chat => .chat,
       .see => .see,
@@ -197,10 +175,6 @@ extension $RWKVGeneration on _RWKVGeneration {
 
     if (P.albatrossRuntime.enabled.q) {
       return P.albatrossRuntime.completion(prompt, batchSize: batchSize);
-    }
-
-    if (P.rwkvContext.isLegacyAlbatrossLoaded.q) {
-      return Albatross.instance.completion(prompt, batchSize: batchSize);
     }
 
     final sendPort = P.rwkvBridge.sendPort;
@@ -351,7 +325,6 @@ extension $RWKVGeneration on _RWKVGeneration {
 
   Future<void> stop() async {
     if (P.albatrossRuntime.enabled.q) return P.albatrossRuntime.stop();
-    if (P.rwkvContext.isLegacyAlbatrossLoaded.q) return Albatross.instance.stop();
     for (final entry in P.rwkvModel.allLoaded.q.entries) {
       final modelID = entry.value;
       P.rwkvBridge.send(to_rwkv.Stop(modelID: modelID));

@@ -64,8 +64,6 @@ class _App extends RawApp {
 
   late final osVersion = qs(Platform.operatingSystemVersion);
 
-  late final featureRollout = qs<FeatureRollout>(const FeatureRollout());
-
   /// 当前应用的主题
   late final theme = qs<app_theme.AppTheme>(.light);
 
@@ -578,9 +576,6 @@ extension _$App on _App {
 
     shareChatQrCodeEn.q = json["share_chat_qrcode_en"];
     shareChatQrCodeZh.q = json["share_chat_qrcode_zh"];
-    featureRollout.q =
-        FeatureRollout.fromMap(json["controlled_rollout"]) // merge with dev options
-            .merge(P.preference.featureRollout);
   }
 
   void _routerListener() {

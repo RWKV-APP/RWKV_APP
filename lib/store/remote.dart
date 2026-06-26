@@ -3,6 +3,7 @@
 part of 'p.dart';
 
 const _modelsDirNotReadyMessage = "Models directory is not ready";
+const _remoteModelConfigDemoTypes = <String>['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay'];
 
 /// 1. 管理通过 latest.json 配置的文件
 class _Remote {
@@ -168,7 +169,7 @@ class _Remote {
     final allModelConfigs = <Map<String, dynamic>>[];
 
     // 收集所有demo类型的模型配置
-    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+    for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
       if (demoConfig is Map && demoConfig['model_config'] is List) {
         allModelConfigs.addAll(HF.listJSON(demoConfig['model_config']));
@@ -272,8 +273,6 @@ extension $Remote on _Remote {
     final worldWeights = HF.listJSON(config["world"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
     final sudokuWeights = HF.listJSON(config["sudoku"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
     final othelloWeights = HF.listJSON(config["othello"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
-    final albatrossWeights = HF.listJSON(config["albatross"]?["model_config"] ?? []).map((e) => FileInfo.fromJSON(e)).toSet();
-
     final roleplayConfig = (config["roleplay"] ?? <String, dynamic>{})["model_config"];
     final roleplayWeights = HF.listJSON(roleplayConfig ?? []).map((e) => FileInfo.fromJSON(e)).toSet();
 
@@ -286,10 +285,6 @@ extension $Remote on _Remote {
     seeWeights.q = worldWeights.where((e) => e.available).toSet();
 
     ttsCores.q = this.ttsWeights.q.where((e) => e.tags.contains("core")).toSet();
-
-    if (P.rwkvFeature.enableAlbatross.q) {
-      this.chatWeights.q = this.chatWeights.q.union(albatrossWeights.where((e) => e.available).toSet());
-    }
   }
 
   void cleanDownloadTasks() {
@@ -742,7 +737,7 @@ extension $Remote on _Remote {
     final allFileNames = <String>{};
 
     // Extract from all demo types
-    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+    for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
       if (demoConfig is Map && demoConfig['model_config'] is List) {
         final modelConfigs = HF.listJSON(demoConfig['model_config']);
@@ -772,7 +767,7 @@ extension $Remote on _Remote {
     final allFileInfos = <FileInfo>{};
 
     // Extract from all demo types
-    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+    for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
       if (demoConfig is Map && demoConfig['model_config'] is List) {
         final modelConfigs = HF.listJSON(demoConfig['model_config']);
@@ -840,7 +835,7 @@ extension $Remote on _Remote {
     final allFileInfos = <FileInfo>{};
 
     // Extract from all demo types
-    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+    for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
       if (demoConfig is Map && demoConfig['model_config'] is List) {
         final modelConfigs = HF.listJSON(demoConfig['model_config']);
@@ -971,7 +966,7 @@ extension $Remote on _Remote {
     }
 
     final allFileInfos = <FileInfo>{};
-    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+    for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
       if (demoConfig is Map && demoConfig['model_config'] is List) {
         final modelConfigs = HF.listJSON(demoConfig['model_config']);
@@ -2090,7 +2085,7 @@ extension _$Remote on _Remote {
     final knownFileNames = <String>{};
     final config = P.app._config.q;
     if (config != null) {
-      for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+      for (final demoType in _remoteModelConfigDemoTypes) {
         final demoConfig = config[demoType];
         if (demoConfig is Map && demoConfig['model_config'] is List) {
           final modelConfigs = HF.listJSON(demoConfig['model_config']);

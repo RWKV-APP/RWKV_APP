@@ -2,9 +2,6 @@
   "chat": {
     "share_chat_qrcode_zh": "https://rwkvos.com/",
     "share_chat_qrcode_en": "https://github.com/RWKV-APP/RWKV_APP",
-    "controlled_rollout": {
-      "web_search": false
-    },
     "model_config": [
       {
         "name": "RWKV7-G1d 0.1B",
@@ -1376,9 +1373,6 @@
         "date": 1768750659
       }
     ]
-  },
-  "albatross": {
-    "model_config": []
   },
   "roleplay": {
     "model_config": [

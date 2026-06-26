@@ -278,16 +278,6 @@ extension $RWKVParams on _RWKVParams {
     final s = S.current;
     final albatrossCanUse = P.albatrossRuntime.canUse.q;
 
-    if (!albatrossCanUse && P.rwkvContext.isLegacyAlbatrossLoaded.q) {
-      final current = thinkingMode.q;
-      if (current != .none) {
-        setModelConfig(thinkingMode: .none, rememberThinkingMode: true);
-      } else {
-        setModelConfig(thinkingMode: .free, rememberThinkingMode: true);
-      }
-      return;
-    }
-
     final currentModelIsBefore20250922 = P.rwkvParams.currentModelIsBefore20250922.q;
     qqr("currentModelIsBefore20250922: $currentModelIsBefore20250922");
     if (!albatrossCanUse && currentModelIsBefore20250922) {

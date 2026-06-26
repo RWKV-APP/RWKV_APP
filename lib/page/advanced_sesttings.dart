@@ -39,19 +39,18 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
                 ChatTemplateDialog.show(context, systemPrompt: true);
               },
             ),
-            if (P.preference.featureRollout.webSearch)
-              item(
-                title: S.current.web_search_template,
-                child: const SizedBox(
-                  height: 56,
-                  width: 18,
-                  child: Icon(Icons.arrow_forward_ios, size: 18),
-                ),
-                onTap: () {
-                  ChatTemplateDialog.show(context, webSearch: true);
-                },
+            item(
+              title: S.current.web_search_template,
+              child: const SizedBox(
+                height: 56,
+                width: 18,
+                child: Icon(Icons.arrow_forward_ios, size: 18),
               ),
-            if (P.preference.featureRollout.webSearch) const SizedBox(height: 8),
+              onTap: () {
+                ChatTemplateDialog.show(context, webSearch: true);
+              },
+            ),
+            const SizedBox(height: 8),
             item(
               title: S.current.thinking_mode_template,
               child: const SizedBox(
@@ -99,37 +98,6 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
           },
         ),
       ),
-      // item(
-      //   title: '启动时自动加载上次模型',
-      //   child: SizedBox(
-      //     height: 56,
-      //     child: Switch(value: false, onChanged: (v) {}),
-      //   ),
-      // ),
-      // const SizedBox(height: 8),
-      // item(
-      //   title: '回车键发送消息',
-      //   child: SizedBox(
-      //     height: 56,
-      //     child: Switch(value: false, onChanged: (v) {}),
-      //   ),
-      // ),
-      // const SizedBox(height: 8),
-      // item(
-      //   title: '启动时检查更新',
-      //   child: SizedBox(
-      //     height: 56,
-      //     child: Switch(value: true, onChanged: (v) {}),
-      //   ),
-      // ),
-      // const SizedBox(height: 8),
-      // item(
-      //   title: '打开模型列表时自动更新',
-      //   child: SizedBox(
-      //     height: 56,
-      //     child: Switch(value: true, onChanged: (v) {}),
-      //   ),
-      // ),
     ];
   }
 

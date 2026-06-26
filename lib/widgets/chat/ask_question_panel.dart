@@ -830,7 +830,6 @@ class _GeneratedQuestionsSectionState extends ConsumerState<_GeneratedQuestionsS
     final theme = Theme.of(context);
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
-    final featureRollout = ref.watch(P.app.featureRollout);
     final questions = ref.watch(P.askQuestion.questions);
     if (questions.isEmpty) return const SizedBox.shrink();
 
@@ -921,8 +920,7 @@ class _GeneratedQuestionsSectionState extends ConsumerState<_GeneratedQuestionsS
                                 ],
                               ],
                             ),
-                          if (resultItems.isNotEmpty && !generating && featureRollout.parallelAnswering)
-                            _AskAllAsBatchButton(questions: questions),
+                          if (resultItems.isNotEmpty && !generating) _AskAllAsBatchButton(questions: questions),
                         ],
                       ),
                     ),
