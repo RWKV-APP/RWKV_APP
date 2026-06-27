@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/func/extract_thought_and_output_for_batch_inference.dart';
@@ -70,7 +69,7 @@ class PageBatchSlotPreview extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title, style: const TS(s: 16, w: .w600)),
+        title: Text(title, style: const TextStyle(fontSize: 16, fontWeight: .w600)),
       ),
       body: SingleChildScrollView(
         padding: .only(
@@ -83,9 +82,9 @@ class PageBatchSlotPreview extends ConsumerWidget {
           crossAxisAlignment: .stretch,
           children: [
             if (thought.isNotEmpty) ...[
-              MarkdownRender(raw: thought, color: qb.q(.55), useMessageLineHeight: true),
+              MarkdownRender(raw: thought, color: qb.withValues(alpha: .55), useMessageLineHeight: true),
               const SizedBox(height: 12),
-              Container(height: 0.5, color: theme.dividerColor.q(.3)),
+              Container(height: 0.5, color: theme.dividerColor.withValues(alpha: .3)),
               const SizedBox(height: 12),
             ],
             if (output.isNotEmpty) MarkdownRender(raw: output, useMessageLineHeight: true),

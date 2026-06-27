@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
@@ -28,26 +27,26 @@ class PerformanceInfo extends ConsumerWidget {
       mainAxisAlignment: .center,
       children: [
         Text.rich(
-          style: TS(c: qb.q(1), s: 10),
+          style: TextStyle(color: qb.withValues(alpha: 1), fontSize: 10),
           TextSpan(
             children: [
               TextSpan(text: short ? "P " : "Prefill "),
               TextSpan(
                 text: prefillSpeed.toStringAsFixed(1),
-                style: TS(ff: monospaceFF),
+                style: TextStyle(fontFamily: monospaceFF),
               ),
               const TextSpan(text: "t/s"),
             ],
           ),
         ),
         Text.rich(
-          style: TS(c: qb.q(1), s: 10),
+          style: TextStyle(color: qb.withValues(alpha: 1), fontSize: 10),
           TextSpan(
             children: [
               TextSpan(text: short ? "D " : "Decode "),
               TextSpan(
                 text: decodeSpeed.toStringAsFixed(1),
-                style: TS(ff: monospaceFF),
+                style: TextStyle(fontFamily: monospaceFF),
               ),
               const TextSpan(text: "t/s"),
             ],

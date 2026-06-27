@@ -61,7 +61,6 @@ extension _$RWKVBridge on _RWKVBridge {
     _receivePort.listen(_onMessage);
     await P.rwkvBackend._init();
     P.rwkvModel.latest.lb(P.rwkvModel._onCurrentModelChanged);
-    Albatross.instance.init();
     P.rwkvGeneration.generating.l(P.rwkvGeneration._onGeneratingChanged);
   }
 

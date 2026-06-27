@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
@@ -21,6 +19,7 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/input_interactions.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class DecodeParamButton extends ConsumerWidget {
   const DecodeParamButton({super.key});
@@ -122,8 +121,8 @@ class DecodeParamButton extends ConsumerWidget {
                 height: height,
                 padding: const .symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  color: bgColor.q(
-                    userBackdropFilterForInputOptions
+                  color: bgColor.withValues(
+                    alpha: userBackdropFilterForInputOptions
                         ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                         : 1,
                   ),
@@ -138,7 +137,7 @@ class DecodeParamButton extends ConsumerWidget {
                     const SizedBox(width: 4),
                     Text(
                       decodeParamType.displayNameShort,
-                      style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                      style: TextStyle(color: textColor, fontSize: fontSize, height: 1, fontWeight: .w500),
                       strutStyle: StrutStyle(
                         fontSize: fontSize,
                         height: 1,

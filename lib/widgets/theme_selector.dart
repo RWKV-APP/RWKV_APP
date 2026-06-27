@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
@@ -14,6 +12,7 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/form_item.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class ThemeSelector extends ConsumerWidget {
   static final _shown = qs(false);
@@ -117,7 +116,7 @@ class ThemeColorSettingSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FormItem(
-          icon: Icon(Icons.dark_mode_outlined, color: qb.q(.667), size: 16),
+          icon: Icon(Icons.dark_mode_outlined, color: qb.withValues(alpha: .667), size: 16),
           title: s.dark_mode,
           subtitle: s.force_dark_mode,
           showArrow: false,
@@ -130,7 +129,7 @@ class ThemeColorSettingSection extends ConsumerWidget {
           ),
         ),
         FormItem(
-          icon: Icon(Icons.auto_mode, color: qb.q(.667), size: 16),
+          icon: Icon(Icons.auto_mode, color: qb.withValues(alpha: .667), size: 16),
           title: s.system_mode,
           subtitle: s.color_theme_follow_system,
           showArrow: false,
@@ -152,7 +151,7 @@ class ThemeColorSettingSection extends ConsumerWidget {
               Expanded(
                 child: Text(
                   s.dark_mode_theme,
-                  style: TS(w: .w500, c: qb.q(.8), s: 12),
+                  style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
                 ),
               ),
             ],
@@ -166,7 +165,7 @@ class ThemeColorSettingSection extends ConsumerWidget {
           trailing: IconButton(
             icon: Icon(
               preferredDarkCustomTheme == .dim ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
-              color: preferredDarkCustomTheme == .dim ? appTheme.themePrimary : qb.q(.33),
+              color: preferredDarkCustomTheme == .dim ? appTheme.themePrimary : qb.withValues(alpha: .33),
             ),
             onPressed: _onDimPressed,
           ),
@@ -180,7 +179,7 @@ class ThemeColorSettingSection extends ConsumerWidget {
           trailing: IconButton(
             icon: Icon(
               preferredDarkCustomTheme == .lightsOut ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
-              color: preferredDarkCustomTheme == .lightsOut ? appTheme.themePrimary : qb.q(.33),
+              color: preferredDarkCustomTheme == .lightsOut ? appTheme.themePrimary : qb.withValues(alpha: .33),
             ),
             onPressed: _onLightsOutPressed,
           ),
@@ -194,7 +193,7 @@ class ThemeColorSettingSection extends ConsumerWidget {
               Expanded(
                 child: Text(
                   s.thinking_tag_rendering,
-                  style: TS(w: .w500, c: qb.q(.8), s: 12),
+                  style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
                 ),
               ),
             ],
@@ -202,7 +201,7 @@ class ThemeColorSettingSection extends ConsumerWidget {
         if (showDarkThemeTitle) const SizedBox(height: 12),
         if (showDarkThemeTitle)
           FormItem(
-            icon: Icon(Icons.psychology_alt_outlined, color: qb.q(.667), size: 16),
+            icon: Icon(Icons.psychology_alt_outlined, color: qb.withValues(alpha: .667), size: 16),
             title: s.thinking_tag_preview,
             subtitle: s.thinking_tag_preview_subtitle,
             showArrow: false,

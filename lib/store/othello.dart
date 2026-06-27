@@ -755,7 +755,7 @@ MAX_DEPTH-$searchDepth
       print("✅ Original prompt:");
       print(prompt);
       print("✅ Formated prompt:");
-      prompt.split("\n").indexMap((index, e) {
+      mapIndexed(prompt.split("\n"), (index, e) {
         if (e.trim().isEmpty) return;
         if (kDebugMode) print(e.replaceAll("·", "· "));
       });

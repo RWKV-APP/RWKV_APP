@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -16,6 +14,7 @@ import 'package:zone/model/cell_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/menu.dart';
 import 'package:zone/widgets/pager.dart';
+import 'package:zone/func/collection_utils.dart';
 
 class PageOthello extends StatelessWidget {
   const PageOthello({super.key});
@@ -49,7 +48,7 @@ class _Page extends ConsumerWidget {
       body: usePortrait
           ? Column(
               children: [
-                paddingTop.h,
+                SizedBox(height: paddingTop),
                 const SizedBox(height: 12),
                 const _Title(),
                 const SizedBox(height: 12),
@@ -111,7 +110,7 @@ class _Page extends ConsumerWidget {
                     ),
                   ],
                 ),
-                paddingRight.w,
+                SizedBox(width: paddingRight),
               ],
             ),
     );
@@ -132,15 +131,15 @@ class _Title extends ConsumerWidget {
       mainAxisAlignment: .center,
       children: [
         const SizedBox(width: 12),
-        Text("$version($buildNumber)", style: TS(c: qb.q(.0), s: 10)),
+        Text("$version($buildNumber)", style: TextStyle(color: qb.withValues(alpha: .0), fontSize: 10)),
         if (usePortrait) const Spacer(),
         Text(
           s.rwkv_othello,
-          style: const TS(s: 20, w: .w700),
+          style: const TextStyle(fontSize: 20, fontWeight: .w700),
         ),
         if (usePortrait) const Spacer(),
         if (!usePortrait) const SizedBox(width: 32),
-        Text("$version($buildNumber)", style: TS(c: qb.q(.5), s: 10)),
+        Text("$version($buildNumber)", style: TextStyle(color: qb.withValues(alpha: .5), fontSize: 10)),
         if (!usePortrait) const SizedBox(width: 32),
         const SizedBox(width: 12),
       ],
@@ -252,15 +251,15 @@ class _ModelSettings extends ConsumerWidget {
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
     return Material(
-      color: qb.q(.0),
-      textStyle: TS(ff: monospaceFF, s: 10),
+      color: qb.withValues(alpha: .0),
+      textStyle: TextStyle(fontFamily: monospaceFF, fontSize: 10),
       child: Container(
         padding: const .all(4),
         margin: const .all(4),
         decoration: BoxDecoration(
-          color: qb.q(.0),
+          color: qb.withValues(alpha: .0),
           borderRadius: .circular(4),
-          border: .all(color: qb.q(.5), width: .5),
+          border: .all(color: qb.withValues(alpha: .5), width: .5),
         ),
         child: Column(
           crossAxisAlignment: .start,
@@ -268,10 +267,13 @@ class _ModelSettings extends ConsumerWidget {
           children: [
             Text(
               s.model_settings,
-              style: const TS(w: .w700),
+              style: const TextStyle(fontWeight: .w700),
             ),
             const SizedBox(height: 8),
-            Text(s.in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2, style: TS(c: qb.q(.5), s: 10)),
+            Text(
+              s.in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2,
+              style: TextStyle(color: qb.withValues(alpha: .5), fontSize: 10),
+            ),
             const SizedBox(height: 8),
             usePortrait
                 ? Column(
@@ -326,7 +328,7 @@ class _Players extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: .circular(4),
-        border: .all(color: qb.q(.5), width: .5),
+        border: .all(color: qb.withValues(alpha: .5), width: .5),
       ),
       padding: const .only(left: 8, top: 8, right: 8),
       child: Wrap(
@@ -335,7 +337,7 @@ class _Players extends ConsumerWidget {
           Text(
             s.black + ":",
             textAlign: TextAlign.center,
-            style: const TS(w: .w700),
+            style: const TextStyle(fontWeight: .w700),
           ),
           RadioGroup<bool>(
             groupValue: blackIsAI,
@@ -372,7 +374,7 @@ class _Players extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: .circular(4),
-        border: .all(color: qb.q(.5), width: .5),
+        border: .all(color: qb.withValues(alpha: .5), width: .5),
       ),
       padding: const .only(left: 8, top: 8, right: 8),
       child: Wrap(
@@ -381,7 +383,7 @@ class _Players extends ConsumerWidget {
           Text(
             s.white + ":",
             textAlign: TextAlign.center,
-            style: const TS(w: .w700),
+            style: const TextStyle(fontWeight: .w700),
           ),
           RadioGroup<bool>(
             groupValue: whiteIsAI,
@@ -417,22 +419,22 @@ class _Players extends ConsumerWidget {
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
     return Material(
-      color: qb.q(.0),
-      textStyle: TS(ff: monospaceFF, s: 10),
+      color: qb.withValues(alpha: .0),
+      textStyle: TextStyle(fontFamily: monospaceFF, fontSize: 10),
       child: Container(
         margin: const .all(4),
         padding: const .all(4),
         decoration: BoxDecoration(
-          color: qb.q(.0),
+          color: qb.withValues(alpha: .0),
           borderRadius: .circular(4),
-          border: .all(color: qb.q(.5), width: .5),
+          border: .all(color: qb.withValues(alpha: .5), width: .5),
         ),
         child: Column(
           crossAxisAlignment: .start,
           children: [
             Text(
               s.players,
-              style: const TS(w: .w700),
+              style: const TextStyle(fontWeight: .w700),
             ),
             const SizedBox(height: 12),
             if (usePortrait && !playerShouldAtSameColumnWithSettings && !settingsAndPlayersShouldAtDifferentColumnIsHorizontal)
@@ -499,16 +501,16 @@ class _Score extends ConsumerWidget {
           duration: const Duration(milliseconds: 150),
           child: Text(
             s.thinking,
-            style: TS(s: 10, w: generating ? .w400 : .w400),
+            style: TextStyle(fontSize: 10, fontWeight: generating ? .w400 : .w400),
           ),
         ),
         Text(
           "${s.prefill}: ${prefillSpeed.toStringAsFixed(1)} t/s",
-          style: const TS(s: 10, w: .w400),
+          style: const TextStyle(fontSize: 10, fontWeight: .w400),
         ),
         Text(
           "${s.decode}: ${decodeSpeed.toStringAsFixed(1)} t/s",
-          style: const TS(s: 10, w: .w400),
+          style: const TextStyle(fontSize: 10, fontWeight: .w400),
         ),
       ],
     );
@@ -521,7 +523,7 @@ class _Score extends ConsumerWidget {
             },
       child: Text(
         s.new_game,
-        style: const TS(s: 10, w: .w500),
+        style: const TextStyle(fontSize: 10, fontWeight: .w500),
       ),
     );
 
@@ -541,7 +543,7 @@ class _Score extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Colors.transparent,
             borderRadius: .circular(8),
-            border: .all(color: qb.q(.5), width: .5),
+            border: .all(color: qb.withValues(alpha: .5), width: .5),
           ),
           child: Column(
             children: [
@@ -615,38 +617,35 @@ class _Grid extends ConsumerWidget {
         final sizeForCells = size - labelSize - _sepPerLine * _sepWidth;
         final sizeForCell = sizeForCells / _cellPerLine;
 
-        final cells = state
-            .indexMap((row, line) {
-              return line.indexMap((col, cellType) {
-                final left = col * sizeForCell + col * _sepWidth;
-                final top = row * sizeForCell + row * _sepWidth;
-                final available = blackTurn ? eatCountMatrixForBlack[row][col] > 0 : eatCountMatrixForWhite[row][col] > 0;
-                return Positioned(
-                  left: left + labelSize,
-                  top: top + labelSize,
-                  width: sizeForCell,
-                  height: sizeForCell,
-                  child: GestureDetector(
-                    onTap: () {
-                      _onCellTap(row: row, col: col);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(color: const Color(0xFF808080).q(.5)),
-                      child: _Cell(
-                        row: row,
-                        col: col,
-                        cellType: cellType,
-                        available: available,
-                      ),
-                    ),
+        final cells = mapIndexed(state, (row, line) {
+          return mapIndexed(line, (col, cellType) {
+            final left = col * sizeForCell + col * _sepWidth;
+            final top = row * sizeForCell + row * _sepWidth;
+            final available = blackTurn ? eatCountMatrixForBlack[row][col] > 0 : eatCountMatrixForWhite[row][col] > 0;
+            return Positioned(
+              left: left + labelSize,
+              top: top + labelSize,
+              width: sizeForCell,
+              height: sizeForCell,
+              child: GestureDetector(
+                onTap: () {
+                  _onCellTap(row: row, col: col);
+                },
+                child: Container(
+                  decoration: BoxDecoration(color: const Color(0xFF808080).withValues(alpha: .5)),
+                  child: _Cell(
+                    row: row,
+                    col: col,
+                    cellType: cellType,
+                    available: available,
                   ),
-                );
-              });
-            })
-            .expand((e) => e)
-            .toList();
+                ),
+              ),
+            );
+          });
+        }).expand((e) => e).toList();
 
-        final rulesHorizontal = rulesHorizontalNames.indexMap((col, e) {
+        final rulesHorizontal = mapIndexed(rulesHorizontalNames, (col, e) {
           final left = col * sizeForCell + col * _sepWidth + labelSize;
           return Positioned(
             left: left,
@@ -656,13 +655,13 @@ class _Grid extends ConsumerWidget {
             child: Center(
               child: Text(
                 e,
-                style: const TS(s: 10, w: .w700),
+                style: const TextStyle(fontSize: 10, fontWeight: .w700),
               ),
             ),
           );
         }).toList();
 
-        final rulesVertical = rulesVerticalNames.indexMap((row, e) {
+        final rulesVertical = mapIndexed(rulesVerticalNames, (row, e) {
           final top = row * sizeForCell + row * _sepWidth + labelSize;
           return Positioned(
             left: 0,
@@ -672,7 +671,7 @@ class _Grid extends ConsumerWidget {
             child: Center(
               child: Text(
                 e,
-                style: const TS(s: 10, w: .w700),
+                style: const TextStyle(fontSize: 10, fontWeight: .w700),
               ),
             ),
           );
@@ -729,7 +728,7 @@ class _Cell extends StatelessWidget {
                     maxWidth: maxAvailableSize,
                     maxHeight: maxAvailableSize,
                   ),
-                  decoration: BoxDecoration(color: Colors.green, borderRadius: 100.r),
+                  decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(100)),
                 ),
               ],
             ),
@@ -776,7 +775,7 @@ class _White extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.black.q(.3),
+            color: Colors.black.withValues(alpha: .3),
             offset: const Offset(1, 1),
             blurRadius: 3,
           ),
@@ -815,7 +814,7 @@ class _Black extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.black.q(.3),
+            color: Colors.black.withValues(alpha: .3),
             offset: const Offset(1, 1),
             blurRadius: 3,
           ),
@@ -849,7 +848,7 @@ class _Console extends ConsumerWidget {
 
     return Material(
       color: qb,
-      textStyle: TS(ff: (Platform.isIOS || Platform.isMacOS) ? "Menlo" : "Monospace", c: qw, s: 10),
+      textStyle: TextStyle(fontFamily: (Platform.isIOS || Platform.isMacOS) ? "Menlo" : "Monospace", color: qw, fontSize: 10),
       child: ListView.builder(
         padding: .only(
           left: 8 + (usePortrait ? 0 : paddingLeft),
@@ -898,7 +897,7 @@ class _Console extends ConsumerWidget {
                   }),
               ],
             ),
-            style: TS(c: qw, s: 12, w: .w500),
+            style: TextStyle(color: qw, fontSize: 12, fontWeight: .w500),
           );
         },
       ),
@@ -930,7 +929,7 @@ class _ConsoleCell extends ConsumerWidget {
       height: 12,
       width: 12,
       margin: const .symmetric(horizontal: 1),
-      decoration: BoxDecoration(color: qw.q(.33)),
+      decoration: BoxDecoration(color: qw.withValues(alpha: .33)),
       child: Center(
         child: Icon(
           Icons.circle,

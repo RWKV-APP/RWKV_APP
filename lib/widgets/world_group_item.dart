@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sprintf/sprintf.dart';
@@ -21,6 +19,8 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_tag.dart';
+import 'package:zone/func/debug_trace.dart';
+import 'package:zone/func/collection_utils.dart';
 
 class WorldGroupItem extends ConsumerStatefulWidget {
   final WorldType worldType;
@@ -275,7 +275,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final primary = appTheme.primary;
     final startButtonRadius = appTheme.startButtonRadius;
 
-    final files = _fileInfos.m((e) {
+    final files = mapFixed(_fileInfos, (e) {
       return ref.watch(P.remote.locals(e));
     });
 
@@ -327,7 +327,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
         decoration: BoxDecoration(
           color: appTheme.settingItem,
           borderRadius: .circular(8),
-          border: .all(color: qw.q(.1), width: .5),
+          border: .all(color: qw.withValues(alpha: .1), width: .5),
         ),
         margin: const .only(top: 8),
         padding: const .all(8),
@@ -342,7 +342,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                 });
               },
               child: Container(
-                decoration: const BoxDecoration(color: kC),
+                decoration: const BoxDecoration(color: Colors.transparent),
                 child: Row(
                   children: [
                     Expanded(
@@ -372,7 +372,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                           onTap: (loading || modelLoading) ? null : _onStartToChatTap,
                           child: AnimatedOpacity(
                             opacity: loading || modelLoading ? 0.6 : 1,
-                            duration: 200.ms,
+                            duration: Duration(milliseconds: 200),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: primary,
@@ -382,12 +382,12 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                               child: modelLoading
                                   ? LoadingProgressButtonContent(
                                       progress: modelLoadingProgress,
-                                      textStyle: TS(c: qw),
+                                      textStyle: TextStyle(color: qw),
                                       indicatorColor: qw,
                                     )
                                   : Text(
                                       startTitle,
-                                      style: TS(c: qw),
+                                      style: TextStyle(color: qw),
                                     ),
                             ),
                           ),
@@ -397,11 +397,11 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                           onTap: null,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: kG.q(.5),
+                              color: Color(0xFF808080).withValues(alpha: .5),
                               borderRadius: .circular(startButtonRadius),
                             ),
                             padding: const .all(8),
-                            child: Text(s.chatting, style: TS(c: qw)),
+                            child: Text(s.chatting, style: TextStyle(color: qw)),
                           ),
                         ),
                       if (!alreadyStarted) const SizedBox(width: 8),
@@ -447,9 +447,9 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                   margin: const .only(top: 8),
                   padding: const .all(8),
                   decoration: BoxDecoration(
-                    color: qb.q(.05),
+                    color: qb.withValues(alpha: .05),
                     borderRadius: .circular(8),
-                    border: .all(color: qb.q(.1), width: 1),
+                    border: .all(color: qb.withValues(alpha: .1), width: 1),
                   ),
                   child: _ExpandedFileItem(fileInfo: e),
                 ),
@@ -502,11 +502,11 @@ class _CollapsedContent extends ConsumerWidget {
           children: [
             Text(
               modelName,
-              style: const TS(w: .w600),
+              style: const TextStyle(fontWeight: .w600),
             ),
             Text(
               formatBytes(totalSize),
-              style: TS(c: qb.q(.7), w: .w500),
+              style: TextStyle(color: qb.withValues(alpha: .7), fontWeight: .w500),
             ),
           ],
         ),
@@ -689,18 +689,18 @@ class _ExpandedFileItem extends ConsumerWidget {
                       children: [
                         Text(
                           fileInfo.name,
-                          style: const TS(
-                            w: .w600,
-                            s: 14,
+                          style: const TextStyle(
+                            fontWeight: .w600,
+                            fontSize: 14,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           formatBytes(fileSize),
-                          style: TS(
-                            c: qb.q(.7),
-                            w: .w500,
-                            s: 12,
+                          style: TextStyle(
+                            color: qb.withValues(alpha: .7),
+                            fontWeight: .w500,
+                            fontSize: 12,
                           ),
                         ),
                       ],

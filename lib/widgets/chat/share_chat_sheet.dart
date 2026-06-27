@@ -9,9 +9,7 @@ import 'package:flutter/rendering.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gal/gal.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -24,6 +22,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/message.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class ShareChatSheet extends ConsumerStatefulWidget {
   const ShareChatSheet({super.key});
@@ -235,7 +234,7 @@ class _PreviewState extends ConsumerState<_Preview> {
 
     final bytes = byteData!.buffer.asUint8List();
     final dir = await getApplicationCacheDirectory();
-    final milliseconds = HF.milliseconds;
+    final milliseconds = DateTime.now().millisecondsSinceEpoch;
     final file = File(p.join(dir.path, "tmp_$milliseconds.png"));
     await file.writeAsBytes(bytes);
     return file;
@@ -291,7 +290,7 @@ class _PreviewState extends ConsumerState<_Preview> {
               ),
             ),
           ),
-          paddingBottom.h,
+          SizedBox(height: paddingBottom),
         ],
       ),
     );

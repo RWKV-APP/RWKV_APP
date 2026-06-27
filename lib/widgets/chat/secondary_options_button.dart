@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -53,12 +52,12 @@ class SecondaryOptionsButton extends ConsumerWidget {
 
     return AnimatedSize(
       key: const Key("_SecondaryOptionsButton"),
-      duration: 150.ms,
+      duration: Duration(milliseconds: 150),
       curve: Curves.easeOutCubic,
       child: IntrinsicWidth(
         child: AnimatedOpacity(
           opacity: loading ? .33 : 1,
-          duration: 250.ms,
+          duration: Duration(milliseconds: 250),
           child: GestureDetector(
             onTap: _onTap,
             child: ClipRRect(
@@ -71,12 +70,12 @@ class SecondaryOptionsButton extends ConsumerWidget {
                 enabled: userBackdropFilterForInputOptions,
                 child: AnimatedContainer(
                   height: height,
-                  duration: 150.ms,
+                  duration: Duration(milliseconds: 150),
                   curve: Curves.easeOutCubic,
                   padding: padding,
                   decoration: BoxDecoration(
-                    color: color.q(
-                      userBackdropFilterForInputOptions
+                    color: color.withValues(
+                      alpha: userBackdropFilterForInputOptions
                           ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                           : 1,
                     ),
@@ -93,7 +92,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
                         children: [
                           Text(
                             s.prefer,
-                            style: TS(c: textColor, s: fontSize, height: 1),
+                            style: TextStyle(color: textColor, fontSize: fontSize, height: 1),
                             strutStyle: StrutStyle(
                               fontSize: fontSize,
                               height: 1,
@@ -104,7 +103,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
                           const SizedBox(height: 2),
                           Text(
                             s.chinese,
-                            style: TS(c: textColor, s: fontSize, height: 1),
+                            style: TextStyle(color: textColor, fontSize: fontSize, height: 1),
                             strutStyle: StrutStyle(
                               fontSize: fontSize,
                               height: 1,

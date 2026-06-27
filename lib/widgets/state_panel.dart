@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/widgets/alert.dart';
 
 // Project imports:
 import 'package:zone/func/format_debug_panel_text.dart';
@@ -45,7 +43,7 @@ class StatePanel extends ConsumerWidget {
     if (scrollController.hasClients) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
-        duration: 200.ms,
+        duration: Duration(milliseconds: 200),
         curve: Curves.easeInOut,
       );
     }
@@ -78,7 +76,7 @@ class StatePanel extends ConsumerWidget {
                 ? Center(
                     child: Text(
                       S.current.state_panel,
-                      style: TS(c: qb.q(.5), s: 14),
+                      style: TextStyle(color: qb.withValues(alpha: .5), fontSize: 14),
                     ),
                   )
                 : ListView.builder(
@@ -93,26 +91,26 @@ class StatePanel extends ConsumerWidget {
                     ),
                     itemBuilder: (context, index) {
                       final log = stateLogList[index];
-                      final textStyle = TS(c: qb.q(.9), s: 12).copyWith(
+                      final textStyle = TextStyle(color: qb.withValues(alpha: .9), fontSize: 12).copyWith(
                         fontFamily: 'monospace',
                         fontFamilyFallback: const ['Menlo', 'Monaco', 'Courier'],
                       );
-                      final symbolTextColor = textStyle.color ?? qb.q(.9);
+                      final symbolTextColor = textStyle.color ?? qb.withValues(alpha: .9);
                       final formattedTextSpan = buildDebugPanelTextSpan(
                         text: log.text,
                         baseStyle: textStyle,
                         renderNewlineDirectly: renderNewlineDirectly,
                         renderSpaceSymbol: renderSpaceSymbol,
                         spaceTextColor: symbolTextColor,
-                        spaceBackgroundColor: kC,
+                        spaceBackgroundColor: Colors.transparent,
                         newlineTextColor: symbolTextColor,
-                        newlineBackgroundColor: kC,
+                        newlineBackgroundColor: Colors.transparent,
                       );
                       return Container(
                         decoration: BoxDecoration(
                           color: appTheme.settingItem,
                           borderRadius: .circular(8),
-                          border: .all(color: qb.q(.2), width: .5),
+                          border: .all(color: qb.withValues(alpha: .2), width: .5),
                         ),
                         padding: const .symmetric(horizontal: 10, vertical: 8),
                         margin: const .only(bottom: 8),
@@ -121,7 +119,7 @@ class StatePanel extends ConsumerWidget {
                           children: [
                             Text(
                               'Text:',
-                              style: TS(c: qb.q(.7), w: .w700, s: 12),
+                              style: TextStyle(color: qb.withValues(alpha: .7), fontWeight: .w700, fontSize: 12),
                             ),
                             const SizedBox(height: 4),
                             SelectableText.rich(
@@ -130,12 +128,12 @@ class StatePanel extends ConsumerWidget {
                             const SizedBox(height: 8),
                             Text(
                               'Life Span:',
-                              style: TS(c: qb.q(.7), w: .w700, s: 12),
+                              style: TextStyle(color: qb.withValues(alpha: .7), fontWeight: .w700, fontSize: 12),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               log.lifeSpan.toString(),
-                              style: TS(c: qb.q(.85), s: 13),
+                              style: TextStyle(color: qb.withValues(alpha: .85), fontSize: 13),
                             ),
                           ],
                         ),
@@ -180,13 +178,13 @@ class _StatePanelBar extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appTheme.settingItem,
         border: Border(
-          bottom: BorderSide(color: qb.q(.12), width: .5),
+          bottom: BorderSide(color: qb.withValues(alpha: .12), width: .5),
         ),
       ),
       child: Row(
         crossAxisAlignment: .center,
         children: [
-          listPadding.w,
+          SizedBox(width: listPadding),
           IconButton(
             onPressed: onRefresh,
             icon: const Icon(Icons.refresh_rounded),
@@ -203,7 +201,7 @@ class _StatePanelBar extends ConsumerWidget {
                 const SizedBox(width: 10),
                 Text(
                   S.current.state_panel,
-                  style: const TS(s: 18, w: .w600),
+                  style: const TextStyle(fontSize: 18, fontWeight: .w600),
                 ),
               ],
             ),
@@ -214,7 +212,7 @@ class _StatePanelBar extends ConsumerWidget {
             tooltip: S.current.close,
             style: IconButton.styleFrom(visualDensity: .compact),
           ),
-          (listPadding + 4).w,
+          SizedBox(width: (listPadding + 4)),
         ],
       ),
     );

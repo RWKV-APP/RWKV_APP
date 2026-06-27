@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
@@ -78,8 +76,8 @@ class AskQuestionButton extends ConsumerWidget {
               height: height,
               padding: const .symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                color: color.q(
-                  userBackdropFilterForInputOptions
+                color: color.withValues(
+                  alpha: userBackdropFilterForInputOptions
                       ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                       : 1,
                 ),
@@ -96,11 +94,11 @@ class AskQuestionButton extends ConsumerWidget {
                   const SizedBox(width: 4),
                   Text(
                     s.ask,
-                    style: TS(
-                      c: textColor,
-                      s: fontSize,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: fontSize,
                       height: 1,
-                      w: .w500,
+                      fontWeight: .w500,
                     ),
                     strutStyle: StrutStyle(
                       fontSize: fontSize,

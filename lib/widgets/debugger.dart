@@ -9,12 +9,13 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/args.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/pager.dart';
+import 'package:zone/func/collection_utils.dart';
+import 'package:zone/func/string_utils.dart';
 
 class Debugger extends ConsumerWidget {
   const Debugger({super.key});
@@ -175,90 +176,92 @@ class Debugger extends ConsumerWidget {
     const showQuestions = true;
     const showGenerating = true;
 
-    final children =
-        [
-          (max(paddingTop, 40)).h,
-          if (showLoadedModels) ...[
-            Text("loadedModels".codeToName),
-            Text(loadedModels.entries.map((e) => "${e.key.name} id: ${e.value}").join("\n")),
+    final children = mapIndexed(
+      [
+        SizedBox(height: (max(paddingTop, 40))),
+        if (showLoadedModels) ...[
+          Text(codeToName("loadedModels")),
+          Text(loadedModels.entries.map((e) => "${e.key.name} id: ${e.value}").join("\n")),
+        ],
+        if (showLoadingStatus) ...[
+          Text(codeToName("loadingStatus")),
+          Text(
+            loadingStatus.entries.map((e) => "${e.key.name} ${e.value.toString().replaceAll("LoadingStatus", "")}").join("\n"),
+          ),
+        ],
+        if (showUnzipping) ...[Text(codeToName("unzipping")), Text(unzipping.toString())],
+        if (showDemoType) ...[Text(codeToName("demoType")), Text(demoType.toString())],
+        if (showCurrentGroupInfo) ...[Text(codeToName("currentGroupInfo")), Text(currentGroupInfo?.displayName ?? "null")],
+        if (showLatestModel) ...[Text(codeToName("latestModel")), Text(latestModel?.name ?? "null")],
+        if (showGeneratingId) ...[Text(codeToName("generatingId")), Text(generatingId?.toString() ?? "null")],
+        if (showGenerating) ...[Text(codeToName("generating")), Text(generating.toString())],
+        if (showHiddenPrefilling) ...[Text(codeToName("hiddenPrefilling")), Text(hiddenPrefilling.toString())],
+        if (showSocName) ...[Text(codeToName("socName")), Text(socName)],
+        if (showSocBrand) ...[Text(codeToName("socBrand")), Text(socBrand.toString())],
+        if (showFrontendSocName) ...[Text(codeToName("frontendSocName")), Text(frontendSocName ?? "null")],
+        if (showFrontendSocBrand) ...[Text(codeToName("frontendSocBrand")), Text(frontendSocBrand.toString())],
+        if (showPreferredUIFont) ...[Text(codeToName("preferredUIFont")), Text(preferredUIFont ?? "null")],
+        if (showPreferredMonospaceFont) ...[Text(codeToName("preferredMonospaceFont")), Text(preferredMonospaceFont ?? "null")],
+        ...[
+          if (!isMobile) ...[
+            Text(codeToName("pthFolderEntries")),
+            Text(pthFolderEntries.map((e) => e.path + (e.bookmark != null ? " [bookmark]" : "")).join("\n")),
           ],
-          if (showLoadingStatus) ...[
-            Text("loadingStatus".codeToName),
-            Text(
-              loadingStatus.entries.map((e) => "${e.key.name} ${e.value.toString().replaceAll("LoadingStatus", "")}").join("\n"),
-            ),
+          if (!isMobile) ...[
+            Text(codeToName("pthFolders")),
+            Text(pthFolders.map((e) => "${e.path} ${e.state.toString()} ${e.files.length}").join("\n")),
           ],
-          if (showUnzipping) ...[Text("unzipping".codeToName), Text(unzipping.toString())],
-          if (showDemoType) ...[Text("demoType".codeToName), Text(demoType.toString())],
-          if (showCurrentGroupInfo) ...[Text("currentGroupInfo".codeToName), Text(currentGroupInfo?.displayName ?? "null")],
-          if (showLatestModel) ...[Text("latestModel".codeToName), Text(latestModel?.name ?? "null")],
-          if (showGeneratingId) ...[Text("generatingId".codeToName), Text(generatingId?.toString() ?? "null")],
-          if (showGenerating) ...[Text("generating".codeToName), Text(generating.toString())],
-          if (showHiddenPrefilling) ...[Text("hiddenPrefilling".codeToName), Text(hiddenPrefilling.toString())],
-          if (showSocName) ...[Text("socName".codeToName), Text(socName)],
-          if (showSocBrand) ...[Text("socBrand".codeToName), Text(socBrand.toString())],
-          if (showFrontendSocName) ...[Text("frontendSocName".codeToName), Text(frontendSocName ?? "null")],
-          if (showFrontendSocBrand) ...[Text("frontendSocBrand".codeToName), Text(frontendSocBrand.toString())],
-          if (showPreferredUIFont) ...[Text("preferredUIFont".codeToName), Text(preferredUIFont ?? "null")],
-          if (showPreferredMonospaceFont) ...[Text("preferredMonospaceFont".codeToName), Text(preferredMonospaceFont ?? "null")],
-          ...[
-            if (!isMobile) ...[
-              Text("pthFolderEntries".codeToName),
-              Text(pthFolderEntries.map((e) => e.path + (e.bookmark != null ? " [bookmark]" : "")).join("\n")),
-            ],
-            if (!isMobile) ...[
-              Text("pthFolders".codeToName),
-              Text(pthFolders.map((e) => "${e.path} ${e.state.toString()} ${e.files.length}").join("\n")),
-            ],
-            if (!isMobile) ...[Text("effectiveModelsDir".codeToName), Text(effectiveModelsDir)],
-            if (!isMobile) ...[Text("defaultModelsDir".codeToName), Text(defaultModelsDir)],
-            if (!isMobile) ...[Text("usingCustomModelsDir".codeToName), Text(usingCustomModelsDir.toString())],
-            if (!isMobile) ...[Text("customModelsDir".codeToName), Text(customModelsDir ?? "null")],
-          ],
-          if (showLoadingProgress) ...[
-            Text("loadingProgress".codeToName),
-            Text(loadingProgress.entries.map((e) => "${e.key.name} ${e.value}").join("\n")),
-          ],
-          if (showMaxWidthAllowedForLayout) ...[Text("maxWidthAllowedForLayout".codeToName), Text(maxWidthAllowedForLayout.toString())],
-          if (showWidthRequiredForLayout) ...[Text("widthRequiredForLayout".codeToName), Text(widthRequiredForLayout.toString())],
-          if (showShouldUseWrapRatherThanRow) ...[
-            Text("shouldUseWrapRatherThanRow".codeToName),
-            Text(shouldUseWrapRatherThanRow.toString()),
-          ],
-          if (showMessageListLayoutKeys) ...[
-            Text("messageListLayoutKeys".codeToName),
-            Text(messageListLayoutKeys.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
-          ],
-          if (showWidthRequiredForLayout) ...[Text("widthRequiredForLayout".codeToName), Text(widthRequiredForLayout.toString())],
-          if (showHomeItemTitleHeights) ...[
-            Text("homeItemTitleHeights".codeToName),
-            Text(homeItemTitleHeights.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
-          ],
-          if (showHomeItemDescriptionHeights) ...[
-            Text("homeItemDescriptionHeights".codeToName),
-            Text(homeItemDescriptionHeights.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
-          ],
-          if (showMaxHeightsOfHomeItemTitle) ...[Text("maxHeightsOfHomeItemTitle".codeToName), Text(maxHeightsOfHomeItemTitle.toString())],
-          if (showMaxHeightsOfHomeItemDescription) ...[
-            Text("maxHeightsOfHomeItemDescription".codeToName),
-            Text(maxHeightsOfHomeItemDescription.toString()),
-          ],
-          if (showQuestions) ...[Text("questions".codeToName), Text(questions.join("\n"))],
-          if (showSupportedBatchSizes) ...[Text("supportedBatchSizes".codeToName), Text(supportedBatchSizes.join(", "))],
-          if (showBatchViewportWidth) ...[Text("batchViewportWidth".codeToName), Text(batchViewportWidth.toString())],
-          if (showBatchEnabled) ...[Text("batchEnabled".codeToName), Text(batchEnabled.toString())],
-          if (showBatchCount) ...[Text("batchCount".codeToName), Text(batchCount.toString())],
-          if (showBatchViewportSlotIndexes) ...[
-            Text("batchViewportSlotIndexes".codeToName),
-            Text(_formatBatchViewportSlotIndexes(batchViewportSlotIndexes)),
-          ],
-        ].indexMap((index, e) {
-          return Container(
-            margin: .only(top: index % 2 == 0 ? 0 : 1),
-            decoration: BoxDecoration(color: qb.q(.55)),
-            child: e,
-          );
-        });
+          if (!isMobile) ...[Text(codeToName("effectiveModelsDir")), Text(effectiveModelsDir)],
+          if (!isMobile) ...[Text(codeToName("defaultModelsDir")), Text(defaultModelsDir)],
+          if (!isMobile) ...[Text(codeToName("usingCustomModelsDir")), Text(usingCustomModelsDir.toString())],
+          if (!isMobile) ...[Text(codeToName("customModelsDir")), Text(customModelsDir ?? "null")],
+        ],
+        if (showLoadingProgress) ...[
+          Text(codeToName("loadingProgress")),
+          Text(loadingProgress.entries.map((e) => "${e.key.name} ${e.value}").join("\n")),
+        ],
+        if (showMaxWidthAllowedForLayout) ...[Text(codeToName("maxWidthAllowedForLayout")), Text(maxWidthAllowedForLayout.toString())],
+        if (showWidthRequiredForLayout) ...[Text(codeToName("widthRequiredForLayout")), Text(widthRequiredForLayout.toString())],
+        if (showShouldUseWrapRatherThanRow) ...[
+          Text(codeToName("shouldUseWrapRatherThanRow")),
+          Text(shouldUseWrapRatherThanRow.toString()),
+        ],
+        if (showMessageListLayoutKeys) ...[
+          Text(codeToName("messageListLayoutKeys")),
+          Text(messageListLayoutKeys.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
+        ],
+        if (showWidthRequiredForLayout) ...[Text(codeToName("widthRequiredForLayout")), Text(widthRequiredForLayout.toString())],
+        if (showHomeItemTitleHeights) ...[
+          Text(codeToName("homeItemTitleHeights")),
+          Text(homeItemTitleHeights.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
+        ],
+        if (showHomeItemDescriptionHeights) ...[
+          Text(codeToName("homeItemDescriptionHeights")),
+          Text(homeItemDescriptionHeights.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
+        ],
+        if (showMaxHeightsOfHomeItemTitle) ...[Text(codeToName("maxHeightsOfHomeItemTitle")), Text(maxHeightsOfHomeItemTitle.toString())],
+        if (showMaxHeightsOfHomeItemDescription) ...[
+          Text(codeToName("maxHeightsOfHomeItemDescription")),
+          Text(maxHeightsOfHomeItemDescription.toString()),
+        ],
+        if (showQuestions) ...[Text(codeToName("questions")), Text(questions.join("\n"))],
+        if (showSupportedBatchSizes) ...[Text(codeToName("supportedBatchSizes")), Text(supportedBatchSizes.join(", "))],
+        if (showBatchViewportWidth) ...[Text(codeToName("batchViewportWidth")), Text(batchViewportWidth.toString())],
+        if (showBatchEnabled) ...[Text(codeToName("batchEnabled")), Text(batchEnabled.toString())],
+        if (showBatchCount) ...[Text(codeToName("batchCount")), Text(batchCount.toString())],
+        if (showBatchViewportSlotIndexes) ...[
+          Text(codeToName("batchViewportSlotIndexes")),
+          Text(_formatBatchViewportSlotIndexes(batchViewportSlotIndexes)),
+        ],
+      ],
+      (index, e) {
+        return Container(
+          margin: .only(top: index % 2 == 0 ? 0 : 1),
+          decoration: BoxDecoration(color: qb.withValues(alpha: .55)),
+          child: e,
+        );
+      },
+    );
 
     return Positioned(
       left: 0,
@@ -267,10 +270,10 @@ class Debugger extends ConsumerWidget {
       bottom: 0,
       child: IgnorePointer(
         child: Material(
-          textStyle: TS(
-            ff: "Monospace",
-            c: qw,
-            s: 8,
+          textStyle: TextStyle(
+            fontFamily: "Monospace",
+            color: qw,
+            fontSize: 8,
           ),
           color: Colors.transparent,
           child: Column(
@@ -314,10 +317,10 @@ class _SudokuDebugger extends ConsumerWidget {
       bottom: 0,
       child: IgnorePointer(
         child: Material(
-          textStyle: TS(
-            ff: "Monospace",
-            c: qw,
-            s: 8,
+          textStyle: TextStyle(
+            fontFamily: "Monospace",
+            color: qw,
+            fontSize: 8,
           ),
           color: Colors.transparent,
           child: SizedBox(
@@ -326,28 +329,30 @@ class _SudokuDebugger extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .end,
-                children:
-                    [
-                      paddingTop.h,
-                      Text("paddingTop".codeToName),
-                      Text(paddingTop.toString()),
-                      Text("loaded".codeToName),
-                      Text(loaded.toString()),
-                      Text("running".codeToName),
-                      Text(running.toString()),
-                      Text("page".codeToName),
-                      Text(page.toString()),
-                      Text("mainPageNotIgnoring".codeToName),
-                      Text(mainPageNotIgnoring.toString()),
-                      Text("modelSelectorShown".codeToName),
-                      Text(modelSelectorShown.toString()),
-                    ].indexMap((index, e) {
-                      return Container(
-                        margin: .only(top: index % 2 == 0 ? 0 : 1),
-                        decoration: BoxDecoration(color: qb.q(.66)),
-                        child: e,
-                      );
-                    }),
+                children: mapIndexed(
+                  [
+                    SizedBox(height: paddingTop),
+                    Text(codeToName("paddingTop")),
+                    Text(paddingTop.toString()),
+                    Text(codeToName("loaded")),
+                    Text(loaded.toString()),
+                    Text(codeToName("running")),
+                    Text(running.toString()),
+                    Text(codeToName("page")),
+                    Text(page.toString()),
+                    Text(codeToName("mainPageNotIgnoring")),
+                    Text(mainPageNotIgnoring.toString()),
+                    Text(codeToName("modelSelectorShown")),
+                    Text(modelSelectorShown.toString()),
+                  ],
+                  (index, e) {
+                    return Container(
+                      margin: .only(top: index % 2 == 0 ? 0 : 1),
+                      decoration: BoxDecoration(color: qb.withValues(alpha: .66)),
+                      child: e,
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -396,10 +401,10 @@ class _TTSDebugger extends ConsumerWidget {
       bottom: 0,
       child: IgnorePointer(
         child: Material(
-          textStyle: TS(
-            ff: "Monospace",
-            c: qw,
-            s: isDesktop ? 20 : 8,
+          textStyle: TextStyle(
+            fontFamily: "Monospace",
+            color: qw,
+            fontSize: isDesktop ? 20 : 8,
           ),
           color: Colors.transparent,
           child: SizedBox(
@@ -408,58 +413,60 @@ class _TTSDebugger extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .end,
-                children:
-                    [
-                      paddingTop.h,
-                      Text("currentModel".codeToName),
-                      Text(currentModel?.fileName ?? "null"),
-                      Text("receiveId".codeToName),
-                      Text(receiveId.toString()),
-                      Text("selectedSpkPanelFilter".codeToName),
-                      Text(selectedSpkPanelFilter.toString()),
-                      Text("selectedLanguage".codeToName),
-                      Text(selectedLanguage.toString()),
-                      Text("startTime".codeToName),
-                      Text(startTime.toString()),
-                      Text("endTime".codeToName),
-                      Text(endTime.toString()),
-                      Text("selectSourceAudioPath".codeToName),
-                      Text(selectSourceAudioPath.toString()),
-                      Text("spkNames length".codeToName),
-                      Text(spkNames.length.toString()),
-                      Text("spkShown".codeToName),
-                      Text(spkShown.toString()),
-                      Text("audioInteractorShown".codeToName),
-                      Text(audioInteractorShown.toString()),
-                      Text("intonationShown".codeToName),
-                      Text(intonationShown.toString()),
-                      Text("selectSpkName".codeToName),
-                      Text(selectSpkName.toString()),
-                      Text("selectSourceAudioPath".codeToName),
-                      Text(selectSourceAudioPath.toString()),
-                      Text("textInInput".codeToName),
-                      Text(textInInput.toString()),
-                      // Text("ttsCores".codeToName),
-                      // Text(ttsCores.map((e) => e.name).join("\n")),
-                      Text("interactingInstruction".codeToName),
-                      Text(interactingInstruction.toString()),
-                      Text("selectedInstruction".codeToName),
-                      Text(selectedInstruction.toString()),
-                      Text("recording".codeToName),
-                      Text(recording.toString()),
-                      Text("generating".codeToName),
-                      Text(generating.toString()),
-                      Text("asFull".codeToName),
-                      Text(asFull.toString()),
-                      Text("asExhaust".codeToName),
-                      Text(asExhaust.toString()),
-                    ].indexMap((index, e) {
-                      return Container(
-                        margin: .only(top: index % 2 == 0 ? 0 : 1),
-                        decoration: BoxDecoration(color: qb.q(.66)),
-                        child: e,
-                      );
-                    }),
+                children: mapIndexed(
+                  [
+                    SizedBox(height: paddingTop),
+                    Text(codeToName("currentModel")),
+                    Text(currentModel?.fileName ?? "null"),
+                    Text(codeToName("receiveId")),
+                    Text(receiveId.toString()),
+                    Text(codeToName("selectedSpkPanelFilter")),
+                    Text(selectedSpkPanelFilter.toString()),
+                    Text(codeToName("selectedLanguage")),
+                    Text(selectedLanguage.toString()),
+                    Text(codeToName("startTime")),
+                    Text(startTime.toString()),
+                    Text(codeToName("endTime")),
+                    Text(endTime.toString()),
+                    Text(codeToName("selectSourceAudioPath")),
+                    Text(selectSourceAudioPath.toString()),
+                    Text(codeToName("spkNames length")),
+                    Text(spkNames.length.toString()),
+                    Text(codeToName("spkShown")),
+                    Text(spkShown.toString()),
+                    Text(codeToName("audioInteractorShown")),
+                    Text(audioInteractorShown.toString()),
+                    Text(codeToName("intonationShown")),
+                    Text(intonationShown.toString()),
+                    Text(codeToName("selectSpkName")),
+                    Text(selectSpkName.toString()),
+                    Text(codeToName("selectSourceAudioPath")),
+                    Text(selectSourceAudioPath.toString()),
+                    Text(codeToName("textInInput")),
+                    Text(textInInput.toString()),
+                    // Text(codeToName("ttsCores")),
+                    // Text(ttsCores.map((e) => e.name).join("\n")),
+                    Text(codeToName("interactingInstruction")),
+                    Text(interactingInstruction.toString()),
+                    Text(codeToName("selectedInstruction")),
+                    Text(selectedInstruction.toString()),
+                    Text(codeToName("recording")),
+                    Text(recording.toString()),
+                    Text(codeToName("generating")),
+                    Text(generating.toString()),
+                    Text(codeToName("asFull")),
+                    Text(asFull.toString()),
+                    Text(codeToName("asExhaust")),
+                    Text(asExhaust.toString()),
+                  ],
+                  (index, e) {
+                    return Container(
+                      margin: .only(top: index % 2 == 0 ? 0 : 1),
+                      decoration: BoxDecoration(color: qb.withValues(alpha: .66)),
+                      child: e,
+                    );
+                  },
+                ),
               ),
             ),
           ),

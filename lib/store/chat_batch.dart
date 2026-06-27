@@ -212,7 +212,7 @@ extension $ChatBatch on _Chat {
   }
 
   void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {
-    if (P.albatrossRuntime.canUse.q || P.rwkvContext.isLegacyAlbatrossLoaded.q) {
+    if (P.albatrossRuntime.canUse.q) {
       if (supportedBatchSizes.isEmpty) {
         batchEnabled.q = false;
         batchCount.q = Argument.batchCount.defaults.toInt();

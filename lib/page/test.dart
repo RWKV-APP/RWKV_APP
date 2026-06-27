@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
+import 'package:zone/func/random_utils.dart';
 
 class PageTest extends ConsumerWidget {
   const PageTest({super.key});
@@ -39,9 +39,9 @@ class PageTest extends ConsumerWidget {
               itemBuilder: (context, index) {
                 return Container(
                   height: 50,
-                  color: kC,
+                  color: Colors.transparent,
                   child: Center(
-                    child: Text("Item $index" + HF.randomString(min: 0, max: 100)),
+                    child: Text("Item $index" + randomString(min: 0, max: 100)),
                   ),
                 );
               },
@@ -106,7 +106,7 @@ class _GradientBlur extends ConsumerWidget {
           children: [
             Positioned.fill(
               child: Container(
-                // color: Colors.red.q(.1),
+                // color: Colors.red.withValues(alpha: .1),
               ),
             ),
             ...sections.map((config) {
@@ -135,9 +135,9 @@ class _GradientBlur extends ConsumerWidget {
                 bottom: 0,
                 top: scale * height,
                 child: Container(
-                  decoration: BD(
+                  decoration: BoxDecoration(
                     border: Border.all(
-                      color: qb.q(.0),
+                      color: qb.withValues(alpha: .0),
                       width: .5,
                     ),
                   ),

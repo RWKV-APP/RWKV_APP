@@ -5,11 +5,10 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
+import 'package:zone/func/debug_trace.dart';
 
 extension RWKVColorExtension on Color {
   Color l(double toLight) {
@@ -32,7 +31,7 @@ extension RWKVColorExtension on Color {
   }
 
   Color lighterWhenDark(double v) {
-  final isLight = P.app.theme.q == .light;
+    final isLight = P.app.theme.q == .light;
     return isLight ? l(v) : d(v);
   }
 

@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:sprintf/sprintf.dart';
 
 // Project imports:
@@ -130,7 +128,7 @@ class _ChatAppBar extends ConsumerWidget {
         AppBar(
           toolbarHeight: theme.appBarTheme.toolbarHeight,
           centerTitle: true,
-          backgroundColor: backgroundColor.q(listAtTop ? 1 : 0.5),
+          backgroundColor: backgroundColor.withValues(alpha: listAtTop ? 1 : 0.5),
           systemOverlayStyle: qt.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
           title: Tooltip(
             message: displayName,
@@ -152,7 +150,7 @@ class _ChatAppBar extends ConsumerWidget {
                         ),
                         Padding(
                           padding: const .only(bottom: 3, left: 1),
-                          child: Text(' $version', style: const TS(s: 8, w: .bold)),
+                          child: Text(' $version', style: const TextStyle(fontSize: 8, fontWeight: .bold)),
                         ),
                       ],
                     ),
@@ -191,7 +189,7 @@ class _AppBarBottomLine extends ConsumerWidget {
 
     return Container(
       height: qt.appBarBottomLineHeight,
-      color: listAtTop ? Colors.transparent : qb.q(.2),
+      color: listAtTop ? Colors.transparent : qb.withValues(alpha: .2),
     );
   }
 }
@@ -259,7 +257,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
             value: -1,
             enabled: false,
             height: 20,
-            child: Text(Config.appTitle + " " + version, style: const TS(s: 10)),
+            child: Text(Config.appTitle + " " + version, style: const TextStyle(fontSize: 10)),
           ),
           PopupMenuItem(
             value: 1,
@@ -380,7 +378,7 @@ class _SelectMessageChatAppBar extends ConsumerWidget {
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      title: Text(sprintf(s.x_message_selected, [selected.length]), style: const TS(s: 18)),
+      title: Text(sprintf(s.x_message_selected, [selected.length]), style: const TextStyle(fontSize: 18)),
       leading: _SelectAllRow(
         all: all,
         onAllTap: () {

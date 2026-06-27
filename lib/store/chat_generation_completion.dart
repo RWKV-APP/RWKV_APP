@@ -67,7 +67,6 @@ extension $ChatGenerationCompletion on _Chat {
     final pageKey = P.app.pageKey.q;
     if (pageKey != .chat) return;
     if (P.albatrossRuntime.enabled.q) return;
-    if (P.rwkvContext.isLegacyAlbatrossLoaded.q) return;
 
     final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text).toList();
     if (messages.isEmpty) return;

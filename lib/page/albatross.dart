@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:desktop_drop/desktop_drop.dart' as desktop_drop;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
@@ -113,7 +111,7 @@ class _AlbatrossSection extends ConsumerWidget {
       decoration: BoxDecoration(
         color: highlighted ? Color.lerp(appTheme.settingItem, highlightColor, .08) : appTheme.settingItem,
         borderRadius: BorderRadius.circular(12),
-        border: highlighted ? Border.all(color: highlightColor.q(.8), width: 1.25) : null,
+        border: highlighted ? Border.all(color: highlightColor.withValues(alpha: .8), width: 1.25) : null,
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -132,7 +130,7 @@ class _AlbatrossSection extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Container(height: 0.5, color: qb.q(.18)),
+          Container(height: 0.5, color: qb.withValues(alpha: .18)),
           const SizedBox(height: 12),
           ...children,
         ],
@@ -362,7 +360,7 @@ class _AlbatrossEndpointSection extends ConsumerWidget {
         const SizedBox(height: 10),
         Text(
           s.albatross_launch_config_hint,
-          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.6)),
+          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: .6)),
         ),
       ],
     );
@@ -418,12 +416,12 @@ class _AlbatrossRuntimeFilesSection extends ConsumerWidget {
         const SizedBox(height: 12),
         Text(
           s.albatross_runtime_assets_hint,
-          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.6)),
+          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: .6)),
         ),
         const SizedBox(height: 8),
         Text(
           s.albatross_binary_compile_hint,
-          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.72), height: 1.35),
+          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: .72), height: 1.35),
         ),
         const SizedBox(height: 10),
         Padding(
@@ -492,7 +490,7 @@ class _ExternalResourceLink extends StatelessWidget {
                   url,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.55)),
+                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: .55)),
                 ),
               ],
             ),
@@ -620,7 +618,7 @@ class _InfoGrid extends StatelessWidget {
             constraints: const BoxConstraints(minWidth: 160, maxWidth: 360),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.q(.45),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: .45),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -629,7 +627,7 @@ class _InfoGrid extends StatelessWidget {
               children: [
                 Text(
                   entry.key,
-                  style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurface.q(.62)),
+                  style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: .62)),
                 ),
                 const SizedBox(height: 3),
                 Text(
@@ -671,13 +669,15 @@ class _ValueRow extends StatelessWidget {
             width: 112,
             child: Text(
               label,
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.62), fontWeight: .w600),
+              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: .62), fontWeight: .w600),
             ),
           ),
           Expanded(
             child: SelectableText(
               display,
-              style: theme.textTheme.bodySmall?.copyWith(color: error ? theme.colorScheme.error : theme.colorScheme.onSurface.q(.82)),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: error ? theme.colorScheme.error : theme.colorScheme.onSurface.withValues(alpha: .82),
+              ),
             ),
           ),
         ],
@@ -709,13 +709,13 @@ class _PathRow extends StatelessWidget {
             width: 92,
             child: Text(
               label,
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(.62), fontWeight: .w600),
+              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: .62), fontWeight: .w600),
             ),
           ),
           Expanded(
             child: SelectableText(
               display,
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.q(value.isEmpty ? .45 : .82)),
+              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: value.isEmpty ? .45 : .82)),
             ),
           ),
         ],
@@ -742,9 +742,9 @@ class _StatusChip extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: color.q(.12),
+        color: color.withValues(alpha: .12),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.q(.55), width: 0.5),
+        border: Border.all(color: color.withValues(alpha: .55), width: 0.5),
       ),
       child: Align(
         alignment: Alignment.center,

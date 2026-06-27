@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/gen/assets.gen.dart';
@@ -74,9 +73,9 @@ class _List extends ConsumerWidget {
       child: GestureDetector(
         onTap: P.chat.onTapMessageList,
         child: RawScrollbar(
-          radius: 100.rr,
+          radius: Radius.circular(100),
           thickness: 4,
-          thumbColor: qb.q(.4),
+          thumbColor: qb.withValues(alpha: .4),
           padding: .only(top: top, right: 4, bottom: scrollBarBottom),
           controller: P.chat.scrollController,
           child: ListView.separated(
@@ -115,7 +114,7 @@ class _Empty extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
 
     return AnimatedPositioned(
-      duration: 200.ms,
+      duration: Duration(milliseconds: 200),
       curve: Curves.ease,
       bottom: inputHeight,
       left: 28,
@@ -123,14 +122,14 @@ class _Empty extends ConsumerWidget {
       top: 0,
       child: AnimatedOpacity(
         opacity: messages.isEmpty ? 1 : 0,
-        duration: 200.ms,
+        duration: Duration(milliseconds: 200),
         curve: Curves.ease,
         child: Column(
           crossAxisAlignment: .center,
           mainAxisAlignment: .center,
           children: [
             logoSquare.image(width: 140),
-            Text(s.chat_welcome_to_use("RWKV Chat"), style: const TS(s: 18, w: .w600)),
+            Text(s.chat_welcome_to_use("RWKV Chat"), style: const TextStyle(fontSize: 18, fontWeight: .w600)),
             const SizedBox(height: 4),
             Text("v$version"),
             const SizedBox(height: 12),
@@ -138,20 +137,20 @@ class _Empty extends ConsumerWidget {
               constraints: const BoxConstraints(maxWidth: 500),
               child: Text(
                 s.intro,
-                style: TS(c: qb, w: .w500),
+                style: TextStyle(color: qb, fontWeight: .w500),
               ),
             ),
             const SizedBox(height: 12),
             if (!loaded)
               Text(
                 s.start_a_new_chat_by_clicking_the_button_below,
-                style: TS(c: qb, s: 12),
+                style: TextStyle(color: qb, fontSize: 12),
               ),
             const SizedBox(height: 12),
             if (!loaded)
               TextButton(
                 onPressed: () => ModelSelector.show(preferredDemoType: .see),
-                child: Text(s.select_a_model, style: const TS(s: 16, w: .w600)),
+                child: Text(s.select_a_model, style: const TextStyle(fontSize: 16, fontWeight: .w600)),
               ),
           ],
         ),

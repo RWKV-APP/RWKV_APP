@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -68,11 +67,11 @@ class ModelSelectButton extends ConsumerWidget {
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: maxButtonWidth),
-      child: C(
-        decoration: BD(
-          color: qb.q(.05),
+      child: Container(
+        decoration: BoxDecoration(
+          color: qb.withValues(alpha: .05),
           borderRadius: .circular(1000),
-          border: .all(color: qb.q(.1)),
+          border: .all(color: qb.withValues(alpha: .1)),
         ),
         child: IntrinsicHeight(
           child: Row(
@@ -118,7 +117,7 @@ class ModelSelectButton extends ConsumerWidget {
               if (showBatchShortcut) ...[
                 Container(
                   width: 0.5,
-                  color: qb.q(.1),
+                  color: qb.withValues(alpha: .1),
                 ),
                 InkWell(
                   borderRadius: const .horizontal(right: .circular(16)),
@@ -164,7 +163,7 @@ class _ActiveLoadingModelContent extends StatelessWidget {
         Container(
           width: 0.5,
           height: 12,
-          color: textColor.q(.18),
+          color: textColor.withValues(alpha: .18),
         ),
         const SizedBox(width: 6),
         Flexible(

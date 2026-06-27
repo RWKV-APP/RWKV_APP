@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
@@ -50,7 +49,7 @@ class _ThinkingFullContentAnimatorState extends State<ThinkingFullContentAnimato
     _buildContent = widget.expanded;
     _controller = AnimationController(
       vsync: this,
-      duration: 250.ms,
+      duration: Duration(milliseconds: 250),
       value: widget.expanded ? 1 : 0,
     )..addStatusListener(_onAnimationStatusChanged);
     _heightFactor = CurvedAnimation(
@@ -263,7 +262,7 @@ class _ThinkingContentPanelState extends ConsumerState<ThinkingContentPanel> {
     if (!position.hasContentDimensions) return;
     await _scrollController.animateTo(
       position.maxScrollExtent,
-      duration: 200.ms,
+      duration: Duration(milliseconds: 200),
       curve: Curves.easeOut,
     );
     _syncScrollState();
@@ -347,8 +346,8 @@ class _ThinkingContentPanelState extends ConsumerState<ThinkingContentPanel> {
     final theme = Theme.of(context);
     final _ = theme;
     final qb = ref.watch(P.app.qb);
-    final panelBorderColor = qb.q(.12);
-    final panelBackgroundColor = qb.q(.025);
+    final panelBorderColor = qb.withValues(alpha: .12);
+    final panelBackgroundColor = qb.withValues(alpha: .025);
     final panelFadeColor = Color.alphaBlend(panelBackgroundColor, widget.baseBackgroundColor);
 
     if (widget.expanded) {
@@ -480,7 +479,7 @@ class _ThinkingScrollFade extends StatelessWidget {
                   end: .bottomCenter,
                   colors: [
                     color,
-                    color.q(0),
+                    color.withValues(alpha: 0),
                   ],
                 ),
               ),
@@ -500,7 +499,7 @@ class _ThinkingScrollFade extends StatelessWidget {
                   end: .topCenter,
                   colors: [
                     color,
-                    color.q(0),
+                    color.withValues(alpha: 0),
                   ],
                 ),
               ),
@@ -533,7 +532,7 @@ class _ThinkingScrollToBottomButton extends ConsumerWidget {
     return AnimatedOpacity(
       key: buttonKey,
       opacity: show ? 1 : 0,
-      duration: 200.ms,
+      duration: Duration(milliseconds: 200),
       curve: Curves.easeOut,
       child: IgnorePointer(
         ignoring: !show,
@@ -545,12 +544,12 @@ class _ThinkingScrollToBottomButton extends ConsumerWidget {
             height: _kCotScrollToBottomButtonHeight,
             decoration: BoxDecoration(
               color: qw,
-              border: .all(color: qb.q(.1)),
+              border: .all(color: qb.withValues(alpha: .1)),
               borderRadius: .circular(14),
             ),
             child: Icon(
               Icons.keyboard_arrow_down,
-              color: qb.q(.7),
+              color: qb.withValues(alpha: .7),
               size: 18,
             ),
           ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/router/method.dart';
@@ -27,7 +26,7 @@ class PhotoViewerOverlay extends ConsumerWidget {
             },
             icon: const Icon(
               Icons.close,
-              color: kW,
+              color: Colors.white,
             ),
           ),
         ),

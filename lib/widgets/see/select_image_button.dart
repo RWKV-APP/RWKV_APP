@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -21,19 +20,19 @@ class SelectImageButton extends ConsumerWidget {
     return GestureDetector(
       onTap: P.see.selectImage,
       child: AnimatedContainer(
-        duration: 150.ms,
+        duration: Duration(milliseconds: 150),
         curve: Curves.easeOutCubic,
         decoration: BoxDecoration(
           color: primaryContainer,
           border: .all(
-            color: color.q(.5),
+            color: color.withValues(alpha: .5),
           ),
           borderRadius: .circular(12),
         ),
         padding: const .only(left: 8, top: 8, right: 8, bottom: 8),
         child: Text(
           selectedImagePath == null ? s.select_new_image : s.change_selected_image,
-          style: TS(c: color),
+          style: TextStyle(color: color),
         ),
       ),
     );

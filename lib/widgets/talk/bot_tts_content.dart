@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
 
@@ -48,7 +47,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     ref.listenManual(P.msg.latestClicked, (previous, next) {
       if (next?.id == widget.msg.id) {
         _timer?.cancel();
-        _timer = Timer.periodic(500.ms, (timer) {
+        _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
           _tick++;
           setState(() {});
         });
@@ -102,7 +101,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
 
     _durationRetryCount += 1;
     _durationRetryTimer?.cancel();
-    _durationRetryTimer = Timer(250.ms, () {
+    _durationRetryTimer = Timer(Duration(milliseconds: 250), () {
       if (!mounted) return;
       unawaited(_refreshWavDuration());
     });
@@ -171,7 +170,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   const SizedBox(width: 8),
                   Text(
                     s.generating + "",
-                    style: TS(c: qb.q(.8), w: .w500),
+                    style: TextStyle(color: qb.withValues(alpha: .8), fontWeight: .w500),
                   ),
                 ],
               ),
@@ -200,7 +199,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   const SizedBox(width: 8),
                   Text(
                     (length / 1000).toStringAsFixed(0) + "s",
-                    style: TS(c: qb.q(.8), w: .w600),
+                    style: TextStyle(color: qb.withValues(alpha: .8), fontWeight: .w600),
                   ),
                   GestureDetector(
                     onTap: _onSharePressed,

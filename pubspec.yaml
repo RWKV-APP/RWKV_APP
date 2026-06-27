@@ -100,9 +100,6 @@ dependencies:
   gal:
   go_router:
   google_mlkit_text_recognition:
-  halo: ^1.0.0
-  halo_alert: ^1.0.0
-  halo_state: ^1.0.0
   http:
   image_picker:
   intl:

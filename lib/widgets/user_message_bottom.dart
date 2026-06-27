@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
@@ -14,6 +12,7 @@ import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class UserMessageBottom extends ConsumerWidget {
   final model.Message msg;
@@ -158,7 +157,7 @@ class UserMessageBottom extends ConsumerWidget {
       if (desktopOpacity == null || !applyDesktopHoverAnimation) return child;
       return AnimatedOpacity(
         opacity: desktopOpacity,
-        duration: 200.ms,
+        duration: Duration(milliseconds: 200),
         child: child,
       );
     }
@@ -182,7 +181,7 @@ class UserMessageBottom extends ConsumerWidget {
               onTap: _onTTSPlayPressed,
               child: Padding(
                 padding: padding,
-                child: Icon(Icons.play_arrow, color: primary.q(.8), size: 20),
+                child: Icon(Icons.play_arrow, color: primary.withValues(alpha: .8), size: 20),
               ),
             ),
           ),
@@ -193,7 +192,7 @@ class UserMessageBottom extends ConsumerWidget {
               onTap: _onTTSPausePressed,
               child: Padding(
                 padding: padding,
-                child: Icon(Icons.pause, color: primary.q(.8), size: 20),
+                child: Icon(Icons.pause, color: primary.withValues(alpha: .8), size: 20),
               ),
             ),
           ),
@@ -207,7 +206,7 @@ class UserMessageBottom extends ConsumerWidget {
                   padding: padding,
                   child: Icon(
                     Symbols.content_copy,
-                    color: primary.q(.8),
+                    color: primary.withValues(alpha: .8),
                     size: 20,
                   ),
                 ),
@@ -225,7 +224,7 @@ class UserMessageBottom extends ConsumerWidget {
                   padding: padding,
                   child: Icon(
                     Symbols.edit,
-                    color: primary.q(.8),
+                    color: primary.withValues(alpha: .8),
                     size: 20,
                   ),
                 ),
@@ -243,7 +242,7 @@ class UserMessageBottom extends ConsumerWidget {
                   padding: padding,
                   child: Icon(
                     Icons.delete_outline,
-                    color: primary.q(.8),
+                    color: primary.withValues(alpha: .8),
                     size: 20,
                   ),
                 ),

@@ -7,9 +7,7 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
@@ -18,6 +16,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class UserTTSContent extends ConsumerWidget {
   const UserTTSContent(this.msg, this.index, {super.key});
@@ -101,7 +100,7 @@ class UserTTSContent extends ConsumerWidget {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: qw.q(.5),
+                    color: qw.withValues(alpha: .5),
                     borderRadius: .circular(8),
                     border: .all(color: primary, width: .5),
                   ),
@@ -137,7 +136,7 @@ class UserTTSContent extends ConsumerWidget {
                   onTap: _onTTSPausePressed,
                   child: Padding(
                     padding: buttonPadding,
-                    child: Icon(Icons.pause, color: primary.q(.8), size: buttonSize),
+                    child: Icon(Icons.pause, color: primary.withValues(alpha: .8), size: buttonSize),
                   ),
                 ),
               if (!playing || !isCurrentMessage)
@@ -145,7 +144,7 @@ class UserTTSContent extends ConsumerWidget {
                   onTap: _onTTSPlayPressed,
                   child: Padding(
                     padding: buttonPadding,
-                    child: Icon(Icons.play_arrow, color: primary.q(.8), size: buttonSize),
+                    child: Icon(Icons.play_arrow, color: primary.withValues(alpha: .8), size: buttonSize),
                   ),
                 ),
               GestureDetector(
@@ -154,7 +153,7 @@ class UserTTSContent extends ConsumerWidget {
                   padding: buttonPadding,
                   child: Icon(
                     Symbols.content_copy,
-                    color: primary.q(.8),
+                    color: primary.withValues(alpha: .8),
                     size: buttonSize,
                   ),
                 ),
@@ -165,7 +164,7 @@ class UserTTSContent extends ConsumerWidget {
                   padding: buttonPadding,
                   child: Icon(
                     Icons.share,
-                    color: primary.q(.8),
+                    color: primary.withValues(alpha: .8),
                     size: buttonSize,
                   ),
                 ),
@@ -175,7 +174,7 @@ class UserTTSContent extends ConsumerWidget {
           const SizedBox(height: 2),
           Text(
             msg.ttsTarget ?? "null",
-            style: const TS(s: 16),
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ),

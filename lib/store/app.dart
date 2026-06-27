@@ -64,8 +64,6 @@ class _App extends RawApp {
 
   late final osVersion = qs(Platform.operatingSystemVersion);
 
-  late final featureRollout = qs<FeatureRollout>(const FeatureRollout());
-
   /// 当前应用的主题
   late final theme = qs<app_theme.AppTheme>(.light);
 
@@ -337,7 +335,7 @@ extension $App on _App {
       fullUrl = "$fullUrl&version=${Uri.encodeComponent(version)}";
     }
     try {
-      final res = await _get(fullUrl, timeout: 2000.ms);
+      final res = await _get(fullUrl, timeout: Duration(milliseconds: 2000));
       if (res is! Map) {
         releaseNotesContent.q = null;
         return;
@@ -578,9 +576,6 @@ extension _$App on _App {
 
     shareChatQrCodeEn.q = json["share_chat_qrcode_en"];
     shareChatQrCodeZh.q = json["share_chat_qrcode_zh"];
-    featureRollout.q =
-        FeatureRollout.fromMap(json["controlled_rollout"]) // merge with dev options
-            .merge(P.preference.featureRollout);
   }
 
   void _routerListener() {
@@ -596,7 +591,7 @@ extension _$App on _App {
   /// 从服务器获取远程配置
   Future<Map<String, dynamic>?> _getRemoteConfig() async {
     try {
-      final res = await _get("get-demo-config", timeout: 10000.ms);
+      final res = await _get("get-demo-config", timeout: Duration(milliseconds: 10000));
       if (res is! Map) return null;
       final success = res["success"];
       final message = res["message"];
@@ -604,7 +599,7 @@ extension _$App on _App {
       if (success != true) throw "success is false, success: $success, message: $message";
       if (data is! Map) throw "data is not a Map, data: ${data.runtimeType}";
       qqr("pull remote config success");
-      return HF.json(data);
+      return castJsonMap(data);
     } catch (e) {
       qe;
       qqe(e);
@@ -844,7 +839,7 @@ extension _$App on _App {
     final baseUrl = "${Config.domain}/distributions/latest";
     final fullUrl = "$baseUrl?$queryString";
 
-    final res = await _get(fullUrl, timeout: 2000.ms);
+    final res = await _get(fullUrl, timeout: Duration(milliseconds: 2000));
 
     if (res is! Map) {
       qqe("res is not a Map, res: $res");
@@ -894,7 +889,7 @@ extension _$App on _App {
 
   /// 从本地沙盒中加载配置, 如果本地沙盒中没有, 则从应用包中加载, 并存储到本地沙盒中
   Future<(Map<String, dynamic> json, SharedPreferences sp)> _loadConfigFromLocal() async {
-    final startTime = HF.milliseconds;
+    final startTime = DateTime.now().millisecondsSinceEpoch;
 
     final sp = await SharedPreferences.getInstance();
     final contains = sp.containsKey(_configForAllDemosKey);
@@ -920,9 +915,9 @@ extension _$App on _App {
 
     final jsonString = sp.getString(_configForAllDemosKey);
     final rawJSON = jsonDecode(jsonString!);
-    final json = HF.json(rawJSON);
+    final json = castJsonMap(rawJSON);
 
-    final endTime = HF.milliseconds;
+    final endTime = DateTime.now().millisecondsSinceEpoch;
     qqw("load config from local sandbox and bundle time: ${endTime - startTime}ms");
 
     return (json, sp);

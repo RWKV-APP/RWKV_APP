@@ -1,18 +1,16 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/page/completion/_completion_controller.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/measure_size.dart';
 
 class CompletionItemDecoration extends StatelessWidget {
   final Widget child;
@@ -29,13 +27,13 @@ class CompletionItemDecoration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final backgroundColor = isUser ? null : theme.colorScheme.primary.q(0.1);
+    final backgroundColor = isUser ? null : theme.colorScheme.primary.withValues(alpha: 0.1);
     final borderColor = isUser ? theme.dividerColor : theme.colorScheme.primary;
 
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: gray ? Colors.grey.q(0.1) : backgroundColor,
+        color: gray ? Colors.grey.withValues(alpha: 0.1) : backgroundColor,
         border: Border(
           left: BorderSide(
             color: gray ? Colors.grey : borderColor,
@@ -137,7 +135,7 @@ class _AutoScrollContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MeasureSize(
-      onChange: (rect) {
+      onRectChange: (rect) {
         if (rect.isEmpty || !CompletionState.autoScrolling) {
           return;
         }
@@ -303,51 +301,5 @@ class _SiblingChoices extends StatelessWidget {
         if (isLast) const Flexible(child: CompletionSpeed()),
       ],
     );
-  }
-}
-
-class MeasureSize extends SingleChildRenderObjectWidget {
-  final void Function(Rect size) onChange;
-
-  const MeasureSize({
-    super.key,
-    required this.onChange,
-    required Widget super.child,
-  });
-
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    return _MeasureSizeRenderObject(onChange);
-  }
-
-  @override
-  void updateRenderObject(
-    BuildContext context,
-    covariant _MeasureSizeRenderObject renderObject,
-  ) {
-    renderObject.onChange = onChange;
-  }
-}
-
-class _MeasureSizeRenderObject extends RenderProxyBox {
-  Size? oldSize;
-  void Function(Rect size) onChange;
-
-  _MeasureSizeRenderObject(this.onChange);
-
-  @override
-  void performLayout() {
-    super.performLayout();
-
-    final newSize = child!.size;
-    if (oldSize == newSize) {
-      return;
-    }
-
-    oldSize = newSize;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final offset = localToGlobal(Offset.zero);
-      onChange(offset & newSize);
-    });
   }
 }

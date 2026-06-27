@@ -73,7 +73,7 @@ extension _$Backend on _Backend {
           final body = jsonEncode({
             'source': source,
             'translation': translation.replaceAll(_endString, ""),
-            'timestamp': HF.microseconds,
+            'timestamp': DateTime.now().microsecondsSinceEpoch,
           });
           runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
           taskHandledCount.q++;
@@ -106,7 +106,7 @@ extension _$Backend on _Backend {
             'source': source,
             'translation': translation.replaceAll(_endString, ""),
             'url': url,
-            'timestamp': HF.microseconds,
+            'timestamp': DateTime.now().microsecondsSinceEpoch,
           });
           runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
           taskHandledCount.q++;
@@ -119,14 +119,14 @@ extension _$Backend on _Backend {
             'source': source,
             'translation': translation.replaceAll(_endString, ""),
             'url': url,
-            'timestamp': HF.microseconds,
+            'timestamp': DateTime.now().microsecondsSinceEpoch,
           });
           runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
           taskHandledCount.q++;
           channel.sink.add(body);
           websocketSentCount.q++;
         case "tab_actived":
-          final tab = HF.json(json["tab"]);
+          final tab = castJsonMap(json["tab"]);
           final id = tab["id"];
           final url = tab["url"];
           final title = tab["title"];
@@ -141,7 +141,7 @@ extension _$Backend on _Backend {
             lastAccessed: (lastAccessed ?? -1.0).toDouble(),
           );
         case "tab_size_change":
-          final tab = HF.json(json["tab"]);
+          final tab = castJsonMap(json["tab"]);
           final id = tab["id"];
           final innerHeight = tab["innerHeight"];
           final outerHeight = tab["outerHeight"];
@@ -172,7 +172,7 @@ extension _$Backend on _Backend {
             ),
           };
         case "windows_all":
-          final windows = HF.listJSON(json["windows"]);
+          final windows = castJsonList(json["windows"]);
           final _windows = windows
               .map(
                 (e) => BrowserWindow(
@@ -189,7 +189,7 @@ extension _$Backend on _Backend {
               .toList();
           P.translator.browserWindows.q = _windows;
         case "tabs_all":
-          final tabs = HF.listJSON(json["tabs"]);
+          final tabs = castJsonList(json["tabs"]);
           final _tabs = tabs
               .map(
                 (e) => BrowserTab(

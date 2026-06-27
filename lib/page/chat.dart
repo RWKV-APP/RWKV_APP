@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/model/message.dart' as model;
@@ -104,9 +102,9 @@ class _List extends ConsumerWidget {
       child: GestureDetector(
         onTap: P.chat.onTapMessageList,
         child: RawScrollbar(
-          radius: 100.rr,
+          radius: Radius.circular(100),
           thickness: 4,
-          thumbColor: qb.q(.4),
+          thumbColor: qb.withValues(alpha: .4),
           padding: .only(top: top, right: 4, bottom: scrollBarBottom),
           controller: P.chat.scrollController,
           child: ListView.separated(

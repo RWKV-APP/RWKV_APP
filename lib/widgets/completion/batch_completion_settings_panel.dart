@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -15,6 +13,7 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/argument_value.dart';
 import 'package:zone/widgets/form_item.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class BatchCompletionSettingsPanel extends ConsumerWidget {
   static final _shown = qs(false);

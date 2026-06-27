@@ -2,8 +2,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:halo/halo.dart';
+// Project imports:
+import 'package:zone/func/widget_debugger.dart';
 
 extension WidgetDebugger on Widget {
   // TODO: @wangce 如何更优雅地做这件事儿

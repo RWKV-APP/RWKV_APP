@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/func/extract_thought_and_output_for_batch_inference.dart';
@@ -169,7 +167,7 @@ class _BatchSlotsListView extends ConsumerWidget {
       viewportWidth: viewportWidth,
     );
 
-    // return C();
+    // return Container();
 
     return SingleChildScrollView(
       controller: scrollController,
@@ -250,7 +248,7 @@ class _BatchSlotItem extends ConsumerWidget {
 
     return Padding(
       padding: .only(right: isLast ? 0 : _kSlotGap),
-      child: GD(
+      child: GestureDetector(
         onTap: () {
           P.chat.onBatchSlotSelected(msg: msg, slotIndex: slotIndex, slotContent: data);
         },
@@ -262,7 +260,7 @@ class _BatchSlotItem extends ConsumerWidget {
           padding: const .symmetric(horizontal: 8),
           decoration: BoxDecoration(
             color: qw,
-            border: .all(color: batchSelection == slotIndex ? kCG : qb.q(.1)),
+            border: .all(color: batchSelection == slotIndex ? Colors.green : qb.withValues(alpha: .1)),
             borderRadius: .circular(8),
           ),
           child: RepaintBoundary(
@@ -304,22 +302,22 @@ class _BatchScrollLeftButton extends ConsumerWidget {
     return AnimatedPositioned(
       left: show ? 4 : -100,
       top: 0,
-      duration: 250.ms,
+      duration: Duration(milliseconds: 250),
       curve: Curves.easeOut,
       bottom: 0,
       child: AnimatedOpacity(
         opacity: show ? 1 : 0,
-        duration: 250.ms,
+        duration: Duration(milliseconds: 250),
         curve: Curves.easeOut,
         child: Center(
-          child: GD(
+          child: GestureDetector(
             onTap: () => P.ui.scrollBatchMessageBy(messageId: messageId, delta: -step),
             child: _BatchButtonBackdrop(
               borderRadius: .circular(20),
               background: qw,
-              border: .all(color: qb.q(.1)),
+              border: .all(color: qb.withValues(alpha: .1)),
               padding: const .all(6),
-              child: Icon(Icons.chevron_left, color: qb.q(.7)),
+              child: Icon(Icons.chevron_left, color: qb.withValues(alpha: .7)),
             ),
           ),
         ),
@@ -352,21 +350,21 @@ class _BatchScrollRightButton extends ConsumerWidget {
       right: show ? 4 : -100,
       top: 0,
       bottom: 0,
-      duration: 250.ms,
+      duration: Duration(milliseconds: 250),
       curve: Curves.easeOut,
       child: AnimatedOpacity(
         opacity: show ? 1 : 0,
-        duration: 250.ms,
+        duration: Duration(milliseconds: 250),
         curve: Curves.easeOut,
         child: Center(
-          child: GD(
+          child: GestureDetector(
             onTap: () => P.ui.scrollBatchMessageBy(messageId: messageId, delta: step),
             child: _BatchButtonBackdrop(
               borderRadius: .circular(20),
               background: qw,
-              border: .all(color: qb.q(.1)),
+              border: .all(color: qb.withValues(alpha: .1)),
               padding: const .all(6),
-              child: Icon(Icons.chevron_right, color: qb.q(.7)),
+              child: Icon(Icons.chevron_right, color: qb.withValues(alpha: .7)),
             ),
           ),
         ),
@@ -505,11 +503,11 @@ class _BatchSlotScrollToBottomButton extends ConsumerWidget {
 
     return AnimatedOpacity(
       opacity: show ? 1 : 0,
-      duration: 200.ms,
+      duration: Duration(milliseconds: 200),
       curve: Curves.easeOut,
       child: IgnorePointer(
         ignoring: !show,
-        child: GD(
+        child: GestureDetector(
           onTap: () => P.ui.scrollBatchSlotToBottom(
             messageId: messageId,
             slotIndex: slotIndex,
@@ -517,14 +515,14 @@ class _BatchSlotScrollToBottomButton extends ConsumerWidget {
           child: _BatchButtonBackdrop(
             borderRadius: .circular(14),
             background: qw,
-            border: .all(color: qb.q(.1)),
+            border: .all(color: qb.withValues(alpha: .1)),
             padding: EdgeInsets.zero,
             child: SizedBox(
               width: 48,
               height: 24,
               child: Icon(
                 Icons.keyboard_arrow_down,
-                color: qb.q(.7),
+                color: qb.withValues(alpha: .7),
                 size: 18,
               ),
             ),
@@ -568,7 +566,7 @@ class _BatchButtonBackdrop extends ConsumerWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: background.q(useBackdropFilter ? bgAlpha * darkModifier : 1),
+            color: background.withValues(alpha: useBackdropFilter ? bgAlpha * darkModifier : 1),
             borderRadius: borderRadius,
             border: border,
           ),
@@ -679,11 +677,11 @@ class _BatchSlotScrollToTopButton extends ConsumerWidget {
 
     return AnimatedOpacity(
       opacity: show ? 1 : 0,
-      duration: 200.ms,
+      duration: Duration(milliseconds: 200),
       curve: Curves.easeOut,
       child: IgnorePointer(
         ignoring: !show,
-        child: GD(
+        child: GestureDetector(
           onTap: () => P.ui.scrollBatchSlotToTop(
             messageId: messageId,
             slotIndex: slotIndex,
@@ -691,14 +689,14 @@ class _BatchSlotScrollToTopButton extends ConsumerWidget {
           child: _BatchButtonBackdrop(
             borderRadius: .circular(14),
             background: qw,
-            border: .all(color: qb.q(.1)),
+            border: .all(color: qb.withValues(alpha: .1)),
             padding: EdgeInsets.zero,
             child: SizedBox(
               width: 48,
               height: 24,
               child: Icon(
                 Icons.keyboard_arrow_up,
-                color: qb.q(.7),
+                color: qb.withValues(alpha: .7),
                 size: 18,
               ),
             ),
@@ -721,17 +719,17 @@ class _SlotPreviewButton extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
 
-    return GD(
+    return GestureDetector(
       onTap: onTap,
       child: _BatchButtonBackdrop(
         borderRadius: .circular(6),
         background: qw,
-        border: .all(color: qb.q(.1)),
+        border: .all(color: qb.withValues(alpha: .1)),
         padding: const .all(4),
         child: Icon(
           Icons.open_in_full,
           size: 16,
-          color: qb.q(.72),
+          color: qb.withValues(alpha: .72),
         ),
       ),
     );
@@ -781,7 +779,7 @@ class _MetaBadge extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final fontSize = theme.textTheme.bodySmall?.fontSize ?? 12.0;
 
-    return GD(
+    return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
@@ -896,8 +894,8 @@ class _MarkdownBody extends ConsumerWidget {
     final cotContentExpanded = renderThinkingTagAsPreview
         ? cotDisplayState == .showCotHeaderAndCotContent
         : cotDisplayState != .hideCotHeader;
-    final thoughtLabelColor = qb.q(.5);
-    final cotColor = qb.q(.55);
+    final thoughtLabelColor = qb.withValues(alpha: .5);
+    final cotColor = qb.withValues(alpha: .55);
 
     final (thought, output) = extractThoughtAndOutputForBatchInference(data);
 
@@ -936,7 +934,7 @@ class _MarkdownBody extends ConsumerWidget {
                 children: [
                   Text(
                     streaming ? s.thinking : s.thought_result,
-                    style: TS(c: thoughtLabelColor, w: .w600),
+                    style: TextStyle(color: thoughtLabelColor, fontWeight: .w600),
                   ),
                   cotContentExpanded
                       ? Icon(Icons.expand_less, color: thoughtLabelColor)
@@ -991,7 +989,7 @@ class _MarkdownBody extends ConsumerWidget {
               children: [
                 Text(
                   streaming ? s.thinking : s.thought_result,
-                  style: TS(c: thoughtLabelColor, w: .w600),
+                  style: TextStyle(color: thoughtLabelColor, fontWeight: .w600),
                 ),
                 cotContentExpanded ? Icon(Icons.expand_less, color: thoughtLabelColor) : Icon(Icons.expand_more, color: thoughtLabelColor),
               ],

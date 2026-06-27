@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -96,7 +94,7 @@ ThemeData _buildCompletionTheme(BuildContext context) {
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         visualDensity: VisualDensity.standard,
         minimumSize: const WidgetStatePropertyAll(Size.zero),
-        backgroundColor: WidgetStatePropertyAll(primaryColor.q(0.17)),
+        backgroundColor: WidgetStatePropertyAll(primaryColor.withValues(alpha: 0.17)),
         side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1)),
       ),
     ),
@@ -427,7 +425,7 @@ class _UserInputArea extends ConsumerWidget {
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       minimumSize: const WidgetStatePropertyAll(Size.zero),
       padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
-      backgroundColor: WidgetStatePropertyAll(theme.dividerColor.q(0.17)),
+      backgroundColor: WidgetStatePropertyAll(theme.dividerColor.withValues(alpha: 0.17)),
       side: WidgetStatePropertyAll(BorderSide(color: theme.dividerColor, width: 1)),
     );
 

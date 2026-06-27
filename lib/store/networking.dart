@@ -47,7 +47,7 @@ Uri _buildUri(
 }) {
   if (url.startsWith("https://") || url.startsWith("http://")) {
     final uri = Uri.parse(url);
-    final mergedQuery = {...uri.queryParameters, ...query.allString};
+    final mergedQuery = {...uri.queryParameters, ...stringifyMapValues(query)};
     return uri.replace(queryParameters: mergedQuery.isEmpty ? null : mergedQuery);
   }
 
@@ -56,7 +56,7 @@ Uri _buildUri(
   }
 
   final base = Uri.parse(domain ?? Config.domain);
-  final mergedQuery = {...base.queryParameters, ...query.allString};
+  final mergedQuery = {...base.queryParameters, ...stringifyMapValues(query)};
   final basePath = base.path.replaceFirst(RegExp(r"/$"), "");
   final nextPath = [basePath, url].where((segment) => segment.isNotEmpty).join("/");
 
@@ -94,11 +94,11 @@ Future<Object?> _post(
     case ContentType.json:
       headers["Content-Type"] = "application/json; charset=utf-8";
       headers["Accept"] = "application/json; charset=utf-8";
-      findlBody = jsonEncode(body.withoutNull);
+      findlBody = jsonEncode(withoutNullValues(body));
     case ContentType.urlencoded:
       headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8";
       headers["Accept"] = "application/x-www-form-urlencoded; charset=utf-8";
-      findlBody = body.withoutNull;
+      findlBody = withoutNullValues(body);
   }
 
   final res = await _errorWrapper(
@@ -364,13 +364,13 @@ dynamic _deal(
       if (kDebugMode) {
         qqe("Can not decode json string");
         qqe(res.body);
-        print("😡 ${"statusCode".codeToName}: ${res.contentLength}");
-        print("😡 ${"statusCode".codeToName}: ${res.statusCode}");
+        print("😡 ${codeToName("statusCode")}: ${res.contentLength}");
+        print("😡 ${codeToName("statusCode")}: ${res.statusCode}");
         final request = res.request;
         if (request != null) {
-          print("😡 ${"method".codeToName}: ${request.method}");
-          print("😡 ${"path".codeToName}: ${request.url.path}");
-          print("😡 ${"query".codeToName}: ${request.url.query}");
+          print("😡 ${codeToName("method")}: ${request.method}");
+          print("😡 ${codeToName("path")}: ${request.url.path}");
+          print("😡 ${codeToName("query")}: ${request.url.query}");
           print("😡 Headers: ${request.headers.map((k, v) => MapEntry(k, v.substring(30)))}");
         }
       }

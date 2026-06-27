@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/func/format_bytes.dart';
@@ -18,6 +16,7 @@ import 'package:zone/model/lambada_test_item.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_selector.dart';
+import 'package:zone/func/string_utils.dart';
 
 part 'benchmark/benchmark_controls.dart';
 part 'benchmark/benchmark_results.dart';
@@ -75,17 +74,17 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
     final s = S.of(context);
     final benchmarkTheme = theme.copyWith(
       tabBarTheme: theme.tabBarTheme.copyWith(
-        dividerColor: qb.q(.16),
-        indicatorColor: qb.q(.5),
+        dividerColor: qb.withValues(alpha: .16),
+        indicatorColor: qb.withValues(alpha: .5),
         labelColor: qb,
-        unselectedLabelColor: qb.q(.68),
+        unselectedLabelColor: qb.withValues(alpha: .68),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
-        color: qb.q(.62),
+        color: qb.withValues(alpha: .62),
         linearTrackColor: appTheme.settingBg,
       ),
-      splashColor: qb.q(.06),
-      highlightColor: qb.q(.04),
+      splashColor: qb.withValues(alpha: .06),
+      highlightColor: qb.withValues(alpha: .04),
     );
 
     return PopScope(
@@ -240,6 +239,6 @@ String _localizedBenchmarkInfoKey(S s, String key) {
     "GPUName" => s.benchmark_info_gpu_name,
     "TotalMemory" => s.benchmark_info_total_memory,
     "TotalVRAM" => s.benchmark_info_total_vram,
-    _ => key.codeToName,
+    _ => codeToName(key),
   };
 }

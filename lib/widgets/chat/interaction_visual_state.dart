@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/model/app_theme.dart';
@@ -30,11 +29,11 @@ InteractionVisualColors interactionVisualColors({
   required AppTheme appTheme,
   required InteractionVisualState state,
 }) {
-  final qw = appTheme.isLight ? kW : kB;
+  final qw = appTheme.isLight ? Colors.white : Colors.black;
 
   final unavailableColors = InteractionVisualColors(
     // background: Color.lerp(appTheme.g1, appTheme.scaffoldBg, .33) ?? appTheme.g1,
-    // background: kC,
+    // background: Colors.transparent,
     background: qw,
     foreground: Color.lerp(appTheme.g5, appTheme.scaffoldBg, .33) ?? appTheme.g5,
     border: Color.lerp(appTheme.g2, appTheme.scaffoldBg, .33) ?? appTheme.g2,
@@ -42,7 +41,7 @@ InteractionVisualColors interactionVisualColors({
 
   final availableColors = InteractionVisualColors(
     // background: appTheme.qb144,
-    // background: kC,
+    // background: Colors.transparent,
     background: qw,
     foreground: appTheme.qb4,
     border: appTheme.qb11,
@@ -52,7 +51,7 @@ InteractionVisualColors interactionVisualColors({
     .unavailable => unavailableColors,
     .idleInteractive => InteractionVisualColors(
       // background: Color.lerp(unavailableColors.background, availableColors.background, .55) ?? availableColors.background,
-      // background: appTheme.isLight ? kW : kB,
+      // background: appTheme.isLight ? Colors.white : Colors.black,
       background: qw,
       foreground: Color.lerp(unavailableColors.foreground, availableColors.foreground, .45) ?? availableColors.foreground,
       border: Color.lerp(unavailableColors.border, availableColors.border, .5) ?? availableColors.border,
@@ -60,7 +59,7 @@ InteractionVisualColors interactionVisualColors({
     .available => availableColors,
     .enabled => InteractionVisualColors(
       background: appTheme.qb5,
-      // background: kC,
+      // background: Colors.transparent,
       foreground: appTheme.g1,
       border: appTheme.qb5,
     ),

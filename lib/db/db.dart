@@ -4,8 +4,6 @@ import 'dart:convert';
 // Package imports:
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:path_provider/path_provider.dart';
 
 // Project imports:
@@ -17,6 +15,7 @@ import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/msg_node.dart';
 import 'package:zone/model/ref_info.dart' as model;
 import 'package:zone/store/p.dart';
+import 'package:zone/func/debug_trace.dart';
 
 part 'db.g.dart';
 
@@ -433,7 +432,7 @@ class AppDatabase extends _$AppDatabase {
       title: Value(title),
       data: msgNode.toJson(),
       appBuildNumber: P.app.buildNumber.q,
-      updatedAtUS: Value(HF.microseconds),
+      updatedAtUS: Value(DateTime.now().microsecondsSinceEpoch),
     );
   }
 
@@ -479,7 +478,7 @@ class AppDatabase extends _$AppDatabase {
               return tbl.createdAtUS.equals(createAtInUS);
             }))
             .write(
-              _ConversationCompanion(updatedAtUS: Value(HF.microseconds)).copyWith(
+              _ConversationCompanion(updatedAtUS: Value(DateTime.now().microsecondsSinceEpoch)).copyWith(
                 title: title == null ? null : Value(title),
                 subtitle: subtitle == null ? null : Value(subtitle),
               ),

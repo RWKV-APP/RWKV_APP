@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/model/argument.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
+import 'package:zone/func/string_utils.dart';
 
 class ArgumentValue extends ConsumerWidget {
   final Argument argument;
@@ -63,17 +63,17 @@ class ArgumentValue extends ConsumerWidget {
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        padding.top.h,
+        SizedBox(height: padding.top),
         Row(
           children: [
-            padding.left.w,
+            SizedBox(width: padding.left),
             Expanded(
               child: showTitle
                   ? Text(
-                      argument.name.codeToName,
-                      style: const TS(
-                        s: 14,
-                        w: .w500,
+                      codeToName(argument.name),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: .w500,
                       ),
                     )
                   : const SizedBox.shrink(),
@@ -81,23 +81,23 @@ class ArgumentValue extends ConsumerWidget {
             if (showValue)
               Text(
                 value.toStringAsFixed(argument.fixedDecimals),
-                style: const TS(s: 14, w: .w600),
+                style: const TextStyle(fontSize: 14, fontWeight: .w600),
               ),
-            padding.right.w,
+            SizedBox(width: padding.right),
           ],
         ),
         const SizedBox(height: 4),
         Row(
           children: [
-            padding.left.w,
+            SizedBox(width: padding.left),
             Text(
               argument.min.toStringAsFixed(argument.fixedDecimals),
-              style: TS(s: 12, c: qb.q(.5)),
+              style: TextStyle(fontSize: 12, color: qb.withValues(alpha: .5)),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: Slider(
-                activeColor: enabled ? null : Colors.grey.q(1),
+                activeColor: enabled ? null : Colors.grey.withValues(alpha: 1),
                 padding: .zero,
                 value: (value).toDouble(),
                 min: argument.min,
@@ -108,12 +108,12 @@ class ArgumentValue extends ConsumerWidget {
             const SizedBox(width: 14),
             Text(
               argument.max.toStringAsFixed(argument.fixedDecimals),
-              style: TS(s: 12, c: qb.q(.5)),
+              style: TextStyle(fontSize: 12, color: qb.withValues(alpha: .5)),
             ),
-            padding.right.w,
+            SizedBox(width: padding.right),
           ],
         ),
-        padding.bottom.h,
+        SizedBox(height: padding.bottom),
       ],
     );
   }

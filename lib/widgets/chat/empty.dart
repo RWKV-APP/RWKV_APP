@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
@@ -47,7 +46,7 @@ class Empty extends ConsumerWidget {
     final version = ref.watch(P.app.version);
 
     return AnimatedPositioned(
-      duration: 200.ms,
+      duration: Duration(milliseconds: 200),
       curve: Curves.easeInOutBack,
       bottom: hasSpecificEmpty ? -2000 : 0,
       left: 0,
@@ -55,7 +54,7 @@ class Empty extends ConsumerWidget {
       top: 0,
       child: AnimatedOpacity(
         opacity: hasSpecificEmpty ? 0 : 1,
-        duration: 200.ms,
+        duration: Duration(milliseconds: 200),
         curve: Curves.easeInOutBack,
         child: GestureDetector(
           onTap: () {
@@ -71,15 +70,7 @@ class Empty extends ConsumerWidget {
                     crossAxisAlignment: .stretch,
                     children: [
                       const SizedBox(height: 90),
-                      const Flexible(
-                        child: Scrollbar(
-                          thumbVisibility: false,
-                          trackVisibility: false,
-                          child: SingleChildScrollView(
-                            child: _EmptyV2(),
-                          ),
-                        ),
-                      ),
+                      const Flexible(child: _EmptyV2ScrollView()),
                       SizedBox(height: inputHeight.toDouble()),
                     ],
                   ),
@@ -100,14 +91,14 @@ class Empty extends ConsumerWidget {
                         children: [
                           Opacity(
                             opacity: 0.0,
-                            child: Text(version, style: const TS(s: 10)),
+                            child: Text(version, style: const TextStyle(fontSize: 10)),
                           ),
-                          Text(s.chat_welcome_to_use(Config.appTitle), style: const TS(s: 18, w: .w600)),
+                          Text(s.chat_welcome_to_use(Config.appTitle), style: const TextStyle(fontSize: 18, fontWeight: .w600)),
                           Opacity(
                             opacity: 0.5,
                             child: Padding(
                               padding: const .only(bottom: 4),
-                              child: Text(version, style: const TS(s: 10)),
+                              child: Text(version, style: const TextStyle(fontSize: 10)),
                             ),
                           ),
                         ],
@@ -127,7 +118,7 @@ class Empty extends ConsumerWidget {
                           },
                           child: Text(
                             demoType == .see ? s.select_a_world_type : s.select_a_model,
-                            style: const TS(s: 16, w: .w600),
+                            style: const TextStyle(fontSize: 16, fontWeight: .w600),
                           ),
                         ),
                       if (!loaded) const SizedBox(height: 12),
@@ -142,17 +133,47 @@ class Empty extends ConsumerWidget {
                           ),
                           child: Text(
                             currentModel?.name ?? "",
-                            style: TS(s: 16, w: .w600, c: primary),
+                            style: TextStyle(fontSize: 16, fontWeight: .w600, color: primary),
                           ),
                         ),
                       const Spacer(),
-                      if (demoType == .tts) (inputHeight / 1.5).h,
+                      if (demoType == .tts) SizedBox(height: inputHeight / 1.5),
                     ],
                   ),
                 ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _EmptyV2ScrollView extends StatefulWidget {
+  const _EmptyV2ScrollView();
+
+  @override
+  State<_EmptyV2ScrollView> createState() => _EmptyV2ScrollViewState();
+}
+
+class _EmptyV2ScrollViewState extends State<_EmptyV2ScrollView> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scrollbar(
+      controller: _scrollController,
+      thumbVisibility: false,
+      trackVisibility: false,
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        child: const _EmptyV2(),
       ),
     );
   }
@@ -170,7 +191,7 @@ class _EmptyV2 extends ConsumerWidget {
     ThemeData theme,
     dynamic suggestion,
   ) {
-    if (suggestion is! Suggestion) return theme.colorScheme.primary.q(.82);
+    if (suggestion is! Suggestion) return theme.colorScheme.primary.withValues(alpha: .82);
 
     switch (_normalizeCategory(suggestion.category)) {
       case "life":
@@ -200,7 +221,7 @@ class _EmptyV2 extends ConsumerWidget {
       case "数学":
         return _mathematicsSuggestionColor;
     }
-    return theme.colorScheme.primary.q(.82);
+    return theme.colorScheme.primary.withValues(alpha: .82);
   }
 
   void _onTap(dynamic suggestion) {

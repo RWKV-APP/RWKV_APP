@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -58,7 +57,7 @@ class LoadingProgressButtonContent extends ConsumerWidget {
             value: safeProgress,
             strokeWidth: 2,
             color: indicatorColor,
-            backgroundColor: indicatorColor.q(.2),
+            backgroundColor: indicatorColor.withValues(alpha: .2),
           ),
         ),
         const SizedBox(width: 6),

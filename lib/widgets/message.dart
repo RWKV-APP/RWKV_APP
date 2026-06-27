@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:photo_viewer/photo_viewer.dart';
 
 // Project imports:
@@ -152,8 +150,8 @@ class _MessageState extends ConsumerState<Message> {
     );
     final thisMessageIsReceiving = receiveId == msg.id && receiving;
     final rawFontSize = theme.textTheme.bodyMedium?.fontSize ?? 14.0;
-    final userMessageStyle = TS(
-      s: rawFontSize * Config.msgFontScale,
+    final userMessageStyle = TextStyle(
+      fontSize: rawFontSize * Config.msgFontScale,
       height: messageLineHeight,
     );
     final double rawMaxWidth = math.min(screenWidth, screenHeight);
@@ -209,7 +207,7 @@ class _MessageState extends ConsumerState<Message> {
             ignoring: editingIndex != null && editingIndex != index,
             child: AnimatedOpacity(
               opacity: opacity,
-              duration: 250.ms,
+              duration: Duration(milliseconds: 250),
               child: Padding(
                 padding: .only(
                   left: batchData.isBatch ? 0 : appTheme.msgListMarginLeft,
@@ -301,7 +299,7 @@ class _UserMessageBubble extends ConsumerWidget {
   final bool desktopActionsHovered;
   final String finalContent;
   final Color userMsgBg;
-  final TS userMessageStyle;
+  final TextStyle userMessageStyle;
   final double rawMaxWidth;
   final _BubbleStyleData bubbleStyleData;
   final bool isBatch;
@@ -440,8 +438,8 @@ class _BotMessageBubble extends ConsumerWidget {
     final demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final showReasoningHeader = thinkingData.reasoning && !thinkingData.isQuickThinking && !isBatch;
     final debugColor = theme.colorScheme.error;
-    final cotColor = qb.q(.55);
-    final thoughtLabelColor = qb.q(.5);
+    final cotColor = qb.withValues(alpha: .55);
+    final thoughtLabelColor = qb.withValues(alpha: .5);
     final appTheme = ref.watch(P.app.theme);
 
     double? fixedBatchBubbleHeight;
@@ -484,13 +482,13 @@ class _BotMessageBubble extends ConsumerWidget {
                   children: [
                     Text(
                       s.batch_inference_running(batchCount),
-                      style: TS(c: appTheme.qb5),
+                      style: TextStyle(color: appTheme.qb5),
                     ),
                     if (batchSelection != null) const SizedBox(width: 16),
                     if (batchSelection != null)
                       Text(
                         s.batch_inference_selected(batchSelection! + 1),
-                        style: TS(c: appTheme.qb5),
+                        style: TextStyle(color: appTheme.qb5),
                       ),
                   ],
                 ),
@@ -515,7 +513,7 @@ class _BotMessageBubble extends ConsumerWidget {
                   children: [
                     Text(
                       thisMessageIsReceiving ? s.thinking : s.thought_result,
-                      style: TS(c: thoughtLabelColor, w: .w600),
+                      style: TextStyle(color: thoughtLabelColor, fontWeight: .w600),
                     ),
                     cotContentExpanded
                         ? Icon(Icons.expand_less, color: thoughtLabelColor)
@@ -621,7 +619,7 @@ class _MessageDebugId extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(color: effectiveDebugColor),
-      child: Text("Debug: $msgId", style: const TS(c: kW)),
+      child: Text("Debug: $msgId", style: const TextStyle(color: Colors.white)),
     );
   }
 }
@@ -782,7 +780,7 @@ _BubbleStyleData _resolveBubbleStyleData({
   required bool isBatch,
 }) {
   EdgeInsets padding = appTheme.msgDefaultPadding;
-  Border? border = Border.all(color: primary.q(.2));
+  Border? border = Border.all(color: primary.withValues(alpha: .2));
   double radius = 12;
 
   switch (msg.type) {

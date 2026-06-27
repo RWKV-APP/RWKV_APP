@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -16,6 +14,7 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat_layout_metrics.dart';
 import 'package:zone/widgets/input_interactions.dart';
 import 'package:zone/widgets/input_text_field.dart';
+import 'package:zone/widgets/measure_size.dart';
 
 class InputBar extends ConsumerWidget {
   final DemoType preferredDemoType;
@@ -48,11 +47,11 @@ class InputBar extends ConsumerWidget {
         onChange: _onChangeSize,
         child: Container(
           decoration: BoxDecoration(
-            // color: kCR,
+            // color: Colors.red,
             gradient: LinearGradient(
               colors: [
-                appTheme.scaffoldBg.q(0),
-                appTheme.scaffoldBg.q(1),
+                appTheme.scaffoldBg.withValues(alpha: 0),
+                appTheme.scaffoldBg.withValues(alpha: 1),
               ],
               begin: Alignment(0, gradientStartForInputBar),
               end: Alignment(0, gradientForInputBar),
@@ -60,7 +59,7 @@ class InputBar extends ConsumerWidget {
           ),
           child: InputBarWidthLimit(
             child: AnimatedSize(
-              duration: 250.ms,
+              duration: Duration(milliseconds: 250),
               child: Column(
                 crossAxisAlignment: .start,
                 children: [
@@ -121,10 +120,10 @@ class _WaitingMsg extends ConsumerWidget {
         children: [
           Text(
             s.message_in_queue(count),
-            style: const TS(s: 12),
+            style: const TextStyle(fontSize: 12),
           ),
           Container(
-            decoration: BoxDecoration(color: kC.q(.1), borderRadius: 12.r),
+            decoration: BoxDecoration(color: Colors.transparent.withValues(alpha: .1), borderRadius: BorderRadius.circular(12)),
             margin: const .only(bottom: 4, top: 4),
             child: Row(
               crossAxisAlignment: .center,
@@ -133,7 +132,7 @@ class _WaitingMsg extends ConsumerWidget {
                 if (waitingImagePath != null) const SizedBox(width: 4),
                 Text(
                   waitingText,
-                  style: const TS(s: 12),
+                  style: const TextStyle(fontSize: 12),
                 ),
               ],
             ),
@@ -169,7 +168,7 @@ class _ImagePreview extends ConsumerWidget {
               maxHeight: maxWidth,
             ),
             child: ClipRRect(
-              borderRadius: (small ? 2 : 12).r,
+              borderRadius: BorderRadius.circular((small ? 2 : 12).toDouble()),
               child: Stack(
                 children: [
                   Image.file(
@@ -184,10 +183,10 @@ class _ImagePreview extends ConsumerWidget {
                           P.see.imagePath.q = null;
                         },
                         icon: Container(
-                          decoration: BoxDecoration(color: kB.q(.5), borderRadius: 1000.r),
+                          decoration: BoxDecoration(color: Colors.black.withValues(alpha: .5), borderRadius: BorderRadius.circular(1000)),
                           child: Icon(
                             Icons.close,
-                            color: kW.q(1),
+                            color: Colors.white.withValues(alpha: 1),
                           ),
                         ),
                       ),

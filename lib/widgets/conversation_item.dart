@@ -6,8 +6,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/models/chat_message_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:sprintf/sprintf.dart';
 
 // Project imports:
@@ -263,7 +261,7 @@ class ConversationItem extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           ConversationListItemData._processTitle(conversation.title),
-                          style: TS(s: 16, w: .w500, c: qb),
+                          style: TextStyle(fontSize: 16, fontWeight: .w500, color: qb),
                           overflow: .ellipsis,
                         ),
                       ),
@@ -273,7 +271,7 @@ class ConversationItem extends ConsumerWidget {
                   const SizedBox(height: 4),
                   Text(
                     conversation.subtitle,
-                    style: const TS(s: 12, c: Colors.grey),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                     overflow: .ellipsis,
                     maxLines: 1,
                   ),

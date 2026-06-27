@@ -8,9 +8,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -20,10 +18,10 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
-import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_tag.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
@@ -118,18 +116,6 @@ class ModelItem extends ConsumerWidget {
     final backend = fileInfo.backend;
 
     if (backend == null) {
-      if (fileInfo.isAlbatross) {
-        if (P.remote.modelSelectorShown.q) {
-          await pop();
-        }
-        try {
-          await Albatross.instance.load(fileInfo);
-          Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
-        } catch (e) {
-          Alert.error(e.toString());
-        }
-        return;
-      }
       Alert.error("Backend is null");
       return;
     }
@@ -200,7 +186,7 @@ class ModelItem extends ConsumerWidget {
             decoration: BoxDecoration(
               color: appTheme.settingItem,
               borderRadius: .circular(8),
-              border: .all(color: qw.q(.1), width: .5),
+              border: .all(color: qw.withValues(alpha: .1), width: .5),
             ),
             margin: const .only(top: 8),
             padding: const .all(8),
@@ -217,7 +203,7 @@ class ModelItem extends ConsumerWidget {
                       onTap: _onStartTap,
                       child: AnimatedContainer(
                         // opacity: loading || unzipping ? 0.6 : 1,
-                        duration: 200.ms,
+                        duration: Duration(milliseconds: 200),
                         child: Container(
                           decoration: BoxDecoration(
                             color: loading || unzipping ? appTheme.qb8 : primary,
@@ -227,12 +213,12 @@ class ModelItem extends ConsumerWidget {
                           child: showLoadingProgress
                               ? LoadingProgressButtonContent(
                                   progress: modelLoadingProgress,
-                                  textStyle: TS(c: qw),
+                                  textStyle: TextStyle(color: qw),
                                   indicatorColor: qw,
                                 )
                               : Text(
                                   startTitle,
-                                  style: TS(c: qw),
+                                  style: TextStyle(color: qw),
                                 ),
                         ),
                       ),
@@ -246,7 +232,7 @@ class ModelItem extends ConsumerWidget {
                           borderRadius: .circular(startButtonRadius),
                         ),
                         padding: const .all(8),
-                        child: Text(loadButtonTextShowLoad ? S.current.loaded : s.chatting, style: TS(c: qw)),
+                        child: Text(loadButtonTextShowLoad ? S.current.loaded : s.chatting, style: TextStyle(color: qw)),
                       ),
                     ),
                   if (!isCurrentModel && showDelete) const SizedBox(width: 8),
@@ -262,14 +248,14 @@ class ModelItem extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: .58),
                   borderRadius: .circular(8),
-                  border: .all(color: kCY.q(1), width: 1),
+                  border: .all(color: Colors.yellow.withValues(alpha: 1), width: 1),
                 ),
                 alignment: .center,
                 padding: const .symmetric(horizontal: 16),
                 child: Text(
                   S.current.model_item_ios18_weight_hint,
                   textAlign: TextAlign.center,
-                  style: const TS(c: kCY, s: 13, w: .w600, height: 1.3),
+                  style: const TextStyle(color: Colors.yellow, fontSize: 13, fontWeight: .w600, height: 1.3),
                 ),
               ),
             ),
@@ -422,11 +408,11 @@ class _FileKeyItem extends ConsumerWidget {
           children: [
             Text(
               fileInfo.name,
-              style: const TS(w: .w600),
+              style: const TextStyle(fontWeight: .w600),
             ),
             Text(
               formatBytes(fileSize),
-              style: TS(c: qb.q(.7), w: .w500),
+              style: TextStyle(color: qb.withValues(alpha: .7), fontWeight: .w500),
             ),
           ],
         ),
@@ -488,7 +474,7 @@ class _Tags extends ConsumerWidget {
       children: <ModelTag>[
         if (fileInfo.backend == .webRwkv) const ModelTag(tag: "GPU"),
         ...tags.where((tag) => !hiddenTags.contains(tag)).map((tag) => ModelTag(tag: tag)),
-        if (kDebugMode && fileInfo.isDebug) const ModelTag(tag: "DEBUG", forceBgColor: Colors.red, forceTextColor: kW),
+        if (kDebugMode && fileInfo.isDebug) const ModelTag(tag: "DEBUG", forceBgColor: Colors.red, forceTextColor: Colors.white),
         if (quantization != null && quantization.isNotEmpty) ModelTag(tag: quantization, forceUppercase: true),
         if (date != null) ModelTag(tag: date),
       ],

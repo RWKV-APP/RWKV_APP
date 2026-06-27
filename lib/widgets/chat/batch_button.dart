@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
@@ -59,8 +58,8 @@ class BatchButton extends ConsumerWidget {
             child: Container(
               height: height,
               decoration: BoxDecoration(
-                color: bgColor.q(
-                  userBackdropFilterForInputOptions
+                color: bgColor.withValues(
+                  alpha: userBackdropFilterForInputOptions
                       ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                       : 1,
                 ),
@@ -77,7 +76,7 @@ class BatchButton extends ConsumerWidget {
                   if (batchEnabled)
                     Text(
                       batchCount.toString(),
-                      style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                      style: TextStyle(color: textColor, fontSize: fontSize, height: 1, fontWeight: .w500),
                       strutStyle: StrutStyle(
                         fontSize: fontSize,
                         height: 1,

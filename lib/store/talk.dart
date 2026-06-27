@@ -73,7 +73,7 @@ extension _$Talk on _Talk {
     final spkPairs = this.spkPairs.q;
 
     final defaultSpk = spkPairs.keys.firstWhereOrNull((e) => e.contains(_Talk._defaultSpkName));
-    selectedSpkName.q = defaultSpk ?? spkPairs.keys.where((e) => e.contains("Chinese")).random;
+    selectedSpkName.q = defaultSpk ?? randomElement(spkPairs.keys.where((e) => e.contains("Chinese")));
 
     selectSourceAudioPath.q = null;
 
@@ -323,7 +323,7 @@ extension _$Talk on _Talk {
 /// Public methods
 extension $Talk on _Talk {
   Future<void> startStateSync() async {
-    Timer.periodic(500.ms, (timer) {
+    Timer.periodic(Duration(milliseconds: 500), (timer) {
       //
     });
   }
@@ -426,7 +426,7 @@ extension $Talk on _Talk {
     qq;
     final fileName = "$spkName.json";
     final data = await rootBundle.loadString("assets/lib/chat/$fileName");
-    final json = HF.json(jsonDecode(data));
+    final json = castJsonMap(jsonDecode(data));
     return json["transcription"];
   }
 
@@ -446,8 +446,8 @@ extension $Talk on _Talk {
     audioStream?.resume();
 
     late final Message? msg;
-    final id = HF.milliseconds;
-    final receiveId = HF.milliseconds + 1;
+    final id = DateTime.now().millisecondsSinceEpoch;
+    final receiveId = DateTime.now().millisecondsSinceEpoch + 1;
     final spkName = selectedSpkName.q;
     final currentModel = P.rwkvModel.latest.q;
     final currentGroupInfo = P.rwkvContext.currentGroupInfo.q;
@@ -645,7 +645,7 @@ outputWavPath: $outputWavPath""");
 }
 
 Map<String, dynamic> _parseSpkNames(String message) {
-  return HF.json(jsonDecode(message));
+  return castJsonMap(jsonDecode(message));
 }
 
 Float32List _synthSineWave(double freq, int sampleRate, Duration duration) {

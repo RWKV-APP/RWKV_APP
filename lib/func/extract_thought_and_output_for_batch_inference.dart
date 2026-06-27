@@ -1,5 +1,5 @@
+import 'package:zone/func/debug_trace.dart';
 // Package imports:
-import 'package:halo/halo.dart';
 
 (String, String) extractThoughtAndOutputForBatchInference(String text) {
   final lengthOfThinkEndTag = "</think>".length;

@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
-import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart';
 
 class DevOptionsPanel extends ConsumerStatefulWidget {
@@ -69,38 +67,6 @@ class _DevOptionsTriggerState extends State<_DevOptionsTrigger> {
 }
 
 class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
-  final TextEditingController _controllerHost = TextEditingController(text: Albatross.instance.host);
-
-  @override
-  void dispose() {
-    final host = _controllerHost.text;
-    if (host != Albatross.instance.host) {
-      Albatross.instance.host = host;
-      Albatross.instance.init();
-    }
-    _controllerHost.dispose();
-    super.dispose();
-  }
-
-  void _onWebSearchChanged(bool value) {
-    final next = P.app.featureRollout.q.copyWith(webSearch: value);
-    P.preference.setFeatureRollout(next);
-    P.app.featureRollout.q = next;
-    setState(() {});
-  }
-
-  void _onParallelAnsweringChanged(bool value) {
-    final next = P.app.featureRollout.q.copyWith(parallelAnswering: value);
-    P.preference.setFeatureRollout(next);
-    P.app.featureRollout.q = next;
-    setState(() {});
-  }
-
-  void _onAlbatrossChanged(bool value) {
-    P.rwkvFeature.enableAlbatross.q = value;
-    setState(() {});
-  }
-
   void _onTelemetryChanged(bool value) {
     P.telemetry.setEnabled(value);
     setState(() {});
@@ -119,7 +85,6 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final featureRollout = P.app.featureRollout.q;
     final panelColor = theme.colorScheme.surface;
     final cardColor = theme.colorScheme.surfaceContainerHighest;
     final borderColor = theme.colorScheme.outlineVariant;
@@ -152,20 +117,6 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
                     child: Column(
                       children: [
                         _DevSwitchItem(
-                          title: 'Web Search',
-                          subtitle: 'Enable experimental web search.',
-                          value: featureRollout.webSearch,
-                          onChanged: _onWebSearchChanged,
-                        ),
-                        Container(height: .5, color: borderColor),
-                        _DevSwitchItem(
-                          title: 'Parallel Answering',
-                          subtitle: 'Show parallel answering buttons in batch and ask-question panels.',
-                          value: featureRollout.parallelAnswering,
-                          onChanged: _onParallelAnsweringChanged,
-                        ),
-                        Container(height: .5, color: borderColor),
-                        _DevSwitchItem(
                           title: S.current.fake_batch_inference_benchmark,
                           subtitle: 'Replace real chat inference with random UI-only streaming output.',
                           value: fakeBatchInferenceBenchmarkEnabled,
@@ -180,13 +131,6 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
                         ),
                         Container(height: .5, color: borderColor),
                         _DevSwitchItem(
-                          title: 'Albatross',
-                          subtitle: 'Use Albatross bridge in RWKV runtime.',
-                          value: P.rwkvFeature.enableAlbatross.q,
-                          onChanged: _onAlbatrossChanged,
-                        ),
-                        Container(height: .5, color: borderColor),
-                        _DevSwitchItem(
                           title: 'Telemetry',
                           subtitle: 'Upload anonymous inference speed after each reply.',
                           value: P.telemetry.enabled.q,
@@ -194,12 +138,6 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  _DevHostCard(
-                    controller: _controllerHost,
-                    cardColor: cardColor,
-                    borderColor: borderColor,
                   ),
                   const SizedBox(height: 12),
                   _DevActionCard(
@@ -350,73 +288,6 @@ class _DevSwitchItem extends StatelessWidget {
           Switch.adaptive(
             value: value,
             onChanged: onChanged,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DevHostCard extends StatelessWidget {
-  final TextEditingController controller;
-  final Color cardColor;
-  final Color borderColor;
-
-  const _DevHostCard({
-    required this.controller,
-    required this.cardColor,
-    required this.borderColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: .circular(14),
-        border: .all(color: borderColor, width: .5),
-      ),
-      padding: const .all(12),
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          Text(
-            'Albatross Host',
-            style: theme.textTheme.titleSmall?.copyWith(fontWeight: .w600),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Custom endpoint for Albatross bridge.',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            controller: controller,
-            keyboardType: TextInputType.url,
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-              isDense: true,
-              filled: true,
-              fillColor: theme.colorScheme.surface,
-              hintText: 'http://127.0.0.1:8080',
-              contentPadding: const .symmetric(horizontal: 12, vertical: 10),
-              border: OutlineInputBorder(
-                borderRadius: .circular(10),
-                borderSide: BorderSide(color: borderColor, width: .5),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: .circular(10),
-                borderSide: BorderSide(color: borderColor, width: .5),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: .circular(10),
-                borderSide: BorderSide(color: theme.colorScheme.primary, width: 1),
-              ),
-            ),
           ),
         ],
       ),

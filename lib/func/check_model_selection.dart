@@ -1,6 +1,5 @@
 // Package imports:
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/widgets/alert.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';

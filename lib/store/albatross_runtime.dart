@@ -135,7 +135,7 @@ class _AlbatrossRuntime {
 
     for (final fileInfo in remoteWeights) {
       final fileName = fileInfo.fileName.toLowerCase();
-      if (!fileName.endsWith(".pth") && !fileInfo.isAlbatross) continue;
+      if (!fileName.endsWith(".pth")) continue;
       add(fileInfo);
     }
 
@@ -1294,7 +1294,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     if (albatross is! Map) return null;
     final binary = albatross["binary_config"] ?? albatross["binary"];
     if (binary is! Map) return null;
-    return HF.json(binary);
+    return castJsonMap(binary);
   }
 
   Map<String, dynamic>? get _tokenizerConfig {
@@ -1303,7 +1303,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     if (albatross is! Map) return null;
     final tokenizer = albatross["tokenizer_config"] ?? albatross["tokenizer"];
     if (tokenizer is! Map) return null;
-    return HF.json(tokenizer);
+    return castJsonMap(tokenizer);
   }
 
   FileInfo? _fileInfoFromConfig(Map<String, dynamic>? config) {

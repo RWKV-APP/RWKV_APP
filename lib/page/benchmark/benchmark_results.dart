@@ -35,7 +35,7 @@ class _BenchmarkResultsCardState extends ConsumerState<_BenchmarkResultsCard> {
     final bestDecodePerBatch = sorted.map((e) => e.decodeSpeedPerBatch).reduce(max);
     final bestBw = sorted.map((e) => e.bw).reduce(max);
     final bestFlops = sorted.map((e) => e.flops).reduce(max);
-    final totalDecodeColor = qb.q(.74);
+    final totalDecodeColor = qb.withValues(alpha: .74);
     const decodePerBatchColor = Color(0xFF1F9D8A);
     const prefillColor = Color(0xFFDE6A2E);
 
@@ -44,7 +44,7 @@ class _BenchmarkResultsCardState extends ConsumerState<_BenchmarkResultsCard> {
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: qb.q(.14), width: .5),
+        side: BorderSide(color: qb.withValues(alpha: .14), width: .5),
       ),
       child: Padding(
         padding: const .symmetric(horizontal: 12, vertical: 12),
@@ -53,7 +53,7 @@ class _BenchmarkResultsCardState extends ConsumerState<_BenchmarkResultsCard> {
           children: [
             Row(
               children: [
-                Icon(Icons.show_chart, size: 18, color: qb.q(.78)),
+                Icon(Icons.show_chart, size: 18, color: qb.withValues(alpha: .78)),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -81,11 +81,11 @@ class _BenchmarkResultsCardState extends ConsumerState<_BenchmarkResultsCard> {
                 totalDecodeColor: totalDecodeColor,
                 decodePerBatchColor: decodePerBatchColor,
                 prefillColor: prefillColor,
-                hoverBandColor: qb.q(.08),
-                tooltipBackgroundColor: qb.q(.9),
+                hoverBandColor: qb.withValues(alpha: .08),
+                tooltipBackgroundColor: qb.withValues(alpha: .9),
                 tooltipTextColor: appTheme.settingBg,
-                gridColor: qb.q(.12),
-                labelColor: qb.q(.62),
+                gridColor: qb.withValues(alpha: .12),
+                labelColor: qb.withValues(alpha: .62),
                 labelStyle: theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12),
                 hoveredBatchSize: hoveredBatchSize,
                 hoveredBatchLabel: hoveredBatchSize == null ? null : s.benchmark_batch(hoveredBatchSize),
@@ -103,7 +103,7 @@ class _BenchmarkResultsCardState extends ConsumerState<_BenchmarkResultsCard> {
             ),
             Container(
               margin: const .symmetric(vertical: 10),
-              decoration: BoxDecoration(color: qb.q(.12)),
+              decoration: BoxDecoration(color: qb.withValues(alpha: .12)),
               height: .5,
             ),
             _InlineInfoRow(label: s.benchmark_best_decode, value: "${bestDecode.toStringAsFixed(2)} t/s"),
@@ -219,9 +219,9 @@ class _BenchmarkResultRows extends ConsumerWidget {
                   padding: const .symmetric(horizontal: 8, vertical: 6),
                   margin: const .symmetric(vertical: 1),
                   decoration: BoxDecoration(
-                    color: hovered ? qb.q(.08) : Colors.transparent,
+                    color: hovered ? qb.withValues(alpha: .08) : Colors.transparent,
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: hovered ? qb.q(.22) : Colors.transparent, width: .5),
+                    border: Border.all(color: hovered ? qb.withValues(alpha: .22) : Colors.transparent, width: .5),
                   ),
                   child: Wrap(
                     spacing: 12,
