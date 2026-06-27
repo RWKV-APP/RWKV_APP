@@ -44,6 +44,7 @@ class ThinkingModeButton extends ConsumerWidget {
     final InteractionVisualState interactionState = switch (thinkingMode) {
       .none => canEnable ? .idleInteractive : .unavailable,
       .fast => canEnable ? .available : .unavailable,
+      .fastWithSpacePrefix => canEnable ? .available : .unavailable,
       .lighting => canEnable ? .available : .unavailable,
       .free => canEnable ? .enabled : .unavailable,
       .en => canEnable ? .enabled : .unavailable,
@@ -66,6 +67,7 @@ class ThinkingModeButton extends ConsumerWidget {
       .free => s.thinking_mode_high(""),
       .preferChinese => s.thinking_mode_high(""),
       .fast => s.think_button_mode_fast(""),
+      .fastWithSpacePrefix => s.think_button_mode_fast(""),
       .en => s.think_button_mode_en(""),
       .enShort => s.think_button_mode_en_short(""),
       .enLong => s.think_button_mode_en_long(""),

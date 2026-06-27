@@ -476,11 +476,16 @@ void main() {
       expect(ThinkingMode.none.albatrossThinkType, isNull);
       expect(ThinkingMode.lighting.albatrossThinkType, 'fast');
       expect(ThinkingMode.fast.albatrossThinkType, 'fast');
+      expect(ThinkingMode.fastWithSpacePrefix.albatrossThinkType, 'fast');
       expect(ThinkingMode.free.albatrossThinkType, 'free');
       expect(ThinkingMode.preferChinese.albatrossThinkType, 'preferChinese');
       expect(ThinkingMode.en.albatrossThinkType, 'en');
       expect(ThinkingMode.enShort.albatrossThinkType, 'enShort');
       expect(ThinkingMode.enLong.albatrossThinkType, 'enLong');
+    });
+
+    test('treats the space prefixed fast mode as thinking content', () {
+      expect(ThinkingMode.fastWithSpacePrefix.hasThinkTag, isTrue);
     });
   });
 

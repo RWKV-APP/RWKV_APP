@@ -244,11 +244,11 @@ Message(
 }
 
 extension MessageX on Message {
-  bool get isReasoning => content.startsWith("<think>");
+  bool get isReasoning => content.trimLeft().startsWith("<think>");
 
   int get createAtInMS => id;
 
-  bool get isCotFormat => content.startsWith("<think>");
+  bool get isCotFormat => content.trimLeft().startsWith("<think>");
 
   bool get containsCotEndMark => content.contains("</think>");
 
@@ -307,7 +307,9 @@ extension MessageX on Message {
     final endIndex = content.indexOf(thinkEndTag);
     if (endIndex < 0) return null;
 
-    final thinkingContent = content.substring(thinkStartTagLength, endIndex);
+    final trimmedContent = content.trimLeft();
+    final leadingWhitespaceLength = content.length - trimmedContent.length;
+    final thinkingContent = content.substring(leadingWhitespaceLength + thinkStartTagLength, endIndex);
     if (thinkingContent.trim().isNotEmpty) return null;
 
     final resultStart = endIndex + thinkEndTag.length;
@@ -326,10 +328,15 @@ extension MessageX on Message {
   (String cotContent, String cotResult) _getCotContentAndResult({bool appendThinkTagInThinkingTagIsEmpty = false}) {
     if (!isCotFormat) return ("", "");
 
-    if (!containsCotEndMark) return (content.substring(7), "");
+    const thinkStartTagLength = 7;
+    final trimmedContent = content.trimLeft();
+    final leadingWhitespaceLength = content.length - trimmedContent.length;
+    final thinkContentStartIndex = leadingWhitespaceLength + thinkStartTagLength;
+
+    if (!containsCotEndMark) return (content.substring(thinkContentStartIndex), "");
 
     final endIndex = content.indexOf("</think>");
-    final thinkingContent = content.substring(7, endIndex);
+    final thinkingContent = content.substring(thinkContentStartIndex, endIndex);
 
     String result = "";
     if (endIndex + 9 < content.length) {

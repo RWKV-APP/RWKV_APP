@@ -161,7 +161,7 @@ extension $RWKVModel on _RWKVModel {
     qq;
     P.rwkvGeneration.prefillSpeed.q = 0;
     P.rwkvGeneration.decodeSpeed.q = 0;
-    P.rwkvParams._thinkingMode.q = enableReasoning ? .free : .none;
+    P.rwkvParams._thinkingMode.q = enableReasoning ? .fastWithSpacePrefix : .none;
 
     final tokenizerPath = await fromAssetsToTemp("assets/config/chat/rwkv_vocab_v20230424.txt");
 

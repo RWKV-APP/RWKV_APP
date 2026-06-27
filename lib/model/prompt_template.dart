@@ -109,6 +109,8 @@ class PromptTemplate {
         return thinkingLighting.isNotEmpty ? thinkingLighting : thinking_mode.ThinkingMode.lighting.header;
       case .fast:
         return thinkingFast.isNotEmpty ? thinkingFast : thinking_mode.ThinkingMode.fast.header;
+      case .fastWithSpacePrefix:
+        return thinking_mode.ThinkingMode.fastWithSpacePrefix.header;
       case .free:
         return thinkingFree.isNotEmpty ? thinkingFree : thinking_mode.ThinkingMode.free.header;
       case .preferChinese:

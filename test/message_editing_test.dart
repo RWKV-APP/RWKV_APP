@@ -15,6 +15,18 @@ void main() {
       expect(message.getContentForEditing(), 'answer');
     });
 
+    test('returns visible answer for quick thinking content with leading space', () {
+      const message = Message(
+        id: 4,
+        content: ' <think>\n</think>\nanswer',
+        isMine: false,
+        paused: false,
+        runningMode: '.Fast',
+      );
+
+      expect(message.getContentForEditing(), 'answer');
+    });
+
     test('strips legacy fast thinking tail from assistant content', () {
       const message = Message(
         id: 2,

@@ -21,6 +21,13 @@ enum ThinkingMode {
     forceReasoning: false,
   ),
 
+  /// 给新rwkv-vl（260625）模型用，会被设置成"spaceAfterRoles=False"但是Assistant:后面又需要空格
+  fastWithSpacePrefix(
+    header: ' <think>\n</think>',
+    userMsgFooter: '',
+    forceReasoning: false,
+  ),
+
   /// 完全自由推理：`<think` 开头，强制推理
   free(
     header: '<think',
@@ -66,12 +73,13 @@ enum ThinkingMode {
   final String userMsgFooter;
   final bool forceReasoning;
 
-  bool get hasThinkTag => header.startsWith('<think');
+  bool get hasThinkTag => header.trimLeft().startsWith('<think');
 
   String? get albatrossThinkType => switch (this) {
     .none => null,
     .lighting => 'fast',
     .fast => 'fast',
+    .fastWithSpacePrefix => 'fast',
     .free => 'free',
     .preferChinese => 'preferChinese',
     .en => 'en',
@@ -101,6 +109,7 @@ enum ThinkingMode {
         .none => 'None',
         .lighting => 'Lighting',
         .fast => 'Fast',
+        .fastWithSpacePrefix => 'Fast',
         .free => 'Free',
         .preferChinese => 'PreferChinese',
         .en => 'En',

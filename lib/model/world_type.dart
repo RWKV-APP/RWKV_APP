@@ -25,6 +25,7 @@ enum WorldType {
 
   bool get isReasoning => switch (this) {
     reasoningQA => true,
+    modrwkvV3 => true,
     _ => false,
   };
 

@@ -424,7 +424,8 @@ extension $ChatInputSend on _Chat {
     List<String> history = withHistory ? _history(excludedMessageId: receiveId) : <String>[];
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
     final inSee = P.app.pageKey.q == .see;
-    final forceChinese = inSee && message.containsChinese;
+    // final forceChinese = inSee && message.containsChinese;
+    final forceChinese = false;
 
     if (!inSee) {
       final List<ResponseStyleRoute> routes = responseStyle.q.enabledRoutesInOrder;

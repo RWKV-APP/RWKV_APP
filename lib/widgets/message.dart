@@ -696,7 +696,9 @@ _ThinkingData _resolveThinkingData({
   required String finalContent,
   required WorldType? worldType,
 }) {
-  final reasoning = finalContent.startsWith("<think>") && !msg.isSensitive;
+  final trimmedContent = finalContent.trimLeft();
+  final leadingWhitespaceLength = finalContent.length - trimmedContent.length;
+  final reasoning = trimmedContent.startsWith("<think>") && !msg.isSensitive;
   if (!reasoning) {
     return const _ThinkingData(
       reasoning: false,
@@ -708,9 +710,10 @@ _ThinkingData _resolveThinkingData({
   const thinkStartTagLength = 7;
   const thinkEndTagLength = 8;
   final endIndex = finalContent.indexOf("</think>");
+  final thinkContentStartIndex = leadingWhitespaceLength + thinkStartTagLength;
 
   if (endIndex < 0) {
-    final cotContent = finalContent.substring(thinkStartTagLength);
+    final cotContent = finalContent.substring(thinkContentStartIndex);
     return _ThinkingData(
       reasoning: true,
       cotContent: cotContent,
@@ -718,7 +721,7 @@ _ThinkingData _resolveThinkingData({
     );
   }
 
-  final cotContent = finalContent.substring(thinkStartTagLength, endIndex);
+  final cotContent = finalContent.substring(thinkContentStartIndex, endIndex);
   if (endIndex + thinkEndTagLength >= finalContent.length) {
     return _ThinkingData(
       reasoning: true,
