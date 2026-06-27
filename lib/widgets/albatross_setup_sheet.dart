@@ -124,7 +124,7 @@ class _AlbatrossSetupSheetState extends ConsumerState<AlbatrossSetupSheet> {
               _PathRow(label: s.albatross_tokenizer, value: tokenizerPath),
               if (lastError.isNotEmpty) ...[
                 const SizedBox(height: 8),
-                Text(lastError, style: TS(c: theme.colorScheme.error, s: 12)),
+                Text(lastError, style: TextStyle(color: theme.colorScheme.error, fontSize: 12)),
               ],
               const SizedBox(height: 12),
               Wrap(
@@ -158,7 +158,7 @@ class _AlbatrossSetupSheetState extends ConsumerState<AlbatrossSetupSheet> {
               Text(
                 running ? s.albatross_connected : s.albatross_not_connected,
                 textAlign: .center,
-                style: TS(c: qb.q(.65), s: 12),
+                style: TextStyle(color: qb.q(.65), fontSize: 12),
               ),
             ],
           ),
@@ -189,7 +189,7 @@ class _PathRow extends StatelessWidget {
             width: 84,
             child: Text(
               label,
-              style: TS(c: theme.colorScheme.onSurface.q(.7), s: 12, w: .w500),
+              style: TextStyle(color: theme.colorScheme.onSurface.q(.7), fontSize: 12, fontWeight: .w500),
             ),
           ),
           Expanded(
@@ -197,7 +197,7 @@ class _PathRow extends StatelessWidget {
               display,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TS(c: theme.colorScheme.onSurface.q(value.isEmpty ? .45 : .82), s: 12),
+              style: TextStyle(color: theme.colorScheme.onSurface.q(value.isEmpty ? .45 : .82), fontSize: 12),
             ),
           ),
         ],

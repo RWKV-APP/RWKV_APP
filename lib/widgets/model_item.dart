@@ -213,12 +213,12 @@ class ModelItem extends ConsumerWidget {
                           child: showLoadingProgress
                               ? LoadingProgressButtonContent(
                                   progress: modelLoadingProgress,
-                                  textStyle: TS(c: qw),
+                                  textStyle: TextStyle(color: qw),
                                   indicatorColor: qw,
                                 )
                               : Text(
                                   startTitle,
-                                  style: TS(c: qw),
+                                  style: TextStyle(color: qw),
                                 ),
                         ),
                       ),
@@ -232,7 +232,7 @@ class ModelItem extends ConsumerWidget {
                           borderRadius: .circular(startButtonRadius),
                         ),
                         padding: const .all(8),
-                        child: Text(loadButtonTextShowLoad ? S.current.loaded : s.chatting, style: TS(c: qw)),
+                        child: Text(loadButtonTextShowLoad ? S.current.loaded : s.chatting, style: TextStyle(color: qw)),
                       ),
                     ),
                   if (!isCurrentModel && showDelete) const SizedBox(width: 8),
@@ -255,7 +255,7 @@ class ModelItem extends ConsumerWidget {
                 child: Text(
                   S.current.model_item_ios18_weight_hint,
                   textAlign: TextAlign.center,
-                  style: const TS(c: kCY, s: 13, w: .w600, height: 1.3),
+                  style: const TextStyle(color: kCY, fontSize: 13, fontWeight: .w600, height: 1.3),
                 ),
               ),
             ),
@@ -408,11 +408,11 @@ class _FileKeyItem extends ConsumerWidget {
           children: [
             Text(
               fileInfo.name,
-              style: const TS(w: .w600),
+              style: const TextStyle(fontWeight: .w600),
             ),
             Text(
               formatBytes(fileSize),
-              style: TS(c: qb.q(.7), w: .w500),
+              style: TextStyle(color: qb.q(.7), fontWeight: .w500),
             ),
           ],
         ),

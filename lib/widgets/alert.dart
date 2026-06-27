@@ -292,7 +292,7 @@ class _AlertHud extends ConsumerWidget {
                       child: Align(
                         alignment: alignment,
                         child: C(
-                          padding: const EI.a(12),
+                          padding: const EdgeInsets.all(12),
                           decoration: BD(
                             color: isLight ? kW : kB,
                             borderRadius: 10.r,
@@ -318,9 +318,9 @@ class _AlertHud extends ConsumerWidget {
                                 constraints: BoxConstraints(
                                   maxWidth: screenWidth * 0.85 - 16 - iconHorizontalDistance - borderWidth * 2,
                                 ),
-                                child: T(
+                                child: Text(
                                   message,
-                                  s: TS(c: color, w: .w600),
+                                  style: TextStyle(color: color, fontWeight: .w600),
                                   maxLines: 10,
                                   overflow: TextOverflow.ellipsis,
                                 ),

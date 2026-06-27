@@ -65,7 +65,7 @@ class LayoutDebugger extends ConsumerWidget {
             bottom: 0,
             child: Material(
               color: qb.q(.5),
-              textStyle: TS(c: qw, s: 8),
+              textStyle: TextStyle(color: qw, fontSize: 8),
               child: Container(
                 child: debugWidget!,
               ),

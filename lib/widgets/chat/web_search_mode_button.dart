@@ -100,7 +100,7 @@ class WebSearchModeButton extends ConsumerWidget {
                     const SizedBox(width: 4),
                     Text(
                       label,
-                      style: TS(c: actionColor, s: fontSize, height: 1, w: .w500),
+                      style: TextStyle(color: actionColor, fontSize: fontSize, height: 1, fontWeight: .w500),
                       strutStyle: StrutStyle(
                         fontSize: fontSize,
                         height: 1,

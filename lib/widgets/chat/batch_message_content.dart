@@ -935,7 +935,7 @@ class _MarkdownBody extends ConsumerWidget {
                 children: [
                   Text(
                     streaming ? s.thinking : s.thought_result,
-                    style: TS(c: thoughtLabelColor, w: .w600),
+                    style: TextStyle(color: thoughtLabelColor, fontWeight: .w600),
                   ),
                   cotContentExpanded
                       ? Icon(Icons.expand_less, color: thoughtLabelColor)
@@ -990,7 +990,7 @@ class _MarkdownBody extends ConsumerWidget {
               children: [
                 Text(
                   streaming ? s.thinking : s.thought_result,
-                  style: TS(c: thoughtLabelColor, w: .w600),
+                  style: TextStyle(color: thoughtLabelColor, fontWeight: .w600),
                 ),
                 cotContentExpanded ? Icon(Icons.expand_less, color: thoughtLabelColor) : Icon(Icons.expand_more, color: thoughtLabelColor),
               ],

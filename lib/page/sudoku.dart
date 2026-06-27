@@ -334,7 +334,7 @@ class _UI extends ConsumerWidget {
       Text(
         Config.appTitle,
         textAlign: TextAlign.center,
-        style: TS(s: 14 * magnification, w: .w500),
+        style: TextStyle(fontSize: 14 * magnification, fontWeight: .w500),
       ),
       Container(
         height: 1,
@@ -566,20 +566,20 @@ class _TokensInfo extends ConsumerWidget {
               Text(
                 "$tokenCount ${tokenCount > 1 ? "tokens" : "token"}",
                 textAlign: TextAlign.center,
-                style: const TS(s: 10, c: Color(0xFF888888)),
+                style: const TextStyle(fontSize: 10, color: Color(0xFF888888)),
               ),
               const SizedBox(width: 4, height: 4),
               Text(
                 "${tokensPerSecond.toStringAsFixed(2)} tokens/s",
                 textAlign: TextAlign.center,
-                style: const TS(s: 10, c: Color(0xFF888888)),
+                style: const TextStyle(fontSize: 10, color: Color(0xFF888888)),
               ),
               if (difficulty != null) ...[
                 const SizedBox(width: 4, height: 4),
                 Text(
                   "Unknown grid count: $difficulty",
                   textAlign: TextAlign.center,
-                  style: const TS(s: 10, c: Color(0xFF888888)),
+                  style: const TextStyle(fontSize: 10, color: Color(0xFF888888)),
                 ),
               ],
             ],
@@ -589,12 +589,12 @@ class _TokensInfo extends ConsumerWidget {
               Text(
                 "$tokenCount ${tokenCount > 1 ? "tokens" : "token"}",
                 textAlign: TextAlign.center,
-                style: const TS(s: 10, c: Color(0xFF888888)),
+                style: const TextStyle(fontSize: 10, color: Color(0xFF888888)),
               ),
               Text(
                 "${tokensPerSecond.toStringAsFixed(2)} tokens/s",
                 textAlign: TextAlign.center,
-                style: const TS(s: 10, c: Color(0xFF888888)),
+                style: const TextStyle(fontSize: 10, color: Color(0xFF888888)),
               ),
             ],
           );
@@ -662,10 +662,10 @@ class _Grid extends ConsumerWidget {
             return Center(
               child: Text(
                 value != 0 ? value.toString() : "",
-                style: TS(
-                  c: kB,
-                  s: textSize,
-                  w: isDesktop ? .w600 : null,
+                style: TextStyle(
+                  color: kB,
+                  fontSize: textSize,
+                  fontWeight: isDesktop ? .w600 : null,
                 ),
               ),
             );
@@ -702,12 +702,12 @@ class _Terminal extends ConsumerWidget {
           itemBuilder: (context, index) {
             return Text(
               logs[index],
-              style: TS(
-                ff: monospaceFF,
-                s: isDesktop ? 16 : 10,
+              style: TextStyle(
+                fontFamily: monospaceFF,
+                fontSize: isDesktop ? 16 : 10,
                 letterSpacing: 0,
                 height: 1.2,
-                c: kW.q(0.8),
+                color: kW.q(0.8),
               ),
             );
           },

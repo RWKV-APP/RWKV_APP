@@ -133,7 +133,7 @@ class _TTSVoiceSourceTypePanel extends ConsumerWidget {
               children: <Widget>[
                 Text(
                   s.tts_voice_source_sheet_subtitle,
-                  style: TS(c: qb.q(.7), s: 12, w: .w500),
+                  style: TextStyle(color: qb.q(.7), fontSize: 12, fontWeight: .w500),
                 ),
                 const SizedBox(height: 8),
                 Container(height: .5, color: qb.q(.15)),
@@ -200,7 +200,7 @@ class _TTSVoiceSourceTypePanelBar extends ConsumerWidget {
           Expanded(
             child: Text(
               s.tts_voice_source_sheet_title,
-              style: const TS(s: 18, w: .w600),
+              style: const TextStyle(fontSize: 18, fontWeight: .w600),
             ),
           ),
           IconButton(
@@ -266,14 +266,14 @@ class _TTSVoiceSourceOptionItem extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       title,
-                      style: TS(c: onSurface.q(.92), w: .w600),
+                      style: TextStyle(color: onSurface.q(.92), fontWeight: .w600),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
                       maxLines: 2,
                       overflow: .ellipsis,
-                      style: TS(c: onSurface.q(.56), s: 12),
+                      style: TextStyle(color: onSurface.q(.56), fontSize: 12),
                     ),
                   ],
                 ),
@@ -309,7 +309,7 @@ class _TTSPanelBar extends ConsumerWidget {
           Expanded(
             child: Text(
               title,
-              style: const TS(s: 18, w: .w600),
+              style: const TextStyle(fontSize: 18, fontWeight: .w600),
             ),
           ),
           IconButton(
@@ -428,7 +428,10 @@ class _TTSPrebuiltVoicesPanel extends ConsumerWidget {
                                   Expanded(
                                     child: Text(
                                       display,
-                                      style: TS(c: selected ? primary : theme.colorScheme.onSurface.q(.85), w: selected ? .w600 : .w400),
+                                      style: TextStyle(
+                                        color: selected ? primary : theme.colorScheme.onSurface.q(.85),
+                                        fontWeight: selected ? .w600 : .w400,
+                                      ),
                                     ),
                                   ),
                                   if (selected)
@@ -585,7 +588,7 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
               children: <Widget>[
                 Text(
                   s.you_can_record_your_voice_and_let_rwkv_to_copy_it,
-                  style: TS(c: qb.q(.85), w: .w500),
+                  style: TextStyle(color: qb.q(.85), fontWeight: .w500),
                 ),
                 const SizedBox(height: 32),
                 Center(
@@ -629,7 +632,7 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
                 Text(
                   s.hold_to_record_release_to_send,
                   textAlign: TextAlign.center,
-                  style: TS(c: qb.q(.75), s: 13),
+                  style: TextStyle(color: qb.q(.75), fontSize: 13),
                 ),
               ],
             ),

@@ -209,7 +209,7 @@ class _PanelBarState extends ConsumerState<_PanelBar> {
           Expanded(
             child: Text(
               s.chat_please_select_a_model,
-              style: const TS(s: 18, w: .w600),
+              style: const TextStyle(fontSize: 18, fontWeight: .w600),
             ),
           ),
           const IconButton(
@@ -236,7 +236,7 @@ class _SelectionHint extends ConsumerWidget {
     }
     return Text(
       "👉${s.str_model_selection_dialog_hint}👈",
-      style: TS(c: qb.q(.7), s: 12, w: .w500),
+      style: TextStyle(color: qb.q(.7), fontSize: 12, fontWeight: .w500),
     );
   }
 }
@@ -495,7 +495,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                 Expanded(
                   child: Text(
                     hasValidSoc ? s.npu_not_supported_title(currentSocName) : s.npu_not_supported_title(frontendSocName ?? "Unknown"),
-                    style: TS(c: qb.q(.9), s: 14, w: .w600),
+                    style: TextStyle(color: qb.q(.9), fontSize: 14, fontWeight: .w600),
                   ),
                 ),
               ],
@@ -507,7 +507,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                   children: [
                     Text(
                       S.current.your_device,
-                      style: TS(c: qb.q(.7), s: 12),
+                      style: TextStyle(color: qb.q(.7), fontSize: 12),
                     ),
                     const SizedBox(width: 6),
                     Container(
@@ -531,10 +531,10 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                           const SizedBox(width: 4),
                           Text(
                             currentSocName,
-                            style: TS(
-                              c: qb.q(.9),
-                              s: 11,
-                              w: .w600,
+                            style: TextStyle(
+                              color: qb.q(.9),
+                              fontSize: 11,
+                              fontWeight: .w600,
                             ),
                           ),
                         ],
@@ -546,7 +546,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
               ],
               Text(
                 S.current.we_support_npu_socs,
-                style: TS(c: qb.q(.7), s: 12),
+                style: TextStyle(color: qb.q(.7), fontSize: 12),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -576,10 +576,10 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                         ),
                         Text(
                           chip,
-                          style: TS(
-                            c: primary,
-                            s: 11,
-                            w: .w500,
+                          style: TextStyle(
+                            color: primary,
+                            fontSize: 11,
+                            fontWeight: .w500,
                           ),
                         ),
                       ],
@@ -590,7 +590,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
               const SizedBox(height: 8),
               Text(
                 s.adapting_more_inference_chips,
-                style: TS(c: qb.q(.7), s: 12),
+                style: TextStyle(color: qb.q(.7), fontSize: 12),
               ),
             ],
           ],
@@ -617,7 +617,7 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
         const SizedBox(height: 4),
         Text(
           S.current.download_server_,
-          style: TS(c: qb.q(.7), s: 12, w: .w600),
+          style: TextStyle(color: qb.q(.7), fontSize: 12, fontWeight: .w600),
         ),
         const SizedBox(height: 4),
         Wrap(
@@ -649,7 +649,7 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           downloadSourceName,
-                          style: TS(c: e == currentSource ? qw : qb.q(.7), s: 14),
+                          style: TextStyle(color: e == currentSource ? qw : qb.q(.7), fontSize: 14),
                         ),
                       ),
                     ),
@@ -750,7 +750,7 @@ class _LocalPthFileItem extends ConsumerWidget {
                   Text(fileInfo.name, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .w600)),
                   Text(
                     formatBytes(fileInfo.fileSize),
-                    style: TS(c: qb.q(.7), w: .w500),
+                    style: TextStyle(color: qb.q(.7), fontWeight: .w500),
                   ),
                 ],
               ),
@@ -777,10 +777,10 @@ class _LocalPthFileItem extends ConsumerWidget {
               child: showLoadingProgress
                   ? LoadingProgressButtonContent(
                       progress: modelLoadingProgress,
-                      textStyle: TS(c: qw),
+                      textStyle: TextStyle(color: qw),
                       indicatorColor: qw,
                     )
-                  : Text(s.start_to_chat, style: TS(c: qw)),
+                  : Text(s.start_to_chat, style: TextStyle(color: qw)),
             ),
           ),
         if (isCurrent)
@@ -789,7 +789,7 @@ class _LocalPthFileItem extends ConsumerWidget {
             child: Container(
               decoration: BoxDecoration(color: kG.q(.5), borderRadius: 4.r),
               padding: const .all(8),
-              child: Text(s.chatting, style: TS(c: qw)),
+              child: Text(s.chatting, style: TextStyle(color: qw)),
             ),
           ),
         2.w,
@@ -810,8 +810,8 @@ class _ModelsInConfigHeader extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: .start,
             children: [
-              T(S.current.prebuilt_models_intro),
-              T((effectiveDir).trim()),
+              Text(S.current.prebuilt_models_intro),
+              Text((effectiveDir).trim()),
             ],
           ),
         ),
@@ -835,8 +835,8 @@ class _LocalPthFolderHeader extends ConsumerWidget {
     final folders = ref.watch(P.pth.folders);
     return Row(
       children: [
-        Expanded(child: T(S.current.below_are_your_local_folders)),
-        if (folders.isNotEmpty) T(S.current.click_plus_to_add_more_folders),
+        Expanded(child: Text(S.current.below_are_your_local_folders)),
+        if (folders.isNotEmpty) Text(S.current.click_plus_to_add_more_folders),
         if (folders.isNotEmpty)
           IconButton(onPressed: P.pth.onAddFolderClicked, icon: const Icon(Icons.add), tooltip: S.current.add_local_folder),
       ],
@@ -898,7 +898,7 @@ class _LocalPthDropZoneState extends ConsumerState<_LocalPthDropZone> {
                     Expanded(
                       child: Text(
                         S.current.drag_local_model_file_to_add_folder,
-                        style: TS(c: qb.q(.82), s: 12, w: .w500),
+                        style: TextStyle(color: qb.q(.82), fontSize: 12, fontWeight: .w500),
                       ),
                     ),
                   ],
@@ -933,7 +933,7 @@ class _LocalPthDropZoneState extends ConsumerState<_LocalPthDropZone> {
                           const SizedBox(width: 8),
                           Text(
                             S.current.drag_local_model_file_to_add_folder,
-                            style: TS(c: qb.q(.9), s: 13, w: .w600),
+                            style: TextStyle(color: qb.q(.9), fontSize: 13, fontWeight: .w600),
                           ),
                         ],
                       ),
@@ -968,7 +968,7 @@ class _LocalPthEmpty extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: T(
+                child: Text(
                   S.current.no_local_folders,
                   textAlign: .center,
                 ),
@@ -981,7 +981,7 @@ class _LocalPthEmpty extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: T(
+                child: Text(
                   S.current.click_plus_add_local_folder,
                   textAlign: .center,
                 ),
@@ -1032,9 +1032,9 @@ class _LocalPthFolder extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: .start,
                   children: [
-                    T(
+                    Text(
                       S.current.local_folder_name(folderName),
-                      s: TS(c: qb.q(.8), w: .w500),
+                      style: TextStyle(color: qb.q(.8), fontWeight: .w500),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -1065,7 +1065,7 @@ class _LocalPthFolder extends ConsumerWidget {
           if (state == FolderState.loading) ...[
             Row(
               children: [
-                T(S.current.scanning_folder_for_pth, s: const TS(c: kCG)),
+                Text(S.current.scanning_folder_for_pth, style: const TextStyle(color: kCG)),
                 const SizedBox(width: 8),
                 const SizedBox(
                   width: 20,
@@ -1080,15 +1080,15 @@ class _LocalPthFolder extends ConsumerWidget {
             const SizedBox(height: 8),
           ],
           if (files.isEmpty && state == FolderState.loaded) ...[
-            T(S.current.current_folder_has_no_local_models),
+            Text(S.current.current_folder_has_no_local_models),
             const SizedBox(height: 8),
           ],
           if (state == FolderState.notfound) ...[
-            T(S.current.folder_not_found_on_device),
+            Text(S.current.folder_not_found_on_device),
             const SizedBox(height: 8),
           ],
           if (state == FolderState.restricted) ...[
-            T(S.current.folder_not_accessible_check_permission),
+            Text(S.current.folder_not_accessible_check_permission),
             const SizedBox(height: 8),
           ],
           if (files.isNotEmpty)

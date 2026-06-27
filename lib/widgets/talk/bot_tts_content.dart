@@ -171,7 +171,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   const SizedBox(width: 8),
                   Text(
                     s.generating + "",
-                    style: TS(c: qb.q(.8), w: .w500),
+                    style: TextStyle(color: qb.q(.8), fontWeight: .w500),
                   ),
                 ],
               ),
@@ -200,7 +200,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   const SizedBox(width: 8),
                   Text(
                     (length / 1000).toStringAsFixed(0) + "s",
-                    style: TS(c: qb.q(.8), w: .w600),
+                    style: TextStyle(color: qb.q(.8), fontWeight: .w600),
                   ),
                   GestureDetector(
                     onTap: _onSharePressed,

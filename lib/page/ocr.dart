@@ -398,7 +398,7 @@ class _Guide extends ConsumerWidget {
                 child: Center(
                   child: Text(
                     s.camera,
-                    style: TS(c: qw, s: 16, w: .w600),
+                    style: TextStyle(color: qw, fontSize: 16, fontWeight: .w600),
                     textAlign: .center,
                   ),
                 ),
@@ -418,7 +418,7 @@ class _Guide extends ConsumerWidget {
                 child: Center(
                   child: Text(
                     s.gallery,
-                    style: TS(c: qw, s: 16, w: .w600),
+                    style: TextStyle(color: qw, fontSize: 16, fontWeight: .w600),
                     textAlign: .center,
                   ),
                 ),

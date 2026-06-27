@@ -95,11 +95,11 @@ class AskQuestionButton extends ConsumerWidget {
                   const SizedBox(width: 4),
                   Text(
                     s.ask,
-                    style: TS(
-                      c: textColor,
-                      s: fontSize,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: fontSize,
                       height: 1,
-                      w: .w500,
+                      fontWeight: .w500,
                     ),
                     strutStyle: StrutStyle(
                       fontSize: fontSize,

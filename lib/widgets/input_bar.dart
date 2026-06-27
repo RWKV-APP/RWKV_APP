@@ -120,7 +120,7 @@ class _WaitingMsg extends ConsumerWidget {
         children: [
           Text(
             s.message_in_queue(count),
-            style: const TS(s: 12),
+            style: const TextStyle(fontSize: 12),
           ),
           Container(
             decoration: BoxDecoration(color: kC.q(.1), borderRadius: 12.r),
@@ -132,7 +132,7 @@ class _WaitingMsg extends ConsumerWidget {
                 if (waitingImagePath != null) const SizedBox(width: 4),
                 Text(
                   waitingText,
-                  style: const TS(s: 12),
+                  style: const TextStyle(fontSize: 12),
                 ),
               ],
             ),

@@ -151,7 +151,7 @@ class _ChatAppBar extends ConsumerWidget {
                         ),
                         Padding(
                           padding: const .only(bottom: 3, left: 1),
-                          child: Text(' $version', style: const TS(s: 8, w: .bold)),
+                          child: Text(' $version', style: const TextStyle(fontSize: 8, fontWeight: .bold)),
                         ),
                       ],
                     ),
@@ -258,7 +258,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
             value: -1,
             enabled: false,
             height: 20,
-            child: Text(Config.appTitle + " " + version, style: const TS(s: 10)),
+            child: Text(Config.appTitle + " " + version, style: const TextStyle(fontSize: 10)),
           ),
           PopupMenuItem(
             value: 1,
@@ -379,7 +379,7 @@ class _SelectMessageChatAppBar extends ConsumerWidget {
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      title: Text(sprintf(s.x_message_selected, [selected.length]), style: const TS(s: 18)),
+      title: Text(sprintf(s.x_message_selected, [selected.length]), style: const TextStyle(fontSize: 18)),
       leading: _SelectAllRow(
         all: all,
         onAllTap: () {

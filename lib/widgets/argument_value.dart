@@ -71,9 +71,9 @@ class ArgumentValue extends ConsumerWidget {
               child: showTitle
                   ? Text(
                       argument.name.codeToName,
-                      style: const TS(
-                        s: 14,
-                        w: .w500,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: .w500,
                       ),
                     )
                   : const SizedBox.shrink(),
@@ -81,7 +81,7 @@ class ArgumentValue extends ConsumerWidget {
             if (showValue)
               Text(
                 value.toStringAsFixed(argument.fixedDecimals),
-                style: const TS(s: 14, w: .w600),
+                style: const TextStyle(fontSize: 14, fontWeight: .w600),
               ),
             padding.right.w,
           ],
@@ -92,7 +92,7 @@ class ArgumentValue extends ConsumerWidget {
             padding.left.w,
             Text(
               argument.min.toStringAsFixed(argument.fixedDecimals),
-              style: TS(s: 12, c: qb.q(.5)),
+              style: TextStyle(fontSize: 12, color: qb.q(.5)),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -108,7 +108,7 @@ class ArgumentValue extends ConsumerWidget {
             const SizedBox(width: 14),
             Text(
               argument.max.toStringAsFixed(argument.fixedDecimals),
-              style: TS(s: 12, c: qb.q(.5)),
+              style: TextStyle(fontSize: 12, color: qb.q(.5)),
             ),
             padding.right.w,
           ],

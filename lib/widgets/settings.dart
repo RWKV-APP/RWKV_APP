@@ -120,7 +120,7 @@ class Settings extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       Config.appTitle,
-                      style: TS(s: 24, w: .w500),
+                      style: TextStyle(fontSize: 24, fontWeight: .w500),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -134,8 +134,8 @@ class Settings extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: .center,
                       children: [
-                        Text(version, style: const TS(s: 12)),
-                        Text(" ($buildNumber)", style: const TS(s: 12)),
+                        Text(version, style: const TextStyle(fontSize: 12)),
+                        Text(" ($buildNumber)", style: const TextStyle(fontSize: 12)),
                       ],
                     ),
                     if (shortCommitId.isNotEmpty)
@@ -150,10 +150,10 @@ class Settings extends ConsumerWidget {
                               decoration: const BD(
                                 color: kC,
                               ),
-                              padding: const EI.a(4),
+                              padding: const EdgeInsets.all(4),
                               child: Text(
                                 s.inference_engine_version(shortCommitId),
-                                style: const TS(s: 12),
+                                style: const TextStyle(fontSize: 12),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -171,7 +171,7 @@ class Settings extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       s.application_settings,
-                      style: TS(w: .w500, c: qb.q(.8), s: 12),
+                      style: TextStyle(fontWeight: .w500, color: qb.q(.8), fontSize: 12),
                     ),
                   ),
                 ],
@@ -229,7 +229,7 @@ class Settings extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       s.join_the_community,
-                      style: TS(w: .w500, c: qb.q(.8), s: 12),
+                      style: TextStyle(fontWeight: .w500, color: qb.q(.8), fontSize: 12),
                     ),
                   ),
                 ],
@@ -276,7 +276,7 @@ class Settings extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       s.about,
-                      style: TS(w: .w500, c: qb.q(.8), s: 12),
+                      style: TextStyle(fontWeight: .w500, color: qb.q(.8), fontSize: 12),
                     ),
                   ),
                 ],

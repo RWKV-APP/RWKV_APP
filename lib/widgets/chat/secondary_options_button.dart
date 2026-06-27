@@ -93,7 +93,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
                         children: [
                           Text(
                             s.prefer,
-                            style: TS(c: textColor, s: fontSize, height: 1),
+                            style: TextStyle(color: textColor, fontSize: fontSize, height: 1),
                             strutStyle: StrutStyle(
                               fontSize: fontSize,
                               height: 1,
@@ -104,7 +104,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
                           const SizedBox(height: 2),
                           Text(
                             s.chinese,
-                            style: TS(c: textColor, s: fontSize, height: 1),
+                            style: TextStyle(color: textColor, fontSize: fontSize, height: 1),
                             strutStyle: StrutStyle(
                               fontSize: fontSize,
                               height: 1,

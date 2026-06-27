@@ -61,7 +61,7 @@ class BranchSwitcher extends ConsumerWidget {
             child: Center(
               child: Text(
                 "${siblingIndex + 1} / $siblingCount",
-                style: TS(c: primary, s: 12, w: .w600),
+                style: TextStyle(color: primary, fontSize: 12, fontWeight: .w600),
               ),
             ),
           ),

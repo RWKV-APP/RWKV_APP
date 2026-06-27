@@ -381,12 +381,12 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                               child: modelLoading
                                   ? LoadingProgressButtonContent(
                                       progress: modelLoadingProgress,
-                                      textStyle: TS(c: qw),
+                                      textStyle: TextStyle(color: qw),
                                       indicatorColor: qw,
                                     )
                                   : Text(
                                       startTitle,
-                                      style: TS(c: qw),
+                                      style: TextStyle(color: qw),
                                     ),
                             ),
                           ),
@@ -400,7 +400,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                               borderRadius: .circular(startButtonRadius),
                             ),
                             padding: const .all(8),
-                            child: Text(s.chatting, style: TS(c: qw)),
+                            child: Text(s.chatting, style: TextStyle(color: qw)),
                           ),
                         ),
                       if (!alreadyStarted) const SizedBox(width: 8),
@@ -501,11 +501,11 @@ class _CollapsedContent extends ConsumerWidget {
           children: [
             Text(
               modelName,
-              style: const TS(w: .w600),
+              style: const TextStyle(fontWeight: .w600),
             ),
             Text(
               formatBytes(totalSize),
-              style: TS(c: qb.q(.7), w: .w500),
+              style: TextStyle(color: qb.q(.7), fontWeight: .w500),
             ),
           ],
         ),
@@ -688,18 +688,18 @@ class _ExpandedFileItem extends ConsumerWidget {
                       children: [
                         Text(
                           fileInfo.name,
-                          style: const TS(
-                            w: .w600,
-                            s: 14,
+                          style: const TextStyle(
+                            fontWeight: .w600,
+                            fontSize: 14,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           formatBytes(fileSize),
-                          style: TS(
-                            c: qb.q(.7),
-                            w: .w500,
-                            s: 12,
+                          style: TextStyle(
+                            color: qb.q(.7),
+                            fontWeight: .w500,
+                            fontSize: 12,
                           ),
                         ),
                       ],

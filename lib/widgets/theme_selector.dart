@@ -151,7 +151,7 @@ class ThemeColorSettingSection extends ConsumerWidget {
               Expanded(
                 child: Text(
                   s.dark_mode_theme,
-                  style: TS(w: .w500, c: qb.q(.8), s: 12),
+                  style: TextStyle(fontWeight: .w500, color: qb.q(.8), fontSize: 12),
                 ),
               ),
             ],
@@ -193,7 +193,7 @@ class ThemeColorSettingSection extends ConsumerWidget {
               Expanded(
                 child: Text(
                   s.thinking_tag_rendering,
-                  style: TS(w: .w500, c: qb.q(.8), s: 12),
+                  style: TextStyle(fontWeight: .w500, color: qb.q(.8), fontSize: 12),
                 ),
               ),
             ],

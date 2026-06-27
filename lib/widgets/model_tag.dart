@@ -160,9 +160,9 @@ class ModelTag extends ConsumerWidget {
               padding: const .symmetric(vertical: 1),
               child: Text(
                 forceUppercase ? opt.displayTagName.toUpperCase() : opt.displayTagName,
-                style: TS(
-                  c: forceTextColor ?? opt.textColor,
-                  w: opt.fontWeight,
+                style: TextStyle(
+                  color: forceTextColor ?? opt.textColor,
+                  fontWeight: opt.fontWeight,
                   height: 1.2,
                 ),
               ),

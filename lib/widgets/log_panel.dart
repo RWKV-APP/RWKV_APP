@@ -79,7 +79,7 @@ class LogPanel extends ConsumerWidget {
                 ? Center(
                     child: Text(
                       S.current.runtime_log_panel,
-                      style: TS(c: qb.q(.5), s: 14),
+                      style: TextStyle(color: qb.q(.5), fontSize: 14),
                     ),
                   )
                 : ListView.builder(
@@ -94,7 +94,7 @@ class LogPanel extends ConsumerWidget {
                     ),
                     itemBuilder: (context, index) {
                       final log = runtimeLog[index];
-                      final textStyle = TS(c: qb.q(.9), s: 12).copyWith(
+                      final textStyle = TextStyle(color: qb.q(.9), fontSize: 12).copyWith(
                         fontFamily: 'monospace',
                         fontFamilyFallback: const ['Menlo', 'Monaco', 'Courier'],
                       );
@@ -122,7 +122,7 @@ class LogPanel extends ConsumerWidget {
                           children: [
                             Row(
                               children: [
-                                Text(log.tag, style: const TS(w: .w700, s: 13)),
+                                Text(log.tag, style: const TextStyle(fontWeight: .w700, fontSize: 13)),
                                 if (log.isPrefill) ...[
                                   const SizedBox(width: 6),
                                   Container(
@@ -131,7 +131,7 @@ class LogPanel extends ConsumerWidget {
                                       borderRadius: .circular(4),
                                     ),
                                     padding: const .symmetric(horizontal: 6, vertical: 2),
-                                    child: const Text('Prefill', style: TS(w: .w700, s: 11)),
+                                    child: const Text('Prefill', style: TextStyle(fontWeight: .w700, fontSize: 11)),
                                   ),
                                 ],
                                 const Spacer(),
@@ -144,7 +144,7 @@ class LogPanel extends ConsumerWidget {
                                     padding: const .symmetric(horizontal: 6, vertical: 2),
                                     child: Text(
                                       log.dateTimeString,
-                                      style: TS(c: qb.q(.85), w: .w600, s: 11),
+                                      style: TextStyle(color: qb.q(.85), fontWeight: .w600, fontSize: 11),
                                     ),
                                   ),
                               ],
@@ -219,7 +219,7 @@ class _LogPanelBar extends ConsumerWidget {
                 const SizedBox(width: 10),
                 Text(
                   S.current.runtime_log_panel,
-                  style: const TS(s: 18, w: .w600),
+                  style: const TextStyle(fontSize: 18, fontWeight: .w600),
                 ),
               ],
             ),

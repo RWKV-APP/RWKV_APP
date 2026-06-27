@@ -483,11 +483,11 @@ class BotMessageBottom extends ConsumerWidget {
                           children: [
                             Text(
                               "${s.prefill} $changingInlinePrefillSpeedText t/s",
-                              style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
+                              style: TextStyle(color: primaryColor.q(.92), fontSize: 10, fontWeight: .w600),
                             ),
                             Text(
                               "${s.decode} $changingInlineDecodeSpeedText t/s",
-                              style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
+                              style: TextStyle(color: primaryColor.q(.92), fontSize: 10, fontWeight: .w600),
                             ),
                           ],
                         ),
@@ -521,10 +521,10 @@ class BotMessageBottom extends ConsumerWidget {
                   maxLines: 1,
                   overflow: .ellipsis,
                   softWrap: false,
-                  style: TS(
-                    c: primaryColor.q(.76),
-                    s: 10,
-                    w: .w600,
+                  style: TextStyle(
+                    color: primaryColor.q(.76),
+                    fontSize: 10,
+                    fontWeight: .w600,
                   ),
                   textAlign: .left,
                 ),
@@ -596,7 +596,7 @@ class BotMessageBottom extends ConsumerWidget {
                         ),
                         child: Text(
                           s.chat_resume,
-                          style: TS(c: primaryColor, w: .w600, s: 16),
+                          style: TextStyle(color: primaryColor, fontWeight: .w600, fontSize: 16),
                         ),
                       ),
                     ),
@@ -717,7 +717,7 @@ class BotMessageBottom extends ConsumerWidget {
                                 const SizedBox(width: 4),
                                 Text(
                                   s.delete,
-                                  style: TS(c: primaryColor.q(.92), s: 11, w: .w600),
+                                  style: TextStyle(color: primaryColor.q(.92), fontSize: 11, fontWeight: .w600),
                                 ),
                               ],
                             ),
@@ -819,11 +819,11 @@ class _BottomDetailsMetaChip extends StatelessWidget {
                   if (label.isNotEmpty)
                     TextSpan(
                       text: "$label ",
-                      style: TS(c: color.q(.62), s: 10, w: .w500),
+                      style: TextStyle(color: color.q(.62), fontSize: 10, fontWeight: .w500),
                     ),
                   TextSpan(
                     text: value,
-                    style: TS(c: color.q(.92), s: 11, w: .w600),
+                    style: TextStyle(color: color.q(.92), fontSize: 11, fontWeight: .w600),
                   ),
                 ],
               ),

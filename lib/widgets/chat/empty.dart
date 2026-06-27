@@ -92,14 +92,14 @@ class Empty extends ConsumerWidget {
                         children: [
                           Opacity(
                             opacity: 0.0,
-                            child: Text(version, style: const TS(s: 10)),
+                            child: Text(version, style: const TextStyle(fontSize: 10)),
                           ),
-                          Text(s.chat_welcome_to_use(Config.appTitle), style: const TS(s: 18, w: .w600)),
+                          Text(s.chat_welcome_to_use(Config.appTitle), style: const TextStyle(fontSize: 18, fontWeight: .w600)),
                           Opacity(
                             opacity: 0.5,
                             child: Padding(
                               padding: const .only(bottom: 4),
-                              child: Text(version, style: const TS(s: 10)),
+                              child: Text(version, style: const TextStyle(fontSize: 10)),
                             ),
                           ),
                         ],
@@ -119,7 +119,7 @@ class Empty extends ConsumerWidget {
                           },
                           child: Text(
                             demoType == .see ? s.select_a_world_type : s.select_a_model,
-                            style: const TS(s: 16, w: .w600),
+                            style: const TextStyle(fontSize: 16, fontWeight: .w600),
                           ),
                         ),
                       if (!loaded) const SizedBox(height: 12),
@@ -134,7 +134,7 @@ class Empty extends ConsumerWidget {
                           ),
                           child: Text(
                             currentModel?.name ?? "",
-                            style: TS(s: 16, w: .w600, c: primary),
+                            style: TextStyle(fontSize: 16, fontWeight: .w600, color: primary),
                           ),
                         ),
                       const Spacer(),

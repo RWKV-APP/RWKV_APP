@@ -457,7 +457,7 @@ class _DownloadingItem extends ConsumerWidget {
                 padding: const .symmetric(horizontal: 4, vertical: 2),
                 child: Text(
                   formatBytes(fileInfo.fileSize),
-                  style: TS(s: _tagTextSize, c: qb.q(_tagTextColorOpacity)),
+                  style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
                 ),
               ),
               Container(
@@ -468,7 +468,7 @@ class _DownloadingItem extends ConsumerWidget {
                 padding: const .symmetric(horizontal: 4, vertical: 2),
                 child: Text(
                   targetLabel,
-                  style: TS(s: _tagTextSize, c: qb.q(_tagTextColorOpacity)),
+                  style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
                 ),
               ),
             ],
@@ -544,13 +544,13 @@ class _WeightItem extends ConsumerWidget {
                       padding: const .symmetric(horizontal: 4, vertical: 2),
                       child: Text(
                         formatBytes(fileInfo.fileSize),
-                        style: TS(s: _tagTextSize, c: qb.q(_tagTextColorOpacity)),
+                        style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
                       ),
                     ),
                     if (needToShowBasename)
                       Text(
                         basename,
-                        style: TS(s: _tagTextSize, c: qb.q(_tagTextColorOpacity)),
+                        style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
                       ),
                   ],
                 ),
@@ -670,7 +670,7 @@ class _MlxCacheItem extends ConsumerWidget {
                       ),
                       child: Text(
                         formatBytes(directory.directorySize),
-                        style: TS(s: _tagTextSize, c: qb.q(_tagTextColorOpacity)),
+                        style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
                       ),
                     ),
                   ],
@@ -781,7 +781,7 @@ class _SectionHeader extends ConsumerWidget {
             ),
             child: Text(
               formatBytes(totalSize),
-              style: TS(s: _tagTextSize, c: qb.q(_tagTextColorOpacity)),
+              style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
             ),
           ),
         ],
@@ -833,13 +833,13 @@ class _OtherFileItem extends ConsumerWidget {
                       ),
                       child: Text(
                         formatBytes(file.fileSize),
-                        style: TS(s: _tagTextSize, c: qb.q(_tagTextColorOpacity)),
+                        style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
                       ),
                     ),
                     if (needToShowBasename)
                       Text(
                         basename,
-                        style: TS(s: _tagTextSize, c: qb.q(_tagTextColorOpacity)),
+                        style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
                       ),
                   ],
                 ),

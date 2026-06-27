@@ -152,7 +152,7 @@ class ArgumentsPanel extends ConsumerWidget {
                             const WidgetSpan(child: SizedBox(width: 8)),
                             TextSpan(
                               text: title ?? s.model_settings,
-                              style: const TS(s: 16, w: .w500),
+                              style: const TextStyle(fontSize: 16, fontWeight: .w500),
                             ),
                           ],
                         ),

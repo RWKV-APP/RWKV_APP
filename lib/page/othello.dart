@@ -131,15 +131,15 @@ class _Title extends ConsumerWidget {
       mainAxisAlignment: .center,
       children: [
         const SizedBox(width: 12),
-        Text("$version($buildNumber)", style: TS(c: qb.q(.0), s: 10)),
+        Text("$version($buildNumber)", style: TextStyle(color: qb.q(.0), fontSize: 10)),
         if (usePortrait) const Spacer(),
         Text(
           s.rwkv_othello,
-          style: const TS(s: 20, w: .w700),
+          style: const TextStyle(fontSize: 20, fontWeight: .w700),
         ),
         if (usePortrait) const Spacer(),
         if (!usePortrait) const SizedBox(width: 32),
-        Text("$version($buildNumber)", style: TS(c: qb.q(.5), s: 10)),
+        Text("$version($buildNumber)", style: TextStyle(color: qb.q(.5), fontSize: 10)),
         if (!usePortrait) const SizedBox(width: 32),
         const SizedBox(width: 12),
       ],
@@ -252,7 +252,7 @@ class _ModelSettings extends ConsumerWidget {
 
     return Material(
       color: qb.q(.0),
-      textStyle: TS(ff: monospaceFF, s: 10),
+      textStyle: TextStyle(fontFamily: monospaceFF, fontSize: 10),
       child: Container(
         padding: const .all(4),
         margin: const .all(4),
@@ -267,10 +267,13 @@ class _ModelSettings extends ConsumerWidget {
           children: [
             Text(
               s.model_settings,
-              style: const TS(w: .w700),
+              style: const TextStyle(fontWeight: .w700),
             ),
             const SizedBox(height: 8),
-            Text(s.in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2, style: TS(c: qb.q(.5), s: 10)),
+            Text(
+              s.in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2,
+              style: TextStyle(color: qb.q(.5), fontSize: 10),
+            ),
             const SizedBox(height: 8),
             usePortrait
                 ? Column(
@@ -334,7 +337,7 @@ class _Players extends ConsumerWidget {
           Text(
             s.black + ":",
             textAlign: TextAlign.center,
-            style: const TS(w: .w700),
+            style: const TextStyle(fontWeight: .w700),
           ),
           RadioGroup<bool>(
             groupValue: blackIsAI,
@@ -380,7 +383,7 @@ class _Players extends ConsumerWidget {
           Text(
             s.white + ":",
             textAlign: TextAlign.center,
-            style: const TS(w: .w700),
+            style: const TextStyle(fontWeight: .w700),
           ),
           RadioGroup<bool>(
             groupValue: whiteIsAI,
@@ -417,7 +420,7 @@ class _Players extends ConsumerWidget {
 
     return Material(
       color: qb.q(.0),
-      textStyle: TS(ff: monospaceFF, s: 10),
+      textStyle: TextStyle(fontFamily: monospaceFF, fontSize: 10),
       child: Container(
         margin: const .all(4),
         padding: const .all(4),
@@ -431,7 +434,7 @@ class _Players extends ConsumerWidget {
           children: [
             Text(
               s.players,
-              style: const TS(w: .w700),
+              style: const TextStyle(fontWeight: .w700),
             ),
             const SizedBox(height: 12),
             if (usePortrait && !playerShouldAtSameColumnWithSettings && !settingsAndPlayersShouldAtDifferentColumnIsHorizontal)
@@ -498,16 +501,16 @@ class _Score extends ConsumerWidget {
           duration: const Duration(milliseconds: 150),
           child: Text(
             s.thinking,
-            style: TS(s: 10, w: generating ? .w400 : .w400),
+            style: TextStyle(fontSize: 10, fontWeight: generating ? .w400 : .w400),
           ),
         ),
         Text(
           "${s.prefill}: ${prefillSpeed.toStringAsFixed(1)} t/s",
-          style: const TS(s: 10, w: .w400),
+          style: const TextStyle(fontSize: 10, fontWeight: .w400),
         ),
         Text(
           "${s.decode}: ${decodeSpeed.toStringAsFixed(1)} t/s",
-          style: const TS(s: 10, w: .w400),
+          style: const TextStyle(fontSize: 10, fontWeight: .w400),
         ),
       ],
     );
@@ -520,7 +523,7 @@ class _Score extends ConsumerWidget {
             },
       child: Text(
         s.new_game,
-        style: const TS(s: 10, w: .w500),
+        style: const TextStyle(fontSize: 10, fontWeight: .w500),
       ),
     );
 
@@ -655,7 +658,7 @@ class _Grid extends ConsumerWidget {
             child: Center(
               child: Text(
                 e,
-                style: const TS(s: 10, w: .w700),
+                style: const TextStyle(fontSize: 10, fontWeight: .w700),
               ),
             ),
           );
@@ -671,7 +674,7 @@ class _Grid extends ConsumerWidget {
             child: Center(
               child: Text(
                 e,
-                style: const TS(s: 10, w: .w700),
+                style: const TextStyle(fontSize: 10, fontWeight: .w700),
               ),
             ),
           );
@@ -848,7 +851,7 @@ class _Console extends ConsumerWidget {
 
     return Material(
       color: qb,
-      textStyle: TS(ff: (Platform.isIOS || Platform.isMacOS) ? "Menlo" : "Monospace", c: qw, s: 10),
+      textStyle: TextStyle(fontFamily: (Platform.isIOS || Platform.isMacOS) ? "Menlo" : "Monospace", color: qw, fontSize: 10),
       child: ListView.builder(
         padding: .only(
           left: 8 + (usePortrait ? 0 : paddingLeft),
@@ -897,7 +900,7 @@ class _Console extends ConsumerWidget {
                   }),
               ],
             ),
-            style: TS(c: qw, s: 12, w: .w500),
+            style: TextStyle(color: qw, fontSize: 12, fontWeight: .w500),
           );
         },
       ),

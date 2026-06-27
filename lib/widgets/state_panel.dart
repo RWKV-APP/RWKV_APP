@@ -77,7 +77,7 @@ class StatePanel extends ConsumerWidget {
                 ? Center(
                     child: Text(
                       S.current.state_panel,
-                      style: TS(c: qb.q(.5), s: 14),
+                      style: TextStyle(color: qb.q(.5), fontSize: 14),
                     ),
                   )
                 : ListView.builder(
@@ -92,7 +92,7 @@ class StatePanel extends ConsumerWidget {
                     ),
                     itemBuilder: (context, index) {
                       final log = stateLogList[index];
-                      final textStyle = TS(c: qb.q(.9), s: 12).copyWith(
+                      final textStyle = TextStyle(color: qb.q(.9), fontSize: 12).copyWith(
                         fontFamily: 'monospace',
                         fontFamilyFallback: const ['Menlo', 'Monaco', 'Courier'],
                       );
@@ -120,7 +120,7 @@ class StatePanel extends ConsumerWidget {
                           children: [
                             Text(
                               'Text:',
-                              style: TS(c: qb.q(.7), w: .w700, s: 12),
+                              style: TextStyle(color: qb.q(.7), fontWeight: .w700, fontSize: 12),
                             ),
                             const SizedBox(height: 4),
                             SelectableText.rich(
@@ -129,12 +129,12 @@ class StatePanel extends ConsumerWidget {
                             const SizedBox(height: 8),
                             Text(
                               'Life Span:',
-                              style: TS(c: qb.q(.7), w: .w700, s: 12),
+                              style: TextStyle(color: qb.q(.7), fontWeight: .w700, fontSize: 12),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               log.lifeSpan.toString(),
-                              style: TS(c: qb.q(.85), s: 13),
+                              style: TextStyle(color: qb.q(.85), fontSize: 13),
                             ),
                           ],
                         ),
@@ -202,7 +202,7 @@ class _StatePanelBar extends ConsumerWidget {
                 const SizedBox(width: 10),
                 Text(
                   S.current.state_panel,
-                  style: const TS(s: 18, w: .w600),
+                  style: const TextStyle(fontSize: 18, fontWeight: .w600),
                 ),
               ],
             ),

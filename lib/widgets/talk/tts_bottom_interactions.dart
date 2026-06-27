@@ -59,7 +59,7 @@ class TTSInteractions extends ConsumerWidget {
                 padding: const .symmetric(vertical: 4),
                 child: Text(
                   target,
-                  style: TS(c: primary, w: .w600),
+                  style: TextStyle(color: primary, fontWeight: .w600),
                 ),
               ),
             if (selectSourceAudioPath != null)
@@ -67,7 +67,7 @@ class TTSInteractions extends ConsumerWidget {
                 padding: const .symmetric(vertical: 4),
                 child: Text(
                   s.imitate_target + ": " + (sourceWavName ?? ""),
-                  style: TS(c: primary, w: .w600),
+                  style: TextStyle(color: primary, fontWeight: .w600),
                 ),
               ),
             const _Actions(),
@@ -129,16 +129,16 @@ class _AudioInteractor extends ConsumerWidget {
                     children: [
                       TextSpan(
                         text: s.you_can_record_your_voice_and_let_rwkv_to_copy_it,
-                        style: TS(
-                          c: primary,
-                          w: .w600,
+                        style: TextStyle(
+                          color: primary,
+                          fontWeight: .w600,
                         ),
                       ),
                       TextSpan(
                         text: s.or_select_a_wav_file_to_let_rwkv_to_copy_it,
-                        style: const TS(
-                          c: Colors.blue,
-                          w: .w600,
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          fontWeight: .w600,
                         ),
                         recognizer: TapGestureRecognizer()..onTap = _onUploadFilePressed,
                       ),
@@ -246,7 +246,7 @@ class _AudioButton extends ConsumerWidget {
           ),
           child: Text(
             s.voice_cloning + (audioInteractorShown ? " ×" : ""),
-            style: TS(c: audioInteractorShown ? qw : primary),
+            style: TextStyle(color: audioInteractorShown ? qw : primary),
           ),
         ),
       ),
@@ -279,7 +279,7 @@ class _SpkButton extends ConsumerWidget {
           ),
           child: Text(
             s.prebuilt_voices + (spkShown ? " ×" : ""),
-            style: TS(c: spkShown ? qw : primary),
+            style: TextStyle(color: spkShown ? qw : primary),
           ),
         ),
       ),
@@ -310,7 +310,7 @@ class _IntonationButton extends ConsumerWidget {
           ),
           child: Text(
             s.intonations + (intonationShown ? " ×" : ""),
-            style: TS(c: intonationShown ? qw : primary),
+            style: TextStyle(color: intonationShown ? qw : primary),
           ),
         ),
       ),
@@ -444,7 +444,7 @@ class _SpkPanel extends ConsumerWidget {
                                 Expanded(
                                   child: Text(
                                     display,
-                                    style: TS(c: selected ? primary : primary.q(.8), w: selected ? .w600 : .w400),
+                                    style: TextStyle(color: selected ? primary : primary.q(.8), fontWeight: selected ? .w600 : .w400),
                                   ),
                                 ),
                                 if (selected)

@@ -89,7 +89,7 @@ class _DebugSwitchRow extends ConsumerWidget {
                   children: [
                     Text(
                       label,
-                      style: TS(c: qb.q(.9), s: 14, w: .w500),
+                      style: TextStyle(color: qb.q(.9), fontSize: 14, fontWeight: .w500),
                     ),
                     if (valueLabel != null) const SizedBox(height: 2),
                     if (valueLabel != null)

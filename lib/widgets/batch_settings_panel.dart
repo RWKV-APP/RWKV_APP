@@ -158,7 +158,7 @@ class BatchSettingsPanel extends ConsumerWidget {
                 subtitle: s.batch_inference_count_detail(batchCount),
                 infoWidget: Container(
                   padding: const .only(right: 4),
-                  child: Text(batchCount.toString(), style: const TS(w: .bold, s: 16)),
+                  child: Text(batchCount.toString(), style: const TextStyle(fontWeight: .bold, fontSize: 16)),
                 ),
                 onTap: () {},
                 bottom: ArgumentValue(
@@ -261,7 +261,7 @@ class _BatchViewportWidthSlider extends ConsumerWidget {
             padding.left.w,
             Text(
               min.toString(),
-              style: TS(s: 12, c: qb.q(.5)),
+              style: TextStyle(fontSize: 12, color: qb.q(.5)),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -278,7 +278,7 @@ class _BatchViewportWidthSlider extends ConsumerWidget {
             const SizedBox(width: 14),
             Text(
               max.toString(),
-              style: TS(s: 12, c: qb.q(.5)),
+              style: TextStyle(fontSize: 12, color: qb.q(.5)),
             ),
             padding.right.w,
           ],
@@ -550,7 +550,7 @@ class _DecodeParam extends ConsumerWidget {
         padding: const .all(12),
         child: forAll
             ? Center(
-                child: Text(s.set_all_batch_params, style: const TS(w: .bold)),
+                child: Text(s.set_all_batch_params, style: const TextStyle(fontWeight: .bold)),
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -565,13 +565,13 @@ class _DecodeParam extends ConsumerWidget {
                           color: qb.q(.15),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Text("#${index + 1}", style: const TS(w: .bold, s: 12)),
+                        child: Text("#${index + 1}", style: const TextStyle(fontWeight: .bold, fontSize: 12)),
                       ),
                       const SizedBox(width: 8),
                       Flexible(
                         child: Text(
                           param?.displayName ?? "",
-                          style: const TS(w: .bold, s: 14),
+                          style: const TextStyle(fontWeight: .bold, fontSize: 14),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -583,7 +583,7 @@ class _DecodeParam extends ConsumerWidget {
                     const SizedBox(height: 2),
                     _infoRow("PP", _fmt(param!.presencePenalty), "FP", _fmt(param!.frequencyPenalty), qb),
                     const SizedBox(height: 2),
-                    Text("Decay: ${_fmt(param!.penaltyDecay)}", style: TS(s: 11, c: qb.q(.7))),
+                    Text("Decay: ${_fmt(param!.penaltyDecay)}", style: TextStyle(fontSize: 11, color: qb.q(.7))),
                   ],
                 ],
               ),
@@ -592,7 +592,7 @@ class _DecodeParam extends ConsumerWidget {
   }
 
   Widget _infoRow(String k1, String v1, String k2, String v2, Color qb) {
-    final style = TS(s: 11, c: qb.q(.7));
+    final style = TextStyle(fontSize: 11, color: qb.q(.7));
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

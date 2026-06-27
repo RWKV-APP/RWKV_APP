@@ -1462,7 +1462,7 @@ class _CodeState extends ConsumerState<_Code> {
               const SizedBox(width: 8),
               Text(
                 widget.name,
-                style: TS(s: 14, w: .w500, c: qb.q(.5)),
+                style: TextStyle(fontSize: 14, fontWeight: .w500, color: qb.q(.5)),
               ),
               const Spacer(),
               IconButton(

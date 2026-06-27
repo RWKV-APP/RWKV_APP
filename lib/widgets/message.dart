@@ -151,8 +151,8 @@ class _MessageState extends ConsumerState<Message> {
     );
     final thisMessageIsReceiving = receiveId == msg.id && receiving;
     final rawFontSize = theme.textTheme.bodyMedium?.fontSize ?? 14.0;
-    final userMessageStyle = TS(
-      s: rawFontSize * Config.msgFontScale,
+    final userMessageStyle = TextStyle(
+      fontSize: rawFontSize * Config.msgFontScale,
       height: messageLineHeight,
     );
     final double rawMaxWidth = math.min(screenWidth, screenHeight);
@@ -300,7 +300,7 @@ class _UserMessageBubble extends ConsumerWidget {
   final bool desktopActionsHovered;
   final String finalContent;
   final Color userMsgBg;
-  final TS userMessageStyle;
+  final TextStyle userMessageStyle;
   final double rawMaxWidth;
   final _BubbleStyleData bubbleStyleData;
   final bool isBatch;
@@ -483,13 +483,13 @@ class _BotMessageBubble extends ConsumerWidget {
                   children: [
                     Text(
                       s.batch_inference_running(batchCount),
-                      style: TS(c: appTheme.qb5),
+                      style: TextStyle(color: appTheme.qb5),
                     ),
                     if (batchSelection != null) const SizedBox(width: 16),
                     if (batchSelection != null)
                       Text(
                         s.batch_inference_selected(batchSelection! + 1),
-                        style: TS(c: appTheme.qb5),
+                        style: TextStyle(color: appTheme.qb5),
                       ),
                   ],
                 ),
@@ -514,7 +514,7 @@ class _BotMessageBubble extends ConsumerWidget {
                   children: [
                     Text(
                       thisMessageIsReceiving ? s.thinking : s.thought_result,
-                      style: TS(c: thoughtLabelColor, w: .w600),
+                      style: TextStyle(color: thoughtLabelColor, fontWeight: .w600),
                     ),
                     cotContentExpanded
                         ? Icon(Icons.expand_less, color: thoughtLabelColor)
@@ -620,7 +620,7 @@ class _MessageDebugId extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(color: effectiveDebugColor),
-      child: Text("Debug: $msgId", style: const TS(c: kW)),
+      child: Text("Debug: $msgId", style: const TextStyle(color: kW)),
     );
   }
 }

@@ -33,7 +33,7 @@ class SelectImageButton extends ConsumerWidget {
         padding: const .only(left: 8, top: 8, right: 8, bottom: 8),
         child: Text(
           selectedImagePath == null ? s.select_new_image : s.change_selected_image,
-          style: TS(c: color),
+          style: TextStyle(color: color),
         ),
       ),
     );

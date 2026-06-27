@@ -267,10 +267,10 @@ class Debugger extends ConsumerWidget {
       bottom: 0,
       child: IgnorePointer(
         child: Material(
-          textStyle: TS(
-            ff: "Monospace",
-            c: qw,
-            s: 8,
+          textStyle: TextStyle(
+            fontFamily: "Monospace",
+            color: qw,
+            fontSize: 8,
           ),
           color: Colors.transparent,
           child: Column(
@@ -314,10 +314,10 @@ class _SudokuDebugger extends ConsumerWidget {
       bottom: 0,
       child: IgnorePointer(
         child: Material(
-          textStyle: TS(
-            ff: "Monospace",
-            c: qw,
-            s: 8,
+          textStyle: TextStyle(
+            fontFamily: "Monospace",
+            color: qw,
+            fontSize: 8,
           ),
           color: Colors.transparent,
           child: SizedBox(
@@ -396,10 +396,10 @@ class _TTSDebugger extends ConsumerWidget {
       bottom: 0,
       child: IgnorePointer(
         child: Material(
-          textStyle: TS(
-            ff: "Monospace",
-            c: qw,
-            s: isDesktop ? 20 : 8,
+          textStyle: TextStyle(
+            fontFamily: "Monospace",
+            color: qw,
+            fontSize: isDesktop ? 20 : 8,
           ),
           color: Colors.transparent,
           child: SizedBox(

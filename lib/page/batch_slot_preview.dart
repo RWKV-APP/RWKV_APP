@@ -70,7 +70,7 @@ class PageBatchSlotPreview extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title, style: const TS(s: 16, w: .w600)),
+        title: Text(title, style: const TextStyle(fontSize: 16, fontWeight: .w600)),
       ),
       body: SingleChildScrollView(
         padding: .only(

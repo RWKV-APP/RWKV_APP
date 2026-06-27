@@ -81,7 +81,7 @@ class ResponseStyleButton extends ConsumerWidget {
               alignment: .center,
               child: Text(
                 buttonLabel,
-                style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                style: TextStyle(color: textColor, fontSize: fontSize, height: 1, fontWeight: .w500),
                 strutStyle: StrutStyle(
                   fontSize: fontSize,
                   height: 1,

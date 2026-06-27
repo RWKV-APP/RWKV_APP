@@ -137,7 +137,7 @@ class DecodeParamButton extends ConsumerWidget {
                     const SizedBox(width: 4),
                     Text(
                       decodeParamType.displayNameShort,
-                      style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                      style: TextStyle(color: textColor, fontSize: fontSize, height: 1, fontWeight: .w500),
                       strutStyle: StrutStyle(
                         fontSize: fontSize,
                         height: 1,

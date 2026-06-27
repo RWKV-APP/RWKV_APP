@@ -174,7 +174,7 @@ class UserTTSContent extends ConsumerWidget {
           const SizedBox(height: 2),
           Text(
             msg.ttsTarget ?? "null",
-            style: const TS(s: 16),
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ),

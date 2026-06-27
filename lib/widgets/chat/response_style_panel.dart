@@ -259,7 +259,7 @@ class _ResponseStyleRouteCard extends ConsumerWidget {
                         route.label,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TS(c: titleColor, s: 21, w: .w700, height: 1),
+                        style: TextStyle(color: titleColor, fontSize: 21, fontWeight: .w700, height: 1),
                       ),
                     ),
                     _ResponseStyleCheckMark(enabled: enabled),

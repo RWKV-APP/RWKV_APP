@@ -190,7 +190,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
                   padding: const .only(left: 16, top: 16),
                   child: Text(
                     widget.isMonospace ? s.monospace_font_setting : s.ui_font_setting,
-                    style: const TS(s: 20, w: .w600),
+                    style: const TextStyle(fontSize: 20, fontWeight: .w600),
                   ),
                 ),
                 IconButton(
@@ -310,10 +310,10 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
       color: qb.q(.1),
       child: Text(
         letter,
-        style: TS(
-          s: 14,
-          w: .w600,
-          c: qb.q(.8),
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: .w600,
+          color: qb.q(.8),
         ),
       ),
     );

@@ -183,9 +183,9 @@ class AudioInput extends ConsumerWidget {
                     const SizedBox(height: 12),
                     Text(
                       bottomMessage,
-                      style: TS(
-                        s: bottomMessageSize,
-                        c: primary.q(.5),
+                      style: TextStyle(
+                        fontSize: bottomMessageSize,
+                        color: primary.q(.5),
                       ),
                       textAlign: TextAlign.center,
                     ),
