@@ -260,7 +260,7 @@ extension $RWKVModel on _RWKVModel {
       _ttsPerformanceTimer = null;
     }
 
-    _ttsPerformanceTimer = Timer.periodic(Duration(milliseconds: 225), (timer) async {
+    _ttsPerformanceTimer = Timer.periodic(const Duration(milliseconds: 225), (timer) async {
       P.rwkvBridge.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
 

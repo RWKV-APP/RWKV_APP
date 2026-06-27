@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:path/path.dart' as path;
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 
 class TTSVoiceSourcePanels {
   static const String sourceTypePanelKey = 'TTSVoiceSourceTypePanel';
@@ -609,7 +609,7 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
                             _onTapCancel(context);
                           },
                     child: AnimatedContainer(
-                      duration: Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 200),
                       width: 92,
                       height: 92,
                       decoration: BoxDecoration(

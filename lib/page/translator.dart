@@ -7,13 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/backend_state.dart';
 import 'package:zone/model/browser_tab.dart';
 import 'package:zone/model/browser_window.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
-import 'package:zone/func/debug_trace.dart';
 
 class PageTranslator extends ConsumerWidget {
   const PageTranslator({super.key});

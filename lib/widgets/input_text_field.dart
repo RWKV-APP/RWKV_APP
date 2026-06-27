@@ -11,13 +11,13 @@ import 'package:path/path.dart' as path;
 
 // Project imports:
 import 'package:zone/func/check_model_selection.dart';
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/sending_interaction.dart';
 import 'package:zone/widgets/talk/tts_voice_source_panels.dart';
-import 'package:zone/func/debug_trace.dart';
 
 class InputTextField extends ConsumerWidget {
   final DemoType? preferredDemoType;
@@ -118,7 +118,7 @@ class InputTextField extends ConsumerWidget {
             crossAxisAlignment: .stretch,
             children: [
               AnimatedSwitcher(
-                duration: Duration(milliseconds: 250),
+                duration: const Duration(milliseconds: 250),
                 switchInCurve: Curves.easeOutCubic,
                 switchOutCurve: Curves.easeInCubic,
                 transitionBuilder: (child, animation) {
@@ -141,7 +141,7 @@ class InputTextField extends ConsumerWidget {
               ),
               if (isSee)
                 AnimatedSwitcher(
-                  duration: Duration(milliseconds: 250),
+                  duration: const Duration(milliseconds: 250),
                   switchInCurve: Curves.easeOutCubic,
                   switchOutCurve: Curves.easeInCubic,
                   transitionBuilder: (child, animation) {
@@ -166,7 +166,7 @@ class InputTextField extends ConsumerWidget {
                 ),
               if (isTalk)
                 AnimatedSwitcher(
-                  duration: Duration(milliseconds: 250),
+                  duration: const Duration(milliseconds: 250),
                   switchInCurve: Curves.easeOutCubic,
                   switchOutCurve: Curves.easeInCubic,
                   transitionBuilder: (child, animation) {
@@ -512,7 +512,7 @@ class _SeeImageQuickButton extends ConsumerWidget {
     final sendingButtonTouchMinSize = appTheme.sendingButtonTouchMinSize;
 
     return AnimatedSwitcher(
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
       switchInCurve: Curves.easeOutCubic,
       switchOutCurve: Curves.easeInCubic,
       transitionBuilder: (child, animation) {
@@ -665,7 +665,7 @@ class _TalkSourceQuickButton extends ConsumerWidget {
     final sendingButtonTouchMinSize = appTheme.sendingButtonTouchMinSize;
 
     return AnimatedSwitcher(
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
       switchInCurve: Curves.easeOutCubic,
       switchOutCurve: Curves.easeInCubic,
       transitionBuilder: (child, animation) {

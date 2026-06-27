@@ -191,7 +191,7 @@ extension $ChatInputSend on _Chat {
     if (animate == true) {
       await scrollController.animateTo(
         offset,
-        duration: duration ?? Duration(milliseconds: 300),
+        duration: duration ?? const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {

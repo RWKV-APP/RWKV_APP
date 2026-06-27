@@ -1,8 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';

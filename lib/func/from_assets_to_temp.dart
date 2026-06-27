@@ -10,8 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 // Project imports:
-import 'package:zone/func/save_asset_to_file.dart';
 import 'package:zone/func/debug_trace.dart';
+import 'package:zone/func/save_asset_to_file.dart';
 
 Future<String> fromAssetsToTemp(String assetsPath, {String? targetPath}) async {
   try {

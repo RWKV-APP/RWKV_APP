@@ -9,12 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
+import 'package:zone/func/collection_utils.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/cell_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/menu.dart';
 import 'package:zone/widgets/pager.dart';
-import 'package:zone/func/collection_utils.dart';
 
 class PageOthello extends StatelessWidget {
   const PageOthello({super.key});

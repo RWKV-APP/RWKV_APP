@@ -59,7 +59,7 @@ class InputBar extends ConsumerWidget {
           ),
           child: InputBarWidthLimit(
             child: AnimatedSize(
-              duration: Duration(milliseconds: 250),
+              duration: const Duration(milliseconds: 250),
               child: Column(
                 crossAxisAlignment: .start,
                 children: [

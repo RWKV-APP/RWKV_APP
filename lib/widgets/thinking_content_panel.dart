@@ -49,7 +49,7 @@ class _ThinkingFullContentAnimatorState extends State<ThinkingFullContentAnimato
     _buildContent = widget.expanded;
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
       value: widget.expanded ? 1 : 0,
     )..addStatusListener(_onAnimationStatusChanged);
     _heightFactor = CurvedAnimation(
@@ -262,7 +262,7 @@ class _ThinkingContentPanelState extends ConsumerState<ThinkingContentPanel> {
     if (!position.hasContentDimensions) return;
     await _scrollController.animateTo(
       position.maxScrollExtent,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       curve: Curves.easeOut,
     );
     _syncScrollState();
@@ -532,7 +532,7 @@ class _ThinkingScrollToBottomButton extends ConsumerWidget {
     return AnimatedOpacity(
       key: buttonKey,
       opacity: show ? 1 : 0,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       curve: Curves.easeOut,
       child: IgnorePointer(
         ignoring: !show,

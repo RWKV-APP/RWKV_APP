@@ -1,8 +1,6 @@
 // Dart imports:
 import 'dart:convert';
 
-// Package imports:
-
 // msg_node.dart
 final class MsgNode {
   /// 所代表的 Message 的 ID

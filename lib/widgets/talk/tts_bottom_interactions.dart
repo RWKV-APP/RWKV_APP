@@ -7,19 +7,19 @@ import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:path/path.dart' as path;
 
 // Project imports:
 import 'package:zone/func/check_model_selection.dart';
+import 'package:zone/func/collection_utils.dart';
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/model/tts_instruction.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/func/debug_trace.dart';
-import 'package:zone/func/collection_utils.dart';
+import 'package:zone/widgets/alert.dart';
 
 class TTSInteractions extends ConsumerWidget {
   const TTSInteractions({super.key});
@@ -579,7 +579,7 @@ class _InstructTabs extends ConsumerWidget {
                 },
                 child: AnimatedOpacity(
                   opacity: enabled ? 1 : .333,
-                  duration: Duration(milliseconds: 250),
+                  duration: const Duration(milliseconds: 250),
                   child: Container(
                     margin: const .only(top: 4),
                     padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
@@ -639,7 +639,7 @@ class _InstructOptions extends ConsumerWidget {
     return GestureDetector(
       onTap: () {},
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 250),
         height: interactingInstruction == TTSInstruction.none ? 0 : 150,
         margin: const .only(top: 4),
         decoration: BoxDecoration(
@@ -735,7 +735,7 @@ class _TextField extends ConsumerWidget {
                   onTap: P.talk.onClearButtonPressed,
                   child: AnimatedOpacity(
                     opacity: textInInput.trim().isNotEmpty ? 1 : .5,
-                    duration: Duration(milliseconds: 250),
+                    duration: const Duration(milliseconds: 250),
                     child: Container(
                       padding: const .symmetric(horizontal: 4, vertical: 6),
                       child: const Icon(Icons.clear),

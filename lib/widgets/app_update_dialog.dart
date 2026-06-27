@@ -6,9 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:background_downloader/background_downloader.dart' as bd;
 
 // Project imports:
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/func/debug_trace.dart';
 
 @Deprecated('Use VersionInfoPanel instead')
 class AppUpdateDialog extends StatefulWidget {

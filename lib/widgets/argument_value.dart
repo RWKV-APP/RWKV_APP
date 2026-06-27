@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
+import 'package:zone/func/string_utils.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
-import 'package:zone/func/string_utils.dart';
 
 class ArgumentValue extends ConsumerWidget {
   final Argument argument;

@@ -335,7 +335,7 @@ extension $App on _App {
       fullUrl = "$fullUrl&version=${Uri.encodeComponent(version)}";
     }
     try {
-      final res = await _get(fullUrl, timeout: Duration(milliseconds: 2000));
+      final res = await _get(fullUrl, timeout: const Duration(milliseconds: 2000));
       if (res is! Map) {
         releaseNotesContent.q = null;
         return;
@@ -591,7 +591,7 @@ extension _$App on _App {
   /// 从服务器获取远程配置
   Future<Map<String, dynamic>?> _getRemoteConfig() async {
     try {
-      final res = await _get("get-demo-config", timeout: Duration(milliseconds: 10000));
+      final res = await _get("get-demo-config", timeout: const Duration(milliseconds: 10000));
       if (res is! Map) return null;
       final success = res["success"];
       final message = res["message"];
@@ -839,7 +839,7 @@ extension _$App on _App {
     final baseUrl = "${Config.domain}/distributions/latest";
     final fullUrl = "$baseUrl?$queryString";
 
-    final res = await _get(fullUrl, timeout: Duration(milliseconds: 2000));
+    final res = await _get(fullUrl, timeout: const Duration(milliseconds: 2000));
 
     if (res is! Map) {
       qqe("res is not a Map, res: $res");

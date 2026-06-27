@@ -1,8 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-
 // Project imports:
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/completion/batch_completion_settings_panel.dart';

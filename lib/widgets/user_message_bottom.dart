@@ -6,13 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
-import 'package:zone/func/debug_trace.dart';
 
 class UserMessageBottom extends ConsumerWidget {
   final model.Message msg;
@@ -157,7 +157,7 @@ class UserMessageBottom extends ConsumerWidget {
       if (desktopOpacity == null || !applyDesktopHoverAnimation) return child;
       return AnimatedOpacity(
         opacity: desktopOpacity,
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         child: child,
       );
     }

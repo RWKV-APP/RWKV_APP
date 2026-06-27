@@ -10,12 +10,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:zone/config.dart';
 import 'package:zone/db/db.steps.dart';
 import 'package:zone/func/conversation_subtitle.dart';
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/msg_node.dart';
 import 'package:zone/model/ref_info.dart' as model;
 import 'package:zone/store/p.dart';
-import 'package:zone/func/debug_trace.dart';
 
 part 'db.g.dart';
 

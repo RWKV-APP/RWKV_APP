@@ -55,7 +55,7 @@ class _Send extends ConsumerWidget {
 
     return AnimatedOpacity(
       opacity: opacity,
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
       child: GestureDetector(
         onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),
         child: Container(

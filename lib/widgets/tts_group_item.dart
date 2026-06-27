@@ -6,20 +6,20 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/models/model_info.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:sprintf/sprintf.dart';
 
 // Project imports:
+import 'package:zone/func/collection_utils.dart';
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_tag.dart';
-import 'package:zone/func/collection_utils.dart';
 
 ModelInfo? rolePlayTTSModel;
 
@@ -365,7 +365,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                           onTap: loading ? null : _onSparkTap,
                           child: AnimatedOpacity(
                             opacity: loading ? 0.6 : 1,
-                            duration: Duration(milliseconds: 200),
+                            duration: const Duration(milliseconds: 200),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: primary,
@@ -390,7 +390,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                           onTap: null,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Color(0xFF808080).withValues(alpha: .5),
+                              color: const Color(0xFF808080).withValues(alpha: .5),
                               borderRadius: .circular(startButtonRadius),
                             ),
                             padding: const .all(8),

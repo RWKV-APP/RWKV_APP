@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -21,6 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/backend_state.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class _ChatMsg {

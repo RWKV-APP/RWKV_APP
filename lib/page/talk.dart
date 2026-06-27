@@ -69,7 +69,7 @@ class _List extends ConsumerWidget {
       child: GestureDetector(
         onTap: P.chat.onTapMessageList,
         child: RawScrollbar(
-          radius: Radius.circular(100),
+          radius: const Radius.circular(100),
           thickness: 4,
           thumbColor: qb.withValues(alpha: .4),
           padding: .only(top: top, right: 4, bottom: scrollBarBottom),
@@ -110,7 +110,7 @@ class _Empty extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
 
     return AnimatedPositioned(
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       curve: Curves.ease,
       bottom: inputHeight,
       left: 28,
@@ -118,7 +118,7 @@ class _Empty extends ConsumerWidget {
       top: 0,
       child: AnimatedOpacity(
         opacity: messages.isEmpty ? 1 : 0,
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.ease,
         child: Column(
           crossAxisAlignment: .center,

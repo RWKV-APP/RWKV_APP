@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/chat/ask_question_panel.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/input_interactions.dart';

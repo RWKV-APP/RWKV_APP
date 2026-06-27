@@ -20,7 +20,7 @@ class SelectImageButton extends ConsumerWidget {
     return GestureDetector(
       onTap: P.see.selectImage,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 150),
+        duration: const Duration(milliseconds: 150),
         curve: Curves.easeOutCubic,
         decoration: BoxDecoration(
           color: primaryContainer,

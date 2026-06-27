@@ -255,7 +255,7 @@ class _SideRailSettingsItem extends StatelessWidget {
               mainAxisSize: .min,
               children: [
                 AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 200),
                   width: 56,
                   height: 32,
                   decoration: BoxDecoration(

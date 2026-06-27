@@ -273,7 +273,7 @@ SPEC CHECKSUMS:
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
-  file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
+  file_picker: 63fd4aa4f1d59f2ef7acb1e026c41a22a3170fdc
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   gaimon: 1979ed07cdcfd0bf0d208f255f550936a196cf5a
   gal: baecd024ebfd13c441269ca7404792a7152fde89

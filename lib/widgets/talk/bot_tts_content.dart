@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
 
@@ -17,6 +16,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 
 class BotTtsContent extends ConsumerStatefulWidget {
   final model.Message msg;
@@ -47,7 +47,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     ref.listenManual(P.msg.latestClicked, (previous, next) {
       if (next?.id == widget.msg.id) {
         _timer?.cancel();
-        _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+        _timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
           _tick++;
           setState(() {});
         });
@@ -101,7 +101,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
 
     _durationRetryCount += 1;
     _durationRetryTimer?.cancel();
-    _durationRetryTimer = Timer(Duration(milliseconds: 250), () {
+    _durationRetryTimer = Timer(const Duration(milliseconds: 250), () {
       if (!mounted) return;
       unawaited(_refreshWavDuration());
     });

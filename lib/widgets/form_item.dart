@@ -65,10 +65,10 @@ class FormItem extends ConsumerWidget {
             decoration: BoxDecoration(
               color: appTheme.settingItem,
               borderRadius: .only(
-                topLeft: isSectionStart ? Radius.circular(12) : .zero,
-                topRight: isSectionStart ? Radius.circular(12) : .zero,
-                bottomLeft: isSectionEnd ? Radius.circular(12) : .zero,
-                bottomRight: isSectionEnd ? Radius.circular(12) : .zero,
+                topLeft: isSectionStart ? const Radius.circular(12) : .zero,
+                topRight: isSectionStart ? const Radius.circular(12) : .zero,
+                bottomLeft: isSectionEnd ? const Radius.circular(12) : .zero,
+                bottomRight: isSectionEnd ? const Radius.circular(12) : .zero,
               ),
             ),
             padding: const .only(left: 8, top: 12, right: 8, bottom: 12),

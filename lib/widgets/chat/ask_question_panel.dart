@@ -558,11 +558,11 @@ class _GenerateButton extends ConsumerWidget {
                     color: iconColor,
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
               ],
               if (!generating) ...[
                 Icon(Symbols.auto_awesome, size: iconSize, color: iconColor),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
               ],
               Expanded(
                 child: Text(

@@ -323,7 +323,7 @@ extension _$Talk on _Talk {
 /// Public methods
 extension $Talk on _Talk {
   Future<void> startStateSync() async {
-    Timer.periodic(Duration(milliseconds: 500), (timer) {
+    Timer.periodic(const Duration(milliseconds: 500), (timer) {
       //
     });
   }

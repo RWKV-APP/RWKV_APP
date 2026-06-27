@@ -11,7 +11,6 @@ import 'package:gpt_markdown/custom_widgets/markdown_config.dart';
 import 'package:gpt_markdown/custom_widgets/selectable_adapter.dart';
 import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 
 const int _softBreakStep = 12;
 const int _softBreakMinRunLength = 24;

@@ -10,22 +10,22 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 // Project imports:
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/material_symbols_keepalive.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/debugger.dart';
 import 'package:zone/widgets/floating_performace_info.dart';
 import 'package:zone/widgets/input_bar_debugger.dart';
-import 'package:zone/func/debug_trace.dart';
 
 const _sentryRelease = String.fromEnvironment('SENTRY_RELEASE');
 const _sentryDist = String.fromEnvironment('SENTRY_DIST');

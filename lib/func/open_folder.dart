@@ -2,14 +2,14 @@
 import 'dart:io';
 
 // Package imports:
-import 'package:zone/widgets/alert.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/func/debug_trace.dart';
+import 'package:zone/widgets/alert.dart';
 
 /// Opens the given folder path in the system file manager (or default handler for directory URIs).
 Future<void> openFolder(

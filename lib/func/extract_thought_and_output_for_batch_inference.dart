@@ -1,5 +1,5 @@
+// Project imports:
 import 'package:zone/func/debug_trace.dart';
-// Package imports:
 
 (String, String) extractThoughtAndOutputForBatchInference(String text) {
   final lengthOfThinkEndTag = "</think>".length;

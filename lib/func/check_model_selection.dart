@@ -1,10 +1,8 @@
-// Package imports:
-import 'package:zone/widgets/alert.dart';
-
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 /// Return true if the model is selected

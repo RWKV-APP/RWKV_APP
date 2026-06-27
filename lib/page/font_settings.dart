@@ -249,7 +249,7 @@ class _PreviewMessageList extends ConsumerWidget {
       child: (Platform.isWindows || Platform.isLinux)
           ? RawScrollbar(
               controller: scrollController,
-              radius: Radius.circular(100),
+              radius: const Radius.circular(100),
               thickness: 4,
               thumbColor: qb.withValues(alpha: .4),
               padding: const .only(top: 4, right: 4, bottom: 4),
@@ -388,7 +388,7 @@ class _SettingsControls extends ConsumerWidget {
                       children: [
                         Row(
                           children: [
-                            SizedBox(width: 18),
+                            const SizedBox(width: 18),
                             Text(
                               'A',
                               style: TextStyle(
@@ -413,7 +413,7 @@ class _SettingsControls extends ConsumerWidget {
                                 color: onSurface.withValues(alpha: .6),
                               ),
                             ),
-                            SizedBox(width: 18),
+                            const SizedBox(width: 18),
                           ],
                         ),
                         Slider(

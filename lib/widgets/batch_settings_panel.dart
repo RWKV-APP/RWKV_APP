@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rwkv_mobile_flutter/to_rwkv.dart';
 
 // Project imports:
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/decode_param_type.dart';
@@ -18,7 +19,6 @@ import 'package:zone/widgets/argument_value.dart';
 import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/chat/multi_question_panel.dart';
 import 'package:zone/widgets/form_item.dart';
-import 'package:zone/func/debug_trace.dart';
 
 class BatchSettingsPanel extends ConsumerWidget {
   static final _shown = qs(false);

@@ -80,12 +80,12 @@ class ThinkingModeButton extends ConsumerWidget {
 
     return AnimatedSize(
       key: const Key("_ThinkingModeButton"),
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
       curve: Curves.easeOutCubic,
       child: IntrinsicWidth(
         child: AnimatedOpacity(
           opacity: loading ? .33 : 1,
-          duration: Duration(milliseconds: 250),
+          duration: const Duration(milliseconds: 250),
           child: GestureDetector(
             onTap: P.rwkvParams.onThinkModeTapped,
             child: ClipRRect(

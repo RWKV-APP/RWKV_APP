@@ -7,19 +7,19 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
 import 'package:zone/func/check_model_selection.dart';
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/input_interactions.dart';
-import 'package:zone/func/debug_trace.dart';
 
 class DecodeParamButton extends ConsumerWidget {
   const DecodeParamButton({super.key});

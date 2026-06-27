@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
@@ -20,7 +21,6 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat_history_width_limit.dart';
 import 'package:zone/widgets/dev_options_panel.dart';
 import 'package:zone/widgets/form_item.dart';
-import 'package:zone/func/debug_trace.dart';
 
 class Settings extends ConsumerWidget {
   final ScrollController? scrollController;
@@ -294,7 +294,7 @@ class Settings extends ConsumerWidget {
                   children: [
                     Text("$version($buildNumber)"),
                     AnimatedSize(
-                      duration: Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 200),
                       curve: Curves.easeOutCubic,
                       child: Row(
                         mainAxisSize: .min,

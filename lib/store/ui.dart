@@ -158,7 +158,7 @@ extension _$UI on _UI {
       case .home:
         homePixels.q = 0;
         homePixelsFromBottom.q = 1;
-        if (homeController.hasClients) homeController.animateTo(0, duration: Duration(milliseconds: 200), curve: Curves.easeOutCubic);
+        if (homeController.hasClients) homeController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeOutCubic);
 
         break;
       default:
@@ -788,7 +788,7 @@ extension $UI on _UI {
       context: context,
       isDismissible: isDismissible,
       isScrollControlled: isScrollControlled,
-      shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      shape: const RoundedSuperellipseBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: initialChildSize,
         maxChildSize: maxChildSize,

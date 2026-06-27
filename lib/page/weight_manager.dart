@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:path/path.dart' as path;
 import 'package:sprintf/sprintf.dart';
 
@@ -17,6 +16,7 @@ import 'package:zone/model/local_file.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 
 /// 权重管理页面, 管理通过 latest.json 配置的文件
 class PageWeightManager extends ConsumerWidget {

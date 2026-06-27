@@ -8,20 +8,20 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:sprintf/sprintf.dart';
 
 // Project imports:
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_tag.dart';
-import 'package:zone/func/debug_trace.dart';
 
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
@@ -203,7 +203,7 @@ class ModelItem extends ConsumerWidget {
                       onTap: _onStartTap,
                       child: AnimatedContainer(
                         // opacity: loading || unzipping ? 0.6 : 1,
-                        duration: Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 200),
                         child: Container(
                           decoration: BoxDecoration(
                             color: loading || unzipping ? appTheme.qb8 : primary,

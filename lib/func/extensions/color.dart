@@ -4,11 +4,9 @@ import 'dart:math';
 // Flutter imports:
 import 'package:flutter/widgets.dart';
 
-// Package imports:
-
 // Project imports:
-import 'package:zone/store/p.dart';
 import 'package:zone/func/debug_trace.dart';
+import 'package:zone/store/p.dart';
 
 extension RWKVColorExtension on Color {
   Color l(double toLight) {

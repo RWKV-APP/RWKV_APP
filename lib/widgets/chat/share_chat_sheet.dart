@@ -9,7 +9,6 @@ import 'package:flutter/rendering.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gal/gal.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -18,11 +17,12 @@ import 'package:sprintf/sprintf.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
+import 'package:zone/func/debug_trace.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/message.dart';
-import 'package:zone/func/debug_trace.dart';
 
 class ShareChatSheet extends ConsumerStatefulWidget {
   const ShareChatSheet({super.key});

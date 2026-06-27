@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/widgets/alert.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/measure_size.dart';
 
 const _kButtonSize = 72.0;
@@ -107,7 +107,7 @@ class AudioInput extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
 
     return AnimatedPositioned(
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
       curve: curve,
       bottom: shouldShow ? (0 + paddingBottom + bottomAdjust) : -_kWidgetSize,
       left: 0,

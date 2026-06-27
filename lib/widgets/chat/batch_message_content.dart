@@ -302,12 +302,12 @@ class _BatchScrollLeftButton extends ConsumerWidget {
     return AnimatedPositioned(
       left: show ? 4 : -100,
       top: 0,
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
       curve: Curves.easeOut,
       bottom: 0,
       child: AnimatedOpacity(
         opacity: show ? 1 : 0,
-        duration: Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
         child: Center(
           child: GestureDetector(
@@ -350,11 +350,11 @@ class _BatchScrollRightButton extends ConsumerWidget {
       right: show ? 4 : -100,
       top: 0,
       bottom: 0,
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
       curve: Curves.easeOut,
       child: AnimatedOpacity(
         opacity: show ? 1 : 0,
-        duration: Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
         child: Center(
           child: GestureDetector(
@@ -503,7 +503,7 @@ class _BatchSlotScrollToBottomButton extends ConsumerWidget {
 
     return AnimatedOpacity(
       opacity: show ? 1 : 0,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       curve: Curves.easeOut,
       child: IgnorePointer(
         ignoring: !show,
@@ -677,7 +677,7 @@ class _BatchSlotScrollToTopButton extends ConsumerWidget {
 
     return AnimatedOpacity(
       opacity: show ? 1 : 0,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       curve: Curves.easeOut,
       child: IgnorePointer(
         ignoring: !show,

@@ -23,7 +23,7 @@ class ModelInteractionButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appTheme = ref.watch(P.app.theme);
     final startButtonRadius = appTheme.startButtonRadius;
-    final Color buttonColor = Color(0xFF808080).withValues(alpha: .5);
+    final Color buttonColor = const Color(0xFF808080).withValues(alpha: .5);
 
     return Container(
       decoration: BoxDecoration(

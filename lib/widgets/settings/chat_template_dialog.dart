@@ -1,13 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:zone/widgets/alert.dart';
-
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/prompt_template.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 
 class ChatTemplateDialog extends StatefulWidget {
   final bool newChat;

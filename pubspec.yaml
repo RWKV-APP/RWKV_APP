@@ -87,7 +87,7 @@ dependencies:
   drift:
   drift_flutter:
   equatable:
-  file_picker:
+  file_picker: ^11.0.2
   flutter_dotenv:
   flutter_math_fork:
   flutter_native_splash:

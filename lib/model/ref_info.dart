@@ -1,11 +1,9 @@
 // Dart imports:
 import 'dart:convert';
 
-// Package imports:
-
 // Project imports:
-import 'package:zone/model/reference.dart';
 import 'package:zone/func/debug_trace.dart';
+import 'package:zone/model/reference.dart';
 
 final class RefInfo {
   final List<Reference> list;

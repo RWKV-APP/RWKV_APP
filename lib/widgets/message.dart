@@ -207,7 +207,7 @@ class _MessageState extends ConsumerState<Message> {
             ignoring: editingIndex != null && editingIndex != index,
             child: AnimatedOpacity(
               opacity: opacity,
-              duration: Duration(milliseconds: 250),
+              duration: const Duration(milliseconds: 250),
               child: Padding(
                 padding: .only(
                   left: batchData.isBatch ? 0 : appTheme.msgListMarginLeft,

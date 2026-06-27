@@ -102,7 +102,7 @@ class _List extends ConsumerWidget {
       child: GestureDetector(
         onTap: P.chat.onTapMessageList,
         child: RawScrollbar(
-          radius: Radius.circular(100),
+          radius: const Radius.circular(100),
           thickness: 4,
           thumbColor: qb.withValues(alpha: .4),
           padding: .only(top: top, right: 4, bottom: scrollBarBottom),

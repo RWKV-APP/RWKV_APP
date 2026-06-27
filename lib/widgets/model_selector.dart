@@ -29,8 +29,8 @@ import 'package:zone/widgets/model_item.dart';
 import 'package:zone/widgets/model_tag.dart';
 import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
-import 'package:zone/widgets/world_group_item.dart';
 import 'package:zone/widgets/widget_join.dart';
+import 'package:zone/widgets/world_group_item.dart';
 
 /// 模型选择器
 ///
@@ -787,12 +787,12 @@ class _LocalPthFileItem extends ConsumerWidget {
           GestureDetector(
             onTap: null,
             child: Container(
-              decoration: BoxDecoration(color: Color(0xFF808080).withValues(alpha: .5), borderRadius: BorderRadius.circular(4)),
+              decoration: BoxDecoration(color: const Color(0xFF808080).withValues(alpha: .5), borderRadius: BorderRadius.circular(4)),
               padding: const .all(8),
               child: Text(s.chatting, style: TextStyle(color: qw)),
             ),
           ),
-        SizedBox(width: 2),
+        const SizedBox(width: 2),
       ],
     );
   }

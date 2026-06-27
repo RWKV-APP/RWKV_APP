@@ -46,7 +46,7 @@ class Empty extends ConsumerWidget {
     final version = ref.watch(P.app.version);
 
     return AnimatedPositioned(
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOutBack,
       bottom: hasSpecificEmpty ? -2000 : 0,
       left: 0,
@@ -54,7 +54,7 @@ class Empty extends ConsumerWidget {
       top: 0,
       child: AnimatedOpacity(
         opacity: hasSpecificEmpty ? 0 : 1,
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOutBack,
         child: GestureDetector(
           onTap: () {

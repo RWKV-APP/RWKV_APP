@@ -10,13 +10,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
 import 'package:zone/func/format_bytes.dart';
+import 'package:zone/func/string_utils.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/lambada_test_item.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_selector.dart';
-import 'package:zone/func/string_utils.dart';
 
 part 'benchmark/benchmark_controls.dart';
 part 'benchmark/benchmark_results.dart';

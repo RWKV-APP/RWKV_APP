@@ -1,7 +1,13 @@
+// Dart imports:
 import 'dart:math' as math;
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
 import 'package:zone/func/collection_utils.dart';
 
 enum AlertPosition {
@@ -268,7 +274,7 @@ class _AlertHud extends ConsumerWidget {
           };
 
           final key = Key("Alert${item.id}");
-          final duration = item.displayStatus == _AlertDisplayStatus.show ? Duration(milliseconds: 250) : Duration(milliseconds: 150);
+          final duration = item.displayStatus == _AlertDisplayStatus.show ? const Duration(milliseconds: 250) : const Duration(milliseconds: 150);
           const iconHorizontalDistance = 8.0;
           final borderWidth = isLight ? 0.0 : 1.0;
 
@@ -313,7 +319,7 @@ class _AlertHud extends ConsumerWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(iconData, color: color),
-                              SizedBox(width: iconHorizontalDistance),
+                              const SizedBox(width: iconHorizontalDistance),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
                                   maxWidth: screenWidth * 0.85 - 16 - iconHorizontalDistance - borderWidth * 2,

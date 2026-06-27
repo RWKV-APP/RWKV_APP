@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:zone/widgets/alert.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
@@ -15,6 +14,7 @@ import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/page/completion/_completion_controller.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/alert.dart';
 
 class CompletionTitleBar extends ConsumerWidget {
   const CompletionTitleBar({super.key});
