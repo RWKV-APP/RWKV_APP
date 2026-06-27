@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
+import 'package:zone/func/collection_utils.dart';
 
 enum AlertPosition {
   top,
@@ -152,7 +152,7 @@ class _AlertStates {
   static final items = StateProvider<List<_AlertItem>>((ref) => []);
   static final container = ProviderContainer();
 
-  static FV show({
+  static Future<void> show({
     required int id,
     required String message,
     required _AlertNotifyStatus notifyStatus,
@@ -180,13 +180,13 @@ class _AlertStates {
     ];
     container.read(items.notifier).state = nextDeploy;
 
-    await HF.wait(10);
+    await Future.delayed(const Duration(milliseconds: 10));
     _updateDisplayStatus(id, _AlertDisplayStatus.show);
 
-    await HF.wait(1900 + math.min(4000, message.length * 20).toInt());
+    await Future.delayed(Duration(milliseconds: 1900 + math.min(4000, message.length * 20).toInt()));
     _updateDisplayStatus(id, _AlertDisplayStatus.hide);
 
-    await HF.wait(250);
+    await Future.delayed(const Duration(milliseconds: 250));
     final currentBeforeRemove = container.read(items);
     final nextRemove = currentBeforeRemove.where((e) => e.id != id).toList();
     nextRemove.sort((left, right) => left.id - right.id);
@@ -219,9 +219,9 @@ class _AlertHud extends ConsumerWidget {
     final themeMode = Alert.preferredThemeMode ?? ThemeMode.system;
 
     return Material(
-      color: kC,
+      color: Colors.transparent,
       child: Stack(
-        children: items.indexMap((index, value) {
+        children: mapIndexed(items, (index, value) {
           final isLight = switch (themeMode) {
             ThemeMode.system => View.of(context).platformDispatcher.platformBrightness == Brightness.light,
             ThemeMode.light => true,
@@ -239,13 +239,13 @@ class _AlertHud extends ConsumerWidget {
               color = item.color ?? Colors.yellow[800]!;
               iconData = Icons.info_outline_rounded;
             case _AlertNotifyStatus.error:
-              color = item.color ?? kCR;
+              color = item.color ?? Colors.red;
               iconData = Icons.error_outline;
             case _AlertNotifyStatus.success:
-              color = item.color ?? kCG;
+              color = item.color ?? Colors.green;
               iconData = Icons.check_circle_outline_rounded;
             case _AlertNotifyStatus.info:
-              color = item.color ?? kCB;
+              color = item.color ?? Colors.blue;
               iconData = Icons.info_outline_rounded;
           }
 
@@ -268,11 +268,11 @@ class _AlertHud extends ConsumerWidget {
           };
 
           final key = Key("Alert${item.id}");
-          final duration = item.displayStatus == _AlertDisplayStatus.show ? 250.ms : 150.ms;
+          final duration = item.displayStatus == _AlertDisplayStatus.show ? Duration(milliseconds: 250) : Duration(milliseconds: 150);
           const iconHorizontalDistance = 8.0;
           final borderWidth = isLight ? 0.0 : 1.0;
 
-          return AP(
+          return AnimatedPositioned(
             key: key,
             duration: duration,
             curve: item.displayStatus == _AlertDisplayStatus.show ? Curves.easeOutBack : Curves.easeInBack,
@@ -280,30 +280,30 @@ class _AlertHud extends ConsumerWidget {
             bottom: bottom != null ? bottom + Alert.bottomAdjustment : null,
             height: screenHeight,
             width: screenWidth,
-            child: AO(
+            child: AnimatedOpacity(
               duration: duration,
               curve: item.displayStatus == _AlertDisplayStatus.show ? Curves.easeOutBack : Curves.easeInBack,
               opacity: item.displayStatus == _AlertDisplayStatus.show ? 1 : 0,
-              child: C(
-                decoration: const BD(color: kC),
+              child: Container(
+                decoration: const BoxDecoration(color: Colors.transparent),
                 child: Stack(
                   children: [
                     Positioned(
                       child: Align(
                         alignment: alignment,
-                        child: C(
+                        child: Container(
                           padding: const EdgeInsets.all(12),
-                          decoration: BD(
-                            color: isLight ? kW : kB,
-                            borderRadius: 10.r,
+                          decoration: BoxDecoration(
+                            color: isLight ? Colors.white : Colors.black,
+                            borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: color.q(0.33),
+                              color: color.withValues(alpha: 0.33),
                               width: borderWidth,
                             ),
                             boxShadow: [
                               if (isLight)
                                 BoxShadow(
-                                  color: kB.q(0.4),
+                                  color: Colors.black.withValues(alpha: 0.4),
                                   blurRadius: 4,
                                   offset: const Offset(0, 1),
                                 ),
@@ -313,7 +313,7 @@ class _AlertHud extends ConsumerWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(iconData, color: color),
-                              iconHorizontalDistance.w,
+                              SizedBox(width: iconHorizontalDistance),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
                                   maxWidth: screenWidth * 0.85 - 16 - iconHorizontalDistance - borderWidth * 2,

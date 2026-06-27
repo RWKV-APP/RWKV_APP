@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
@@ -77,8 +76,8 @@ class AskQuestionButton extends ConsumerWidget {
               height: height,
               padding: const .symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                color: color.q(
-                  userBackdropFilterForInputOptions
+                color: color.withValues(
+                  alpha: userBackdropFilterForInputOptions
                       ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                       : 1,
                 ),

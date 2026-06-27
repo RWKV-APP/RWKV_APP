@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:image_picker/image_picker.dart';
 
 // Project imports:
@@ -85,7 +84,7 @@ class PageOcr extends ConsumerWidget {
       body: Column(
         crossAxisAlignment: .center,
         children: [
-          screenWidth.w,
+          SizedBox(width: screenWidth),
           if (image != null) Expanded(child: _ImageView(image: image)) else const Expanded(child: _Guide()),
         ],
       ),
@@ -136,7 +135,7 @@ class _OcrOverlay extends ConsumerWidget {
     final showTranslation = ref.watch(P.ocr.showTranslation);
     final theme = Theme.of(context);
     final translationColor = theme.colorScheme.onSurface;
-    final translationBackgroundColor = theme.colorScheme.surface.q(.8);
+    final translationBackgroundColor = theme.colorScheme.surface.withValues(alpha: .8);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -273,7 +272,7 @@ class _BBoxPainter extends CustomPainter {
                 text: translation,
                 style: TextStyle(
                   fontSize: 8,
-                  color: translationColor ?? kB,
+                  color: translationColor ?? Colors.black,
                   backgroundColor: translationBackgroundColor,
                 ),
               ),
@@ -359,7 +358,7 @@ class _Guide extends ConsumerWidget {
       mainAxisAlignment: .center,
       children: [
         Container(
-          // decoration: BoxDecoration(color: Colors.red.q(.2)),
+          // decoration: BoxDecoration(color: Colors.red.withValues(alpha: .2)),
           padding: const .all(32),
           width: screenWidth,
           height: screenWidth,
@@ -367,7 +366,7 @@ class _Guide extends ConsumerWidget {
             crossAxisAlignment: .center,
             mainAxisAlignment: .center,
             children: [
-              FaIcon(FontAwesomeIcons.camera, size: 48, color: qb.q(.6667)),
+              FaIcon(FontAwesomeIcons.camera, size: 48, color: qb.withValues(alpha: .6667)),
               const SizedBox(height: 16),
               Text.rich(
                 textAlign: .center,
@@ -384,14 +383,14 @@ class _Guide extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 16,
           children: [
-            GD(
+            GestureDetector(
               onTap: P.ocr.takePhoto,
               child: Container(
                 decoration: BoxDecoration(
                   // border: .all(color: Colors.blue, width: 1),
                   borderRadius: .circular(48),
-                  color: primary.q(1),
-                  boxShadow: [BoxShadow(color: kB.q(.33), blurRadius: 10, offset: const Offset(0, 2))],
+                  color: primary.withValues(alpha: 1),
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .33), blurRadius: 10, offset: const Offset(0, 2))],
                 ),
                 height: 96,
                 width: 96,
@@ -404,14 +403,14 @@ class _Guide extends ConsumerWidget {
                 ),
               ),
             ),
-            GD(
+            GestureDetector(
               onTap: P.ocr.pickFromGallery,
               child: Container(
                 decoration: BoxDecoration(
                   // border: .all(color: Colors.blue, width: 1),
                   borderRadius: .circular(48),
-                  color: primary.q(1),
-                  boxShadow: [BoxShadow(color: kB.q(.33), blurRadius: 10, offset: const Offset(0, 2))],
+                  color: primary.withValues(alpha: 1),
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .33), blurRadius: 10, offset: const Offset(0, 2))],
                 ),
                 height: 96,
                 width: 96,
@@ -426,7 +425,7 @@ class _Guide extends ConsumerWidget {
             ),
           ],
         ),
-        paddingBottom.h,
+        SizedBox(height: paddingBottom),
       ],
     );
   }

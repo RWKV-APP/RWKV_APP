@@ -410,7 +410,8 @@ extension $Preference on _Preference {
       title: S.current.application_language,
       message: S.current.please_select_application_language,
       initialSelectedActionKey: currentQ,
-      actions: Language.values.m(
+      actions: mapFixed(
+        Language.values,
         (lang) => AlertDialogAction<Language>(
           label: lang.display ?? S.current.follow_system,
           key: lang,

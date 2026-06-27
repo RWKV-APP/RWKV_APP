@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:path/path.dart' as path;
 
 // Project imports:
@@ -18,6 +17,7 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/sending_interaction.dart';
 import 'package:zone/widgets/talk/tts_voice_source_panels.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class InputTextField extends ConsumerWidget {
   final DemoType? preferredDemoType;
@@ -118,7 +118,7 @@ class InputTextField extends ConsumerWidget {
             crossAxisAlignment: .stretch,
             children: [
               AnimatedSwitcher(
-                duration: 250.ms,
+                duration: Duration(milliseconds: 250),
                 switchInCurve: Curves.easeOutCubic,
                 switchOutCurve: Curves.easeInCubic,
                 transitionBuilder: (child, animation) {
@@ -141,7 +141,7 @@ class InputTextField extends ConsumerWidget {
               ),
               if (isSee)
                 AnimatedSwitcher(
-                  duration: 250.ms,
+                  duration: Duration(milliseconds: 250),
                   switchInCurve: Curves.easeOutCubic,
                   switchOutCurve: Curves.easeInCubic,
                   transitionBuilder: (child, animation) {
@@ -166,7 +166,7 @@ class InputTextField extends ConsumerWidget {
                 ),
               if (isTalk)
                 AnimatedSwitcher(
-                  duration: 250.ms,
+                  duration: Duration(milliseconds: 250),
                   switchInCurve: Curves.easeOutCubic,
                   switchOutCurve: Curves.easeInCubic,
                   transitionBuilder: (child, animation) {
@@ -244,7 +244,7 @@ class InputTextField extends ConsumerWidget {
                         focusedBorder: .none,
                         focusedErrorBorder: .none,
                         hintText: hintText,
-                        hintStyle: !isChat ? null : TextStyle(color: theme.colorScheme.onSurface.q(.5)),
+                        hintStyle: !isChat ? null : TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: .5)),
                       ),
                     ),
                   ),
@@ -333,7 +333,7 @@ class _EditingMessageBanner extends StatelessWidget {
     final s = S.of(context);
     final primary = theme.colorScheme.primary;
     final onSurface = theme.colorScheme.onSurface;
-    final bgColor = theme.colorScheme.surfaceContainer.q(.72);
+    final bgColor = theme.colorScheme.surfaceContainer.withValues(alpha: .72);
 
     return Padding(
       padding: const .fromLTRB(8, 8, 8, 2),
@@ -342,14 +342,14 @@ class _EditingMessageBanner extends StatelessWidget {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: .circular(12),
-          border: Border.all(color: primary.q(.16), width: .5),
+          border: Border.all(color: primary.withValues(alpha: .16), width: .5),
         ),
         child: Row(
           children: [
             Icon(
               Icons.edit_outlined,
               size: 16,
-              color: primary.q(.88),
+              color: primary.withValues(alpha: .88),
             ),
             const SizedBox(width: 6),
             Expanded(
@@ -357,7 +357,7 @@ class _EditingMessageBanner extends StatelessWidget {
                 s.editing,
                 maxLines: 1,
                 overflow: .ellipsis,
-                style: TextStyle(color: onSurface.q(.88), fontWeight: .w600, fontSize: 13),
+                style: TextStyle(color: onSurface.withValues(alpha: .88), fontWeight: .w600, fontSize: 13),
               ),
             ),
             Tooltip(
@@ -375,7 +375,7 @@ class _EditingMessageBanner extends StatelessWidget {
                     child: Icon(
                       Icons.close_rounded,
                       size: 18,
-                      color: onSurface.q(.78),
+                      color: onSurface.withValues(alpha: .78),
                     ),
                   ),
                 ),
@@ -421,9 +421,9 @@ class _SeeImageSection extends StatelessWidget {
           child: Container(
             padding: const .only(left: 8, top: 8, right: 4, bottom: 8),
             decoration: BoxDecoration(
-              color: surfaceContainer.q(.7),
+              color: surfaceContainer.withValues(alpha: .7),
               borderRadius: .circular(14),
-              border: Border.all(color: primary.q(.16)),
+              border: Border.all(color: primary.withValues(alpha: .16)),
             ),
             child: Row(
               children: [
@@ -438,7 +438,7 @@ class _SeeImageSection extends StatelessWidget {
                       errorBuilder: (context, error, stackTrace) {
                         return ColoredBox(
                           color: surfaceContainer,
-                          child: Icon(Icons.broken_image_outlined, color: onSurface.q(.45)),
+                          child: Icon(Icons.broken_image_outlined, color: onSurface.withValues(alpha: .45)),
                         );
                       },
                     ),
@@ -454,14 +454,14 @@ class _SeeImageSection extends StatelessWidget {
                         s.change_selected_image,
                         maxLines: 1,
                         overflow: .ellipsis,
-                        style: TextStyle(color: onSurface.q(.88), fontWeight: .w600),
+                        style: TextStyle(color: onSurface.withValues(alpha: .88), fontWeight: .w600),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         imagePath.split(Platform.pathSeparator).last,
                         maxLines: 1,
                         overflow: .ellipsis,
-                        style: TextStyle(color: onSurface.q(.56), fontSize: 12),
+                        style: TextStyle(color: onSurface.withValues(alpha: .56), fontSize: 12),
                       ),
                     ],
                   ),
@@ -470,7 +470,7 @@ class _SeeImageSection extends StatelessWidget {
                   onPressed: textFieldEnabled ? P.see.selectImage : null,
                   visualDensity: .compact,
                   tooltip: s.change_selected_image,
-                  icon: Icon(Icons.swap_horiz_rounded, size: 18, color: onSurface.q(.75)),
+                  icon: Icon(Icons.swap_horiz_rounded, size: 18, color: onSurface.withValues(alpha: .75)),
                 ),
                 IconButton(
                   onPressed: textFieldEnabled
@@ -480,7 +480,7 @@ class _SeeImageSection extends StatelessWidget {
                       : null,
                   visualDensity: .compact,
                   tooltip: s.clear,
-                  icon: Icon(Icons.close_rounded, size: 18, color: onSurface.q(.75)),
+                  icon: Icon(Icons.close_rounded, size: 18, color: onSurface.withValues(alpha: .75)),
                 ),
               ],
             ),
@@ -512,7 +512,7 @@ class _SeeImageQuickButton extends ConsumerWidget {
     final sendingButtonTouchMinSize = appTheme.sendingButtonTouchMinSize;
 
     return AnimatedSwitcher(
-      duration: 250.ms,
+      duration: Duration(milliseconds: 250),
       switchInCurve: Curves.easeOutCubic,
       switchOutCurve: Curves.easeInCubic,
       transitionBuilder: (child, animation) {
@@ -530,13 +530,13 @@ class _SeeImageQuickButton extends ConsumerWidget {
           ? const SizedBox(
               key: ValueKey("see-image-quick-button-hidden"),
             )
-          : C(
+          : Container(
               key: const ValueKey("see-image-quick-button"),
               child: Material(
                 color: Colors.transparent,
                 child: Tooltip(
                   message: s.select_new_image,
-                  child: GD(
+                  child: GestureDetector(
                     onTap: textFieldEnabled ? P.see.selectImage : null,
                     child: Container(
                       width: sendingButtonTouchMinSize.width,
@@ -548,7 +548,7 @@ class _SeeImageQuickButton extends ConsumerWidget {
                         child: Icon(
                           Icons.add_photo_alternate_outlined,
                           size: 22,
-                          color: shouldGuideImageSelection ? primary : onSurface.q(.82),
+                          color: shouldGuideImageSelection ? primary : onSurface.withValues(alpha: .82),
                         ),
                       ),
                     ),
@@ -592,16 +592,16 @@ class _TalkSourceVoiceSection extends StatelessWidget {
           child: Container(
             padding: const .only(left: 10, top: 4, right: 4, bottom: 4),
             decoration: BoxDecoration(
-              color: surfaceContainer.q(.7),
+              color: surfaceContainer.withValues(alpha: .7),
               borderRadius: .circular(14),
-              border: Border.all(color: primary.q(.16)),
+              border: Border.all(color: primary.withValues(alpha: .16)),
             ),
             child: Row(
               children: <Widget>[
                 Icon(
                   Icons.volume_up_rounded,
                   size: 20,
-                  color: primary.q(.85),
+                  color: primary.withValues(alpha: .85),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -613,7 +613,7 @@ class _TalkSourceVoiceSection extends StatelessWidget {
                         s.mimic + s.colon + sourceVoiceName,
                         maxLines: 1,
                         overflow: .ellipsis,
-                        style: TextStyle(color: onSurface.q(.74), fontSize: 14, fontWeight: .w600),
+                        style: TextStyle(color: onSurface.withValues(alpha: .74), fontSize: 14, fontWeight: .w600),
                       ),
                     ],
                   ),
@@ -622,7 +622,7 @@ class _TalkSourceVoiceSection extends StatelessWidget {
                   onPressed: textFieldEnabled ? onTapSetSourceWav : null,
                   visualDensity: .compact,
                   tooltip: s.voice_cloning,
-                  icon: Icon(Icons.swap_horiz_rounded, size: 18, color: onSurface.q(.75)),
+                  icon: Icon(Icons.swap_horiz_rounded, size: 18, color: onSurface.withValues(alpha: .75)),
                 ),
                 IconButton(
                   onPressed: textFieldEnabled
@@ -633,7 +633,7 @@ class _TalkSourceVoiceSection extends StatelessWidget {
                       : null,
                   visualDensity: .compact,
                   tooltip: s.clear,
-                  icon: Icon(Icons.close_rounded, size: 18, color: onSurface.q(.75)),
+                  icon: Icon(Icons.close_rounded, size: 18, color: onSurface.withValues(alpha: .75)),
                 ),
               ],
             ),
@@ -665,7 +665,7 @@ class _TalkSourceQuickButton extends ConsumerWidget {
     final sendingButtonTouchMinSize = appTheme.sendingButtonTouchMinSize;
 
     return AnimatedSwitcher(
-      duration: 250.ms,
+      duration: Duration(milliseconds: 250),
       switchInCurve: Curves.easeOutCubic,
       switchOutCurve: Curves.easeInCubic,
       transitionBuilder: (child, animation) {
@@ -683,13 +683,13 @@ class _TalkSourceQuickButton extends ConsumerWidget {
           ? const SizedBox(
               key: ValueKey("talk-source-wav-quick-button-hidden"),
             )
-          : C(
+          : Container(
               key: const ValueKey("talk-source-wav-quick-button"),
               child: Material(
                 color: Colors.transparent,
                 child: Tooltip(
                   message: s.voice_cloning,
-                  child: GD(
+                  child: GestureDetector(
                     onTap: textFieldEnabled ? onTapSetSourceWav : null,
                     child: Container(
                       width: sendingButtonTouchMinSize.width,
@@ -701,7 +701,7 @@ class _TalkSourceQuickButton extends ConsumerWidget {
                         child: Icon(
                           Icons.volume_up_rounded,
                           size: 22,
-                          color: textFieldEnabled ? primary : onSurface.q(.82),
+                          color: textFieldEnabled ? primary : onSurface.withValues(alpha: .82),
                         ),
                       ),
                     ),

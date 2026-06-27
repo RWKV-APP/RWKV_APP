@@ -92,7 +92,7 @@ final List<_LineRule> _lineRules = [
   _LineRule(
     name: 'no-with-opacity',
     pattern: RegExp(r'\.withOpacity\s*\('),
-    message: 'Use .q(alpha) for color alpha adjustments',
+    message: 'Use .withValues(alpha: alpha) for color alpha adjustments',
     libOnly: true,
   ),
   _LineRule(

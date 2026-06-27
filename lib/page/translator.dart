@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
@@ -14,6 +13,7 @@ import 'package:zone/model/browser_tab.dart';
 import 'package:zone/model/browser_window.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class PageTranslator extends ConsumerWidget {
   const PageTranslator({super.key});
@@ -119,9 +119,9 @@ class _TranslatorInterface extends ConsumerWidget {
         crossAxisAlignment: .stretch,
         children: [
           const _Source(),
-          Divider(height: 1, color: theme.colorScheme.outline.q(0.2)),
+          Divider(height: 1, color: theme.colorScheme.outline.withValues(alpha: 0.2)),
           const _TranslationDirectionButton(),
-          Divider(height: 1, color: theme.colorScheme.outline.q(0.2)),
+          Divider(height: 1, color: theme.colorScheme.outline.withValues(alpha: 0.2)),
           const _Result(),
           Padding(
             padding: const .all(12.0),
@@ -234,7 +234,7 @@ class _ResultState extends ConsumerState<_Result> {
     return Container(
       width: double.infinity,
       padding: const .fromLTRB(16, 8, 16, 16),
-      color: theme.colorScheme.surfaceContainerHighest.q(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: .start,
         children: [
@@ -287,7 +287,7 @@ class _InferenceInfo extends ConsumerWidget {
 
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.q(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: Padding(
         padding: const .all(8.0),
@@ -371,7 +371,7 @@ class _ServiceInfo extends ConsumerWidget {
 
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.q(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: Padding(
         padding: const .all(8.0),
@@ -414,7 +414,7 @@ class _BrowserInfo extends ConsumerWidget {
 
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.q(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: Padding(
         padding: const .all(8.0),
@@ -456,7 +456,7 @@ class _BrowserWindow extends ConsumerWidget {
       shape: RoundedRectangleBorder(
         borderRadius: .circular(8),
         side: BorderSide(
-          color: focused ? theme.colorScheme.primary : theme.colorScheme.outline.q(0.5),
+          color: focused ? theme.colorScheme.primary : theme.colorScheme.outline.withValues(alpha: 0.5),
           width: focused ? 2 : 1,
         ),
       ),
@@ -492,7 +492,7 @@ class _BrowserTab extends ConsumerWidget {
       trailing: isThisTabRunningTask
           ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
           : (pool.isNotEmpty ? Text(s.queued_x(pool.length)) : null),
-      tileColor: isActive ? theme.colorScheme.primaryContainer.q(0.4) : null,
+      tileColor: isActive ? theme.colorScheme.primaryContainer.withValues(alpha: 0.4) : null,
     );
   }
 }
@@ -533,7 +533,7 @@ class _TranslatorDebugInfo extends ConsumerWidget {
 
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.q(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: Padding(
         padding: const .all(8.0),
@@ -602,10 +602,10 @@ class _TranslationDirectionButton extends ConsumerWidget {
               child: Container(
                 padding: const .symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer.q(0.3),
+                  color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                   borderRadius: .circular(20),
                   border: .all(
-                    color: theme.colorScheme.primary.q(0.5),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.5),
                     width: 1,
                   ),
                 ),

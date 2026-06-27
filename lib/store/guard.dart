@@ -24,7 +24,7 @@ extension $Guard on _Guard {
     final subString = index >= 0 ? text.substring(index) : text;
     final blockedWords = _blockedWords.q;
     if (blockedWords.isEmpty) return false;
-    final start = HF.milliseconds;
+    final start = DateTime.now().millisecondsSinceEpoch;
     final res = await compute((args) {
       final (text, blockedWords) = args;
       for (final word in blockedWords) {
@@ -34,7 +34,7 @@ extension $Guard on _Guard {
       }
       return false;
     }, (subString, blockedWords));
-    final end = HF.milliseconds;
+    final end = DateTime.now().millisecondsSinceEpoch;
     checkingLatency.q = end - start;
     return res;
   }
@@ -74,7 +74,7 @@ extension _$Guard on _Guard {
   Future<void> _loadFilter() async {
     qq;
 
-    final start = HF.milliseconds;
+    final start = DateTime.now().millisecondsSinceEpoch;
     final filter = await rootBundle.loadString("assets/filter.txt");
     final (res, maxLength) = await compute((filter) async {
       final lines = filter.split("\n");
@@ -83,7 +83,7 @@ extension _$Guard on _Guard {
       final maxLength = words.map((e) => e.length).reduce((a, b) => a > b ? a : b);
       return (words, maxLength);
     }, filter);
-    final end = HF.milliseconds;
+    final end = DateTime.now().millisecondsSinceEpoch;
     _maxLength = maxLength;
     _blockedWords.q = res;
     qqw("加载敏感词耗时: ${end - start}ms, 最大长度: $_maxLength");

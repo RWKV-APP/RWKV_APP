@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -79,7 +78,7 @@ class BranchSwitcher extends ConsumerWidget {
               ),
               icon: Icon(
                 Icons.arrow_back_ios_new,
-                color: isFirst ? primary.q(.5) : primary,
+                color: isFirst ? primary.withValues(alpha: .5) : primary,
                 size: 16,
               ),
             ),
@@ -93,7 +92,7 @@ class BranchSwitcher extends ConsumerWidget {
               ),
               icon: Icon(
                 Icons.arrow_forward_ios,
-                color: isLast ? primary.q(.5) : primary,
+                color: isLast ? primary.withValues(alpha: .5) : primary,
                 size: 16,
               ),
             ),

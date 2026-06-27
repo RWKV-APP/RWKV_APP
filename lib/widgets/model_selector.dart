@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:desktop_drop/desktop_drop.dart' as desktop_drop;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:path/path.dart' as path;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 
@@ -31,6 +30,7 @@ import 'package:zone/widgets/model_tag.dart';
 import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/world_group_item.dart';
+import 'package:zone/widgets/widget_join.dart';
 
 /// 模型选择器
 ///
@@ -119,7 +119,7 @@ class ModelSelector extends ConsumerWidget {
         const _ModelsInConfigDownloadSource(),
         _ModelsInConfigFile(showNeko: _showNeko, rolePlayOnly: _rolePlayOnly),
       ],
-      (16 + paddingBottom).h,
+      SizedBox(height: (16 + paddingBottom)),
     ];
 
     return ClipRRect(
@@ -197,15 +197,15 @@ class _PanelBarState extends ConsumerState<_PanelBar> {
       ),
       padding: const .only(top: 4),
       decoration: BoxDecoration(
-        color: appTheme.settingItem.q(_opacity * _opacity),
+        color: appTheme.settingItem.withValues(alpha: _opacity * _opacity),
         border: Border(
-          bottom: BorderSide(color: qb.q(.2 * _opacity * _opacity), width: 0.5),
+          bottom: BorderSide(color: qb.withValues(alpha: .2 * _opacity * _opacity), width: 0.5),
         ),
       ),
       child: Row(
         crossAxisAlignment: .center,
         children: [
-          (ModelSelector._listPadding + (8 * _opacity)).w,
+          SizedBox(width: (ModelSelector._listPadding + (8 * _opacity))),
           Expanded(
             child: Text(
               s.chat_please_select_a_model,
@@ -236,7 +236,7 @@ class _SelectionHint extends ConsumerWidget {
     }
     return Text(
       "👉${s.str_model_selection_dialog_hint}👈",
-      style: TextStyle(color: qb.q(.7), fontSize: 12, fontWeight: .w500),
+      style: TextStyle(color: qb.withValues(alpha: .7), fontSize: 12, fontWeight: .w500),
     );
   }
 }
@@ -415,9 +415,9 @@ class _NpuRecommendationDivider extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
-    final lineColor = qb.q(.35);
+    final lineColor = qb.withValues(alpha: .35);
     final textStyle = theme.textTheme.labelSmall?.copyWith(
-      color: qb.q(.55),
+      color: qb.withValues(alpha: .55),
       fontSize: 11,
       fontWeight: .w500,
       height: 1,
@@ -471,7 +471,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
 
     final hasValidSoc = currentSocName.isNotEmpty && currentSocName != "Unknown";
 
-    return GD(
+    return GestureDetector(
       onTap: () {
         setState(() {
           _expanded = !_expanded;
@@ -481,21 +481,21 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
         margin: const .only(top: 8, bottom: 8),
         padding: const .all(8),
         decoration: BoxDecoration(
-          color: qb.q(.1),
+          color: qb.withValues(alpha: .1),
           borderRadius: .circular(8),
-          border: .all(color: qb.q(.2), width: 1),
+          border: .all(color: qb.withValues(alpha: .2), width: 1),
         ),
         child: Column(
           crossAxisAlignment: .start,
           children: [
             Row(
               children: [
-                Icon(Icons.info_outline, size: 18, color: qb.q(.8)),
+                Icon(Icons.info_outline, size: 18, color: qb.withValues(alpha: .8)),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
                     hasValidSoc ? s.npu_not_supported_title(currentSocName) : s.npu_not_supported_title(frontendSocName ?? "Unknown"),
-                    style: TextStyle(color: qb.q(.9), fontSize: 14, fontWeight: .w600),
+                    style: TextStyle(color: qb.withValues(alpha: .9), fontSize: 14, fontWeight: .w600),
                   ),
                 ),
               ],
@@ -507,16 +507,16 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                   children: [
                     Text(
                       S.current.your_device,
-                      style: TextStyle(color: qb.q(.7), fontSize: 12),
+                      style: TextStyle(color: qb.withValues(alpha: .7), fontSize: 12),
                     ),
                     const SizedBox(width: 6),
                     Container(
                       padding: const .symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: qb.q(.2),
+                        color: qb.withValues(alpha: .2),
                         borderRadius: .circular(6),
                         border: .all(
-                          color: qb.q(.4),
+                          color: qb.withValues(alpha: .4),
                           width: 1,
                         ),
                       ),
@@ -526,13 +526,13 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                           Icon(
                             Icons.phone_android,
                             size: 14,
-                            color: qb.q(.8),
+                            color: qb.withValues(alpha: .8),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             currentSocName,
                             style: TextStyle(
-                              color: qb.q(.9),
+                              color: qb.withValues(alpha: .9),
                               fontSize: 11,
                               fontWeight: .w600,
                             ),
@@ -546,7 +546,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
               ],
               Text(
                 S.current.we_support_npu_socs,
-                style: TextStyle(color: qb.q(.7), fontSize: 12),
+                style: TextStyle(color: qb.withValues(alpha: .7), fontSize: 12),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -556,10 +556,10 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                   return Container(
                     padding: const .symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: primary.q(.2),
+                      color: primary.withValues(alpha: .2),
                       borderRadius: .circular(4),
                       border: .all(
-                        color: primary.q(.9),
+                        color: primary.withValues(alpha: .9),
                         width: 0.5,
                       ),
                     ),
@@ -590,7 +590,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
               const SizedBox(height: 8),
               Text(
                 s.adapting_more_inference_chips,
-                style: TextStyle(color: qb.q(.7), fontSize: 12),
+                style: TextStyle(color: qb.withValues(alpha: .7), fontSize: 12),
               ),
             ],
           ],
@@ -617,7 +617,7 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
         const SizedBox(height: 4),
         Text(
           S.current.download_server_,
-          style: TextStyle(color: qb.q(.7), fontSize: 12, fontWeight: .w600),
+          style: TextStyle(color: qb.withValues(alpha: .7), fontSize: 12, fontWeight: .w600),
         ),
         const SizedBox(height: 4),
         Wrap(
@@ -649,7 +649,7 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           downloadSourceName,
-                          style: TextStyle(color: e == currentSource ? qw : qb.q(.7), fontSize: 14),
+                          style: TextStyle(color: e == currentSource ? qw : qb.withValues(alpha: .7), fontSize: 14),
                         ),
                       ),
                     ),
@@ -750,7 +750,7 @@ class _LocalPthFileItem extends ConsumerWidget {
                   Text(fileInfo.name, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .w600)),
                   Text(
                     formatBytes(fileInfo.fileSize),
-                    style: TextStyle(color: qb.q(.7), fontWeight: .w500),
+                    style: TextStyle(color: qb.withValues(alpha: .7), fontWeight: .w500),
                   ),
                 ],
               ),
@@ -787,12 +787,12 @@ class _LocalPthFileItem extends ConsumerWidget {
           GestureDetector(
             onTap: null,
             child: Container(
-              decoration: BoxDecoration(color: kG.q(.5), borderRadius: 4.r),
+              decoration: BoxDecoration(color: Color(0xFF808080).withValues(alpha: .5), borderRadius: BorderRadius.circular(4)),
               padding: const .all(8),
               child: Text(s.chatting, style: TextStyle(color: qw)),
             ),
           ),
-        2.w,
+        SizedBox(width: 2),
       ],
     );
   }
@@ -867,7 +867,7 @@ class _LocalPthDropZoneState extends ConsumerState<_LocalPthDropZone> {
     final folders = ref.watch(P.pth.folders);
     final qb = ref.watch(P.app.qb);
     final primary = theme.colorScheme.primary;
-    final folderWidgets = folders.map((e) => _LocalPthFolder(e)).toList().widgetJoin((index) => const SizedBox(height: 8));
+    final folderWidgets = joinWidgets(folders.map((e) => _LocalPthFolder(e)).toList(), (index) => const SizedBox(height: 8));
 
     return desktop_drop.DropTarget(
       onDragEntered: (_) => _setDragging(true),
@@ -887,9 +887,12 @@ class _LocalPthDropZoneState extends ConsumerState<_LocalPthDropZone> {
               Container(
                 padding: const .symmetric(horizontal: 10, vertical: 8),
                 decoration: BoxDecoration(
-                  color: primary.q(_dragging ? .14 : .08),
+                  color: primary.withValues(alpha: _dragging ? .14 : .08),
                   borderRadius: .circular(8),
-                  border: .all(color: primary.q(_dragging ? .75 : .35), width: _dragging ? 1 : 0.5),
+                  border: .all(
+                    color: primary.withValues(alpha: _dragging ? .75 : .35),
+                    width: _dragging ? 1 : 0.5,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -898,7 +901,7 @@ class _LocalPthDropZoneState extends ConsumerState<_LocalPthDropZone> {
                     Expanded(
                       child: Text(
                         S.current.drag_local_model_file_to_add_folder,
-                        style: TextStyle(color: qb.q(.82), fontSize: 12, fontWeight: .w500),
+                        style: TextStyle(color: qb.withValues(alpha: .82), fontSize: 12, fontWeight: .w500),
                       ),
                     ),
                   ],
@@ -914,17 +917,17 @@ class _LocalPthDropZoneState extends ConsumerState<_LocalPthDropZone> {
               child: IgnorePointer(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: primary.q(.08),
+                    color: primary.withValues(alpha: .08),
                     borderRadius: .circular(10),
-                    border: .all(color: primary.q(.9), width: 2),
+                    border: .all(color: primary.withValues(alpha: .9), width: 2),
                   ),
                   child: Center(
                     child: Container(
                       padding: const .symmetric(horizontal: 14, vertical: 10),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surface.q(.92),
+                        color: theme.colorScheme.surface.withValues(alpha: .92),
                         borderRadius: .circular(8),
-                        border: .all(color: primary.q(.6), width: 0.5),
+                        border: .all(color: primary.withValues(alpha: .6), width: 0.5),
                       ),
                       child: Row(
                         mainAxisSize: .min,
@@ -933,7 +936,7 @@ class _LocalPthDropZoneState extends ConsumerState<_LocalPthDropZone> {
                           const SizedBox(width: 8),
                           Text(
                             S.current.drag_local_model_file_to_add_folder,
-                            style: TextStyle(color: qb.q(.9), fontSize: 13, fontWeight: .w600),
+                            style: TextStyle(color: qb.withValues(alpha: .9), fontSize: 13, fontWeight: .w600),
                           ),
                         ],
                       ),
@@ -957,9 +960,9 @@ class _LocalPthEmpty extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: kC,
+        color: Colors.transparent,
         borderRadius: .circular(8),
-        border: .all(color: qb.q(.5), width: 1),
+        border: .all(color: qb.withValues(alpha: .5), width: 1),
       ),
       padding: const .all(12),
       child: Column(
@@ -1034,12 +1037,12 @@ class _LocalPthFolder extends ConsumerWidget {
                   children: [
                     Text(
                       S.current.local_folder_name(folderName),
-                      style: TextStyle(color: qb.q(.8), fontWeight: .w500),
+                      style: TextStyle(color: qb.withValues(alpha: .8), fontWeight: .w500),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       S.current.path_label(folderPathDisplay),
-                      style: theme.textTheme.bodySmall?.copyWith(color: qb.q(.8), fontSize: 12),
+                      style: theme.textTheme.bodySmall?.copyWith(color: qb.withValues(alpha: .8), fontSize: 12),
                     ),
                   ],
                 ),
@@ -1065,14 +1068,14 @@ class _LocalPthFolder extends ConsumerWidget {
           if (state == FolderState.loading) ...[
             Row(
               children: [
-                Text(S.current.scanning_folder_for_pth, style: const TextStyle(color: kCG)),
+                Text(S.current.scanning_folder_for_pth, style: const TextStyle(color: Colors.green)),
                 const SizedBox(width: 8),
                 const SizedBox(
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: kCG,
+                    color: Colors.green,
                   ),
                 ),
               ],
@@ -1092,20 +1095,22 @@ class _LocalPthFolder extends ConsumerWidget {
             const SizedBox(height: 8),
           ],
           if (files.isNotEmpty)
-            ...files
-                .map(
-                  (e) => Container(
-                    decoration: BoxDecoration(
-                      color: appTheme.settingItem,
-                      borderRadius: .circular(8),
-                      border: .all(color: qb.q(.1), width: .5),
+            ...joinWidgets(
+              files
+                  .map(
+                    (e) => Container(
+                      decoration: BoxDecoration(
+                        color: appTheme.settingItem,
+                        borderRadius: .circular(8),
+                        border: .all(color: qb.withValues(alpha: .1), width: .5),
+                      ),
+                      padding: const .all(4),
+                      child: _LocalPthFileItem(e, onStartToChat: () => P.pth.onStartLocalModelFileForChat(e)),
                     ),
-                    padding: const .all(4),
-                    child: _LocalPthFileItem(e, onStartToChat: () => P.pth.onStartLocalModelFileForChat(e)),
-                  ),
-                )
-                .toList()
-                .widgetJoin((index) => const SizedBox(height: 8)),
+                  )
+                  .toList(),
+              (index) => const SizedBox(height: 8),
+            ),
           const SizedBox(height: 4),
         ],
       ),

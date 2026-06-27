@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
@@ -68,7 +67,7 @@ class _MultiQuestionInputState extends ConsumerState<MultiQuestionInput> {
                 Text(
                   "${s.question} ${widget.index + 1}",
                   style: TextStyle(
-                    color: qb.q(.6),
+                    color: qb.withValues(alpha: .6),
                     fontSize: 12,
                     fontWeight: .w500,
                   ),
@@ -98,7 +97,7 @@ class _MultiQuestionInputState extends ConsumerState<MultiQuestionInput> {
                             P.multiQuestion.removeQuestion(widget.index);
                           }
                         : null,
-                    icon: Icon(Icons.remove_circle_outline, color: widget.canRemove ? qb.q(.4) : qb.q(.15)),
+                    icon: Icon(Icons.remove_circle_outline, color: widget.canRemove ? qb.withValues(alpha: .4) : qb.withValues(alpha: .15)),
                   ),
                 ),
               ],
@@ -113,7 +112,7 @@ class _MultiQuestionInputState extends ConsumerState<MultiQuestionInput> {
               style: TextStyle(color: qb, fontSize: 14),
               decoration: InputDecoration(
                 hintText: s.multi_question_input_hint,
-                hintStyle: TextStyle(color: qb.q(.3)),
+                hintStyle: TextStyle(color: qb.withValues(alpha: .3)),
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: const .only(top: 4),

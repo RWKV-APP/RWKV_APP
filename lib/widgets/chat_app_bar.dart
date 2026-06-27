@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:sprintf/sprintf.dart';
 
 // Project imports:
@@ -129,7 +128,7 @@ class _ChatAppBar extends ConsumerWidget {
         AppBar(
           toolbarHeight: theme.appBarTheme.toolbarHeight,
           centerTitle: true,
-          backgroundColor: backgroundColor.q(listAtTop ? 1 : 0.5),
+          backgroundColor: backgroundColor.withValues(alpha: listAtTop ? 1 : 0.5),
           systemOverlayStyle: qt.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
           title: Tooltip(
             message: displayName,
@@ -190,7 +189,7 @@ class _AppBarBottomLine extends ConsumerWidget {
 
     return Container(
       height: qt.appBarBottomLineHeight,
-      color: listAtTop ? Colors.transparent : qb.q(.2),
+      color: listAtTop ? Colors.transparent : qb.withValues(alpha: .2),
     );
   }
 }

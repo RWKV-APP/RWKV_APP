@@ -55,7 +55,7 @@ extension $ChatInputSend on _Chat {
     final _editingBotMessage = P.msg.editingBotMessage.q;
 
     if (_editingBotMessage) {
-      final id = HF.milliseconds;
+      final id = DateTime.now().millisecondsSinceEpoch;
       final currentMessages = [...P.msg.list.q];
       final _editingIndex = P.msg.editingOrRegeneratingIndex.q!;
       final currentMessage = currentMessages[_editingIndex];
@@ -191,7 +191,7 @@ extension $ChatInputSend on _Chat {
     if (animate == true) {
       await scrollController.animateTo(
         offset,
-        duration: duration ?? 300.ms,
+        duration: duration ?? Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
@@ -284,7 +284,7 @@ extension $ChatInputSend on _Chat {
 
     late final Message? userMsg;
 
-    final id = HF.milliseconds;
+    final id = DateTime.now().millisecondsSinceEpoch;
 
     if (thinkingMode.userMsgFooter.isNotEmpty) {
       message = message + thinkingMode.userMsgFooter;
@@ -377,7 +377,7 @@ extension $ChatInputSend on _Chat {
 
     P.msg.clearBottomDetailsStateInScope(scope: "chat_bot_message_bottom");
 
-    final receiveId = HF.milliseconds + 1;
+    final receiveId = DateTime.now().millisecondsSinceEpoch + 1;
     this.receiveId.q = receiveId;
 
     P.msg.editingOrRegeneratingIndex.q = null;

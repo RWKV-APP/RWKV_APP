@@ -1294,7 +1294,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     if (albatross is! Map) return null;
     final binary = albatross["binary_config"] ?? albatross["binary"];
     if (binary is! Map) return null;
-    return HF.json(binary);
+    return castJsonMap(binary);
   }
 
   Map<String, dynamic>? get _tokenizerConfig {
@@ -1303,7 +1303,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     if (albatross is! Map) return null;
     final tokenizer = albatross["tokenizer_config"] ?? albatross["tokenizer"];
     if (tokenizer is! Map) return null;
-    return HF.json(tokenizer);
+    return castJsonMap(tokenizer);
   }
 
   FileInfo? _fileInfoFromConfig(Map<String, dynamic>? config) {

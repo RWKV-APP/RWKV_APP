@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 
 // Project imports:
@@ -18,6 +17,8 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/menu.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/pager.dart';
+import 'package:zone/func/collection_utils.dart';
+import 'package:zone/widgets/widget_join.dart';
 
 const _kStaticGridColor = Color.fromARGB(255, 159, 255, 121);
 const _kDynamicGridColor = Color.fromARGB(255, 190, 158, 255);
@@ -73,7 +74,7 @@ class _Page extends ConsumerWidget {
       body: isPortrait
           ? Column(
               children: [
-                paddingTop.h,
+                SizedBox(height: paddingTop),
                 const _UI(),
                 const Expanded(child: _Terminal()),
               ],
@@ -339,7 +340,7 @@ class _UI extends ConsumerWidget {
       Container(
         height: 1,
         width: 1,
-        decoration: BoxDecoration(color: const Color(0xFF888888).q(0.33)),
+        decoration: BoxDecoration(color: const Color(0xFF888888).withValues(alpha: 0.33)),
         margin: const .symmetric(horizontal: 4, vertical: 4),
       ),
       const _TokensInfo(),
@@ -437,34 +438,38 @@ class _Board extends ConsumerWidget {
     final staticData = ref.watch(P.sudoku.staticData);
     final dynamicData = ref.watch(P.sudoku.dynamicData);
     final isDesktop = ref.watch(P.app.isDesktop);
-    final magnification = isDesktop ? 2 : 1;
+    final magnification = isDesktop ? 2.0 : 1.0;
     return Column(
-      children:
-          List.generate(9, (rowIndex) {
-            return Expanded(
-              child: Row(
-                children:
-                    List.generate(9, (colIndex) {
-                      final staticValue = staticData[rowIndex][colIndex];
-                      final dynamicValue = dynamicData[rowIndex][colIndex];
-                      final isStatic = dynamicValue == 0 || dynamicValue == staticValue;
-                      final value = isStatic ? staticValue : dynamicValue;
-                      return Expanded(
-                        child: _Grid(
-                          value: value,
-                          isStatic: isStatic,
-                          col: colIndex,
-                          row: rowIndex,
-                        ),
-                      );
-                    }).widgetJoin((e) {
-                      return e % 3 == 2 ? (4 * magnification).w : (2 * magnification).w;
-                    }),
+      children: joinWidgets(
+        List.generate(9, (rowIndex) {
+          return Expanded(
+            child: Row(
+              children: joinWidgets(
+                List.generate(9, (colIndex) {
+                  final staticValue = staticData[rowIndex][colIndex];
+                  final dynamicValue = dynamicData[rowIndex][colIndex];
+                  final isStatic = dynamicValue == 0 || dynamicValue == staticValue;
+                  final value = isStatic ? staticValue : dynamicValue;
+                  return Expanded(
+                    child: _Grid(
+                      value: value,
+                      isStatic: isStatic,
+                      col: colIndex,
+                      row: rowIndex,
+                    ),
+                  );
+                }),
+                (e) {
+                  return e % 3 == 2 ? SizedBox(width: 4 * magnification) : SizedBox(width: 2 * magnification);
+                },
               ),
-            );
-          }).widgetJoin((e) {
-            return e % 3 == 2 ? (4 * magnification).h : (2 * magnification).h;
-          }),
+            ),
+          );
+        }),
+        (e) {
+          return e % 3 == 2 ? SizedBox(height: 4 * magnification) : SizedBox(height: 2 * magnification);
+        },
+      ),
     );
   }
 }
@@ -492,53 +497,54 @@ class _Stack extends ConsumerWidget {
     return IgnorePointer(
       child: Stack(
         children: [
-          ...currentStack
-              .m((e) {
-                final col = e.$2;
-                final row = e.$1;
-                final position = widgetPosition["$col-$row"];
-                if (position == null) return Container();
-                return Positioned(
-                  left: _kStackPointOffsetX + position.dx - uiOffset.dx,
-                  top: _kStackPointOffsetY + position.dy - uiOffset.dy - padding.top,
-                  child: Container(
-                    height: _kStackPointSize,
-                    width: _kStackPointSize,
-                    decoration: BoxDecoration(
-                      color: _kStackColor,
-                      borderRadius: .circular(100),
-                    ),
+          ...joinWidgets(
+            mapFixed(currentStack, (e) {
+              final col = e.$2;
+              final row = e.$1;
+              final position = widgetPosition["$col-$row"];
+              if (position == null) return Container();
+              return Positioned(
+                left: _kStackPointOffsetX + position.dx - uiOffset.dx,
+                top: _kStackPointOffsetY + position.dy - uiOffset.dy - padding.top,
+                child: Container(
+                  height: _kStackPointSize,
+                  width: _kStackPointSize,
+                  decoration: BoxDecoration(
+                    color: _kStackColor,
+                    borderRadius: .circular(100),
                   ),
-                );
-              })
-              .widgetJoin((e) {
-                final start = currentStack[e];
-                final end = currentStack[e + 1];
-                final colStart = start.$2;
-                final rowStart = start.$1;
-                final startOffset = widgetPosition["$colStart-$rowStart"];
-                final colEnd = end.$2;
-                final rowEnd = end.$1;
-                final endOffset = widgetPosition["$colEnd-$rowEnd"];
-                if (startOffset == null || endOffset == null) return Container();
+                ),
+              );
+            }),
+            (e) {
+              final start = currentStack[e];
+              final end = currentStack[e + 1];
+              final colStart = start.$2;
+              final rowStart = start.$1;
+              final startOffset = widgetPosition["$colStart-$rowStart"];
+              final colEnd = end.$2;
+              final rowEnd = end.$1;
+              final endOffset = widgetPosition["$colEnd-$rowEnd"];
+              if (startOffset == null || endOffset == null) return Container();
 
-                return AnimatedOpacity(
-                  opacity: 1,
-                  duration: const Duration(milliseconds: 300),
-                  child: CustomPaint(
-                    painter: _ArrowPainter(
-                      start: (startOffset - uiOffset).translate(
-                        _kStackPointOffsetX + _kStackPointSize / 2,
-                        _kStackPointOffsetY + _kStackPointSize / 2 - padding.top,
-                      ),
-                      end: (endOffset - uiOffset).translate(
-                        _kStackPointOffsetX + _kStackPointSize / 2,
-                        _kStackPointOffsetY + _kStackPointSize / 2 - padding.top,
-                      ),
+              return AnimatedOpacity(
+                opacity: 1,
+                duration: const Duration(milliseconds: 300),
+                child: CustomPaint(
+                  painter: _ArrowPainter(
+                    start: (startOffset - uiOffset).translate(
+                      _kStackPointOffsetX + _kStackPointSize / 2,
+                      _kStackPointOffsetY + _kStackPointSize / 2 - padding.top,
+                    ),
+                    end: (endOffset - uiOffset).translate(
+                      _kStackPointOffsetX + _kStackPointSize / 2,
+                      _kStackPointOffsetY + _kStackPointSize / 2 - padding.top,
                     ),
                   ),
-                );
-              }),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -654,7 +660,7 @@ class _Grid extends ConsumerWidget {
       onTap: () => _onPressed(context, ref),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        decoration: BoxDecoration(color: bg, borderRadius: (2 * magnification).r),
+        decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular((2 * magnification).toDouble())),
         child: LayoutBuilder(
           builder: (context, constraints) {
             final maxWidth = constraints.maxWidth;
@@ -663,7 +669,7 @@ class _Grid extends ConsumerWidget {
               child: Text(
                 value != 0 ? value.toString() : "",
                 style: TextStyle(
-                  color: kB,
+                  color: Colors.black,
                   fontSize: textSize,
                   fontWeight: isDesktop ? .w600 : null,
                 ),
@@ -707,7 +713,7 @@ class _Terminal extends ConsumerWidget {
                 fontSize: isDesktop ? 16 : 10,
                 letterSpacing: 0,
                 height: 1.2,
-                color: kW.q(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
               ),
             );
           },

@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:equatable/equatable.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:path/path.dart' as p;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 
@@ -15,6 +14,8 @@ import 'package:zone/config.dart';
 import 'package:zone/model/file_download_source.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/func/debug_trace.dart';
+import 'package:zone/func/json_cast.dart';
 
 @immutable
 class FileInfo extends Equatable {
@@ -147,12 +148,12 @@ class FileInfo extends Equatable {
   });
 
   factory FileInfo.fromJSON(Map<String, dynamic> json) {
-    final firstBackend = HF.list(json['backends'] ?? []).firstOrNull;
+    final firstBackend = castList(json['backends'] ?? []).firstOrNull;
     final backend = firstBackend == null ? null : Backend.fromString(firstBackend);
     final rawFileType = json['fileType'];
     final fileType = rawFileType == null ? FileType.weights : FileType.values.byName(rawFileType);
-    final socLimitations = HF.list(json['socLimitations'] ?? []).map((e) => e.toString()).toList();
-    final unsupportedSocBrand = HF.list(json['unsupportedSocBrand'] ?? []).map((e) => SocBrand.values.byName(e.toString())).toSet();
+    final socLimitations = castList(json['socLimitations'] ?? []).map((e) => e.toString()).toList();
+    final unsupportedSocBrand = castList(json['unsupportedSocBrand'] ?? []).map((e) => SocBrand.values.byName(e.toString())).toSet();
     final url = json['url'] as String;
     final fileName = p.basename(Uri.parse(url).path);
     return FileInfo(
@@ -162,8 +163,8 @@ class FileInfo extends Equatable {
       fileSize: json['fileSize'],
       raw: url,
       isDebug: json['isDebug'] as bool? ?? false,
-      availableIn: HF.list(json['availableIn'] ?? []).map((e) => FileDownloadSource.values.byName(e.toString())).toList(),
-      supportedPlatforms: HF.list(json['platforms']).map((e) => e.toString()).toList(),
+      availableIn: castList(json['availableIn'] ?? []).map((e) => FileDownloadSource.values.byName(e.toString())).toList(),
+      supportedPlatforms: castList(json['platforms']).map((e) => e.toString()).toList(),
       backend: backend,
       sha256: json['sha256'] as String?,
       modelSize: json['modelSize'] as double?,
@@ -171,10 +172,10 @@ class FileInfo extends Equatable {
       updatedAt: json['updatedAt'] as String?,
       timestamp: json['date'] as int?,
       date: json['date'] != null ? DateTime.fromMillisecondsSinceEpoch(json['date'] * 1000) : null,
-      tags: HF.list(json['tags'] ?? []).map((e) => e.toString()).toList(),
+      tags: castList(json['tags'] ?? []).map((e) => e.toString()).toList(),
       socLimitations: socLimitations,
       unsupportedSocBrand: unsupportedSocBrand,
-      state: HF.list(json['state'] ?? []).map((e) => ModelStateFile.fromJson(e)).toList(),
+      state: castList(json['state'] ?? []).map((e) => ModelStateFile.fromJson(e)).toList(),
     );
   }
 

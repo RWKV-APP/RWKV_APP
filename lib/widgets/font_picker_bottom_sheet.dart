@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -199,7 +198,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
                 ),
               ],
             ),
-            Container(height: 0.5, color: qb.q(.2)),
+            Container(height: 0.5, color: qb.withValues(alpha: .2)),
             // 字体列表
             if (_isLoading)
               const Expanded(
@@ -261,7 +260,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
                 ],
               ),
             ),
-            paddingBottom.h,
+            SizedBox(height: paddingBottom),
           ],
         ),
       ),
@@ -307,13 +306,13 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
     return Container(
       key: key,
       padding: const .symmetric(horizontal: 16, vertical: 8),
-      color: qb.q(.1),
+      color: qb.withValues(alpha: .1),
       child: Text(
         letter,
         style: TextStyle(
           fontSize: 14,
           fontWeight: .w600,
-          color: qb.q(.8),
+          color: qb.withValues(alpha: .8),
         ),
       ),
     );
@@ -401,7 +400,7 @@ class _FontPreviewItemState extends State<_FontPreviewItem> {
     return InkWell(
       onTap: widget.onTap,
       child: Container(
-        color: widget.isSelected ? theme.colorScheme.primaryContainer.q(.25) : null,
+        color: widget.isSelected ? theme.colorScheme.primaryContainer.withValues(alpha: .25) : null,
         padding: const .symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
@@ -423,7 +422,7 @@ class _FontPreviewItemState extends State<_FontPreviewItem> {
                     style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 12,
-                      color: widget.qb.q(.6),
+                      color: widget.qb.withValues(alpha: .6),
                     ),
                   ),
                 ],

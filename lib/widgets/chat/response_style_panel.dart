@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -178,9 +177,9 @@ class _ResponseStyleSelectAllButton extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final responseStyle = ref.watch(P.chat.responseStyle);
     final allSelected = responseStyle.hasAllRoutes;
-    final foregroundColor = allSelected ? qb.q(.35) : qb.q(.78);
-    final borderColor = allSelected ? qb.q(.12) : qb.q(.22);
-    final backgroundColor = allSelected ? qb.q(.045) : (appTheme.isLight ? appTheme.qb14 : appTheme.qb12);
+    final foregroundColor = allSelected ? qb.withValues(alpha: .35) : qb.withValues(alpha: .78);
+    final borderColor = allSelected ? qb.withValues(alpha: .12) : qb.withValues(alpha: .22);
+    final backgroundColor = allSelected ? qb.withValues(alpha: .045) : (appTheme.isLight ? appTheme.qb14 : appTheme.qb12);
 
     return SizedBox(
       width: double.infinity,
@@ -225,9 +224,9 @@ class _ResponseStyleRouteCard extends ConsumerWidget {
     final bool disableToggle = route.isDefaultRoute && responseStyle.isDefault;
     final selectedBackgroundColor = appTheme.isLight ? appTheme.qb14 : appTheme.qb12;
     final backgroundColor = enabled ? selectedBackgroundColor : appTheme.settingItem;
-    final borderColor = enabled ? qb.q(.42) : qb.q(.11);
-    final titleColor = enabled ? qb.q(.95) : qb.q(.9);
-    final detailColor = enabled ? qb.q(.68) : qb.q(.56);
+    final borderColor = enabled ? qb.withValues(alpha: .42) : qb.withValues(alpha: .11);
+    final titleColor = enabled ? qb.withValues(alpha: .95) : qb.withValues(alpha: .9);
+    final detailColor = enabled ? qb.withValues(alpha: .68) : qb.withValues(alpha: .56);
 
     return Semantics(
       button: true,
@@ -297,8 +296,8 @@ class _ResponseStyleCheckMark extends ConsumerWidget {
     final theme = Theme.of(context);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
-    final backgroundColor = enabled ? qb.q(.78) : Colors.transparent;
-    final borderColor = enabled ? qb.q(.78) : qb.q(.28);
+    final backgroundColor = enabled ? qb.withValues(alpha: .78) : Colors.transparent;
+    final borderColor = enabled ? qb.withValues(alpha: .78) : qb.withValues(alpha: .28);
     final iconSize = (theme.iconTheme.size ?? 24) - 8;
     final iconColor = appTheme.qb15;
 

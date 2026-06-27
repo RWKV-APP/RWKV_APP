@@ -10,7 +10,6 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/services/role_play_manage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:path_provider/path_provider.dart';
 
 // Project imports:
@@ -20,6 +19,7 @@ import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat_history_width_limit.dart';
 import 'package:zone/widgets/conversation_item.dart';
+import 'package:zone/func/debug_trace.dart';
 
 final _roleplayConvList = qs<List<ConversationListItemData>>([]);
 
@@ -185,7 +185,7 @@ class _ConversationSeparator extends StatelessWidget {
     return Container(
       height: .5,
       margin: const .only(left: 68),
-      color: theme.dividerColor.q(.2),
+      color: theme.dividerColor.withValues(alpha: .2),
     );
   }
 }
@@ -317,7 +317,7 @@ class _BatchActionBar extends ConsumerWidget {
         color: theme.colorScheme.surface,
         border: Border(
           top: BorderSide(
-            color: theme.dividerColor.q(.2),
+            color: theme.dividerColor.withValues(alpha: .2),
             width: 1,
           ),
         ),

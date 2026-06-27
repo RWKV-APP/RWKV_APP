@@ -78,7 +78,7 @@ class _LambadaTestDataCard extends ConsumerWidget {
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: qb.q(.14), width: .5),
+        side: BorderSide(color: qb.withValues(alpha: .14), width: .5),
       ),
       child: Padding(
         padding: const .all(16.0),
@@ -97,8 +97,8 @@ class _LambadaTestDataCard extends ConsumerWidget {
               const SizedBox(height: 8),
               LinearProgressIndicator(
                 value: progress,
-                color: qb.q(.62),
-                backgroundColor: qb.q(.1),
+                color: qb.withValues(alpha: .62),
+                backgroundColor: qb.withValues(alpha: .1),
               ),
             ],
           ],
@@ -128,7 +128,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: qb.q(.14), width: .5),
+        side: BorderSide(color: qb.withValues(alpha: .14), width: .5),
       ),
       child: Padding(
         padding: const .all(16.0),
@@ -146,9 +146,9 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                   Container(
                     padding: const .symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: qb.q(.16),
+                      color: qb.withValues(alpha: .16),
                       borderRadius: .circular(12),
-                      border: .all(color: qb.q(.35)),
+                      border: .all(color: qb.withValues(alpha: .35)),
                     ),
                     child: Row(
                       mainAxisSize: .min,
@@ -166,7 +166,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                           s.real_time_update,
                           style: TextStyle(
                             fontSize: 12,
-                            color: qb.q(.75),
+                            color: qb.withValues(alpha: .75),
                             fontWeight: .w500,
                           ),
                         ),
@@ -183,7 +183,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                   child: _LambadaResultCard(
                     title: s.accuracy,
                     value: '${(acc * 100).toStringAsFixed(2)}%',
-                    color: qb.q(.95),
+                    color: qb.withValues(alpha: .95),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -191,7 +191,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                   child: _LambadaResultCard(
                     title: s.perplexity,
                     value: ppl.toStringAsFixed(2),
-                    color: qb.q(.85),
+                    color: qb.withValues(alpha: .85),
                   ),
                 ),
               ],
@@ -203,7 +203,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                   child: _LambadaResultCard(
                     title: s.correct_count,
                     value: '$correctCount',
-                    color: qb.q(.75),
+                    color: qb.withValues(alpha: .75),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -211,7 +211,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                   child: _LambadaResultCard(
                     title: s.total_count,
                     value: '$totalFinishCount',
-                    color: qb.q(.65),
+                    color: qb.withValues(alpha: .65),
                   ),
                 ),
               ],
@@ -285,7 +285,7 @@ class _LambadaTestListItem extends ConsumerWidget {
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: qb.q(.14), width: .5),
+          side: BorderSide(color: qb.withValues(alpha: .14), width: .5),
         ),
         child: Padding(
           padding: const .all(16.0),
@@ -305,7 +305,7 @@ class _LambadaTestListItem extends ConsumerWidget {
               if (displayOutputText.isEmpty)
                 Text(
                   s.target_text(displayTargetText),
-                  style: TextStyle(fontSize: 12, color: qb.q(.78)),
+                  style: TextStyle(fontSize: 12, color: qb.withValues(alpha: .78)),
                 )
               else
                 Row(
@@ -314,7 +314,7 @@ class _LambadaTestListItem extends ConsumerWidget {
                     Expanded(
                       child: Text(
                         s.target_text(displayTargetText),
-                        style: TextStyle(fontSize: 12, color: qb.q(.78)),
+                        style: TextStyle(fontSize: 12, color: qb.withValues(alpha: .78)),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -323,7 +323,7 @@ class _LambadaTestListItem extends ConsumerWidget {
                         s.model_output(displayOutputText),
                         style: TextStyle(
                           fontSize: 12,
-                          color: displayIsCorrect ? qb.q(.92) : qb.q(.62),
+                          color: displayIsCorrect ? qb.withValues(alpha: .92) : qb.withValues(alpha: .62),
                           fontWeight: displayIsCorrect ? FontWeight.w500 : FontWeight.w600,
                         ),
                       ),
@@ -345,7 +345,7 @@ class _LambadaTestListItem extends ConsumerWidget {
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: qb.q(.14), width: .5),
+        side: BorderSide(color: qb.withValues(alpha: .14), width: .5),
       ),
       child: Padding(
         padding: const .all(16.0),
@@ -357,7 +357,7 @@ class _LambadaTestListItem extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: .w600,
-                color: qb.q(.6),
+                color: qb.withValues(alpha: .6),
               ),
             ),
             const SizedBox(height: 8),
@@ -372,7 +372,7 @@ class _LambadaTestListItem extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     s.target_text(targetText!),
-                    style: TextStyle(fontSize: 12, color: qb.q(.78)),
+                    style: TextStyle(fontSize: 12, color: qb.withValues(alpha: .78)),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -381,7 +381,7 @@ class _LambadaTestListItem extends ConsumerWidget {
                     s.model_output(outputText!),
                     style: TextStyle(
                       fontSize: 12,
-                      color: isCorrect! ? qb.q(.92) : qb.q(.62),
+                      color: isCorrect! ? qb.withValues(alpha: .92) : qb.withValues(alpha: .62),
                       fontWeight: isCorrect! ? FontWeight.w500 : FontWeight.w600,
                     ),
                   ),
@@ -411,9 +411,9 @@ class _LambadaResultCard extends StatelessWidget {
     return Container(
       padding: const .all(12),
       decoration: BoxDecoration(
-        color: color.q(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: .circular(8),
-        border: .all(color: color.q(0.3)),
+        border: .all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [

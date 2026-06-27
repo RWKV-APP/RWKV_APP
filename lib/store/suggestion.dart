@@ -170,12 +170,12 @@ class _Suggestion {
       case WorldType.reasoningQA:
         return config.seeReasoningQa;
       case WorldType.ocr:
-        final shuffled = config.seeOcr.shuffled;
+        final shuffled = shuffledList(config.seeOcr);
         if (shuffled.length < 5) return shuffled;
         return shuffled.take(5).toList();
       case WorldType.modrwkvV2:
       case WorldType.modrwkvV3:
-        return [...config.seeReasoningQa, ...config.seeOcr].shuffled.take(5).toList();
+        return shuffledList([...config.seeReasoningQa, ...config.seeOcr]).take(5).toList();
       case null:
         return [];
     }
@@ -402,10 +402,10 @@ extension $Suggestion on _Suggestion {
     final excludeSet = exclude.map(_normalizePromptDedupeKey).where((item) => item.isNotEmpty).toSet();
     final seen = <String>{};
     final prompts = <String>[];
-    final pool = <Suggestion>[
+    final pool = shuffledList(<Suggestion>[
       if (useHighScoreApi.q && highScoreTopSuggestions.q.isNotEmpty) ...highScoreTopSuggestions.q,
       ...config.q.chat.expand((category) => category.items),
-    ].shuffled;
+    ]);
 
     for (final suggestion in pool) {
       final prompt = suggestion.prompt.trim();
@@ -460,11 +460,11 @@ List<Suggestion> _pickChatSuggestionsByCategory(
   final availableCategories = categories.where((category) => category.items.isNotEmpty).toList();
   if (availableCategories.isEmpty) return const [];
 
-  final selectedCategories = availableCategories.shuffled.take(min(_chatSuggestionCount, availableCategories.length)).toList();
+  final selectedCategories = shuffledList(availableCategories).take(min(_chatSuggestionCount, availableCategories.length)).toList();
   final suggestions = <Suggestion>[];
 
   for (final category in selectedCategories) {
-    final items = category.items.shuffled;
+    final items = shuffledList(category.items);
     if (items.isEmpty) continue;
     suggestions.add(items.first);
   }
@@ -477,10 +477,10 @@ List<String> _buildMixedTalkSuggestions(List<String> rawSuggestions) {
   const intonationCount = 1;
   const normalCount = totalCount - intonationCount;
 
-  final normalSuggestions = rawSuggestions.toList().shuffled.toList();
+  final normalSuggestions = shuffledList(rawSuggestions.toList()).toList();
   final selectedNormal = normalSuggestions.length <= normalCount ? normalSuggestions : normalSuggestions.take(normalCount).toList();
 
-  final intonationSuggestions = _buildIntonationSuggestionDisplays().shuffled.toList();
+  final intonationSuggestions = shuffledList(_buildIntonationSuggestionDisplays()).toList();
   if (intonationSuggestions.isEmpty) {
     if (normalSuggestions.length <= totalCount) return normalSuggestions;
     return normalSuggestions.take(totalCount).toList();
@@ -490,11 +490,11 @@ List<String> _buildMixedTalkSuggestions(List<String> rawSuggestions) {
     ...selectedNormal,
     intonationSuggestions.first,
   ];
-  return mixed.shuffled.toList();
+  return shuffledList(mixed).toList();
 }
 
 List<String> _buildIntonationSuggestionDisplays() {
-  return TTSInstruction.intonation.options.indexMap((index, option) {
+  return mapIndexed(TTSInstruction.intonation.options, (index, option) {
     final emoji = TTSInstruction.intonation.emojiOptions[index];
     return "$emoji$option";
   });

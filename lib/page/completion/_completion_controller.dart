@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:rwkv_mobile_flutter/from_rwkv.dart';
 import 'package:rxdart/rxdart.dart';
@@ -20,6 +19,7 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/completion/batch_completion_settings_panel.dart';
 import 'package:zone/widgets/model_selector.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class CompletionController {
   StreamSubscription? _subscription;

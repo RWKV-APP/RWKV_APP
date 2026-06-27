@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -21,6 +20,7 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat_history_width_limit.dart';
 import 'package:zone/widgets/dev_options_panel.dart';
 import 'package:zone/widgets/form_item.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class Settings extends ConsumerWidget {
   final ScrollController? scrollController;
@@ -147,8 +147,8 @@ class Settings extends ConsumerWidget {
                             behavior: HitTestBehavior.opaque,
                             onTap: () => _openRWKVMobileCommit(normalizedCommitId),
                             child: Container(
-                              decoration: const BD(
-                                color: kC,
+                              decoration: const BoxDecoration(
+                                color: Colors.transparent,
                               ),
                               padding: const EdgeInsets.all(4),
                               child: Text(
@@ -163,129 +163,129 @@ class Settings extends ConsumerWidget {
                   ],
                 ),
               ),
-              appTheme.settingsSectionTitleBottomSpace.h,
+              SizedBox(height: appTheme.settingsSectionTitleBottomSpace),
               Row(
                 mainAxisAlignment: .start,
                 children: [
-                  appTheme.settingsSectionTitleLeftSpace.w,
+                  SizedBox(width: appTheme.settingsSectionTitleLeftSpace),
                   Expanded(
                     child: Text(
                       s.application_settings,
-                      style: TextStyle(fontWeight: .w500, color: qb.q(.8), fontSize: 12),
+                      style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
                     ),
                   ),
                 ],
               ),
-              appTheme.settingsSectionTitleTopSpace.h,
+              SizedBox(height: appTheme.settingsSectionTitleTopSpace),
               FormItem(
                 isSectionStart: true,
-                icon: Icon(Icons.manage_accounts, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.manage_accounts, color: qb.withValues(alpha: .667), size: 16),
                 title: s.application_mode,
                 infoText: userType.displayName(),
                 onTap: P.preference.showUserTypeDialog,
               ),
               FormItem(
-                icon: Icon(Icons.format_size_outlined, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.format_size_outlined, color: qb.withValues(alpha: .667), size: 16),
                 title: s.font_setting,
                 infoText: "${P.preference.textScalePairs[preferredTextScaleFactor]}",
                 onTap: P.preference.goToFontSettings,
               ),
               FormItem(
-                icon: Icon(Icons.language_outlined, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.language_outlined, color: qb.withValues(alpha: .667), size: 16),
                 title: s.application_language,
                 infoText: preferredLanguage.display ?? s.follow_system,
                 onTap: P.preference.showLocaleDialog,
               ),
               if (userType.isGreaterThan(.user))
                 FormItem(
-                  icon: Icon(Icons.settings_applications, color: qb.q(.667), size: 16),
+                  icon: Icon(Icons.settings_applications, color: qb.withValues(alpha: .667), size: 16),
                   title: S.current.advance_settings,
                   onTap: () => push(.advancedSettings),
                 ),
               FormItem(
                 isSectionEnd: false,
-                icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.q(.667), size: 16),
+                icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.withValues(alpha: .667), size: 16),
                 title: s.appearance,
                 infoText: preferredThemeMode.displayName,
                 onTap: P.preference.showThemeSettings,
               ),
               FormItem(
-                icon: Icon(Icons.file_download_outlined, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.file_download_outlined, color: qb.withValues(alpha: .667), size: 16),
                 title: s.export_data,
                 onTap: () => P.dataExport.showExportDataSheet(context),
               ),
               FormItem(
                 isSectionEnd: true,
-                icon: Icon(Icons.storage, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.storage, color: qb.withValues(alpha: .667), size: 16),
                 title: s.weights_mangement,
                 infoText: totalUsage,
                 onTap: () => push(.weightManager),
               ),
-              appTheme.settingsSectionTitleBottomSpace.h,
+              SizedBox(height: appTheme.settingsSectionTitleBottomSpace),
               Row(
                 mainAxisAlignment: .start,
                 children: [
-                  appTheme.settingsSectionTitleLeftSpace.w,
+                  SizedBox(width: appTheme.settingsSectionTitleLeftSpace),
                   Expanded(
                     child: Text(
                       s.join_the_community,
-                      style: TextStyle(fontWeight: .w500, color: qb.q(.8), fontSize: 12),
+                      style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
                     ),
                   ),
                 ],
               ),
-              appTheme.settingsSectionTitleTopSpace.h,
+              SizedBox(height: appTheme.settingsSectionTitleTopSpace),
               FormItem(
-                icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
                 isSectionStart: true,
                 title: s.qq_group_1,
                 subtitle: "${s.application_internal_test_group}: 332381861",
                 onTap: _openQQGroup1,
               ),
               FormItem(
-                icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
                 title: s.qq_group_2,
                 subtitle: "${s.technical_research_group}: 325154699",
                 onTap: _openQQGroup2,
               ),
               if (kDebugMode)
                 FormItem(
-                  icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
+                  icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
                   title: "Test Page",
                   subtitle: "Test Page",
                   onTap: _onTestPageClicked,
                 ),
               FormItem(
-                icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
                 title: s.discord,
                 subtitle: s.join_our_discord_server,
                 onTap: _openDiscord,
               ),
               FormItem(
                 isSectionEnd: true,
-                icon: Icon(Icons.tag, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.tag, color: qb.withValues(alpha: .667), size: 16),
                 title: s.twitter,
                 subtitle: "@BlinkDL_AI",
                 onTap: _openTwitter,
               ),
-              appTheme.settingsSectionTitleBottomSpace.h,
+              SizedBox(height: appTheme.settingsSectionTitleBottomSpace),
               Row(
                 mainAxisAlignment: .start,
                 children: [
-                  appTheme.settingsSectionTitleLeftSpace.w,
+                  SizedBox(width: appTheme.settingsSectionTitleLeftSpace),
                   Expanded(
                     child: Text(
                       s.about,
-                      style: TextStyle(fontWeight: .w500, color: qb.q(.8), fontSize: 12),
+                      style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
                     ),
                   ),
                 ],
               ),
-              appTheme.settingsSectionTitleTopSpace.h,
+              SizedBox(height: appTheme.settingsSectionTitleTopSpace),
               FormItem(
                 isSectionStart: true,
                 title: s.feedback,
-                icon: Icon(Icons.feedback_outlined, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.feedback_outlined, color: qb.withValues(alpha: .667), size: 16),
                 onTap: _openFeedback,
               ),
               FormItem(
@@ -294,14 +294,14 @@ class Settings extends ConsumerWidget {
                   children: [
                     Text("$version($buildNumber)"),
                     AnimatedSize(
-                      duration: 200.ms,
+                      duration: Duration(milliseconds: 200),
                       curve: Curves.easeOutCubic,
                       child: Row(
                         mainAxisSize: .min,
                         children: [
                           if (checkingLatestVersion) const SizedBox(width: 8),
                           if (checkingLatestVersion)
-                            const SB(
+                            const SizedBox(
                               width: 16,
                               height: 16,
                               child: CircularProgressIndicator.adaptive(
@@ -313,26 +313,26 @@ class Settings extends ConsumerWidget {
                     ),
                   ],
                 ),
-                icon: Icon(Icons.update, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.update, color: qb.withValues(alpha: .667), size: 16),
                 onTap: () => P.app.checkUpdates(manually: true),
               ),
               FormItem(
                 title: s.github_repository,
-                icon: Icon(Icons.code, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.code, color: qb.withValues(alpha: .667), size: 16),
                 onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP", mode: LaunchMode.externalApplication),
               ),
               FormItem(
                 title: s.report_an_issue_on_github,
-                icon: Icon(Icons.bug_report, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.bug_report, color: qb.withValues(alpha: .667), size: 16),
                 onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP/issues/new", mode: LaunchMode.externalApplication),
               ),
               FormItem(
                 isSectionEnd: true,
                 title: s.license,
-                icon: Icon(Icons.contact_page_outlined, color: qb.q(.667), size: 16),
+                icon: Icon(Icons.contact_page_outlined, color: qb.withValues(alpha: .667), size: 16),
                 onTap: () => _showLicensePage(context, version, buildNumber, iconWidget),
               ),
-              paddingBottom.h,
+              SizedBox(height: paddingBottom),
             ],
           ),
         ),

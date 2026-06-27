@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -51,7 +50,7 @@ class PageTab extends ConsumerWidget {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
               child: Container(
-                color: appTheme.settingBg.q(.5),
+                color: appTheme.settingBg.withValues(alpha: .5),
               ),
             ),
           ),
@@ -63,9 +62,9 @@ class PageTab extends ConsumerWidget {
           height: appTheme.tabBarHeight,
           child: Container(
             decoration: BoxDecoration(
-              color: appTheme.settingBg.q(.5),
+              color: appTheme.settingBg.withValues(alpha: .5),
               borderRadius: .circular(100),
-              border: Border.all(color: qb.q(.2), width: .5),
+              border: Border.all(color: qb.withValues(alpha: .2), width: .5),
             ),
             child: const Row(
               children: [
@@ -101,8 +100,8 @@ class PageTab extends ConsumerWidget {
     );
 
     final isLight = appTheme.isLight;
-    final hoverColor = isLight ? kW.q(.95) : kW.q(.15);
-    final indicatorColor = isLight ? kW.q(.99) : kW.q(.2);
+    final hoverColor = isLight ? Colors.white.withValues(alpha: .95) : Colors.white.withValues(alpha: .15);
+    final indicatorColor = isLight ? Colors.white.withValues(alpha: .99) : Colors.white.withValues(alpha: .2);
     final railSelectedIndex = tabIndex == 2 ? null : tabIndex;
 
     final horizontalLayout = Row(
@@ -145,7 +144,7 @@ class PageTab extends ConsumerWidget {
         Container(
           width: .5,
           height: double.infinity,
-          color: qb.q(.2),
+          color: qb.withValues(alpha: .2),
         ),
         Expanded(child: child),
       ],
@@ -197,11 +196,11 @@ class _TabItem extends ConsumerWidget {
     final theme = Theme.of(context);
     final selectedIndex = ref.watch(P.app.tabIndex);
     final qb = ref.watch(P.app.qb);
-    final color = qb.q(selectedIndex == index ? 1 : .4);
+    final color = qb.withValues(alpha: selectedIndex == index ? 1 : .4);
 
-    return GD(
+    return GestureDetector(
       onTap: () => P.app.onTabSelected(index),
-      child: C(
+      child: Container(
         decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: .circular(100),
@@ -256,7 +255,7 @@ class _SideRailSettingsItem extends StatelessWidget {
               mainAxisSize: .min,
               children: [
                 AnimatedContainer(
-                  duration: 200.ms,
+                  duration: Duration(milliseconds: 200),
                   width: 56,
                   height: 32,
                   decoration: BoxDecoration(

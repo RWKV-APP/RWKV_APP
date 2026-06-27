@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:sprintf/sprintf.dart';
 
 // Project imports:
@@ -46,7 +45,7 @@ class _ReferenceInfoState extends ConsumerState<ReferenceInfo> {
               child: Container(
                 padding: const .symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: primary.q(.1),
+                  color: primary.withValues(alpha: .1),
                   borderRadius: .circular(20),
                 ),
                 child: searching
@@ -74,7 +73,7 @@ class _ReferenceInfoState extends ConsumerState<ReferenceInfo> {
                   SizedBox(
                     width: 18,
                     height: 18,
-                    child: CircularProgressIndicator(value: prefill, color: primary, backgroundColor: primary.q(.1)),
+                    child: CircularProgressIndicator(value: prefill, color: primary, backgroundColor: primary.withValues(alpha: .1)),
                   ),
                   const SizedBox(width: 10),
                   Text(S.current.analysing_result, style: const TextStyle(fontSize: 12)),

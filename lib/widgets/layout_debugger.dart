@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
+import 'package:zone/func/random_utils.dart';
 
 class LayoutDebugger extends ConsumerWidget {
   const LayoutDebugger({
@@ -26,7 +26,7 @@ class LayoutDebugger extends ConsumerWidget {
     if (!kDebugMode) return child;
     // final showFrame = ref.watch(P.debugger.showFrame);
     // final showFrame = false;
-    final frameWidth = HF.randomInt(min: 2, max: 2) / 2.0;
+    final frameWidth = randomInt(min: 2, max: 2) / 2.0;
 
     final colors = [
       const Color(0xFFAA0000),
@@ -36,7 +36,7 @@ class LayoutDebugger extends ConsumerWidget {
       const Color(0xFF000000),
     ];
 
-    final frameColor = colors[HF.randomInt(min: 0, max: colors.length - 1)].q(.33);
+    final frameColor = colors[randomInt(min: 0, max: colors.length - 1)].withValues(alpha: .33);
 
     // 注意这里不能写这句话, 否则会影响手势事件
     // if (!showFrame) return child;
@@ -64,7 +64,7 @@ class LayoutDebugger extends ConsumerWidget {
           Positioned(
             bottom: 0,
             child: Material(
-              color: qb.q(.5),
+              color: qb.withValues(alpha: .5),
               textStyle: TextStyle(color: qw, fontSize: 8),
               child: Container(
                 child: debugWidget!,

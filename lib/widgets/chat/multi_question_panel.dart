@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
@@ -70,7 +69,7 @@ class MultiQuestionPanel extends ConsumerWidget {
                         P.multiQuestion.addQuestion();
                       }
                     : null,
-                icon: Icon(Icons.add, color: canAdd ? null : theme.colorScheme.onSurface.q(.3)),
+                icon: Icon(Icons.add, color: canAdd ? null : theme.colorScheme.onSurface.withValues(alpha: .3)),
               ),
             ),
             Padding(
@@ -129,7 +128,7 @@ class _SendBar extends ConsumerWidget {
           style: FilledButton.styleFrom(
             backgroundColor: theme.colorScheme.primary,
             foregroundColor: theme.colorScheme.onPrimary,
-            disabledBackgroundColor: theme.colorScheme.primary.q(.3),
+            disabledBackgroundColor: theme.colorScheme.primary.withValues(alpha: .3),
             shape: RoundedRectangleBorder(borderRadius: .circular(10)),
           ),
         ),

@@ -45,17 +45,17 @@ class _BenchmarkScaffoldActionBar extends ConsumerWidget {
 
     final neutralOutlinedStyle = OutlinedButton.styleFrom(
       foregroundColor: qb,
-      backgroundColor: appTheme.settingItem.q(.82),
-      disabledBackgroundColor: appTheme.settingItem.q(.48),
-      side: BorderSide(color: qb.q(.2), width: .5),
+      backgroundColor: appTheme.settingItem.withValues(alpha: .82),
+      disabledBackgroundColor: appTheme.settingItem.withValues(alpha: .48),
+      side: BorderSide(color: qb.withValues(alpha: .2), width: .5),
       textStyle: theme.textTheme.bodyMedium,
     );
     final neutralFilledStyle = FilledButton.styleFrom(
-      backgroundColor: qb.q(.15),
+      backgroundColor: qb.withValues(alpha: .15),
       foregroundColor: qb,
-      disabledBackgroundColor: qb.q(.08),
-      disabledForegroundColor: qb.q(.4),
-      side: BorderSide(color: qb.q(.18), width: .5),
+      disabledBackgroundColor: qb.withValues(alpha: .08),
+      disabledForegroundColor: qb.withValues(alpha: .4),
+      side: BorderSide(color: qb.withValues(alpha: .18), width: .5),
       textStyle: theme.textTheme.bodyMedium,
     );
 
@@ -65,7 +65,7 @@ class _BenchmarkScaffoldActionBar extends ConsumerWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: appTheme.settingBg.withValues(alpha: .78),
-            border: Border(top: BorderSide(color: qb.q(.12), width: .5)),
+            border: Border(top: BorderSide(color: qb.withValues(alpha: .12), width: .5)),
           ),
           child: SafeArea(
             top: false,
@@ -132,9 +132,9 @@ class _BenchmarkLoadingProgress extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(
-        color: qb.q(.06),
+        color: qb.withValues(alpha: .06),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: qb.q(.14), width: .5),
+        border: Border.all(color: qb.withValues(alpha: .14), width: .5),
       ),
       child: Column(
         crossAxisAlignment: .stretch,
@@ -152,7 +152,7 @@ class _BenchmarkLoadingProgress extends ConsumerWidget {
               const SizedBox(width: 8),
               Text(
                 s.loading_progress_percent(progressPercent),
-                style: theme.textTheme.bodySmall?.copyWith(color: qb.q(.72)),
+                style: theme.textTheme.bodySmall?.copyWith(color: qb.withValues(alpha: .72)),
               ),
             ],
           ),
@@ -161,8 +161,8 @@ class _BenchmarkLoadingProgress extends ConsumerWidget {
             value: safeProgress,
             minHeight: 5,
             borderRadius: BorderRadius.circular(3),
-            color: qb.q(.62),
-            backgroundColor: qb.q(.12),
+            color: qb.withValues(alpha: .62),
+            backgroundColor: qb.withValues(alpha: .12),
           ),
         ],
       ),
@@ -187,7 +187,7 @@ class _RunningActionIcon extends StatelessWidget {
             dimension: 18,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: color.q(.5),
+              color: color.withValues(alpha: .5),
               strokeCap: StrokeCap.round,
             ),
           ),
@@ -196,7 +196,7 @@ class _RunningActionIcon extends StatelessWidget {
             height: 8,
             decoration: BoxDecoration(
               color: color,
-              borderRadius: 2.r,
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
         ],
@@ -238,7 +238,7 @@ class _BatchPlanCard extends ConsumerWidget {
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: qb.q(.14), width: .5),
+        side: BorderSide(color: qb.withValues(alpha: .14), width: .5),
       ),
       child: Padding(
         padding: const .symmetric(horizontal: 12, vertical: 12),
@@ -247,7 +247,7 @@ class _BatchPlanCard extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.dynamic_feed, size: 18, color: qb.q(.78)),
+                Icon(Icons.dynamic_feed, size: 18, color: qb.withValues(alpha: .78)),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -299,7 +299,7 @@ class _InlineInfoRow extends ConsumerWidget {
           child: Text(
             value,
             textAlign: TextAlign.end,
-            style: theme.textTheme.bodyMedium?.copyWith(color: qb.q(.72)),
+            style: theme.textTheme.bodyMedium?.copyWith(color: qb.withValues(alpha: .72)),
           ),
         ),
       ],
@@ -344,7 +344,7 @@ class _BenchmarkProgressCard extends ConsumerWidget {
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: qb.q(.14), width: .5),
+        side: BorderSide(color: qb.withValues(alpha: .14), width: .5),
       ),
       child: Padding(
         padding: const .symmetric(horizontal: 12, vertical: 12),
@@ -353,7 +353,7 @@ class _BenchmarkProgressCard extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.speed, size: 18, color: qb.q(.78)),
+                Icon(Icons.speed, size: 18, color: qb.withValues(alpha: .78)),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -365,7 +365,7 @@ class _BenchmarkProgressCard extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Text(
                   s.benchmark_batch(batchSize),
-                  style: theme.textTheme.bodyMedium?.copyWith(color: qb.q(.68)),
+                  style: theme.textTheme.bodyMedium?.copyWith(color: qb.withValues(alpha: .68)),
                 ),
               ],
             ),
@@ -423,7 +423,7 @@ class _ProgressLine extends ConsumerWidget {
               child: Text(
                 valueText,
                 textAlign: TextAlign.end,
-                style: theme.textTheme.bodyMedium?.copyWith(color: qb.q(.68)),
+                style: theme.textTheme.bodyMedium?.copyWith(color: qb.withValues(alpha: .68)),
               ),
             ),
           ],
@@ -433,7 +433,7 @@ class _ProgressLine extends ConsumerWidget {
           value: value,
           minHeight: 4,
           borderRadius: BorderRadius.circular(2),
-          color: qb.q(.5),
+          color: qb.withValues(alpha: .5),
           backgroundColor: appTheme.settingBg,
         ),
       ],
@@ -458,7 +458,7 @@ class _KeyValuePairs extends ConsumerWidget {
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: qb.q(.14), width: .5),
+        side: BorderSide(color: qb.withValues(alpha: .14), width: .5),
       ),
       child: Padding(
         padding: const .symmetric(horizontal: 12, vertical: 12),
@@ -483,7 +483,7 @@ class _KeyValuePairs extends ConsumerWidget {
               else
                 Container(
                   margin: const .symmetric(vertical: 6),
-                  decoration: BoxDecoration(color: qb.q(.16)),
+                  decoration: BoxDecoration(color: qb.withValues(alpha: .16)),
                   height: .5,
                 ),
             ],

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
@@ -47,7 +46,7 @@ class Empty extends ConsumerWidget {
     final version = ref.watch(P.app.version);
 
     return AnimatedPositioned(
-      duration: 200.ms,
+      duration: Duration(milliseconds: 200),
       curve: Curves.easeInOutBack,
       bottom: hasSpecificEmpty ? -2000 : 0,
       left: 0,
@@ -55,7 +54,7 @@ class Empty extends ConsumerWidget {
       top: 0,
       child: AnimatedOpacity(
         opacity: hasSpecificEmpty ? 0 : 1,
-        duration: 200.ms,
+        duration: Duration(milliseconds: 200),
         curve: Curves.easeInOutBack,
         child: GestureDetector(
           onTap: () {
@@ -138,7 +137,7 @@ class Empty extends ConsumerWidget {
                           ),
                         ),
                       const Spacer(),
-                      if (demoType == .tts) (inputHeight / 1.5).h,
+                      if (demoType == .tts) SizedBox(height: inputHeight / 1.5),
                     ],
                   ),
                 ),
@@ -192,7 +191,7 @@ class _EmptyV2 extends ConsumerWidget {
     ThemeData theme,
     dynamic suggestion,
   ) {
-    if (suggestion is! Suggestion) return theme.colorScheme.primary.q(.82);
+    if (suggestion is! Suggestion) return theme.colorScheme.primary.withValues(alpha: .82);
 
     switch (_normalizeCategory(suggestion.category)) {
       case "life":
@@ -222,7 +221,7 @@ class _EmptyV2 extends ConsumerWidget {
       case "数学":
         return _mathematicsSuggestionColor;
     }
-    return theme.colorScheme.primary.q(.82);
+    return theme.colorScheme.primary.withValues(alpha: .82);
   }
 
   void _onTap(dynamic suggestion) {

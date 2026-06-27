@@ -11,7 +11,6 @@ import 'package:gpt_markdown/custom_widgets/markdown_config.dart';
 import 'package:gpt_markdown/custom_widgets/selectable_adapter.dart';
 import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:syntax_highlight/syntax_highlight.dart';
@@ -1281,7 +1280,7 @@ class _Highlight extends ConsumerWidget {
       decoration: BoxDecoration(
         color: inlineCodeBackgroundColor,
         borderRadius: .circular(6),
-        border: .all(color: theme.dividerColor.q(appTheme.isLight ? .15 : .45)),
+        border: .all(color: theme.dividerColor.withValues(alpha: appTheme.isLight ? .15 : .45)),
       ),
       padding: const .only(left: 4, right: 4, top: 0, bottom: 0),
       child: Text.rich(
@@ -1439,9 +1438,9 @@ class _CodeState extends ConsumerState<_Code> {
 
     final qb = ref.watch(P.app.qb);
     final codeBlockBackgroundColor = switch (appTheme) {
-      .light => qb.q(.04),
-      .dim => qb.q(.08),
-      .lightsOut => qb.q(.1),
+      .light => qb.withValues(alpha: .04),
+      .dim => qb.withValues(alpha: .08),
+      .lightsOut => qb.withValues(alpha: .1),
     };
 
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
@@ -1462,13 +1461,13 @@ class _CodeState extends ConsumerState<_Code> {
               const SizedBox(width: 8),
               Text(
                 widget.name,
-                style: TextStyle(fontSize: 14, fontWeight: .w500, color: qb.q(.5)),
+                style: TextStyle(fontSize: 14, fontWeight: .w500, color: qb.withValues(alpha: .5)),
               ),
               const Spacer(),
               IconButton(
                 onPressed: _onCopyPressed,
                 icon: const Icon(Symbols.content_copy),
-                color: qb.q(.5),
+                color: qb.withValues(alpha: .5),
                 iconSize: 20,
                 style: IconButton.styleFrom(
                   padding: .zero,
@@ -1485,7 +1484,7 @@ class _CodeState extends ConsumerState<_Code> {
           const SizedBox(height: 4),
           Container(
             height: .5,
-            color: theme.dividerColor.q(appTheme.isLight ? .35 : .6),
+            color: theme.dividerColor.withValues(alpha: appTheme.isLight ? .35 : .6),
           ),
           const SizedBox(height: 4),
           NotificationListener<ScrollNotification>(

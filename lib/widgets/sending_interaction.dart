@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/model/demo_type.dart';
@@ -56,7 +55,7 @@ class _Send extends ConsumerWidget {
 
     return AnimatedOpacity(
       opacity: opacity,
-      duration: 250.ms,
+      duration: Duration(milliseconds: 250),
       child: GestureDetector(
         onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),
         child: Container(
@@ -95,7 +94,7 @@ class _Stop extends ConsumerWidget {
               height: sendingButtonTouchMinSize.height,
               child: Center(
                 child: Container(
-                  decoration: BoxDecoration(color: sendingButtonColor, borderRadius: 2.r),
+                  decoration: BoxDecoration(color: sendingButtonColor, borderRadius: BorderRadius.circular(2)),
                   width: 12,
                   height: 12,
                 ),
@@ -109,7 +108,7 @@ class _Stop extends ConsumerWidget {
                   width: 24,
                   height: 24,
                   child: CircularProgressIndicator(
-                    color: sendingButtonColor.q(.5),
+                    color: sendingButtonColor.withValues(alpha: .5),
                     strokeWidth: 3,
                     strokeCap: StrokeCap.round,
                   ),

@@ -395,7 +395,7 @@ extension $RWKVParams on _RWKVParams {
   }
 
   void _syncMaxBatchCount() {
-    for (final delay in [500.ms, 1000.ms, 2000.ms]) {
+    for (final delay in const [Duration(milliseconds: 500), Duration(milliseconds: 1000), Duration(milliseconds: 2000)]) {
       unawaited(_requestSupportedBatchSizesLater(delay));
     }
   }

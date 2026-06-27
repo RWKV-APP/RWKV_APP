@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:path/path.dart' as path;
 import 'package:sprintf/sprintf.dart';
@@ -161,7 +160,7 @@ class _Body extends ConsumerWidget {
         if (isDesktop) ...[
           const _CustomDirectoryTile(),
           Container(
-            decoration: BoxDecoration(color: qb.q(.3)),
+            decoration: BoxDecoration(color: qb.withValues(alpha: .3)),
             height: .5,
           ),
         ],
@@ -177,7 +176,7 @@ class _Body extends ConsumerWidget {
               separatorBuilder: (context, index) => Padding(
                 padding: const .symmetric(horizontal: 8),
                 child: Container(
-                  decoration: BoxDecoration(color: qb.q(.3)),
+                  decoration: BoxDecoration(color: qb.withValues(alpha: .3)),
                   height: .5,
                 ),
               ),
@@ -217,7 +216,7 @@ class _TotalSizeSection extends ConsumerWidget {
         if (!isDesktop) const SizedBox(height: 8),
         if (!isDesktop)
           Container(
-            decoration: BoxDecoration(color: qb.q(.3)),
+            decoration: BoxDecoration(color: qb.withValues(alpha: .3)),
             height: .5,
           ),
       ],
@@ -353,7 +352,7 @@ class _DownloadingSection extends ConsumerWidget {
         Padding(
           padding: const .symmetric(horizontal: 8),
           child: Container(
-            decoration: BoxDecoration(color: qb.q(.3)),
+            decoration: BoxDecoration(color: qb.withValues(alpha: .3)),
             height: .5,
           ),
         ),
@@ -451,24 +450,30 @@ class _DownloadingItem extends ConsumerWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: qb.q(_tagBgOpacity),
+                  color: qb.withValues(alpha: _tagBgOpacity),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 padding: const .symmetric(horizontal: 4, vertical: 2),
                 child: Text(
                   formatBytes(fileInfo.fileSize),
-                  style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
+                  style: TextStyle(
+                    fontSize: _tagTextSize,
+                    color: qb.withValues(alpha: _tagTextColorOpacity),
+                  ),
                 ),
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: qb.q(_tagBgOpacity),
+                  color: qb.withValues(alpha: _tagBgOpacity),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 padding: const .symmetric(horizontal: 4, vertical: 2),
                 child: Text(
                   targetLabel,
-                  style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
+                  style: TextStyle(
+                    fontSize: _tagTextSize,
+                    color: qb.withValues(alpha: _tagTextColorOpacity),
+                  ),
                 ),
               ),
             ],
@@ -538,19 +543,25 @@ class _WeightItem extends ConsumerWidget {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: qb.q(_tagBgOpacity),
+                        color: qb.withValues(alpha: _tagBgOpacity),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       padding: const .symmetric(horizontal: 4, vertical: 2),
                       child: Text(
                         formatBytes(fileInfo.fileSize),
-                        style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
+                        style: TextStyle(
+                          fontSize: _tagTextSize,
+                          color: qb.withValues(alpha: _tagTextColorOpacity),
+                        ),
                       ),
                     ),
                     if (needToShowBasename)
                       Text(
                         basename,
-                        style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
+                        style: TextStyle(
+                          fontSize: _tagTextSize,
+                          color: qb.withValues(alpha: _tagTextColorOpacity),
+                        ),
                       ),
                   ],
                 ),
@@ -665,12 +676,15 @@ class _MlxCacheItem extends ConsumerWidget {
                     Container(
                       padding: const .symmetric(horizontal: 4, vertical: 2),
                       decoration: BoxDecoration(
-                        color: qb.q(_tagBgOpacity),
+                        color: qb.withValues(alpha: _tagBgOpacity),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         formatBytes(directory.directorySize),
-                        style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
+                        style: TextStyle(
+                          fontSize: _tagTextSize,
+                          color: qb.withValues(alpha: _tagTextColorOpacity),
+                        ),
                       ),
                     ),
                   ],
@@ -776,12 +790,15 @@ class _SectionHeader extends ConsumerWidget {
           Container(
             padding: const .symmetric(horizontal: 4, vertical: 2),
             decoration: BoxDecoration(
-              color: qb.q(_tagBgOpacity),
+              color: qb.withValues(alpha: _tagBgOpacity),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
               formatBytes(totalSize),
-              style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
+              style: TextStyle(
+                fontSize: _tagTextSize,
+                color: qb.withValues(alpha: _tagTextColorOpacity),
+              ),
             ),
           ),
         ],
@@ -828,18 +845,24 @@ class _OtherFileItem extends ConsumerWidget {
                     Container(
                       padding: const .symmetric(horizontal: 4, vertical: 2),
                       decoration: BoxDecoration(
-                        color: qb.q(_tagBgOpacity),
+                        color: qb.withValues(alpha: _tagBgOpacity),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         formatBytes(file.fileSize),
-                        style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
+                        style: TextStyle(
+                          fontSize: _tagTextSize,
+                          color: qb.withValues(alpha: _tagTextColorOpacity),
+                        ),
                       ),
                     ),
                     if (needToShowBasename)
                       Text(
                         basename,
-                        style: TextStyle(fontSize: _tagTextSize, color: qb.q(_tagTextColorOpacity)),
+                        style: TextStyle(
+                          fontSize: _tagTextSize,
+                          color: qb.withValues(alpha: _tagTextColorOpacity),
+                        ),
                       ),
                   ],
                 ),
@@ -895,7 +918,7 @@ class _EmptyStateGuide extends ConsumerWidget {
             Icon(
               Icons.folder_open,
               size: 64,
-              color: theme.colorScheme.primary.q(.5),
+              color: theme.colorScheme.primary.withValues(alpha: .5),
             ),
             const SizedBox(height: 24),
             Text(

@@ -5,10 +5,10 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
+import 'package:zone/func/debug_trace.dart';
 
 extension RWKVColorExtension on Color {
   Color l(double toLight) {

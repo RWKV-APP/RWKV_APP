@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:path/path.dart' as path;
 
@@ -19,6 +18,8 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/model/tts_instruction.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/func/debug_trace.dart';
+import 'package:zone/func/collection_utils.dart';
 
 class TTSInteractions extends ConsumerWidget {
   const TTSInteractions({super.key});
@@ -200,7 +201,7 @@ class _IntonationPanel extends ConsumerWidget {
         child: Wrap(
           spacing: 4,
           runSpacing: 4,
-          children: TTSInstruction.intonation.options.indexMap((index, e) {
+          children: mapIndexed(TTSInstruction.intonation.options, (index, e) {
             final emoji = TTSInstruction.intonation.emojiOptions[index];
             return GestureDetector(
               onTap: () {
@@ -209,7 +210,7 @@ class _IntonationPanel extends ConsumerWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.transparent,
-                  border: .all(color: qb.q(.5), width: .5),
+                  border: .all(color: qb.withValues(alpha: .5), width: .5),
                   borderRadius: .circular(4),
                 ),
                 padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
@@ -232,7 +233,7 @@ class _AudioButton extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final primary = Theme.of(context).colorScheme.primary;
     const demoType = DemoType.tts;
-    final borderRadius = demoType != .tts ? 12.r : 6.r;
+    final borderRadius = demoType != .tts ? BorderRadius.circular(12) : BorderRadius.circular(6);
     final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
     return GestureDetector(
       onTap: P.talk.onAudioInteractorButtonPressed,
@@ -241,7 +242,7 @@ class _AudioButton extends ConsumerWidget {
         child: Container(
           padding: const .only(left: 8, top: 6, right: 8, bottom: 6),
           decoration: BoxDecoration(
-            color: primary.q(audioInteractorShown ? 1 : .1),
+            color: primary.withValues(alpha: audioInteractorShown ? 1 : .1),
             borderRadius: borderRadius,
           ),
           child: Text(
@@ -263,7 +264,7 @@ class _SpkButton extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final primary = Theme.of(context).colorScheme.primary;
     const demoType = DemoType.tts;
-    final borderRadius = demoType != .tts ? 12.r : 6.r;
+    final borderRadius = demoType != .tts ? BorderRadius.circular(12) : BorderRadius.circular(6);
     ref.watch(P.talk.intonationShown);
     ref.watch(P.talk.audioInteractorShown);
     final spkShown = ref.watch(P.talk.spkShown);
@@ -274,7 +275,7 @@ class _SpkButton extends ConsumerWidget {
         child: Container(
           padding: const .only(left: 8, top: 6, right: 8, bottom: 6),
           decoration: BoxDecoration(
-            color: primary.q(spkShown ? 1 : .1),
+            color: primary.withValues(alpha: spkShown ? 1 : .1),
             borderRadius: borderRadius,
           ),
           child: Text(
@@ -296,7 +297,7 @@ class _IntonationButton extends ConsumerWidget {
     final s = S.of(context);
     final primary = Theme.of(context).colorScheme.primary;
     const demoType = DemoType.tts;
-    final borderRadius = demoType != .tts ? 12.r : 6.r;
+    final borderRadius = demoType != .tts ? BorderRadius.circular(12) : BorderRadius.circular(6);
     final intonationShown = ref.watch(P.talk.intonationShown);
     return GestureDetector(
       onTap: P.talk.onIntonationButtonPressed,
@@ -305,7 +306,7 @@ class _IntonationButton extends ConsumerWidget {
         child: Container(
           padding: const .only(left: 8, top: 6, right: 8, bottom: 6),
           decoration: BoxDecoration(
-            color: primary.q(intonationShown ? 1 : .1),
+            color: primary.withValues(alpha: intonationShown ? 1 : .1),
             borderRadius: borderRadius,
           ),
           child: Text(
@@ -374,7 +375,7 @@ class _SpkPanel extends ConsumerWidget {
             scrollDirection: Axis.horizontal,
             physics: const AlwaysScrollableScrollPhysics(),
             child: Row(
-              children: [Language.zh_Hans, Language.en, Language.ja].m((e) {
+              children: mapFixed([Language.zh_Hans, Language.en, Language.ja], (e) {
                 final flag = e.flag;
                 final localizedName = e.soundDisplay;
                 final selected = selectedLanguage == e;
@@ -389,9 +390,9 @@ class _SpkPanel extends ConsumerWidget {
                     padding: const .symmetric(horizontal: 4, vertical: 2),
                     margin: const .only(right: 4),
                     decoration: BoxDecoration(
-                      color: filtered ? primary.q(.1) : Colors.transparent,
+                      color: filtered ? primary.withValues(alpha: .1) : Colors.transparent,
                       borderRadius: .circular(4),
-                      border: .all(color: qb.q(.5), width: .5),
+                      border: .all(color: qb.withValues(alpha: .5), width: .5),
                     ),
                     child: Row(
                       children: [
@@ -436,7 +437,7 @@ class _SpkPanel extends ConsumerWidget {
                           child: Container(
                             padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                             decoration: BoxDecoration(
-                              color: selected ? primary.q(.1) : Colors.transparent,
+                              color: selected ? primary.withValues(alpha: .1) : Colors.transparent,
                               borderRadius: .circular(6),
                             ),
                             child: Row(
@@ -444,7 +445,10 @@ class _SpkPanel extends ConsumerWidget {
                                 Expanded(
                                   child: Text(
                                     display,
-                                    style: TextStyle(color: selected ? primary : primary.q(.8), fontWeight: selected ? .w600 : .w400),
+                                    style: TextStyle(
+                                      color: selected ? primary : primary.withValues(alpha: .8),
+                                      fontWeight: selected ? .w600 : .w400,
+                                    ),
                                   ),
                                 ),
                                 if (selected)
@@ -549,7 +553,7 @@ class _InstructTabs extends ConsumerWidget {
           child: Wrap(
             // runSpacing: 4,
             spacing: 4,
-            children: TTSInstruction.values.where((e) => e.forInstruction).indexMap((index, e) {
+            children: mapIndexed(TTSInstruction.values.where((e) => e.forInstruction), (index, e) {
               final isSelected = P.talk.interactingInstruction.q == e;
               String displayText = isZh ? e.nameCN : e.nameEN;
               if (isSelected) displayText += " ×";
@@ -575,13 +579,13 @@ class _InstructTabs extends ConsumerWidget {
                 },
                 child: AnimatedOpacity(
                   opacity: enabled ? 1 : .333,
-                  duration: 250.ms,
+                  duration: Duration(milliseconds: 250),
                   child: Container(
                     margin: const .only(top: 4),
                     padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                     decoration: BoxDecoration(
-                      color: isSelected ? primary.q(.2) : Colors.transparent,
-                      border: .all(color: qb.q(.5), width: .5),
+                      color: isSelected ? primary.withValues(alpha: .2) : Colors.transparent,
+                      border: .all(color: qb.withValues(alpha: .5), width: .5),
                       borderRadius: .circular(4),
                     ),
                     child: Row(
@@ -635,16 +639,16 @@ class _InstructOptions extends ConsumerWidget {
     return GestureDetector(
       onTap: () {},
       child: AnimatedContainer(
-        duration: 250.ms,
+        duration: Duration(milliseconds: 250),
         height: interactingInstruction == TTSInstruction.none ? 0 : 150,
         margin: const .only(top: 4),
         decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: qb.q(.5), width: .5)),
+          border: Border(top: BorderSide(color: qb.withValues(alpha: .5), width: .5)),
         ),
         child: Wrap(
           alignment: WrapAlignment.start,
           spacing: 4,
-          children: options.indexMap((index, e) {
+          children: mapIndexed(options, (index, e) {
             bool selected = false;
             if (interactingInstruction != TTSInstruction.none) {
               selected = P.talk.instructions(interactingInstruction).q == index;
@@ -658,8 +662,8 @@ class _InstructOptions extends ConsumerWidget {
                 padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                 margin: const .only(top: 4),
                 decoration: BoxDecoration(
-                  color: selected ? primary.q(.2) : Colors.transparent,
-                  border: .all(color: qb.q(.5), width: .5),
+                  color: selected ? primary.withValues(alpha: .2) : Colors.transparent,
+                  border: .all(color: qb.withValues(alpha: .5), width: .5),
                   borderRadius: .circular(4),
                 ),
                 child: Text(e + (selected ? " ×" : "")),
@@ -698,7 +702,7 @@ class _TextField extends ConsumerWidget {
 
     bool textFieldEnabled = loaded && !loading;
 
-    final borderRadius = demoType != .tts ? 12.r : 6.r;
+    final borderRadius = demoType != .tts ? BorderRadius.circular(12) : BorderRadius.circular(6);
 
     final textInInput = ref.watch(P.talk.textInInput);
 
@@ -731,7 +735,7 @@ class _TextField extends ConsumerWidget {
                   onTap: P.talk.onClearButtonPressed,
                   child: AnimatedOpacity(
                     opacity: textInInput.trim().isNotEmpty ? 1 : .5,
-                    duration: 250.ms,
+                    duration: Duration(milliseconds: 250),
                     child: Container(
                       padding: const .symmetric(horizontal: 4, vertical: 6),
                       child: const Icon(Icons.clear),
@@ -754,19 +758,19 @@ class _TextField extends ConsumerWidget {
             iconColor: qw,
             border: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: BorderSide(color: primary.q(.33)),
+              borderSide: BorderSide(color: primary.withValues(alpha: .33)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: BorderSide(color: primary.q(.33)),
+              borderSide: BorderSide(color: primary.withValues(alpha: .33)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: BorderSide(color: primary.q(.33)),
+              borderSide: BorderSide(color: primary.withValues(alpha: .33)),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: BorderSide(color: primary.q(.33)),
+              borderSide: BorderSide(color: primary.withValues(alpha: .33)),
             ),
             hintText: hintText,
           ),

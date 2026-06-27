@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:desktop_drop/desktop_drop.dart' as desktop_drop;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/func/albatross_endpoint_input.dart';
@@ -158,7 +157,7 @@ class _AlbatrossSetupSheetState extends ConsumerState<AlbatrossSetupSheet> {
               Text(
                 running ? s.albatross_connected : s.albatross_not_connected,
                 textAlign: .center,
-                style: TextStyle(color: qb.q(.65), fontSize: 12),
+                style: TextStyle(color: qb.withValues(alpha: .65), fontSize: 12),
               ),
             ],
           ),
@@ -189,7 +188,7 @@ class _PathRow extends StatelessWidget {
             width: 84,
             child: Text(
               label,
-              style: TextStyle(color: theme.colorScheme.onSurface.q(.7), fontSize: 12, fontWeight: .w500),
+              style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: .7), fontSize: 12, fontWeight: .w500),
             ),
           ),
           Expanded(
@@ -197,7 +196,7 @@ class _PathRow extends StatelessWidget {
               display,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: theme.colorScheme.onSurface.q(value.isEmpty ? .45 : .82), fontSize: 12),
+              style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: value.isEmpty ? .45 : .82), fontSize: 12),
             ),
           ),
         ],

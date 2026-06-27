@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/assets.gen.dart';
@@ -79,12 +78,12 @@ class ThinkingModeButton extends ConsumerWidget {
 
     return AnimatedSize(
       key: const Key("_ThinkingModeButton"),
-      duration: 150.ms,
+      duration: Duration(milliseconds: 150),
       curve: Curves.easeOutCubic,
       child: IntrinsicWidth(
         child: AnimatedOpacity(
           opacity: loading ? .33 : 1,
-          duration: 250.ms,
+          duration: Duration(milliseconds: 250),
           child: GestureDetector(
             onTap: P.rwkvParams.onThinkModeTapped,
             child: ClipRRect(
@@ -100,8 +99,10 @@ class ThinkingModeButton extends ConsumerWidget {
                   child: Container(
                     padding: padding,
                     decoration: BoxDecoration(
-                      color: color.q(
-                        useBackdropFilter ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier : 1,
+                      color: color.withValues(
+                        alpha: useBackdropFilter
+                            ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
+                            : 1,
                       ),
                       borderRadius: .circular(60),
                       border: border,

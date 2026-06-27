@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -70,8 +69,8 @@ class ResponseStyleButton extends ConsumerWidget {
               height: height,
               padding: const .symmetric(horizontal: 8),
               decoration: BoxDecoration(
-                color: bgColor.q(
-                  userBackdropFilterForInputOptions
+                color: bgColor.withValues(
+                  alpha: userBackdropFilterForInputOptions
                       ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                       : 1,
                 ),

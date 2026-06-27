@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/models/model_info.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:rwkv_downloader/downloader.dart';
 
 // Project imports:
@@ -13,6 +12,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_item.dart';
+import 'package:zone/func/debug_trace.dart';
 
 ModelInfo? rolePlayCurrentModel;
 
@@ -113,7 +113,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
                         height: 8,
                         padding: const .symmetric(horizontal: 2),
                         alignment: .center,
-                        child: Container(height: 0.5, color: qb.q(.4)),
+                        child: Container(height: 0.5, color: qb.withValues(alpha: .4)),
                       ),
                   ],
                 ],

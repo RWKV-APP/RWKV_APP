@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:path/path.dart' as path;
 
@@ -133,10 +132,10 @@ class _TTSVoiceSourceTypePanel extends ConsumerWidget {
               children: <Widget>[
                 Text(
                   s.tts_voice_source_sheet_subtitle,
-                  style: TextStyle(color: qb.q(.7), fontSize: 12, fontWeight: .w500),
+                  style: TextStyle(color: qb.withValues(alpha: .7), fontSize: 12, fontWeight: .w500),
                 ),
                 const SizedBox(height: 8),
-                Container(height: .5, color: qb.q(.15)),
+                Container(height: .5, color: qb.withValues(alpha: .15)),
                 _TTSVoiceSourceOptionItem(
                   icon: Icons.record_voice_over_rounded,
                   title: s.tts_voice_source_preset_title,
@@ -147,7 +146,7 @@ class _TTSVoiceSourceTypePanel extends ConsumerWidget {
                     await TTSVoiceSourcePanels.showPrebuiltVoicesPanel();
                   },
                 ),
-                Container(height: .5, color: qb.q(.15)),
+                Container(height: .5, color: qb.withValues(alpha: .15)),
                 _TTSVoiceSourceOptionItem(
                   icon: Icons.mic_rounded,
                   title: s.tts_voice_source_my_voice_title,
@@ -158,7 +157,7 @@ class _TTSVoiceSourceTypePanel extends ConsumerWidget {
                     await TTSVoiceSourcePanels.showRecordVoicePanel();
                   },
                 ),
-                Container(height: .5, color: qb.q(.15)),
+                Container(height: .5, color: qb.withValues(alpha: .15)),
                 _TTSVoiceSourceOptionItem(
                   icon: Icons.audio_file_rounded,
                   title: s.tts_voice_source_file_title,
@@ -192,11 +191,11 @@ class _TTSVoiceSourceTypePanelBar extends ConsumerWidget {
         minHeight: kToolbarHeight - 4,
       ),
       padding: const .only(top: 4),
-      decoration: const BoxDecoration(color: kC),
+      decoration: const BoxDecoration(color: Colors.transparent),
       child: Row(
         crossAxisAlignment: .center,
         children: <Widget>[
-          listPadding.w,
+          SizedBox(width: listPadding),
           Expanded(
             child: Text(
               s.tts_voice_source_sheet_title,
@@ -251,7 +250,7 @@ class _TTSVoiceSourceOptionItem extends StatelessWidget {
                 height: 32,
                 decoration: BoxDecoration(
                   borderRadius: .circular(1000),
-                  color: iconColor.q(.12),
+                  color: iconColor.withValues(alpha: .12),
                 ),
                 child: Icon(
                   icon,
@@ -266,21 +265,21 @@ class _TTSVoiceSourceOptionItem extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       title,
-                      style: TextStyle(color: onSurface.q(.92), fontWeight: .w600),
+                      style: TextStyle(color: onSurface.withValues(alpha: .92), fontWeight: .w600),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
                       maxLines: 2,
                       overflow: .ellipsis,
-                      style: TextStyle(color: onSurface.q(.56), fontSize: 12),
+                      style: TextStyle(color: onSurface.withValues(alpha: .56), fontSize: 12),
                     ),
                   ],
                 ),
               ),
               Icon(
                 Icons.chevron_right_rounded,
-                color: onSurface.q(.45),
+                color: onSurface.withValues(alpha: .45),
               ),
             ],
           ),
@@ -301,7 +300,7 @@ class _TTSPanelBar extends ConsumerWidget {
       constraints: const BoxConstraints(minHeight: kToolbarHeight - 4),
       padding: const .only(top: 4, left: 12, right: 8),
       decoration: const BoxDecoration(
-        color: kC,
+        color: Colors.transparent,
       ),
       child: Row(
         crossAxisAlignment: .center,
@@ -406,9 +405,9 @@ class _TTSPrebuiltVoicesPanel extends ConsumerWidget {
                   padding: const .only(bottom: 6),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: selected ? primary.q(.1) : Colors.transparent,
+                      color: selected ? primary.withValues(alpha: .1) : Colors.transparent,
                       borderRadius: .circular(8),
-                      border: Border.all(color: qb.q(selected ? .4 : .2), width: .5),
+                      border: Border.all(color: qb.withValues(alpha: selected ? .4 : .2), width: .5),
                     ),
                     child: InkWell(
                       onTap: () {
@@ -429,7 +428,7 @@ class _TTSPrebuiltVoicesPanel extends ConsumerWidget {
                                     child: Text(
                                       display,
                                       style: TextStyle(
-                                        color: selected ? primary : theme.colorScheme.onSurface.q(.85),
+                                        color: selected ? primary : theme.colorScheme.onSurface.withValues(alpha: .85),
                                         fontWeight: selected ? .w600 : .w400,
                                       ),
                                     ),
@@ -499,9 +498,9 @@ class _LanguageFilterChip extends ConsumerWidget {
       child: Container(
         padding: const .symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
-          color: isFiltered ? primary.q(.1) : Colors.transparent,
+          color: isFiltered ? primary.withValues(alpha: .1) : Colors.transparent,
           borderRadius: .circular(6),
-          border: Border.all(color: qb.q(.35), width: .5),
+          border: Border.all(color: qb.withValues(alpha: .35), width: .5),
         ),
         child: Row(
           children: <Widget>[
@@ -588,7 +587,7 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
               children: <Widget>[
                 Text(
                   s.you_can_record_your_voice_and_let_rwkv_to_copy_it,
-                  style: TextStyle(color: qb.q(.85), fontWeight: .w500),
+                  style: TextStyle(color: qb.withValues(alpha: .85), fontWeight: .w500),
                 ),
                 const SizedBox(height: 32),
                 Center(
@@ -610,13 +609,13 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
                             _onTapCancel(context);
                           },
                     child: AnimatedContainer(
-                      duration: 200.ms,
+                      duration: Duration(milliseconds: 200),
                       width: 92,
                       height: 92,
                       decoration: BoxDecoration(
-                        color: primary.q(recording ? .92 : .2),
+                        color: primary.withValues(alpha: recording ? .92 : .2),
                         borderRadius: .circular(1000),
-                        border: Border.all(color: primary.q(recording ? .95 : .5), width: 1),
+                        border: Border.all(color: primary.withValues(alpha: recording ? .95 : .5), width: 1),
                       ),
                       child: Center(
                         child: Icon(
@@ -632,12 +631,12 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
                 Text(
                   s.hold_to_record_release_to_send,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: qb.q(.75), fontSize: 13),
+                  style: TextStyle(color: qb.withValues(alpha: .75), fontSize: 13),
                 ),
               ],
             ),
           ),
-          paddingBottom.h,
+          SizedBox(height: paddingBottom),
         ],
       ),
     );

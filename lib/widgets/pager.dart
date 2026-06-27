@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class Pager extends ConsumerStatefulWidget {
   static final page = qs<double>(1.0);
@@ -32,7 +32,7 @@ class Pager extends ConsumerStatefulWidget {
     });
     await Pager._newController.q.animateToPage(
       targetPage,
-      duration: 300.ms,
+      duration: Duration(milliseconds: 300),
       curve: Curves.easeOutCubic,
     );
     await 50.msLater;
@@ -82,7 +82,7 @@ class _PagerState extends ConsumerState<Pager> {
         await 100.msLater;
         if (!mounted) return;
         if (Pager._newController.q.page == 1) return;
-        await Pager._newController.q.animateToPage(1, duration: 200.ms, curve: Curves.easeOutCubic);
+        await Pager._newController.q.animateToPage(1, duration: Duration(milliseconds: 200), curve: Curves.easeOutCubic);
       },
     );
     Pager._newController.q.addListener(_onPageChanged);
@@ -106,7 +106,7 @@ class _PagerState extends ConsumerState<Pager> {
 
   void _onPopInvokedWithResult(bool didPop, dynamic result) async {
     qqq("didPop: $didPop, result: $result");
-    await Pager._newController.q.animateToPage(1, duration: 200.ms, curve: Curves.easeOutCubic);
+    await Pager._newController.q.animateToPage(1, duration: Duration(milliseconds: 200), curve: Curves.easeOutCubic);
   }
 
   @override
@@ -197,7 +197,7 @@ class _Dim extends ConsumerWidget {
             child: Container(
               width: screenWidth,
               height: screenHeight,
-              decoration: BoxDecoration(color: qb.q(dark ? .1 : .3)),
+              decoration: BoxDecoration(color: qb.withValues(alpha: dark ? .1 : .3)),
             ),
           ),
         ),

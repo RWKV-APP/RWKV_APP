@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
@@ -20,6 +19,7 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/input_interactions.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class DecodeParamButton extends ConsumerWidget {
   const DecodeParamButton({super.key});
@@ -121,8 +121,8 @@ class DecodeParamButton extends ConsumerWidget {
                 height: height,
                 padding: const .symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  color: bgColor.q(
-                    userBackdropFilterForInputOptions
+                  color: bgColor.withValues(
+                    alpha: userBackdropFilterForInputOptions
                         ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                         : 1,
                   ),

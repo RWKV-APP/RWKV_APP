@@ -4,7 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Package imports:
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
@@ -59,11 +58,13 @@ void main() {
     );
 
     await _pumpMessage(tester: tester, msg: msg);
-    final expectedFadeColor = Color.alphaBlend(Colors.black.q(.025), Colors.white);
+    final expectedFadeColor = Color.alphaBlend(Colors.black.withValues(alpha: .025), Colors.white);
     final matchingFadeGradients = _findLinearGradients(tester)
         .where(
           (gradient) =>
-              gradient.colors.length == 2 && gradient.colors.first == expectedFadeColor && gradient.colors.last == expectedFadeColor.q(0),
+              gradient.colors.length == 2 &&
+              gradient.colors.first == expectedFadeColor &&
+              gradient.colors.last == expectedFadeColor.withValues(alpha: 0),
         )
         .toList();
 

@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:zone/func/shortcuts.dart';
 
 // msg_node.dart
 final class MsgNode {
@@ -26,7 +25,7 @@ final class MsgNode {
     this.root,
     int? createAtInUS,
   }) : children = List<MsgNode>.empty(growable: true) {
-    this.createAtInUS = createAtInUS ?? HF.microseconds;
+    this.createAtInUS = createAtInUS ?? DateTime.now().microsecondsSinceEpoch;
     // Initialized here
     // If you intended to use the passed 'children' parameter, you'd do:
     // this.children = List<MsgNode>.from(children, growable: true);

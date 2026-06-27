@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
@@ -59,8 +58,8 @@ class BatchButton extends ConsumerWidget {
             child: Container(
               height: height,
               decoration: BoxDecoration(
-                color: bgColor.q(
-                  userBackdropFilterForInputOptions
+                color: bgColor.withValues(
+                  alpha: userBackdropFilterForInputOptions
                       ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                       : 1,
                 ),

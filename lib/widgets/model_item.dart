@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:sprintf/sprintf.dart';
@@ -22,6 +21,7 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_tag.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
@@ -186,7 +186,7 @@ class ModelItem extends ConsumerWidget {
             decoration: BoxDecoration(
               color: appTheme.settingItem,
               borderRadius: .circular(8),
-              border: .all(color: qw.q(.1), width: .5),
+              border: .all(color: qw.withValues(alpha: .1), width: .5),
             ),
             margin: const .only(top: 8),
             padding: const .all(8),
@@ -203,7 +203,7 @@ class ModelItem extends ConsumerWidget {
                       onTap: _onStartTap,
                       child: AnimatedContainer(
                         // opacity: loading || unzipping ? 0.6 : 1,
-                        duration: 200.ms,
+                        duration: Duration(milliseconds: 200),
                         child: Container(
                           decoration: BoxDecoration(
                             color: loading || unzipping ? appTheme.qb8 : primary,
@@ -248,14 +248,14 @@ class ModelItem extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: .58),
                   borderRadius: .circular(8),
-                  border: .all(color: kCY.q(1), width: 1),
+                  border: .all(color: Colors.yellow.withValues(alpha: 1), width: 1),
                 ),
                 alignment: .center,
                 padding: const .symmetric(horizontal: 16),
                 child: Text(
                   S.current.model_item_ios18_weight_hint,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: kCY, fontSize: 13, fontWeight: .w600, height: 1.3),
+                  style: const TextStyle(color: Colors.yellow, fontSize: 13, fontWeight: .w600, height: 1.3),
                 ),
               ),
             ),
@@ -412,7 +412,7 @@ class _FileKeyItem extends ConsumerWidget {
             ),
             Text(
               formatBytes(fileSize),
-              style: TextStyle(color: qb.q(.7), fontWeight: .w500),
+              style: TextStyle(color: qb.withValues(alpha: .7), fontWeight: .w500),
             ),
           ],
         ),
@@ -474,7 +474,7 @@ class _Tags extends ConsumerWidget {
       children: <ModelTag>[
         if (fileInfo.backend == .webRwkv) const ModelTag(tag: "GPU"),
         ...tags.where((tag) => !hiddenTags.contains(tag)).map((tag) => ModelTag(tag: tag)),
-        if (kDebugMode && fileInfo.isDebug) const ModelTag(tag: "DEBUG", forceBgColor: Colors.red, forceTextColor: kW),
+        if (kDebugMode && fileInfo.isDebug) const ModelTag(tag: "DEBUG", forceBgColor: Colors.red, forceTextColor: Colors.white),
         if (quantization != null && quantization.isNotEmpty) ModelTag(tag: quantization, forceUppercase: true),
         if (date != null) ModelTag(tag: date),
       ],

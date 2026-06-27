@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
@@ -53,9 +52,9 @@ class ModelTag extends ConsumerWidget {
             size: 14,
             color: qb,
           ),
-          bgColor: qb.q(.1),
+          bgColor: qb.withValues(alpha: .1),
           textColor: qb,
-          borderColor: qb.q(.1),
+          borderColor: qb.withValues(alpha: .1),
           displayTagName: "GPU",
           fontWeight: .w400,
         );
@@ -67,69 +66,69 @@ class ModelTag extends ConsumerWidget {
             size: 14,
             color: tagBoltColor,
           ),
-          bgColor: qb.q(.1),
+          bgColor: qb.withValues(alpha: .1),
           textColor: qb,
-          borderColor: qb.q(.1),
+          borderColor: qb.withValues(alpha: .1),
           displayTagName: "NPU",
         );
       case "deepembedding":
         return _RenderingOptions(
-          bgColor: qb.q(.1),
+          bgColor: qb.withValues(alpha: .1),
           textColor: qb,
-          borderColor: qb.q(.1),
+          borderColor: qb.withValues(alpha: .1),
           displayTagName: "DeepEmb",
         );
       case "batch":
         return _RenderingOptions(
-          bgColor: qb.q(.1),
+          bgColor: qb.withValues(alpha: .1),
           textColor: qb,
-          borderColor: qb.q(.1),
+          borderColor: qb.withValues(alpha: .1),
           displayTagName: "BATCH",
         );
       case "webrwkv":
         return _RenderingOptions(
-          bgColor: qb.q(.1),
+          bgColor: qb.withValues(alpha: .1),
           textColor: qb,
-          borderColor: qb.q(.1),
+          borderColor: qb.withValues(alpha: .1),
           displayTagName: "WebRWKV",
         );
       case "cpu":
         return _RenderingOptions(
-          bgColor: qb.q(.1),
+          bgColor: qb.withValues(alpha: .1),
           textColor: qb,
-          borderColor: qb.q(.1),
+          borderColor: qb.withValues(alpha: .1),
           displayTagName: "CPU",
           fontWeight: .w400,
         );
       case "translate":
         return _RenderingOptions(
-          bgColor: qb.q(.1),
+          bgColor: qb.withValues(alpha: .1),
           textColor: qb,
-          borderColor: qb.q(.1),
+          borderColor: qb.withValues(alpha: .1),
           displayTagName: "Translation",
         );
       case "tts":
         return _RenderingOptions(
-          bgColor: qb.q(.1),
+          bgColor: qb.withValues(alpha: .1),
           textColor: qb,
-          borderColor: qb.q(.1),
+          borderColor: qb.withValues(alpha: .1),
           displayTagName: tagName.toUpperCase(),
           fontWeight: .w400,
         );
       case "vision":
         return _RenderingOptions(
-          bgColor: qb.q(.1),
+          bgColor: qb.withValues(alpha: .1),
           textColor: qb,
-          borderColor: qb.q(.1),
+          borderColor: qb.withValues(alpha: .1),
           displayTagName: tagName.toUpperCase(),
           fontWeight: .w400,
         );
       case "gpu":
       default:
         return _RenderingOptions(
-          bgColor: qb.q(.1),
+          bgColor: qb.withValues(alpha: .1),
           textColor: qb,
-          borderColor: qb.q(.1),
+          borderColor: qb.withValues(alpha: .1),
           displayTagName: tagName,
           fontWeight: .w400,
         );
@@ -155,7 +154,7 @@ class ModelTag extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: .center,
           children: [
-            if (opt.footer != null) 2.w,
+            if (opt.footer != null) const SizedBox(width: 2),
             Container(
               padding: const .symmetric(vertical: 1),
               child: Text(

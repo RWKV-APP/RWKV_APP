@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -99,7 +98,7 @@ class _AllSuggestionDialogState extends ConsumerState<AllSuggestionDialog> with 
           ),
           Container(
             height: .5,
-            color: theme.dividerColor.q(.3),
+            color: theme.dividerColor.withValues(alpha: .3),
           ),
           Expanded(
             child: PageView.builder(
@@ -164,15 +163,15 @@ class _PanelHeaderState extends ConsumerState<_PanelHeader> {
       constraints: const BoxConstraints(minHeight: kToolbarHeight - 4),
       padding: const .only(top: 4),
       decoration: BoxDecoration(
-        color: appTheme.settingItem.q(_opacity * _opacity),
+        color: appTheme.settingItem.withValues(alpha: _opacity * _opacity),
         border: Border(
-          bottom: BorderSide(color: qb.q(.2 * _opacity * _opacity), width: .5),
+          bottom: BorderSide(color: qb.withValues(alpha: .2 * _opacity * _opacity), width: .5),
         ),
       ),
       child: Row(
         crossAxisAlignment: .center,
         children: [
-          (12 + (8 * _opacity)).w,
+          SizedBox(width: (12 + (8 * _opacity))),
           Expanded(
             child: Text(
               s.all_prompt,
@@ -219,7 +218,7 @@ class _CategoryTabs extends ConsumerWidget {
         labelStyle: theme.textTheme.bodyMedium?.copyWith(fontWeight: .w600),
         unselectedLabelStyle: theme.textTheme.bodyMedium?.copyWith(
           fontWeight: .w400,
-          color: qb.q(.6),
+          color: qb.withValues(alpha: .6),
         ),
         indicatorWeight: 2.5,
         dividerHeight: 0,
@@ -262,7 +261,7 @@ class _SuggestionList extends ConsumerWidget {
       separatorBuilder: (_, _) => const SizedBox(height: 8),
       itemBuilder: (ctx, i) {
         final item = suggestions[i];
-        return GD(
+        return GestureDetector(
           onTap: () => onTap(item),
           child: Container(
             width: double.infinity,
@@ -270,12 +269,12 @@ class _SuggestionList extends ConsumerWidget {
             decoration: BoxDecoration(
               color: appTheme.settingItem,
               borderRadius: .circular(8),
-              border: .all(color: qb.q(.12), width: .5),
+              border: .all(color: qb.withValues(alpha: .12), width: .5),
             ),
             child: Text(
               item.display,
               style: theme.textTheme.bodyLarge?.copyWith(
-                color: qb.q(.94),
+                color: qb.withValues(alpha: .94),
                 height: 1.4,
               ),
             ),

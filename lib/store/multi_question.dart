@@ -187,7 +187,7 @@ extension $MultiQuestion on _MultiQuestion {
     }
 
     // 3. 创建用户消息
-    final int userMsgId = HF.milliseconds;
+    final int userMsgId = DateTime.now().millisecondsSinceEpoch;
     final userMsg = Message(
       id: userMsgId,
       content: storedContent,
@@ -199,7 +199,7 @@ extension $MultiQuestion on _MultiQuestion {
     parentNode = parentNode.add(MsgNode(userMsgId));
 
     // 4. 创建空 bot 消息
-    final int botMsgId = HF.milliseconds + 1;
+    final int botMsgId = DateTime.now().millisecondsSinceEpoch + 1;
     final botMsg = Message(
       id: botMsgId,
       content: "",

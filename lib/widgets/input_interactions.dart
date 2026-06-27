@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/model/demo_type.dart';
@@ -32,7 +31,7 @@ class InputInteractions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      decoration: const BoxDecoration(color: kC),
+      decoration: const BoxDecoration(color: Colors.transparent),
       child: _ItemList(preferredDemoType: preferredDemoType),
     );
   }

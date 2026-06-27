@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
@@ -66,10 +65,10 @@ class FormItem extends ConsumerWidget {
             decoration: BoxDecoration(
               color: appTheme.settingItem,
               borderRadius: .only(
-                topLeft: isSectionStart ? 12.rr : .zero,
-                topRight: isSectionStart ? 12.rr : .zero,
-                bottomLeft: isSectionEnd ? 12.rr : .zero,
-                bottomRight: isSectionEnd ? 12.rr : .zero,
+                topLeft: isSectionStart ? Radius.circular(12) : .zero,
+                topRight: isSectionStart ? Radius.circular(12) : .zero,
+                bottomLeft: isSectionEnd ? Radius.circular(12) : .zero,
+                bottomRight: isSectionEnd ? Radius.circular(12) : .zero,
               ),
             ),
             padding: const .only(left: 8, top: 12, right: 8, bottom: 12),
@@ -105,7 +104,7 @@ class FormItem extends ConsumerWidget {
                         flex: 2,
                         child: Text(
                           infoText ?? "null",
-                          style: TextStyle(fontWeight: .w500, fontSize: 12, color: qb.q(.5)),
+                          style: TextStyle(fontWeight: .w500, fontSize: 12, color: qb.withValues(alpha: .5)),
                           textAlign: TextAlign.right,
                         ),
                       ),
@@ -116,7 +115,7 @@ class FormItem extends ConsumerWidget {
                     if (showArrow)
                       Icon(
                         Icons.chevron_right,
-                        color: qb.q(.5),
+                        color: qb.withValues(alpha: .5),
                       ),
                   ],
                 ),
@@ -133,7 +132,7 @@ class FormItem extends ConsumerWidget {
               height: bottomLineHeight,
               child: Container(
                 height: bottomLineHeight,
-                color: bottomLineColor ?? qb.q(.1),
+                color: bottomLineColor ?? qb.withValues(alpha: .1),
               ),
             ),
         ],

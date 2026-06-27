@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 
 // Project imports:
@@ -44,7 +43,7 @@ class LogPanel extends ConsumerWidget {
     if (scrollController.hasClients) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
-        duration: 200.ms,
+        duration: Duration(milliseconds: 200),
         curve: Curves.easeInOut,
       );
     }
@@ -79,7 +78,7 @@ class LogPanel extends ConsumerWidget {
                 ? Center(
                     child: Text(
                       S.current.runtime_log_panel,
-                      style: TextStyle(color: qb.q(.5), fontSize: 14),
+                      style: TextStyle(color: qb.withValues(alpha: .5), fontSize: 14),
                     ),
                   )
                 : ListView.builder(
@@ -94,26 +93,26 @@ class LogPanel extends ConsumerWidget {
                     ),
                     itemBuilder: (context, index) {
                       final log = runtimeLog[index];
-                      final textStyle = TextStyle(color: qb.q(.9), fontSize: 12).copyWith(
+                      final textStyle = TextStyle(color: qb.withValues(alpha: .9), fontSize: 12).copyWith(
                         fontFamily: 'monospace',
                         fontFamilyFallback: const ['Menlo', 'Monaco', 'Courier'],
                       );
-                      final symbolTextColor = textStyle.color ?? qb.q(.9);
+                      final symbolTextColor = textStyle.color ?? qb.withValues(alpha: .9);
                       final formattedContentSpan = buildDebugPanelTextSpan(
                         text: log.content,
                         baseStyle: textStyle,
                         renderNewlineDirectly: renderNewlineDirectly,
                         renderSpaceSymbol: renderSpaceSymbol,
                         spaceTextColor: symbolTextColor,
-                        spaceBackgroundColor: kC,
+                        spaceBackgroundColor: Colors.transparent,
                         newlineTextColor: symbolTextColor,
-                        newlineBackgroundColor: kC,
+                        newlineBackgroundColor: Colors.transparent,
                       );
                       return Container(
                         decoration: BoxDecoration(
                           color: appTheme.settingItem,
                           borderRadius: .circular(8),
-                          border: .all(color: qb.q(.2), width: .5),
+                          border: .all(color: qb.withValues(alpha: .2), width: .5),
                         ),
                         padding: const .symmetric(horizontal: 10, vertical: 8),
                         margin: const .only(bottom: 8),
@@ -127,7 +126,7 @@ class LogPanel extends ConsumerWidget {
                                   const SizedBox(width: 6),
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: kCG.q(.25),
+                                      color: Colors.green.withValues(alpha: .25),
                                       borderRadius: .circular(4),
                                     ),
                                     padding: const .symmetric(horizontal: 6, vertical: 2),
@@ -138,13 +137,13 @@ class LogPanel extends ConsumerWidget {
                                 if (log.dateTimeString.isNotEmpty)
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: qb.q(.15),
+                                      color: qb.withValues(alpha: .15),
                                       borderRadius: .circular(4),
                                     ),
                                     padding: const .symmetric(horizontal: 6, vertical: 2),
                                     child: Text(
                                       log.dateTimeString,
-                                      style: TextStyle(color: qb.q(.85), fontWeight: .w600, fontSize: 11),
+                                      style: TextStyle(color: qb.withValues(alpha: .85), fontWeight: .w600, fontSize: 11),
                                     ),
                                   ),
                               ],
@@ -196,13 +195,13 @@ class _LogPanelBar extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appTheme.settingItem,
         border: Border(
-          bottom: BorderSide(color: qb.q(.12), width: .5),
+          bottom: BorderSide(color: qb.withValues(alpha: .12), width: .5),
         ),
       ),
       child: Row(
         crossAxisAlignment: .center,
         children: [
-          listPadding.w,
+          SizedBox(width: listPadding),
           IconButton(
             onPressed: onRefresh,
             icon: const Icon(Icons.refresh_rounded),
@@ -230,7 +229,7 @@ class _LogPanelBar extends ConsumerWidget {
             tooltip: S.current.close,
             style: IconButton.styleFrom(visualDensity: .compact),
           ),
-          (listPadding + 4).w,
+          SizedBox(width: (listPadding + 4)),
         ],
       ),
     );

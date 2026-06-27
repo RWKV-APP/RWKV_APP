@@ -53,7 +53,7 @@ extension $See on _See {
       return;
     }
 
-    final t = HF.milliseconds;
+    final t = DateTime.now().millisecondsSinceEpoch;
     startTime.q = t;
     recording.q = true;
     _currentStreamController = StreamController<Uint8List>();
@@ -89,7 +89,7 @@ extension $See on _See {
       return false;
     }
 
-    final t = HF.milliseconds;
+    final t = DateTime.now().millisecondsSinceEpoch;
     endTime.q = t;
 
     final audioLengthInMilliseconds = endTime.q - startTime.q;
@@ -108,7 +108,7 @@ extension $See on _See {
     final cacheDir = P.app.cacheDir.q;
     if (cacheDir == null) throw Exception("😡 cacheDir is null");
 
-    final path = "${cacheDir.path}/${HF.seconds}.${S.current.my_voice}.wav";
+    final path = "${cacheDir.path}/${(DateTime.now().millisecondsSinceEpoch ~/ 1000)}.${S.current.my_voice}.wav";
     final file = File(path);
 
     List<int> wavHeader = _createWavHeader(
@@ -187,7 +187,7 @@ extension $See on _See {
     onSuggestionTap("What is this image?");
     await 100.msLater;
     await selectImage();
-    // await Future.delayed(1000.ms);
+    // await Future.delayed(Duration(milliseconds: 1000));
     // P.chat.onSendButtonPressed(preferredDemoType: .see);
   }
 

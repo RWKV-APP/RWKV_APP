@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -89,13 +88,13 @@ class _DebugSwitchRow extends ConsumerWidget {
                   children: [
                     Text(
                       label,
-                      style: TextStyle(color: qb.q(.9), fontSize: 14, fontWeight: .w500),
+                      style: TextStyle(color: qb.withValues(alpha: .9), fontSize: 14, fontWeight: .w500),
                     ),
                     if (valueLabel != null) const SizedBox(height: 2),
                     if (valueLabel != null)
                       Text(
                         valueLabel!,
-                        style: theme.textTheme.bodySmall?.copyWith(color: qb.q(.6)),
+                        style: theme.textTheme.bodySmall?.copyWith(color: qb.withValues(alpha: .6)),
                       ),
                   ],
                 ),

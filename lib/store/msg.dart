@@ -48,7 +48,7 @@ class _Msg {
   late final list = qp<List<Message>>((ref) {
     final ids = ref.watch(this.ids);
     final pool = ref.watch(this.pool);
-    return ids.m((id) => pool[id]).withoutNull;
+    return nonNullList(mapFixed(ids, (id) => pool[id]));
   });
 
   late final length = qp<int>((ref) {

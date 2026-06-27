@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/assets.gen.dart';
@@ -74,9 +73,9 @@ class _List extends ConsumerWidget {
       child: GestureDetector(
         onTap: P.chat.onTapMessageList,
         child: RawScrollbar(
-          radius: 100.rr,
+          radius: Radius.circular(100),
           thickness: 4,
-          thumbColor: qb.q(.4),
+          thumbColor: qb.withValues(alpha: .4),
           padding: .only(top: top, right: 4, bottom: scrollBarBottom),
           controller: P.chat.scrollController,
           child: ListView.separated(
@@ -115,7 +114,7 @@ class _Empty extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
 
     return AnimatedPositioned(
-      duration: 200.ms,
+      duration: Duration(milliseconds: 200),
       curve: Curves.ease,
       bottom: inputHeight,
       left: 28,
@@ -123,7 +122,7 @@ class _Empty extends ConsumerWidget {
       top: 0,
       child: AnimatedOpacity(
         opacity: messages.isEmpty ? 1 : 0,
-        duration: 200.ms,
+        duration: Duration(milliseconds: 200),
         curve: Curves.ease,
         child: Column(
           crossAxisAlignment: .center,

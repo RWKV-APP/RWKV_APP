@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
@@ -48,8 +47,8 @@ class SuggestionChips extends ConsumerWidget {
     );
     final double sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
     final Color chipBackgroundColor = userBackdropFilterForInputOptions
-        ? backgroundColor.q(
-            backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier,
+        ? backgroundColor.withValues(
+            alpha: backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier,
           )
         : backgroundColor;
 
@@ -60,7 +59,7 @@ class SuggestionChips extends ConsumerWidget {
         padding: listPadding,
         itemBuilder: (BuildContext context, int index) {
           final item = suggestions[index];
-          return GD(
+          return GestureDetector(
             onTap: () {
               onTap(item);
             },

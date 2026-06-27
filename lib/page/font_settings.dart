@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
@@ -250,9 +249,9 @@ class _PreviewMessageList extends ConsumerWidget {
       child: (Platform.isWindows || Platform.isLinux)
           ? RawScrollbar(
               controller: scrollController,
-              radius: 100.rr,
+              radius: Radius.circular(100),
               thickness: 4,
-              thumbColor: qb.q(.4),
+              thumbColor: qb.withValues(alpha: .4),
               padding: const .only(top: 4, right: 4, bottom: 4),
               child: listView,
             )
@@ -343,7 +342,7 @@ class _SettingsControls extends ConsumerWidget {
         color: appTheme.settingBg,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.q(.1),
+            color: Colors.black.withValues(alpha: .1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -354,7 +353,7 @@ class _SettingsControls extends ConsumerWidget {
         children: [
           // Use system font size toggle
           Container(
-            decoration: BoxDecoration(color: qb.q(.1)),
+            decoration: BoxDecoration(color: qb.withValues(alpha: .1)),
             height: 1,
           ),
           const SizedBox(height: 8),
@@ -389,12 +388,12 @@ class _SettingsControls extends ConsumerWidget {
                       children: [
                         Row(
                           children: [
-                            18.w,
+                            SizedBox(width: 18),
                             Text(
                               'A',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: onSurface.q(.6),
+                                color: onSurface.withValues(alpha: .6),
                               ),
                             ),
                             const Spacer(),
@@ -411,10 +410,10 @@ class _SettingsControls extends ConsumerWidget {
                               'A',
                               style: TextStyle(
                                 fontSize: 20,
-                                color: onSurface.q(.6),
+                                color: onSurface.withValues(alpha: .6),
                               ),
                             ),
-                            18.w,
+                            SizedBox(width: 18),
                           ],
                         ),
                         Slider(
@@ -495,7 +494,7 @@ class _SettingsControls extends ConsumerWidget {
                             s.message_line_height_default_hint,
                             style: TextStyle(
                               fontSize: 12,
-                              color: onSurface.q(.65),
+                              color: onSurface.withValues(alpha: .65),
                             ),
                           ),
                         ),
@@ -514,12 +513,12 @@ class _SettingsControls extends ConsumerWidget {
                   ),
           ),
           Container(
-            decoration: BoxDecoration(color: qb.q(.1)),
+            decoration: BoxDecoration(color: qb.withValues(alpha: .1)),
             margin: const .only(top: 8),
             height: 1,
           ),
           const _FontSelectionButtons(),
-          paddingBottom.h,
+          SizedBox(height: paddingBottom),
         ],
       ),
     );
@@ -544,7 +543,7 @@ class _FontSelectionButtons extends ConsumerWidget {
           title: s.ui_font_setting,
           subtitle: preferredUIFont ?? s.default_font,
           subtitleFontFamily: preferredUIFont,
-          subtitleColor: onSurface.q(.7),
+          subtitleColor: onSurface.withValues(alpha: .7),
           onTap: () async {
             await FontPickerBottomSheet.show(
               context: context,
@@ -559,13 +558,13 @@ class _FontSelectionButtons extends ConsumerWidget {
         Container(
           margin: const .only(left: 16, right: 16),
           height: 0.5,
-          color: qb.q(.12),
+          color: qb.withValues(alpha: .12),
         ),
         _FontSelectionRow(
           title: s.monospace_font_setting,
           subtitle: preferredMonospaceFont ?? s.default_font,
           subtitleFontFamily: preferredMonospaceFont,
-          subtitleColor: onSurface.q(.7),
+          subtitleColor: onSurface.withValues(alpha: .7),
           onTap: () async {
             await FontPickerBottomSheet.show(
               context: context,
@@ -628,7 +627,7 @@ class _FontSelectionRow extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right,
-              color: theme.colorScheme.onSurface.q(.45),
+              color: theme.colorScheme.onSurface.withValues(alpha: .45),
             ),
           ],
         ),

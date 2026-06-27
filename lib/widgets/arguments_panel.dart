@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -12,6 +11,7 @@ import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/argument_value.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class ArgumentsPanel extends ConsumerWidget {
   static final temporary = qs<SamplerAndPenaltyParam?>(null);
@@ -204,7 +204,7 @@ class _SamplerOptions extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     return Container(
       margin: const .symmetric(horizontal: 12),
-      decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
+      decoration: BoxDecoration(color: qb.withValues(alpha: .1), borderRadius: BorderRadius.circular(8)),
       child: Row(
         children: [
           const SizedBox(width: 12),
@@ -235,7 +235,7 @@ class _CompletionOptions extends ConsumerWidget {
     final reasoning = ref.watch(P.rwkvParams.reasoning);
     return Container(
       margin: const .symmetric(horizontal: 12),
-      decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
+      decoration: BoxDecoration(color: qb.withValues(alpha: .1), borderRadius: BorderRadius.circular(8)),
       child: Row(
         children: [
           const SizedBox(width: 12),

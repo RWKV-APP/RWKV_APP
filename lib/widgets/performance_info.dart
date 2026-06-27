@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
@@ -28,7 +27,7 @@ class PerformanceInfo extends ConsumerWidget {
       mainAxisAlignment: .center,
       children: [
         Text.rich(
-          style: TextStyle(color: qb.q(1), fontSize: 10),
+          style: TextStyle(color: qb.withValues(alpha: 1), fontSize: 10),
           TextSpan(
             children: [
               TextSpan(text: short ? "P " : "Prefill "),
@@ -41,7 +40,7 @@ class PerformanceInfo extends ConsumerWidget {
           ),
         ),
         Text.rich(
-          style: TextStyle(color: qb.q(1), fontSize: 10),
+          style: TextStyle(color: qb.withValues(alpha: 1), fontSize: 10),
           TextSpan(
             children: [
               TextSpan(text: short ? "D " : "Decode "),

@@ -364,7 +364,7 @@ extension $ChatResponseStyle on _Chat {
     final thinkingMode = P.rwkvParams.thinkingMode.q;
     final userBatchContent = buildBatchContent(questions);
     final storedContent = userBatchContent + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
-    final userMsgId = HF.milliseconds;
+    final userMsgId = DateTime.now().millisecondsSinceEpoch;
     final userMsg = Message(
       id: userMsgId,
       content: storedContent,
@@ -375,7 +375,7 @@ extension $ChatResponseStyle on _Chat {
     await P.msg._syncMsg(userMsgId, userMsg);
     final botParentNode = parentNode.add(MsgNode(userMsgId));
 
-    final botMsgId = HF.milliseconds + 1;
+    final botMsgId = DateTime.now().millisecondsSinceEpoch + 1;
     final botMsg = Message(
       id: botMsgId,
       content: "",

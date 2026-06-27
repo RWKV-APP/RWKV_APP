@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:rwkv_mobile_flutter/to_rwkv.dart';
 
 // Project imports:
@@ -19,6 +18,7 @@ import 'package:zone/widgets/argument_value.dart';
 import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/chat/multi_question_panel.dart';
 import 'package:zone/widgets/form_item.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class BatchSettingsPanel extends ConsumerWidget {
   static final _shown = qs(false);
@@ -129,7 +129,7 @@ class BatchSettingsPanel extends ConsumerWidget {
             FormItem(
               bottomLineLeft: 8,
               bottomLineRight: 8,
-              bottomLineColor: qb.q(.2),
+              bottomLineColor: qb.withValues(alpha: .2),
               isSectionStart: true,
               isSectionEnd: !batchInference,
               title: s.batch_inference,
@@ -151,7 +151,7 @@ class BatchSettingsPanel extends ConsumerWidget {
               child: FormItem(
                 bottomLineLeft: 8,
                 bottomLineRight: 8,
-                bottomLineColor: qb.q(.2),
+                bottomLineColor: qb.withValues(alpha: .2),
                 showArrow: false,
                 isSectionStart: !batchInference,
                 title: s.batch_inference_count,
@@ -176,7 +176,7 @@ class BatchSettingsPanel extends ConsumerWidget {
               child: FormItem(
                 bottomLineLeft: 8,
                 bottomLineRight: 8,
-                bottomLineColor: qb.q(.2),
+                bottomLineColor: qb.withValues(alpha: .2),
                 title: s.decode_params_for_each_message,
                 subtitle: s.decode_params_for_each_message_detail,
                 showArrow: false,
@@ -198,7 +198,7 @@ class BatchSettingsPanel extends ConsumerWidget {
               child: FormItem(
                 bottomLineLeft: 8,
                 bottomLineRight: 8,
-                bottomLineColor: qb.q(.2),
+                bottomLineColor: qb.withValues(alpha: .2),
                 isSectionEnd: false,
                 title: s.multi_question_title,
                 subtitle: s.multi_question_entry_detail,
@@ -214,7 +214,7 @@ class BatchSettingsPanel extends ConsumerWidget {
               child: FormItem(
                 bottomLineLeft: 8,
                 bottomLineRight: 8,
-                bottomLineColor: qb.q(.2),
+                bottomLineColor: qb.withValues(alpha: .2),
                 showArrow: false,
                 isSectionEnd: true,
                 title: s.batch_inference_width,
@@ -255,13 +255,13 @@ class _BatchViewportWidthSlider extends ConsumerWidget {
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        padding.top.h,
+        SizedBox(height: padding.top),
         Row(
           children: [
-            padding.left.w,
+            SizedBox(width: padding.left),
             Text(
               min.toString(),
-              style: TextStyle(fontSize: 12, color: qb.q(.5)),
+              style: TextStyle(fontSize: 12, color: qb.withValues(alpha: .5)),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -278,12 +278,12 @@ class _BatchViewportWidthSlider extends ConsumerWidget {
             const SizedBox(width: 14),
             Text(
               max.toString(),
-              style: TextStyle(fontSize: 12, color: qb.q(.5)),
+              style: TextStyle(fontSize: 12, color: qb.withValues(alpha: .5)),
             ),
-            padding.right.w,
+            SizedBox(width: padding.right),
           ],
         ),
-        padding.bottom.h,
+        SizedBox(height: padding.bottom),
       ],
     );
   }
@@ -301,9 +301,9 @@ class _FakeBatchInferenceBenchmarkNotice extends StatelessWidget {
     return Container(
       padding: const .symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: color.q(.12),
+        color: color.withValues(alpha: .12),
         borderRadius: .circular(10),
-        border: .all(color: color.q(.7), width: .5),
+        border: .all(color: color.withValues(alpha: .7), width: .5),
       ),
       child: Row(
         crossAxisAlignment: .start,
@@ -402,7 +402,7 @@ class _DecodeParams extends ConsumerWidget {
             const SizedBox(height: 4),
             ...rows,
             const SizedBox(height: 8),
-            Container(height: 0.5, color: qb.q(.2)),
+            Container(height: 0.5, color: qb.withValues(alpha: .2)),
             const SizedBox(height: 8),
             const Align(
               alignment: .centerLeft,
@@ -538,13 +538,13 @@ class _DecodeParam extends ConsumerWidget {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
 
-    return GD(
+    return GestureDetector(
       onTap: _onTap,
       child: Container(
         width: forAll ? double.infinity : null,
         decoration: BoxDecoration(
-          color: qb.q(.08),
-          border: .all(color: qb.q(.15)),
+          color: qb.withValues(alpha: .08),
+          border: .all(color: qb.withValues(alpha: .15)),
           borderRadius: BorderRadius.circular(12),
         ),
         padding: const .all(12),
@@ -562,7 +562,7 @@ class _DecodeParam extends ConsumerWidget {
                       Container(
                         padding: const .symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: qb.q(.15),
+                          color: qb.withValues(alpha: .15),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text("#${index + 1}", style: const TextStyle(fontWeight: .bold, fontSize: 12)),
@@ -583,7 +583,7 @@ class _DecodeParam extends ConsumerWidget {
                     const SizedBox(height: 2),
                     _infoRow("PP", _fmt(param!.presencePenalty), "FP", _fmt(param!.frequencyPenalty), qb),
                     const SizedBox(height: 2),
-                    Text("Decay: ${_fmt(param!.penaltyDecay)}", style: TextStyle(fontSize: 11, color: qb.q(.7))),
+                    Text("Decay: ${_fmt(param!.penaltyDecay)}", style: TextStyle(fontSize: 11, color: qb.withValues(alpha: .7))),
                   ],
                 ],
               ),
@@ -592,7 +592,7 @@ class _DecodeParam extends ConsumerWidget {
   }
 
   Widget _infoRow(String k1, String v1, String k2, String v2, Color qb) {
-    final style = TextStyle(fontSize: 11, color: qb.q(.7));
+    final style = TextStyle(fontSize: 11, color: qb.withValues(alpha: .7));
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

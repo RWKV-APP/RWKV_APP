@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 
 // Project imports:
@@ -14,6 +13,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/measure_size.dart';
 
 const _kButtonSize = 72.0;
 const _kButtonBottom = 36.0;
@@ -107,7 +107,7 @@ class AudioInput extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
 
     return AnimatedPositioned(
-      duration: 250.ms,
+      duration: Duration(milliseconds: 250),
       curve: curve,
       bottom: shouldShow ? (0 + paddingBottom + bottomAdjust) : -_kWidgetSize,
       left: 0,
@@ -130,7 +130,7 @@ class AudioInput extends ConsumerWidget {
                     gradient: showGradient
                         ? LinearGradient(
                             colors: [
-                              appTheme.scaffoldBg.q(0),
+                              appTheme.scaffoldBg.withValues(alpha: 0),
                               appTheme.scaffoldBg,
                               appTheme.scaffoldBg,
                             ],
@@ -158,8 +158,8 @@ class AudioInput extends ConsumerWidget {
                             height: _kButtonSize,
                             width: _kButtonSize,
                             decoration: BoxDecoration(
-                              color: primary.q(.2),
-                              border: .all(color: primary.q(.5)),
+                              color: primary.withValues(alpha: .2),
+                              border: .all(color: primary.withValues(alpha: .5)),
                               borderRadius: .circular(1000),
                             ),
                             child: Center(
@@ -167,7 +167,7 @@ class AudioInput extends ConsumerWidget {
                                   ? CircularProgressIndicator(
                                       color: primary,
                                       strokeWidth: 3,
-                                      backgroundColor: primary.q(.1),
+                                      backgroundColor: primary.withValues(alpha: .1),
                                       strokeCap: StrokeCap.round,
                                     )
                                   : Icon(
@@ -185,7 +185,7 @@ class AudioInput extends ConsumerWidget {
                       bottomMessage,
                       style: TextStyle(
                         fontSize: bottomMessageSize,
-                        color: primary.q(.5),
+                        color: primary.withValues(alpha: .5),
                       ),
                       textAlign: TextAlign.center,
                     ),

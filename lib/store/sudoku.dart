@@ -93,15 +93,15 @@ extension $Sudoku on _Sudoku {
       actions: [
         AlertDialogAction(
           label: S.current.sudoku_easy,
-          key: HF.randomInt(min: 19, max: 25),
+          key: randomInt(min: 19, max: 25),
         ),
         AlertDialogAction(
           label: S.current.sudoku_medium,
-          key: HF.randomInt(min: 26, max: 35),
+          key: randomInt(min: 26, max: 35),
         ),
         AlertDialogAction(
           label: S.current.sudoku_hard,
-          key: HF.randomInt(min: 36, max: 45),
+          key: randomInt(min: 36, max: 45),
         ),
         AlertDialogAction(
           label: S.current.custom_difficulty,
@@ -230,7 +230,7 @@ extension $Sudoku on _Sudoku {
 
   void debugRenderingRandom() {
     final solvedGrid = func_sudoku.genSolved();
-    final difficulty = HF.randomInt(min: 1, max: 1);
+    final difficulty = randomInt(min: 1, max: 1);
     final newValue = func_sudoku.genPuzzle(solvedGrid, difficulty: difficulty);
     staticData.q = newValue;
     this.difficulty.q = difficulty;

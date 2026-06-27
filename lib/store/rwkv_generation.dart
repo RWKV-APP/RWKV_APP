@@ -154,8 +154,8 @@ extension $RWKVGeneration on _RWKVGeneration {
           ? to_rwkv.GetBatchResponseBufferContent(messages: messages, modelID: modelID) //
           : to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID);
       P.rwkvBridge.send(getResponseCalling);
-      if (HF.randomBool(truePercentage: getIsGeneratingRate)) P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
-      if (HF.randomBool(truePercentage: getResponseBufferContentRate)) {
+      if (randomBool(truePercentage: getIsGeneratingRate)) P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
+      if (randomBool(truePercentage: getResponseBufferContentRate)) {
         P.rwkvBridge.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
       }
     });
@@ -204,8 +204,8 @@ extension $RWKVGeneration on _RWKVGeneration {
           ? to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID) //
           : to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID);
       P.rwkvBridge.send(getResponseCalling);
-      if (HF.randomBool(truePercentage: .5)) P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
-      if (HF.randomBool(truePercentage: .5)) P.rwkvBridge.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
+      if (randomBool(truePercentage: .5)) P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
+      if (randomBool(truePercentage: .5)) P.rwkvBridge.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
     return P.rwkvBridge.broadcastStream.mapNotNull((e) {
       if (e is from_rwkv.ResponseBatchBufferContent) {

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
@@ -84,8 +83,8 @@ class WebSearchModeButton extends ConsumerWidget {
                 height: height,
                 padding: padding,
                 decoration: BoxDecoration(
-                  color: backgroundColor.q(
-                    userBackdropFilterForInputOptions
+                  color: backgroundColor.withValues(
+                    alpha: userBackdropFilterForInputOptions
                         ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                         : 1,
                   ),

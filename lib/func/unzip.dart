@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:archive/archive_io.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:path/path.dart' as p;
+import 'package:zone/func/debug_trace.dart';
 
 /// 在 zip 文件所在的位置解压缩
 Future<String> unzipInPlace(String modelPath) async {
@@ -16,7 +16,7 @@ Future<String> unzipInPlace(String modelPath) async {
 
 /// 在 isolate 中执行解压缩的顶级函数
 Future<String> _unzipInPlaceIsolate(String modelPath) async {
-  final start = HF.milliseconds;
+  final start = DateTime.now().millisecondsSinceEpoch;
   qqq("start");
   final modelDir = p.dirname(modelPath);
   final modelPathWithoutZip = p.withoutExtension(modelPath);
@@ -59,7 +59,7 @@ Future<String> _unzipInPlaceIsolate(String modelPath) async {
     await link.create(entity.symbolicLink!, recursive: true);
   }
 
-  final end = HF.milliseconds;
+  final end = DateTime.now().millisecondsSinceEpoch;
   qqq("time cost: ${end - start}ms");
   qqq("end");
   return modelPathWithoutZip;

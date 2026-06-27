@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
@@ -162,15 +161,15 @@ class _PanelHeaderState extends ConsumerState<_PanelHeader> {
       ),
       padding: const .only(top: 4),
       decoration: BoxDecoration(
-        color: appTheme.settingItem.q(_opacity * _opacity),
+        color: appTheme.settingItem.withValues(alpha: _opacity * _opacity),
         border: Border(
-          bottom: BorderSide(color: qb.q(.2 * _opacity * _opacity), width: .5),
+          bottom: BorderSide(color: qb.withValues(alpha: .2 * _opacity * _opacity), width: .5),
         ),
       ),
       child: Row(
         crossAxisAlignment: .center,
         children: [
-          (12 + (8 * _opacity)).w,
+          SizedBox(width: (12 + (8 * _opacity))),
           Expanded(
             child: Text(
               s.question_generator,
@@ -212,7 +211,7 @@ class _PanelSection extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appTheme.settingItem,
         borderRadius: .circular(_maxRadius),
-        border: .all(color: qb.q(.15), width: .5),
+        border: .all(color: qb.withValues(alpha: .15), width: .5),
       ),
       padding: padding,
       child: DefaultTextStyle.merge(
@@ -256,7 +255,7 @@ class _PrefixComposerSection extends ConsumerWidget {
             Container(
               height: .5,
               margin: const .only(top: 14, bottom: 14),
-              color: qb.q(.1),
+              color: qb.withValues(alpha: .1),
             ),
           const _PrefixInputField(),
         ],
@@ -305,9 +304,9 @@ class _PrefixInputFieldState extends ConsumerState<_PrefixInputField> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 180),
       decoration: BoxDecoration(
-        color: qb.q(generating ? .02 : .04),
+        color: qb.withValues(alpha: generating ? .02 : .04),
         borderRadius: .circular(_maxRadius),
-        border: .all(color: qb.q(generating ? .08 : .14), width: .5),
+        border: .all(color: qb.withValues(alpha: generating ? .08 : .14), width: .5),
       ),
       padding: const .symmetric(horizontal: 14, vertical: 12),
       child: TextField(
@@ -324,11 +323,11 @@ class _PrefixInputFieldState extends ConsumerState<_PrefixInputField> {
               ? S.of(context).question_generator_context_prefix_input_placeholder
               : S.of(context).question_generator_prefix_input_placeholder,
           hintStyle: theme.textTheme.bodyMedium?.copyWith(
-            color: qb.q(.42),
+            color: qb.withValues(alpha: .42),
           ),
         ),
         style: theme.textTheme.bodyLarge?.copyWith(
-          color: qb.q(.95),
+          color: qb.withValues(alpha: .95),
           height: 1.35,
         ),
       ),
@@ -361,7 +360,7 @@ class _GenerateControls extends ConsumerWidget {
                 height: _generateBarButtonHeight,
                 child: Tooltip(
                   message: s.stop,
-                  child: GD(
+                  child: GestureDetector(
                     onTap: P.askQuestion.pauseGeneration,
                     child: Container(
                       decoration: BoxDecoration(
@@ -420,11 +419,11 @@ class _PrefillProgressNotice extends ConsumerWidget {
       showProgress: showProgress,
     );
     final isDark = theme.brightness == Brightness.dark;
-    final backgroundColor = qb.q(isDark ? .09 : .035);
-    final borderColor = qb.q(isDark ? .18 : .1);
-    final titleColor = qb.q(isDark ? .88 : .8);
-    final metaColor = qb.q(isDark ? .68 : .56);
-    final progressColor = (isDark ? const Color(0xFFE0E0E0) : qb.q(.68)).q(.9);
+    final backgroundColor = qb.withValues(alpha: isDark ? .09 : .035);
+    final borderColor = qb.withValues(alpha: isDark ? .18 : .1);
+    final titleColor = qb.withValues(alpha: isDark ? .88 : .8);
+    final metaColor = qb.withValues(alpha: isDark ? .68 : .56);
+    final progressColor = (isDark ? const Color(0xFFE0E0E0) : qb.withValues(alpha: .68)).withValues(alpha: .9);
     final progressBackgroundColor = isDark ? const Color(0xFF000000) : const Color(0xFFFFFFFF);
 
     return AnimatedSize(
@@ -538,7 +537,7 @@ class _GenerateButton extends ConsumerWidget {
 
     return SizedBox(
       height: _generateBarButtonHeight,
-      child: GD(
+      child: GestureDetector(
         onTap: isGenerateEnabled ? P.askQuestion.generateFromCurrentChat : null,
         child: Container(
           decoration: BoxDecoration(
@@ -559,11 +558,11 @@ class _GenerateButton extends ConsumerWidget {
                     color: iconColor,
                   ),
                 ),
-                12.w,
+                SizedBox(width: 12),
               ],
               if (!generating) ...[
                 Icon(Symbols.auto_awesome, size: iconSize, color: iconColor),
-                12.w,
+                SizedBox(width: 12),
               ],
               Expanded(
                 child: Text(
@@ -908,7 +907,7 @@ class _GeneratedQuestionsSectionState extends ConsumerState<_GeneratedQuestionsS
                           Container(
                             height: .5,
                             margin: const .only(top: 12, bottom: 14),
-                            color: qb.q(.1),
+                            color: qb.withValues(alpha: .1),
                           ),
                           if (resultItems.isNotEmpty)
                             Column(
@@ -1046,7 +1045,7 @@ class _ClearQuestionsButton extends ConsumerWidget {
       (false, false) => const Color(0xFF9D9D9D),
     };
 
-    return GD(
+    return GestureDetector(
       onTap: enabled ? onTap : null,
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 160),
@@ -1095,9 +1094,9 @@ class _PrefixPill extends ConsumerWidget {
     final theme = Theme.of(context);
     final qb = ref.watch(P.app.qb);
     final selected = ref.watch(P.askQuestion.selectedPrefix) == label;
-    final bgColor = selected ? qb.q(.12) : qb.q(.025);
-    final borderColor = selected ? qb.q(.18) : qb.q(.075);
-    final textColor = selected ? qb.q(.96) : qb.q(.7);
+    final bgColor = selected ? qb.withValues(alpha: .12) : qb.withValues(alpha: .025);
+    final borderColor = selected ? qb.withValues(alpha: .18) : qb.withValues(alpha: .075);
+    final textColor = selected ? qb.withValues(alpha: .96) : qb.withValues(alpha: .7);
 
     return GestureDetector(
       onTap: () {
@@ -1149,7 +1148,7 @@ class _Question extends ConsumerWidget {
         decoration: BoxDecoration(
           color: appTheme.settingItem,
           borderRadius: .circular(_questionCardRadius),
-          border: .all(color: qb.q(.12), width: .7),
+          border: .all(color: qb.withValues(alpha: .12), width: .7),
         ),
         padding: const .symmetric(
           horizontal: 8,
@@ -1158,7 +1157,7 @@ class _Question extends ConsumerWidget {
         child: Text(
           question,
           style: theme.textTheme.bodyLarge?.copyWith(
-            color: qb.q(.94),
+            color: qb.withValues(alpha: .94),
             height: 1.4,
           ),
         ),
@@ -1181,7 +1180,7 @@ class _PendingQuestionCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appTheme.settingItem,
         borderRadius: .circular(_questionCardRadius),
-        border: .all(color: qb.q(.12), width: .7),
+        border: .all(color: qb.withValues(alpha: .12), width: .7),
       ),
       padding: const .all(14),
       child: Row(
@@ -1191,7 +1190,7 @@ class _PendingQuestionCard extends ConsumerWidget {
             height: 16,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: qb.q(.62),
+              color: qb.withValues(alpha: .62),
             ),
           ),
           const SizedBox(width: 12),
@@ -1199,7 +1198,7 @@ class _PendingQuestionCard extends ConsumerWidget {
             child: Text(
               s.generating,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: qb.q(.56),
+                color: qb.withValues(alpha: .56),
               ),
             ),
           ),
@@ -1240,7 +1239,7 @@ class _AskAllAsBatchButton extends ConsumerWidget {
           style: FilledButton.styleFrom(
             backgroundColor: theme.colorScheme.primary,
             foregroundColor: theme.colorScheme.onPrimary,
-            disabledBackgroundColor: theme.colorScheme.primary.q(.3),
+            disabledBackgroundColor: theme.colorScheme.primary.withValues(alpha: .3),
             shape: RoundedRectangleBorder(borderRadius: .circular(8)),
           ),
         ),

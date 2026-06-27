@@ -172,16 +172,16 @@ class _Remote {
     for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
       if (demoConfig is Map && demoConfig['model_config'] is List) {
-        allModelConfigs.addAll(HF.listJSON(demoConfig['model_config']));
+        allModelConfigs.addAll(castJsonList(demoConfig['model_config']));
       }
     }
 
     // 提取所有NPU模型的socLimitations
     final supportedNpus = <String>{};
     for (final modelConfig in allModelConfigs) {
-      final tags = HF.list(modelConfig['tags'] ?? []).map((e) => e.toString().toLowerCase()).toList();
+      final tags = castList(modelConfig['tags'] ?? []).map((e) => e.toString().toLowerCase()).toList();
       if (tags.contains('npu')) {
-        final socLimitations = HF.list(modelConfig['socLimitations'] ?? []);
+        final socLimitations = castList(modelConfig['socLimitations'] ?? []);
         for (final soc in socLimitations) {
           final socName = soc.toString();
           if (socName.isNotEmpty) {
@@ -268,13 +268,13 @@ extension $Remote on _Remote {
       return;
     }
 
-    final chatWeights = HF.listJSON(config["chat"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
-    final ttsWeights = HF.listJSON(config["tts"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
-    final worldWeights = HF.listJSON(config["world"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
-    final sudokuWeights = HF.listJSON(config["sudoku"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
-    final othelloWeights = HF.listJSON(config["othello"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
+    final chatWeights = castJsonList(config["chat"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
+    final ttsWeights = castJsonList(config["tts"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
+    final worldWeights = castJsonList(config["world"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
+    final sudokuWeights = castJsonList(config["sudoku"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
+    final othelloWeights = castJsonList(config["othello"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
     final roleplayConfig = (config["roleplay"] ?? <String, dynamic>{})["model_config"];
-    final roleplayWeights = HF.listJSON(roleplayConfig ?? []).map((e) => FileInfo.fromJSON(e)).toSet();
+    final roleplayWeights = castJsonList(roleplayConfig ?? []).map((e) => FileInfo.fromJSON(e)).toSet();
 
     _allChatWeights.q = chatWeights;
     this.chatWeights.q = chatWeights.where((e) => e.available).toSet();
@@ -514,7 +514,7 @@ extension $Remote on _Remote {
           .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
           .listen(
             (e) {
-              if (HF.randomBool(truePercentage: .2)) {
+              if (randomBool(truePercentage: .2)) {
                 qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s, ${e.totalSize}');
               }
               state.q = state.q.copyWith(
@@ -740,7 +740,7 @@ extension $Remote on _Remote {
     for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
       if (demoConfig is Map && demoConfig['model_config'] is List) {
-        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        final modelConfigs = castJsonList(demoConfig['model_config']);
         for (final modelConfig in modelConfigs) {
           try {
             final fileInfo = FileInfo.fromJSON(modelConfig);
@@ -770,7 +770,7 @@ extension $Remote on _Remote {
     for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
       if (demoConfig is Map && demoConfig['model_config'] is List) {
-        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        final modelConfigs = castJsonList(demoConfig['model_config']);
         for (final modelConfig in modelConfigs) {
           try {
             final fileInfo = FileInfo.fromJSON(modelConfig);
@@ -838,7 +838,7 @@ extension $Remote on _Remote {
     for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
       if (demoConfig is Map && demoConfig['model_config'] is List) {
-        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        final modelConfigs = castJsonList(demoConfig['model_config']);
         for (final modelConfig in modelConfigs) {
           try {
             final fileInfo = FileInfo.fromJSON(modelConfig);
@@ -969,7 +969,7 @@ extension $Remote on _Remote {
     for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
       if (demoConfig is Map && demoConfig['model_config'] is List) {
-        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        final modelConfigs = castJsonList(demoConfig['model_config']);
         for (final modelConfig in modelConfigs) {
           try {
             final fileInfo = FileInfo.fromJSON(modelConfig);
@@ -2088,7 +2088,7 @@ extension _$Remote on _Remote {
       for (final demoType in _remoteModelConfigDemoTypes) {
         final demoConfig = config[demoType];
         if (demoConfig is Map && demoConfig['model_config'] is List) {
-          final modelConfigs = HF.listJSON(demoConfig['model_config']);
+          final modelConfigs = castJsonList(demoConfig['model_config']);
           for (final modelConfig in modelConfigs) {
             // Try to get fileName from fileName field
             if (modelConfig['fileName'] is String) {

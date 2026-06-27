@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/func/extensions/num.dart';
@@ -15,6 +14,7 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/markdown_render.dart';
+import 'package:zone/func/debug_trace.dart';
 
 class VersionInfoPanel extends ConsumerWidget {
   static final _shown = qs(false);
@@ -185,7 +185,7 @@ class VersionInfoPanel extends ConsumerWidget {
                   ),
                 ],
               ),
-            paddingBottom.h,
+            SizedBox(height: paddingBottom),
           ],
         ),
       ),
@@ -209,7 +209,7 @@ class _ReleaseNotesContent extends ConsumerWidget {
       return Center(
         child: Text(
           S.of(context).no_latest_version_info,
-          style: theme.textTheme.bodyMedium?.copyWith(color: qb.q(.5)),
+          style: theme.textTheme.bodyMedium?.copyWith(color: qb.withValues(alpha: .5)),
         ),
       );
     }
@@ -238,7 +238,7 @@ class _ReleaseNotesContent extends ConsumerWidget {
           padding: const .all(16),
           child: Text(
             S.of(context).no_latest_version_info,
-            style: theme.textTheme.bodyMedium?.copyWith(color: qb.q(.5)),
+            style: theme.textTheme.bodyMedium?.copyWith(color: qb.withValues(alpha: .5)),
             textAlign: TextAlign.center,
           ),
         ),

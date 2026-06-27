@@ -10,7 +10,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/func/shortcuts.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -26,6 +25,7 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/debugger.dart';
 import 'package:zone/widgets/floating_performace_info.dart';
 import 'package:zone/widgets/input_bar_debugger.dart';
+import 'package:zone/func/debug_trace.dart';
 
 const _sentryRelease = String.fromEnvironment('SENTRY_RELEASE');
 const _sentryDist = String.fromEnvironment('SENTRY_DIST');
@@ -35,7 +35,6 @@ void main() async {
   keepUsedMaterialSymbols();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await _loadEnv();
-  HF.init();
   await P.init();
   if (kDebugMode) {
     await _debugAppRunner();
@@ -127,7 +126,7 @@ class _App extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final brightness = appTheme.isLight ? Brightness.light : Brightness.dark;
     final appColorScheme = appTheme.colorScheme;
-    final modalBarrierColor = appTheme.pagerDim.q(.25);
+    final modalBarrierColor = appTheme.pagerDim.withValues(alpha: .25);
 
     final bottomSheetTheme = BottomSheetThemeData(
       backgroundColor: appTheme.settingBg,
