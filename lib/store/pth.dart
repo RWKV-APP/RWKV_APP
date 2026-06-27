@@ -62,7 +62,7 @@ double? _modelSizeFromSizeLabel(String? sizeLabel) {
 
 /// Private methods
 extension _$Pth on _Pth {
-  FV _init() async {
+  Future<void> _init() async {
     if (!P.preference.hasUnlinkDefaultModelsDirOnce) {
       final defaultModelsDir = P.remote.defaultModelsDir.q;
       if (defaultModelsDir.isEmpty) {

@@ -137,7 +137,7 @@ class _UI {
 
 /// Private methods
 extension _$UI on _UI {
-  FV _init() async {
+  Future<void> _init() async {
     P.app.screenWidth.l(_onScreenWidthChanged, fireImmediately: true);
     homeController.addListener(_onHomeScroll);
     P.app.pageKey.l(_onPageKeyChanged);
