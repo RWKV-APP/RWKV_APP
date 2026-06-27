@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
+import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
@@ -71,15 +71,7 @@ class Empty extends ConsumerWidget {
                     crossAxisAlignment: .stretch,
                     children: [
                       const SizedBox(height: 90),
-                      const Flexible(
-                        child: Scrollbar(
-                          thumbVisibility: false,
-                          trackVisibility: false,
-                          child: SingleChildScrollView(
-                            child: _EmptyV2(),
-                          ),
-                        ),
-                      ),
+                      const Flexible(child: _EmptyV2ScrollView()),
                       SizedBox(height: inputHeight.toDouble()),
                     ],
                   ),
@@ -153,6 +145,36 @@ class Empty extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _EmptyV2ScrollView extends StatefulWidget {
+  const _EmptyV2ScrollView();
+
+  @override
+  State<_EmptyV2ScrollView> createState() => _EmptyV2ScrollViewState();
+}
+
+class _EmptyV2ScrollViewState extends State<_EmptyV2ScrollView> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scrollbar(
+      controller: _scrollController,
+      thumbVisibility: false,
+      trackVisibility: false,
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        child: const _EmptyV2(),
       ),
     );
   }

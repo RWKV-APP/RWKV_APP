@@ -6,8 +6,7 @@ import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:equatable/equatable.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/func/shortcuts.dart';
 import 'package:path/path.dart' as p;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 

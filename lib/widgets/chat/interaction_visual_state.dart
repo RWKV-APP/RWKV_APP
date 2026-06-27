@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:halo/halo.dart';
+import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/model/app_theme.dart';

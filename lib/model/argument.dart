@@ -1,6 +1,5 @@
 // Package imports:
 import 'package:collection/collection.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/args.dart';
@@ -15,8 +14,7 @@ enum Argument {
   frequencyPenalty,
   penaltyDecay,
   maxLength,
-  batchCount
-  ;
+  batchCount;
 
   bool get configureable => switch (this) {
     temperature => true,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
+import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/model/argument.dart';

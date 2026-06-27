@@ -1,6 +1,6 @@
 // Package imports:
 import 'package:go_router/go_router.dart';
-import 'package:halo/halo.dart';
+import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/router/page_key.dart';

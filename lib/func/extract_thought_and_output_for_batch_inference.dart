@@ -1,5 +1,5 @@
 // Package imports:
-import 'package:halo/halo.dart';
+import 'package:zone/func/shortcuts.dart';
 
 (String, String) extractThoughtAndOutputForBatchInference(String text) {
   final lengthOfThinkEndTag = "</think>".length;

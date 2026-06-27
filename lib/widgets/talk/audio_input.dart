@@ -6,9 +6,8 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/func/shortcuts.dart';
+import 'package:zone/widgets/alert.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';

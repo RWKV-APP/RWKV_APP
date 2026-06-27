@@ -7,8 +7,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/func/shortcuts.dart';
 import 'package:photo_viewer/photo_viewer.dart';
 
 // Project imports:

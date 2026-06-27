@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:archive/archive_io.dart';
-import 'package:halo/halo.dart';
+import 'package:zone/func/shortcuts.dart';
 import 'package:path/path.dart' as p;
 
 /// 在 zip 文件所在的位置解压缩

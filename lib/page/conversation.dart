@@ -10,8 +10,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/services/role_play_manage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/func/shortcuts.dart';
 import 'package:path_provider/path_provider.dart';
 
 // Project imports:

@@ -2,8 +2,8 @@
 import 'dart:io';
 
 // Package imports:
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
+import 'package:zone/func/shortcuts.dart';
+import 'package:zone/widgets/alert.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 

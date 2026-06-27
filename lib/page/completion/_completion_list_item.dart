@@ -5,8 +5,7 @@ import 'package:flutter/rendering.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/gen/assets.gen.dart';

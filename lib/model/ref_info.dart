@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:halo/halo.dart';
+import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/model/reference.dart';

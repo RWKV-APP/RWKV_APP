@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:background_downloader/background_downloader.dart' as bd;
-import 'package:halo/halo.dart';
+import 'package:zone/func/shortcuts.dart';
 
 // Project imports:
 import 'package:zone/func/format_bytes.dart';

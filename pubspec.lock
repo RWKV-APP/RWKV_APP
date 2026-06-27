@@ -808,30 +808,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  halo:
-    dependency: "direct main"
-    description:
-      name: halo
-      sha256: "7dbf90a318b7177de91ecb57b3ba46227479687c6962e5311d760f4ade16cd6b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
-  halo_alert:
-    dependency: "direct main"
-    description:
-      name: halo_alert
-      sha256: "9e479e1a21d627087c832981daa0d2608babd8f990521ecd27c94d04a58a52f1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
-  halo_state:
-    dependency: "direct main"
-    description:
-      name: halo_state
-      sha256: "01bfc62e3ec65cdd212f1acd3072f2a6c27afb9b963a90ae3cd3f2a2d2c7e1e2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   hashcodes:
     dependency: transitive
     description:

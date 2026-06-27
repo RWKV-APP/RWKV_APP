@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;

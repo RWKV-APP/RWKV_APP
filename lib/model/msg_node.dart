@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:halo/halo.dart';
+import 'package:zone/func/shortcuts.dart';
 
 // msg_node.dart
 final class MsgNode {

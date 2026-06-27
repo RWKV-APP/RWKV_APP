@@ -9,8 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:desktop_drop/desktop_drop.dart' as desktop_drop;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
+import 'package:zone/func/shortcuts.dart';
 import 'package:path/path.dart' as path;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 
