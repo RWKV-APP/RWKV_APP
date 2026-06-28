@@ -697,9 +697,9 @@ class _WebDemoGridState extends ConsumerState<_WebDemoGrid> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appTheme = ref.watch(P.app.theme);
-    final results = ref.watch(P.webDemo.results);
+    final resultCount = ref.watch(P.webDemo.results.select((results) => results.length));
 
-    if (results.isEmpty) {
+    if (resultCount == 0) {
       return Container(
         color: appTheme.scaffoldBg,
         child: LayoutBuilder(
@@ -757,10 +757,10 @@ class _WebDemoGridState extends ConsumerState<_WebDemoGrid> {
             crossAxisSpacing: 10,
             mainAxisExtent: itemHeight,
           ),
-          itemCount: results.length,
+          itemCount: resultCount,
           itemBuilder: (context, index) {
             return _WebDemoResultTile(
-              result: results[index],
+              index: index,
               parentScrollController: _gridScrollController,
             );
           },
@@ -771,11 +771,11 @@ class _WebDemoGridState extends ConsumerState<_WebDemoGrid> {
 }
 
 class _WebDemoResultTile extends ConsumerWidget {
-  final WebDemoResult result;
+  final int index;
   final ScrollController parentScrollController;
 
   const _WebDemoResultTile({
-    required this.result,
+    required this.index,
     required this.parentScrollController,
   });
 
@@ -785,6 +785,8 @@ class _WebDemoResultTile extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final scalePercent = ref.watch(P.webDemo.previewScalePercent);
     final autoScrollSeconds = ref.watch(P.webDemo.previewAutoScrollSeconds);
+    final result = ref.watch(P.webDemo.resultByIndex(index));
+    if (result == null) return const SizedBox.shrink();
     final html = result.html;
 
     return Container(

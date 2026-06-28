@@ -382,7 +382,6 @@ class _Suggestion {
 /// Private methods
 extension _$Suggestion on _Suggestion {
   Future<void> _init() async {
-    await loadSuggestions();
     P.app.pageKey.l(_onPageKeyChanged);
     P.preference.preferredLanguage.lv(loadSuggestions);
   }

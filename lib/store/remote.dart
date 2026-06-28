@@ -1962,7 +1962,6 @@ extension $Remote on _Remote {
       syncingLocalFiles.q = false;
       return;
     }
-    await calculateTotalSizeOfDir(readyModelsDir);
     syncingLocalFiles.q = false;
   }
 
@@ -2035,7 +2034,6 @@ extension _$Remote on _Remote {
     hasActiveDownload.l(_onHasActiveDownloadChanged, fireImmediately: true);
 
     await _transferAllFilesFromOldModelsDirToNewModelsDirIfNeeded();
-    sync();
 
     initDownloader();
   }

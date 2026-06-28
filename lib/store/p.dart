@@ -234,6 +234,7 @@ abstract class P {
   static final benchmark = _Benchmark();
   static final telemetry = _Telemetry();
   static final webDemo = _WebDemo();
+  static bool _postFirstFrameInitStarted = false;
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -251,10 +252,10 @@ abstract class P {
       qqe('Error initializing app: $e');
     }
 
-    await _unorderedInit();
+    await _foregroundInit();
   }
 
-  static Future<void> _unorderedInit() async {
+  static Future<void> _foregroundInit() async {
     await Future.wait([
       _safeInit(() => askQuestion._init(), mark: "askQuestion"),
       _safeInit(() => albatrossRuntime._init(), mark: "albatrossRuntime"),
@@ -275,13 +276,22 @@ abstract class P {
       _safeInit(() => msg._init(), mark: "msg"),
       _safeInit(() => backend._init(), mark: "backend"),
       _safeInit(() => translator._init(), mark: "translator"),
-      _safeInit(() => lambada._init(), mark: "lambada"),
       _safeInit(() => ocr._init(), mark: "ocr"),
-      _safeInit(() => mdRender._init(), mark: "mdRender"),
       _safeInit(() => font._init(), mark: "font"),
       _safeInit(() => ui._init(), mark: "ui"),
       _safeInit(() => pth._init(), mark: "pth"),
       _safeInit(() => apiServer._init(), mark: "apiServer"),
+    ]);
+  }
+
+  static Future<void> postFirstFrameInit() async {
+    if (_postFirstFrameInitStarted) return;
+    _postFirstFrameInitStarted = true;
+    await Future.wait([
+      _safeInit(() => lambada._init(), mark: "lambada"),
+      _safeInit(() => mdRender._init(), mark: "mdRender"),
+      _safeInit(() => suggestion.loadSuggestions(), mark: "suggestionLoad"),
+      _safeInit(() => remote.sync(), mark: "remoteSync"),
       _safeInit(() => telemetry._init(), mark: "telemetry"),
       _safeInit(() => benchmark._init(), mark: "benchmark"),
       _safeInit(() => webDemo._init(), mark: "webDemo"),

@@ -47,12 +47,25 @@ class _MDRender {
 
   late final _darkTheme = qs<HighlighterTheme?>(null);
   late final _lightTheme = qs<HighlighterTheme?>(null);
+  Future<void>? _highlighterInitFuture;
 }
 
 /// Private methods
 extension _$MDRender on _MDRender {
   Future<void> _init() async {
-    _initHighlighters();
+    await _ensureHighlightersInitialized();
+  }
+
+  Future<void> _ensureHighlightersInitialized() async {
+    final existing = _highlighterInitFuture;
+    if (existing != null) {
+      await existing;
+      return;
+    }
+
+    final future = _initHighlighters();
+    _highlighterInitFuture = future;
+    await future;
   }
 
   Future<void> _initHighlighters() async {
@@ -61,17 +74,14 @@ extension _$MDRender on _MDRender {
     _lightTheme.q = await HighlighterTheme.loadLightTheme();
     _darkTheme.q = await HighlighterTheme.loadDarkTheme();
 
-    final loaded = await tryToLoadLanguageHighlighter(defaultCodeLanguage);
+    final loaded = await _loadLanguageHighlighter(defaultCodeLanguage);
     if (!loaded) {
       qqe("Failed to load default code language highlighter: $defaultCodeLanguage");
       return;
     }
   }
-}
 
-/// Public methods
-extension $MDRender on _MDRender {
-  Future<bool> tryToLoadLanguageHighlighter(String language) async {
+  Future<bool> _loadLanguageHighlighter(String language) async {
     if (language.trim() == "") return true;
     final contains = _MDRender.supportedCodeLanguages.contains(language);
     if (!contains) {
@@ -82,13 +92,25 @@ extension $MDRender on _MDRender {
     final existingDarkHighlighter = darkHighlighters(language).q;
     if (existingHighlighter != null && existingDarkHighlighter != null) return true;
 
+    final lightTheme = _lightTheme.q;
+    final darkTheme = _darkTheme.q;
+    if (lightTheme == null || darkTheme == null) return false;
+
     final grammarFileContent = await rootBundle.loadString(
       "assets/config/code_highlights/$language.json",
     );
     Highlighter.addLanguage(language, grammarFileContent);
-    highlighters(language).q = Highlighter(language: language, theme: _lightTheme.q!);
-    darkHighlighters(language).q = Highlighter(language: language, theme: _darkTheme.q!);
+    highlighters(language).q = Highlighter(language: language, theme: lightTheme);
+    darkHighlighters(language).q = Highlighter(language: language, theme: darkTheme);
     return true;
+  }
+}
+
+/// Public methods
+extension $MDRender on _MDRender {
+  Future<bool> tryToLoadLanguageHighlighter(String language) async {
+    await _ensureHighlightersInitialized();
+    return await _loadLanguageHighlighter(language);
   }
 
   String normalizeLatexForMarkdown(String raw) {

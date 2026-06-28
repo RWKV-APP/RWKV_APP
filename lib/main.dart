@@ -77,13 +77,20 @@ Future<void> _sentryAppRunner() async {
   await SentryFlutter.init(
     _configureSentry,
     appRunner: () {
-      runApp(const _StateWrapper());
+      _runZoneApp();
     },
   );
 }
 
 Future<void> _debugAppRunner() async {
+  _runZoneApp();
+}
+
+void _runZoneApp() {
   runApp(const _StateWrapper());
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    unawaited(P.postFirstFrameInit());
+  });
 }
 
 FutureOr<void> _configureSentry(SentryFlutterOptions options) {

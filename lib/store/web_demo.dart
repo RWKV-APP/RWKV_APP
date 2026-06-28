@@ -10,6 +10,7 @@ const int _webDemoDefaultBatchSize = 30;
 const int _webDemoMaxBatchSize = 30;
 const double _webDemoDefaultPreviewScalePercent = 35;
 const double _webDemoDefaultPreviewAutoScrollSeconds = 5;
+const Duration _webDemoStreamingResultsSyncInterval = Duration(milliseconds: 120);
 const List<String> _webDemoLightningStopTokens = <String>["\nUser:"];
 
 enum WebDemoBackendMode {
@@ -84,6 +85,8 @@ class _WebDemo {
   List<String> _activeOutputs = const <String>[];
   int? _activeReceiveId;
   String? _hydratedSignature;
+  Timer? _streamingResultsSyncTimer;
+  bool _streamingResultsSyncPending = false;
 
   late final promptController = TextEditingController(text: "");
   late final promptFocusNode = FocusNode();
@@ -103,6 +106,11 @@ class _WebDemo {
   late final previewAutoScrollSeconds = qs(_webDemoDefaultPreviewAutoScrollSeconds);
   late final currentRun = qs<WebDemoRun?>(null);
   late final results = qs<List<WebDemoResult>>(const <WebDemoResult>[]);
+  late final resultByIndex = Provider.family<WebDemoResult?, int>((ref, index) {
+    final results = ref.watch(this.results);
+    if (index < 0 || index >= results.length) return null;
+    return results[index];
+  });
 }
 
 extension $WebDemo on _WebDemo {
@@ -222,6 +230,7 @@ extension $WebDemo on _WebDemo {
     _cancelLocalSubscriptions();
     _cloudClient?.close();
     _cloudClient = null;
+    _cancelStreamingResultsSync();
     lastError.q = null;
 
     final prompt = sourceHtml == null || sourceHtml.trim().isEmpty
@@ -641,7 +650,7 @@ extension $WebDemo on _WebDemo {
     _activeOutputs = List<String>.from(outputs);
     _activeContent = _joinOutputs(_activeOutputs);
     _syncActiveMessageContent(receiveId: receiveId);
-    _syncResultsFromOutputs(streaming: true);
+    _scheduleStreamingResultsSync();
   }
 
   void _syncActiveMessageContent({
@@ -661,9 +670,38 @@ extension $WebDemo on _WebDemo {
       final existing = i < current.length
           ? current[i]
           : WebDemoResult(index: i, raw: "", streaming: streaming, messageId: _activeReceiveId);
-      next.add(existing.copyWith(raw: _activeOutputs[i], streaming: streaming, clearError: true));
+      final raw = _activeOutputs[i];
+      if (existing.raw == raw && existing.streaming == streaming && existing.error == null) {
+        next.add(existing);
+        continue;
+      }
+      next.add(existing.copyWith(raw: raw, streaming: streaming, clearError: true));
     }
     results.q = next;
+  }
+
+  void _scheduleStreamingResultsSync() {
+    _streamingResultsSyncPending = true;
+    if (_streamingResultsSyncTimer != null) return;
+    _streamingResultsSyncTimer = Timer(_webDemoStreamingResultsSyncInterval, () {
+      _streamingResultsSyncTimer = null;
+      if (!_streamingResultsSyncPending) return;
+      _streamingResultsSyncPending = false;
+      _syncResultsFromOutputs(streaming: true);
+    });
+  }
+
+  void _flushStreamingResultsSync({
+    required bool streaming,
+  }) {
+    _cancelStreamingResultsSync();
+    _syncResultsFromOutputs(streaming: streaming);
+  }
+
+  void _cancelStreamingResultsSync() {
+    _streamingResultsSyncTimer?.cancel();
+    _streamingResultsSyncTimer = null;
+    _streamingResultsSyncPending = false;
   }
 
   void _markResultsStreaming(bool streaming, {String? error}) {
@@ -764,7 +802,7 @@ extension $WebDemo on _WebDemo {
     if (_activeOutputs.isEmpty && finalContent.isNotEmpty) {
       _activeOutputs = splitWebDemoBatchContent(finalContent);
     }
-    _syncResultsFromOutputs(streaming: false);
+    _flushStreamingResultsSync(streaming: false);
     if (error != null && error.isNotEmpty) {
       _markResultsStreaming(false, error: error);
     }

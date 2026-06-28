@@ -139,43 +139,34 @@ abstract class RawApp with WidgetsBindingObserver {
   }
 
   Future<void> _syncAllDir() async {
-    try {
-      cacheDir.q = await getApplicationCacheDirectory();
-    } catch (e) {
-      if (kDebugMode) print("RawApp.init");
-      if (kDebugMode) print("warning $e");
-    }
-    try {
-      documentsDir.q = await getApplicationDocumentsDirectory();
-    } catch (e) {
-      if (kDebugMode) print("RawApp.init");
-      if (kDebugMode) print("warning $e");
-    }
-    try {
-      downloadsDir.q = await getDownloadsDirectory();
-    } catch (e) {
-      if (kDebugMode) print("RawApp.init");
-      if (kDebugMode) print("warning $e");
-    }
+    final results = await Future.wait<Directory?>([
+      _getAppDirectory(() async => getApplicationCacheDirectory(), mark: "cacheDir"),
+      _getAppDirectory(() async => getApplicationDocumentsDirectory(), mark: "documentsDir"),
+      _getAppDirectory(() async => getDownloadsDirectory(), mark: "downloadsDir"),
+      Platform.isIOS || Platform.isMacOS
+          ? _getAppDirectory(() async => getLibraryDirectory(), mark: "libraryDir")
+          : Future<Directory?>.value(null),
+      _getAppDirectory(() async => getApplicationSupportDirectory(), mark: "supportDir"),
+      _getAppDirectory(() async => getTemporaryDirectory(), mark: "tempDir"),
+    ]);
+
+    cacheDir.q = results[0];
+    documentsDir.q = results[1];
+    downloadsDir.q = results[2];
     if (Platform.isIOS || Platform.isMacOS) {
-      try {
-        libraryDir.q = await getLibraryDirectory();
-      } catch (e) {
-        if (kDebugMode) print("RawApp.init");
-        if (kDebugMode) print("warning $e");
-      }
+      libraryDir.q = results[3];
     }
+    supportDir.q = results[4];
+    tempDir.q = results[5];
+  }
+
+  Future<Directory?> _getAppDirectory(Future<Directory?> Function() createFn, {required String mark}) async {
     try {
-      supportDir.q = await getApplicationSupportDirectory();
+      return await createFn();
     } catch (e) {
       if (kDebugMode) print("RawApp.init");
-      if (kDebugMode) print("warning $e");
-    }
-    try {
-      tempDir.q = await getTemporaryDirectory();
-    } catch (e) {
-      if (kDebugMode) print("RawApp.init");
-      if (kDebugMode) print("warning $e");
+      if (kDebugMode) print("warning $mark $e");
+      return null;
     }
   }
 
