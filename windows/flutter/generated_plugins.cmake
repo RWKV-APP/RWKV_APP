@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   dynamic_color
   file_selector_windows
+  flutter_inappwebview_windows
   gal
   permission_handler_windows
   proxy_setting_windows

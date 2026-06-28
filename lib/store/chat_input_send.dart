@@ -5,6 +5,7 @@ extension $ChatInputSend on _Chat {
     required DemoType preferredDemoType,
   }) async {
     final inSee = P.app.pageKey.q == .see;
+
     if (!inSee && _showGeneratingSendBlockedAlert()) return;
 
     final textToSend = textInInput.q.trim();

@@ -99,242 +99,248 @@ class Settings extends ConsumerWidget {
                   ),
                 ],
               ),
-        body: ChatHistoryWidthLimit(
-          child: ListView(
-            padding: .only(
-              left: 12 + paddingLeft,
-              top: paddingTop + 12,
-              right: 12 + paddingRight,
-              bottom: math.max(paddingBottom, 12) + tabBarReservedHeight + 12,
-            ),
-            controller: scrollController,
-            children: [
-              Row(
-                mainAxisAlignment: .center,
-                children: [iconWidget],
-              ),
-              const SizedBox(height: 16),
-              const Row(
-                mainAxisAlignment: .center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      Config.appTitle,
-                      style: TextStyle(fontSize: 24, fontWeight: .w500),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Opacity(
-                opacity: appTheme.settingVersionOpacity,
+        body: ListView(
+          padding: .only(
+            top: paddingTop + 12,
+            bottom: math.max(paddingBottom, 12) + tabBarReservedHeight + 12,
+          ),
+          controller: scrollController,
+          children: [
+            ChatHistoryWidthLimit(
+              child: Padding(
+                padding: .only(left: 12 + paddingLeft, right: 12 + paddingRight),
                 child: Column(
+                  crossAxisAlignment: .stretch,
                   children: [
                     Row(
                       mainAxisAlignment: .center,
-                      children: [
-                        Text(version, style: const TextStyle(fontSize: 12)),
-                        Text(" ($buildNumber)", style: const TextStyle(fontSize: 12)),
-                      ],
+                      children: [iconWidget],
                     ),
-                    if (shortCommitId.isNotEmpty)
-                      Tooltip(
-                        message: normalizedCommitId,
-                        child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => _openRWKVMobileCommit(normalizedCommitId),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.transparent,
-                              ),
-                              padding: const EdgeInsets.all(4),
-                              child: Text(
-                                s.inference_engine_version(shortCommitId),
-                                style: const TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
+                    const SizedBox(height: 16),
+                    const Row(
+                      mainAxisAlignment: .center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            Config.appTitle,
+                            style: TextStyle(fontSize: 24, fontWeight: .w500),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                      ),
-                  ],
-                ),
-              ),
-              SizedBox(height: appTheme.settingsSectionTitleBottomSpace),
-              Row(
-                mainAxisAlignment: .start,
-                children: [
-                  SizedBox(width: appTheme.settingsSectionTitleLeftSpace),
-                  Expanded(
-                    child: Text(
-                      s.application_settings,
-                      style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: appTheme.settingsSectionTitleTopSpace),
-              FormItem(
-                isSectionStart: true,
-                icon: Icon(Icons.manage_accounts, color: qb.withValues(alpha: .667), size: 16),
-                title: s.application_mode,
-                infoText: userType.displayName(),
-                onTap: P.preference.showUserTypeDialog,
-              ),
-              FormItem(
-                icon: Icon(Icons.format_size_outlined, color: qb.withValues(alpha: .667), size: 16),
-                title: s.font_setting,
-                infoText: "${P.preference.textScalePairs[preferredTextScaleFactor]}",
-                onTap: P.preference.goToFontSettings,
-              ),
-              FormItem(
-                icon: Icon(Icons.language_outlined, color: qb.withValues(alpha: .667), size: 16),
-                title: s.application_language,
-                infoText: preferredLanguage.display ?? s.follow_system,
-                onTap: P.preference.showLocaleDialog,
-              ),
-              if (userType.isGreaterThan(.user))
-                FormItem(
-                  icon: Icon(Icons.settings_applications, color: qb.withValues(alpha: .667), size: 16),
-                  title: S.current.advance_settings,
-                  onTap: () => push(.advancedSettings),
-                ),
-              FormItem(
-                isSectionEnd: false,
-                icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.withValues(alpha: .667), size: 16),
-                title: s.appearance,
-                infoText: preferredThemeMode.displayName,
-                onTap: P.preference.showThemeSettings,
-              ),
-              FormItem(
-                icon: Icon(Icons.file_download_outlined, color: qb.withValues(alpha: .667), size: 16),
-                title: s.export_data,
-                onTap: () => P.dataExport.showExportDataSheet(context),
-              ),
-              FormItem(
-                isSectionEnd: true,
-                icon: Icon(Icons.storage, color: qb.withValues(alpha: .667), size: 16),
-                title: s.weights_mangement,
-                infoText: totalUsage,
-                onTap: () => push(.weightManager),
-              ),
-              SizedBox(height: appTheme.settingsSectionTitleBottomSpace),
-              Row(
-                mainAxisAlignment: .start,
-                children: [
-                  SizedBox(width: appTheme.settingsSectionTitleLeftSpace),
-                  Expanded(
-                    child: Text(
-                      s.join_the_community,
-                      style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: appTheme.settingsSectionTitleTopSpace),
-              FormItem(
-                icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
-                isSectionStart: true,
-                title: s.qq_group_1,
-                subtitle: "${s.application_internal_test_group}: 332381861",
-                onTap: _openQQGroup1,
-              ),
-              FormItem(
-                icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
-                title: s.qq_group_2,
-                subtitle: "${s.technical_research_group}: 325154699",
-                onTap: _openQQGroup2,
-              ),
-              if (kDebugMode)
-                FormItem(
-                  icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
-                  title: "Test Page",
-                  subtitle: "Test Page",
-                  onTap: _onTestPageClicked,
-                ),
-              FormItem(
-                icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
-                title: s.discord,
-                subtitle: s.join_our_discord_server,
-                onTap: _openDiscord,
-              ),
-              FormItem(
-                isSectionEnd: true,
-                icon: Icon(Icons.tag, color: qb.withValues(alpha: .667), size: 16),
-                title: s.twitter,
-                subtitle: "@BlinkDL_AI",
-                onTap: _openTwitter,
-              ),
-              SizedBox(height: appTheme.settingsSectionTitleBottomSpace),
-              Row(
-                mainAxisAlignment: .start,
-                children: [
-                  SizedBox(width: appTheme.settingsSectionTitleLeftSpace),
-                  Expanded(
-                    child: Text(
-                      s.about,
-                      style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: appTheme.settingsSectionTitleTopSpace),
-              FormItem(
-                isSectionStart: true,
-                title: s.feedback,
-                icon: Icon(Icons.feedback_outlined, color: qb.withValues(alpha: .667), size: 16),
-                onTap: _openFeedback,
-              ),
-              FormItem(
-                title: S.current.check_for_updates,
-                trailing: Row(
-                  children: [
-                    Text("$version($buildNumber)"),
-                    AnimatedSize(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeOutCubic,
-                      child: Row(
-                        mainAxisSize: .min,
+                    const SizedBox(height: 4),
+                    Opacity(
+                      opacity: appTheme.settingVersionOpacity,
+                      child: Column(
                         children: [
-                          if (checkingLatestVersion) const SizedBox(width: 8),
-                          if (checkingLatestVersion)
-                            const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator.adaptive(
-                                strokeWidth: 2,
+                          Row(
+                            mainAxisAlignment: .center,
+                            children: [
+                              Text(version, style: const TextStyle(fontSize: 12)),
+                              Text(" ($buildNumber)", style: const TextStyle(fontSize: 12)),
+                            ],
+                          ),
+                          if (shortCommitId.isNotEmpty)
+                            Tooltip(
+                              message: normalizedCommitId,
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => _openRWKVMobileCommit(normalizedCommitId),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.transparent,
+                                    ),
+                                    padding: const EdgeInsets.all(4),
+                                    child: Text(
+                                      s.inference_engine_version(shortCommitId),
+                                      style: const TextStyle(fontSize: 12),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                         ],
                       ),
                     ),
+                    SizedBox(height: appTheme.settingsSectionTitleBottomSpace),
+                    Row(
+                      mainAxisAlignment: .start,
+                      children: [
+                        SizedBox(width: appTheme.settingsSectionTitleLeftSpace),
+                        Expanded(
+                          child: Text(
+                            s.application_settings,
+                            style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: appTheme.settingsSectionTitleTopSpace),
+                    FormItem(
+                      isSectionStart: true,
+                      icon: Icon(Icons.manage_accounts, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.application_mode,
+                      infoText: userType.displayName(),
+                      onTap: P.preference.showUserTypeDialog,
+                    ),
+                    FormItem(
+                      icon: Icon(Icons.format_size_outlined, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.font_setting,
+                      infoText: "${P.preference.textScalePairs[preferredTextScaleFactor]}",
+                      onTap: P.preference.goToFontSettings,
+                    ),
+                    FormItem(
+                      icon: Icon(Icons.language_outlined, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.application_language,
+                      infoText: preferredLanguage.display ?? s.follow_system,
+                      onTap: P.preference.showLocaleDialog,
+                    ),
+                    if (userType.isGreaterThan(.user))
+                      FormItem(
+                        icon: Icon(Icons.settings_applications, color: qb.withValues(alpha: .667), size: 16),
+                        title: S.current.advance_settings,
+                        onTap: () => push(.advancedSettings),
+                      ),
+                    FormItem(
+                      isSectionEnd: false,
+                      icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.appearance,
+                      infoText: preferredThemeMode.displayName,
+                      onTap: P.preference.showThemeSettings,
+                    ),
+                    FormItem(
+                      icon: Icon(Icons.file_download_outlined, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.export_data,
+                      onTap: () => P.dataExport.showExportDataSheet(context),
+                    ),
+                    FormItem(
+                      isSectionEnd: true,
+                      icon: Icon(Icons.storage, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.weights_mangement,
+                      infoText: totalUsage,
+                      onTap: () => push(.weightManager),
+                    ),
+                    SizedBox(height: appTheme.settingsSectionTitleBottomSpace),
+                    Row(
+                      mainAxisAlignment: .start,
+                      children: [
+                        SizedBox(width: appTheme.settingsSectionTitleLeftSpace),
+                        Expanded(
+                          child: Text(
+                            s.join_the_community,
+                            style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: appTheme.settingsSectionTitleTopSpace),
+                    FormItem(
+                      icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
+                      isSectionStart: true,
+                      title: s.qq_group_1,
+                      subtitle: "${s.application_internal_test_group}: 332381861",
+                      onTap: _openQQGroup1,
+                    ),
+                    FormItem(
+                      icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.qq_group_2,
+                      subtitle: "${s.technical_research_group}: 325154699",
+                      onTap: _openQQGroup2,
+                    ),
+                    if (kDebugMode)
+                      FormItem(
+                        icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
+                        title: "Test Page",
+                        subtitle: "Test Page",
+                        onTap: _onTestPageClicked,
+                      ),
+                    FormItem(
+                      icon: Icon(Icons.chat_bubble_outline, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.discord,
+                      subtitle: s.join_our_discord_server,
+                      onTap: _openDiscord,
+                    ),
+                    FormItem(
+                      isSectionEnd: true,
+                      icon: Icon(Icons.tag, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.twitter,
+                      subtitle: "@BlinkDL_AI",
+                      onTap: _openTwitter,
+                    ),
+                    SizedBox(height: appTheme.settingsSectionTitleBottomSpace),
+                    Row(
+                      mainAxisAlignment: .start,
+                      children: [
+                        SizedBox(width: appTheme.settingsSectionTitleLeftSpace),
+                        Expanded(
+                          child: Text(
+                            s.about,
+                            style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: appTheme.settingsSectionTitleTopSpace),
+                    FormItem(
+                      isSectionStart: true,
+                      title: s.feedback,
+                      icon: Icon(Icons.feedback_outlined, color: qb.withValues(alpha: .667), size: 16),
+                      onTap: _openFeedback,
+                    ),
+                    FormItem(
+                      title: S.current.check_for_updates,
+                      trailing: Row(
+                        children: [
+                          Text("$version($buildNumber)"),
+                          AnimatedSize(
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeOutCubic,
+                            child: Row(
+                              mainAxisSize: .min,
+                              children: [
+                                if (checkingLatestVersion) const SizedBox(width: 8),
+                                if (checkingLatestVersion)
+                                  const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator.adaptive(
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      icon: Icon(Icons.update, color: qb.withValues(alpha: .667), size: 16),
+                      onTap: () => P.app.checkUpdates(manually: true),
+                    ),
+                    FormItem(
+                      title: s.github_repository,
+                      icon: Icon(Icons.code, color: qb.withValues(alpha: .667), size: 16),
+                      onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP", mode: LaunchMode.externalApplication),
+                    ),
+                    FormItem(
+                      title: s.report_an_issue_on_github,
+                      icon: Icon(Icons.bug_report, color: qb.withValues(alpha: .667), size: 16),
+                      onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP/issues/new", mode: LaunchMode.externalApplication),
+                    ),
+                    FormItem(
+                      isSectionEnd: true,
+                      title: s.license,
+                      icon: Icon(Icons.contact_page_outlined, color: qb.withValues(alpha: .667), size: 16),
+                      onTap: () => _showLicensePage(context, version, buildNumber, iconWidget),
+                    ),
+                    SizedBox(height: paddingBottom),
                   ],
                 ),
-                icon: Icon(Icons.update, color: qb.withValues(alpha: .667), size: 16),
-                onTap: () => P.app.checkUpdates(manually: true),
               ),
-              FormItem(
-                title: s.github_repository,
-                icon: Icon(Icons.code, color: qb.withValues(alpha: .667), size: 16),
-                onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP", mode: LaunchMode.externalApplication),
-              ),
-              FormItem(
-                title: s.report_an_issue_on_github,
-                icon: Icon(Icons.bug_report, color: qb.withValues(alpha: .667), size: 16),
-                onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP/issues/new", mode: LaunchMode.externalApplication),
-              ),
-              FormItem(
-                isSectionEnd: true,
-                title: s.license,
-                icon: Icon(Icons.contact_page_outlined, color: qb.withValues(alpha: .667), size: 16),
-                onTap: () => _showLicensePage(context, version, buildNumber, iconWidget),
-              ),
-              SizedBox(height: paddingBottom),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

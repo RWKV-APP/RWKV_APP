@@ -53,6 +53,7 @@ class PageHome extends ConsumerWidget {
     final widgets = [
       const _ChatButton(),
       const _CompletionButton(),
+      const _WebDemoButton(),
       const _VisualButton(),
       const _TTSButton(),
       const _RolePlayButton(),
@@ -294,6 +295,28 @@ class _AlbatrossButton extends ConsumerWidget {
       ),
       title: s.albatross_chat,
       description: s.albatross_chat_description,
+    );
+  }
+}
+
+class _WebDemoButton extends ConsumerWidget {
+  const _WebDemoButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
+
+    return _HomeCard(
+      heightsKey: 'webDemo',
+      onTap: () {
+        P.chat.startNewChat();
+        push(.webDemo);
+      },
+      color: Colors.indigoAccent,
+      icon: const Icon(Icons.web_asset_rounded, color: Colors.white),
+      title: "Web Demo",
+      description: "Generate and preview HTML pages with RWKV",
     );
   }
 }

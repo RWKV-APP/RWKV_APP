@@ -29,6 +29,7 @@ import 'package:flutter_roleplay/services/role_play_manage.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart' as http_io;
 import 'package:image_picker/image_picker.dart';
 import 'package:macos_secure_bookmarks/macos_secure_bookmarks.dart';
 import 'package:mp_audio_stream/mp_audio_stream.dart' as mp_audio_stream;
@@ -83,6 +84,7 @@ import 'package:zone/func/string_utils.dart';
 import 'package:zone/func/sudoku.dart' as func_sudoku;
 import 'package:zone/func/transfer_all_files_in_dir.dart';
 import 'package:zone/func/unzip.dart';
+import 'package:zone/func/web_demo.dart';
 import 'package:zone/func/web_search_prompt.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/io.dart';
@@ -190,6 +192,7 @@ part "api_server.dart";
 part "multi_question.dart";
 part "benchmark.dart";
 part "telemetry.dart";
+part "web_demo.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -230,6 +233,7 @@ abstract class P {
   static final multiQuestion = _MultiQuestion();
   static final benchmark = _Benchmark();
   static final telemetry = _Telemetry();
+  static final webDemo = _WebDemo();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -280,6 +284,7 @@ abstract class P {
       _safeInit(() => apiServer._init(), mark: "apiServer"),
       _safeInit(() => telemetry._init(), mark: "telemetry"),
       _safeInit(() => benchmark._init(), mark: "benchmark"),
+      _safeInit(() => webDemo._init(), mark: "webDemo"),
     ]);
   }
 

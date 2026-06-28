@@ -62,6 +62,8 @@ class _PageConversationState extends ConsumerState<PageConversation> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final conversations = ref.watch(_compositedConversations);
     final isEmpty = conversations.isEmpty;
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
@@ -69,14 +71,12 @@ class _PageConversationState extends ConsumerState<PageConversation> {
 
     return Scaffold(
       backgroundColor: appTheme.settingBg,
-      body: ChatHistoryWidthLimit(
-        child: Column(
-          children: [
-            const _ConversationAppBar(),
-            isEmpty ? const Expanded(child: _EmptyState()) : const Expanded(child: _ConversationList()),
-            if (isBatchMode) const _BatchActionBar(),
-          ],
-        ),
+      body: Column(
+        children: [
+          const ChatHistoryWidthLimit(child: _ConversationAppBar()),
+          isEmpty ? const Expanded(child: ChatHistoryWidthLimit(child: _EmptyState())) : const Expanded(child: _ConversationList()),
+          if (isBatchMode) const ChatHistoryWidthLimit(child: _BatchActionBar()),
+        ],
       ),
     );
   }
@@ -160,6 +160,8 @@ class _ConversationList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final conversations = ref.watch(_compositedConversations);
     final appTheme = ref.watch(P.app.theme);
     final paddingBottom = ref.watch(P.app.paddingBottom);
@@ -170,8 +172,12 @@ class _ConversationList extends ConsumerWidget {
       itemCount: conversations.length,
       scrollCacheExtent: const ScrollCacheExtent.pixels(200),
       physics: const AlwaysScrollableScrollPhysics(),
-      separatorBuilder: (context, index) => const _ConversationSeparator(),
-      itemBuilder: (context, index) => _ConversationDismissible(conversation: conversations[index]),
+      separatorBuilder: (context, index) => const ChatHistoryWidthLimit(child: _ConversationSeparator()),
+      itemBuilder: (context, index) {
+        return ChatHistoryWidthLimit(
+          child: _ConversationDismissible(conversation: conversations[index]),
+        );
+      },
     );
   }
 }
