@@ -402,6 +402,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "앱이 이미 최신 버전입니다",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("외관"),
+    "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
+      "캐시를 지웠습니다. 완전히 적용하려면 앱을 다시 시작하세요.",
+    ),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "응용 프로그램 내부 테스트 그룹",
     ),
@@ -574,6 +577,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "사전 정의된 캐릭터 선택",
     ),
     "clear": MessageLookupByLibrary.simpleMessage("지우기"),
+    "clear_application_cache": MessageLookupByLibrary.simpleMessage("캐시 지우기"),
+    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "앱 설정과 로컬 구성 캐시를 지우시겠습니까? 채팅 기록, 내보낸 파일, 가중치 파일은 삭제되지 않습니다. 사용자 지정 모델 폴더 연결은 유지됩니다.",
+    ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage("메모리 캐시 지우기"),
     "clear_text": MessageLookupByLibrary.simpleMessage("텍스트 지우기"),
     "click_here_to_select_a_new_model": MessageLookupByLibrary.simpleMessage(

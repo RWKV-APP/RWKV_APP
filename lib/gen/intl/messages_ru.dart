@@ -462,6 +462,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "У вас последняя версия",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Внешний вид"),
+    "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
+      "Кэш очищен. Перезапустите приложение, чтобы сброс полностью вступил в силу.",
+    ),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "Группа внутреннего тестирования приложения",
     ),
@@ -692,6 +695,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Выбрать предустановленного персонажа",
     ),
     "clear": MessageLookupByLibrary.simpleMessage("Очистить"),
+    "clear_application_cache": MessageLookupByLibrary.simpleMessage(
+      "Очистить кэш",
+    ),
+    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "Очистить кэш настроек приложения и локальной конфигурации? История чатов, экспортированные файлы и файлы весов не будут удалены. Пользовательские папки моделей останутся подключенными.",
+    ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage(
       "Очистить кэш в памяти",
     ),

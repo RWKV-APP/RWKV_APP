@@ -218,6 +218,11 @@ class Settings extends ConsumerWidget {
                       onTap: () => P.dataExport.showExportDataSheet(context),
                     ),
                     FormItem(
+                      icon: Icon(Icons.cleaning_services_outlined, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.clear_application_cache,
+                      onTap: P.preference.showClearPreferenceCacheDialog,
+                    ),
+                    FormItem(
                       isSectionEnd: true,
                       icon: Icon(Icons.storage, color: qb.withValues(alpha: .667), size: 16),
                       title: s.weights_mangement,

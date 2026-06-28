@@ -391,6 +391,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "已经是最新版本",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("外观"),
+    "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
+      "缓存已清除，重启应用后完全生效",
+    ),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "应用内测群",
     ),
@@ -547,6 +550,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "choose_prebuilt_character": MessageLookupByLibrary.simpleMessage("选择预设角色"),
     "clear": MessageLookupByLibrary.simpleMessage("清除"),
+    "clear_application_cache": MessageLookupByLibrary.simpleMessage("清除缓存"),
+    "clear_application_cache_confirmation":
+        MessageLookupByLibrary.simpleMessage(
+          "确定要清除应用偏好和本地配置缓存吗？聊天记录、导出文件和权重文件不会被删除。自定义模型目录会保留。",
+        ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage("清除内存缓存"),
     "clear_text": MessageLookupByLibrary.simpleMessage("清除文本"),
     "click_here_to_select_a_new_model": MessageLookupByLibrary.simpleMessage(

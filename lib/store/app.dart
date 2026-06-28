@@ -888,28 +888,27 @@ extension _$App on _App {
   }
 
   /// 从本地沙盒中加载配置, 如果本地沙盒中没有, 则从应用包中加载, 并存储到本地沙盒中
+  /// 如果禁用了远程配置, 则直接读取应用包中的配置
   Future<(Map<String, dynamic> json, SharedPreferences sp)> _loadConfigFromLocal() async {
     final startTime = DateTime.now().millisecondsSinceEpoch;
 
     final sp = await SharedPreferences.getInstance();
-    final contains = sp.containsKey(_configForAllDemosKey);
-
-    // 如果禁用了远程配置, 则强制从应用包中加载
-    final forceRefreshFromBundle = Args.disableRemoteConfig;
-    if (forceRefreshFromBundle) {
-      qqw("force refresh from bundle");
-      final jsonPath = "remote/latest.json";
-      final jsonStringInBundle = await rootBundle.loadString(jsonPath);
-      await sp.setString(_configForAllDemosKey, jsonStringInBundle);
+    if (Args.disableRemoteConfig) {
+      qqw("load bundled config directly because remote config is disabled");
+      final json = await _loadConfigFromBundle();
+      final endTime = DateTime.now().millisecondsSinceEpoch;
+      qqw("load bundled config time: ${endTime - startTime}ms");
+      return (json, sp);
     }
+
+    final contains = sp.containsKey(_configForAllDemosKey);
 
     if (contains) {
       qqq("latest config data already stored in sandbox");
     } else {
       qqq("latest config data not stored in sandbox");
       qqq("load latest config from application bundle");
-      final jsonPath = "remote/latest.json";
-      final jsonStringInBundle = await rootBundle.loadString(jsonPath);
+      final jsonStringInBundle = await _loadConfigStringFromBundle();
       await sp.setString(_configForAllDemosKey, jsonStringInBundle);
     }
 
@@ -921,6 +920,17 @@ extension _$App on _App {
     qqw("load config from local sandbox and bundle time: ${endTime - startTime}ms");
 
     return (json, sp);
+  }
+
+  Future<String> _loadConfigStringFromBundle() async {
+    const jsonPath = "remote/latest.json";
+    return await rootBundle.loadString(jsonPath);
+  }
+
+  Future<Map<String, dynamic>> _loadConfigFromBundle() async {
+    final jsonStringInBundle = await _loadConfigStringFromBundle();
+    final rawJSON = jsonDecode(jsonStringInBundle);
+    return castJsonMap(rawJSON);
   }
 }
 

@@ -451,6 +451,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "App is already up to date",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+    "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
+      "Cache cleared. Restart the app to fully apply the reset.",
+    ),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "Application Internal Test Group",
     ),
@@ -671,6 +674,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Choose prebuilt character",
     ),
     "clear": MessageLookupByLibrary.simpleMessage("Clear"),
+    "clear_application_cache": MessageLookupByLibrary.simpleMessage(
+      "Clear Cache",
+    ),
+    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "Clear cached app preferences and local config? Chat history, exported files, and weight files will not be deleted. Custom model folders will remain linked.",
+    ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage(
       "Clear Memory Cache",
     ),

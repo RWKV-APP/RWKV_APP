@@ -402,6 +402,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "アプリは既に最新です",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("外観"),
+    "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
+      "キャッシュをクリアしました。完全に反映するにはアプリを再起動してください。",
+    ),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "アプリケーション内部テストグループ",
     ),
@@ -576,6 +579,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "プリセットキャラクターを選択",
     ),
     "clear": MessageLookupByLibrary.simpleMessage("クリア"),
+    "clear_application_cache": MessageLookupByLibrary.simpleMessage(
+      "キャッシュをクリア",
+    ),
+    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "アプリ設定とローカル設定キャッシュをクリアしますか？チャット履歴、エクスポートファイル、重みファイルは削除されません。カスタムモデルフォルダのリンクは保持されます。",
+    ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage("メモリキャッシュをクリア"),
     "clear_text": MessageLookupByLibrary.simpleMessage("テキストを消去"),
     "click_here_to_select_a_new_model": MessageLookupByLibrary.simpleMessage(

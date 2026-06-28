@@ -389,6 +389,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_url": MessageLookupByLibrary.simpleMessage("伺服器位址"),
     "app_is_already_up_to_date": MessageLookupByLibrary.simpleMessage("已是最新版本"),
     "appearance": MessageLookupByLibrary.simpleMessage("外觀"),
+    "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
+      "快取已清除，重新啟動應用後完整生效",
+    ),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "應用程式內測群",
     ),
@@ -545,6 +548,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "choose_prebuilt_character": MessageLookupByLibrary.simpleMessage("選擇預設角色"),
     "clear": MessageLookupByLibrary.simpleMessage("清除"),
+    "clear_application_cache": MessageLookupByLibrary.simpleMessage("清除快取"),
+    "clear_application_cache_confirmation":
+        MessageLookupByLibrary.simpleMessage(
+          "確定要清除應用偏好和本機設定快取嗎？聊天記錄、匯出檔案和權重檔案不會被刪除。自訂模型目錄會保留。",
+        ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage("清除記憶體快取"),
     "clear_text": MessageLookupByLibrary.simpleMessage("清除文字"),
     "click_here_to_select_a_new_model": MessageLookupByLibrary.simpleMessage(

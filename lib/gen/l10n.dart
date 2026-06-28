@@ -4963,6 +4963,36 @@ class S {
     );
   }
 
+  /// `清除缓存`
+  String get clear_application_cache {
+    return Intl.message(
+      '清除缓存',
+      name: 'clear_application_cache',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `确定要清除应用偏好和本地配置缓存吗？聊天记录、导出文件和权重文件不会被删除。自定义模型目录会保留。`
+  String get clear_application_cache_confirmation {
+    return Intl.message(
+      '确定要清除应用偏好和本地配置缓存吗？聊天记录、导出文件和权重文件不会被删除。自定义模型目录会保留。',
+      name: 'clear_application_cache_confirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缓存已清除，重启应用后完全生效`
+  String get application_cache_cleared {
+    return Intl.message(
+      '缓存已清除，重启应用后完全生效',
+      name: 'application_cache_cleared',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `导入权重文件`
   String get import_weight_file {
     return Intl.message(

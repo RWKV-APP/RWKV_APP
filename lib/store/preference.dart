@@ -11,6 +11,14 @@ const String _batchViewportWidthPreferenceKey = "halo_state.batchViewportWidth";
 const String _renderMarkdownAndLatexPreferenceKey = "halo_state.renderMarkdownAndLatex";
 const String _renderThinkingTagAsPreviewPreferenceKey = "halo_state.renderThinkingTagAsPreview";
 const String _thinkingModePreferenceKey = "halo_state.thinkingMode";
+const Set<String> _preservedPreferenceCacheKeys = <String>{
+  "halo_state.customModelsDir",
+  "halo_state.customModelsDirBookmark",
+  "halo_state.pthFolderEntries",
+  "halo_state.pthFolderPaths",
+  "halo_state.telemetry.installId",
+  "halo_state.weightsMigrationCompletedv640",
+};
 
 class _Preference {
   // ===========================================================================
@@ -371,10 +379,85 @@ extension _$Preference on _Preference {
     final sp = await SharedPreferences.getInstance();
     await sp.setBool("halo_state.dumpping", dumpping);
   }
+
+  Future<int> _clearPreferenceCache() async {
+    final sp = await SharedPreferences.getInstance();
+    final keys = sp.getKeys().toList()..sort();
+    int clearedCount = 0;
+
+    for (final key in keys) {
+      if (!_shouldClearPreferenceCacheKey(key)) continue;
+      final removed = await sp.remove(key);
+      if (!removed) continue;
+      clearedCount++;
+    }
+
+    _resetInMemoryPreferenceCache();
+    return clearedCount;
+  }
+
+  bool _shouldClearPreferenceCacheKey(String key) {
+    if (key.startsWith("configForAllDemosKey_")) return true;
+    if (key == "app.promptTemplate") return true;
+    if (!key.startsWith("halo_state.")) return false;
+    if (_preservedPreferenceCacheKeys.contains(key)) return false;
+    return true;
+  }
+
+  void _resetInMemoryPreferenceCache() {
+    _showBatteryOptimization = true;
+    _enableSystemProxy = true;
+    fakeBatchInferenceBenchmarkEnabled = false;
+    renderMarkdownAndLatex = true;
+    renderThinkingTagAsPreview = true;
+    promptTemplate = PromptTemplate.empty();
+
+    preferredLanguage.q = Language.none;
+    userType.q = .powerUser;
+    preferredTextScaleFactor.q = textScaleFactorSystem;
+    preferredMessageLineHeight.q = messageLineHeightDefault;
+    renderMarkdownAndLatexEnabled.q = true;
+    renderThinkingTagAsPreviewEnabled.q = true;
+    preferredThinkingMode.q = .fast;
+    themeMode.q = ThemeMode.system;
+    preferredDarkCustomTheme.q = .lightsOut;
+    lastWorldModel.q = null;
+    lastChatModel.q = null;
+    latestRuntimeAddress.q = 0;
+    dumpping.q = false;
+    preferredUIFont.q = null;
+    preferredMonospaceFont.q = null;
+    latestSkippedBuildNumber.q = 0;
+    hasUnlinkDefaultModelsDirOnce = false;
+
+    P.app.preferredThemeMode.q = ThemeMode.system;
+    P.rwkvAutoLoad.lastModelByScene.q = <String, Map<String, dynamic>>{};
+    P.rwkvDebug.renderNewlineDirectly.q = false;
+    P.rwkvDebug.renderSpaceSymbol.q = false;
+    P.rwkvDebug.showPrefillLogOnly.q = true;
+  }
 }
 
 /// Public methods
 extension $Preference on _Preference {
+  Future<void> showClearPreferenceCacheDialog() async {
+    final context = getContext();
+    if (context == null || !context.mounted) return;
+    final result = await showOkCancelAlertDialog(
+      context: context,
+      title: S.current.clear_application_cache,
+      message: S.current.clear_application_cache_confirmation,
+      okLabel: S.current.clear,
+      cancelLabel: S.current.cancel,
+      isDestructiveAction: true,
+    );
+
+    if (result != OkCancelResult.ok) return;
+    final clearedCount = await _clearPreferenceCache();
+    qqr("clear preference cache: $clearedCount keys");
+    Alert.success(S.current.application_cache_cleared);
+  }
+
   void showUserTypeDialog() async {
     final context = getContext();
     if (context == null || !context.mounted) return;
