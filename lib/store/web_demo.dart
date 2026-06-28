@@ -5,20 +5,104 @@ const String _webDemoProtocolRwkvLightningV1 = "rwkv_lightning_v1";
 const String _webDemoProtocolOpenAi = "openai";
 const String _webDemoDefault7BBaseUrl = "http://47.115.88.183:1801/v1/chat/completions";
 const String _webDemoDefault13BBaseUrl = "http://47.115.88.183:1800/v1/chat/completions";
+const int _webDemoLightningMaxTokensCap = 4096;
+const int _webDemoDefaultBatchSize = 30;
+const int _webDemoMaxBatchSize = 30;
+const double _webDemoDefaultPreviewScalePercent = 35;
+const double _webDemoDefaultPreviewAutoScrollSeconds = 5;
 const List<String> _webDemoLightningStopTokens = <String>["\nUser:"];
+
+enum WebDemoBackendMode {
+  cloud7b,
+  cloud13b,
+  local,
+}
+
+@immutable
+class WebDemoRun {
+  final String prompt;
+  final DateTime createdAt;
+  final WebDemoBackendMode backendMode;
+  final int batchSize;
+  final String rawDecodeParams;
+
+  const WebDemoRun({
+    required this.prompt,
+    required this.createdAt,
+    required this.backendMode,
+    required this.batchSize,
+    required this.rawDecodeParams,
+  });
+}
+
+@immutable
+class WebDemoResult {
+  final int index;
+  final String raw;
+  final bool streaming;
+  final String? error;
+  final int? messageId;
+
+  const WebDemoResult({
+    required this.index,
+    required this.raw,
+    required this.streaming,
+    this.error,
+    this.messageId,
+  });
+
+  WebDemoHtmlDocument? get document => extractFirstWebDemoHtml(raw);
+
+  String? get html => document?.html;
+
+  int get bytes => utf8.encode(raw).length;
+
+  int get tokens => _estimateWebDemoTokens(raw);
+
+  WebDemoResult copyWith({
+    String? raw,
+    bool? streaming,
+    String? error,
+    bool clearError = false,
+    int? messageId,
+  }) {
+    return WebDemoResult(
+      index: index,
+      raw: raw ?? this.raw,
+      streaming: streaming ?? this.streaming,
+      error: clearError ? null : (error ?? this.error),
+      messageId: messageId ?? this.messageId,
+    );
+  }
+}
 
 class _WebDemo {
   StreamSubscription<from_rwkv.ResponseBatchBufferContent>? _localSubscription;
   StreamSubscription<IsGenerating>? _localGeneratingSubscription;
   http.Client? _cloudClient;
   String _activeContent = "";
+  List<String> _activeOutputs = const <String>[];
+  int? _activeReceiveId;
+  String? _hydratedSignature;
 
-  late final useOfficialCloud = qs(false);
+  late final promptController = TextEditingController(text: "");
+  late final promptFocusNode = FocusNode();
+
+  late final promptInput = qs("");
+  late final backendMode = qs(
+    Config.webDemoOfficialApiKey.trim().isNotEmpty ? WebDemoBackendMode.cloud7b : WebDemoBackendMode.local,
+  );
+  late final useOfficialCloud = qs(Config.webDemoOfficialApiKey.trim().isNotEmpty);
   late final promptTemplate = qs(webDemoDefaultPromptTemplate);
   late final pendingHtmlContext = qs<String?>(null);
   late final lastSavedHtmlPath = qs<String?>(null);
   late final lastError = qs<String?>(null);
   late final active = qs(false);
+  late final batchSize = qs<int>(_webDemoDefaultBatchSize);
+  late final previewScalePercent = qs(_webDemoDefaultPreviewScalePercent);
+  late final previewAutoScrollSeconds = qs(_webDemoDefaultPreviewAutoScrollSeconds);
+  late final currentRun = qs<WebDemoRun?>(null);
+  late final results = qs<List<WebDemoResult>>(const <WebDemoResult>[]);
 }
 
 extension $WebDemo on _WebDemo {
@@ -26,8 +110,41 @@ extension $WebDemo on _WebDemo {
 
   bool get officialCloudConfigured => Config.webDemoOfficialApiKey.trim().isNotEmpty;
 
+  bool get officialCloudActive => P.app.pageKey.q == .webDemo && _isCloudBackend(backendMode.q) && officialCloudConfigured;
+
+  void setBackendMode(WebDemoBackendMode value) {
+    if (active.q) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+    backendMode.q = value;
+    useOfficialCloud.q = _isCloudBackend(value);
+  }
+
   void setUseOfficialCloud(bool value) {
-    useOfficialCloud.q = value;
+    setBackendMode(value ? WebDemoBackendMode.cloud7b : WebDemoBackendMode.local);
+  }
+
+  void setPromptInput(String value) {
+    promptInput.q = value;
+  }
+
+  void setBatchSize(num value) {
+    final next = value.round().clamp(1, _webDemoMaxBatchSize).toInt();
+    if (batchSize.q == next) return;
+    batchSize.q = next;
+  }
+
+  void setPreviewScalePercent(num value) {
+    final next = value.toDouble().clamp(20, 100).toDouble();
+    if (previewScalePercent.q == next) return;
+    previewScalePercent.q = next;
+  }
+
+  void setPreviewAutoScrollSeconds(num value) {
+    final next = value.toDouble().clamp(0, 10).toDouble();
+    if (previewAutoScrollSeconds.q == next) return;
+    previewAutoScrollSeconds.q = next;
   }
 
   void setPromptTemplate(String value) {
@@ -38,27 +155,67 @@ extension $WebDemo on _WebDemo {
     promptTemplate.q = webDemoDefaultPromptTemplate;
   }
 
+  void syncArgument(Argument argument, double value) {
+    switch (argument) {
+      case Argument.maxLength:
+        unawaited(P.rwkvParams.syncMaxLength(maxLength: value));
+      case Argument.temperature:
+        unawaited(P.rwkvParams.syncSamplerParams(temperature: value));
+      case Argument.topP:
+        unawaited(P.rwkvParams.syncSamplerParams(topP: value));
+      case Argument.presencePenalty:
+        unawaited(P.rwkvParams.syncSamplerParams(presencePenalty: value));
+      case Argument.frequencyPenalty:
+        unawaited(P.rwkvParams.syncSamplerParams(frequencyPenalty: value));
+      case Argument.penaltyDecay:
+        unawaited(P.rwkvParams.syncSamplerParams(penaltyDecay: value));
+      case Argument.topK:
+      case Argument.batchCount:
+        break;
+    }
+  }
+
+  Future<void> sendPresetPrompt(String prompt) async {
+    final trimmed = prompt.trim();
+    if (trimmed.isEmpty) return;
+    promptInput.q = trimmed;
+    promptController.text = trimmed;
+    promptController.selection = TextSelection.collapsed(offset: trimmed.length);
+    await sendFromCurrentInput();
+  }
+
   Future<void> sendFromCurrentInput() async {
-    final raw = P.chat.textInInput.q.trim();
+    final raw = promptInput.q.trim();
     if (raw.isEmpty) {
       Alert.info(S.current.chat_empty_message);
       return;
     }
 
-    P.chat.focusNode.unfocus();
-    P.chat.textInInput.q = "";
+    promptFocusNode.unfocus();
+    promptInput.q = "";
+    promptController.text = "";
     final sourceHtml = pendingHtmlContext.q;
     pendingHtmlContext.q = null;
     await sendPrompt(raw, sourceHtml: sourceHtml);
   }
 
   Future<void> sendPrompt(String raw, {String? sourceHtml}) async {
-    if (P.chat._showGeneratingSendBlockedAlert()) return;
+    if (active.q || P.rwkvGeneration.generating.q) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
 
-    final usingCloud = useOfficialCloud.q;
-    if (!usingCloud && !checkModelSelection(preferredDemoType: .chat)) return;
+    final backend = backendMode.q;
+    final usingCloud = _isCloudBackend(backend);
     if (usingCloud && !officialCloudConfigured) {
       Alert.warning("Official Web Demo endpoint key is not configured");
+      return;
+    }
+    if (!usingCloud && !checkModelSelection(preferredDemoType: .chat)) return;
+
+    final requestedBatchSize = batchSize.q.clamp(1, _webDemoMaxBatchSize);
+    if (!usingCloud && requestedBatchSize > 1 && !P.chat.batchInferenceAvailable.q) {
+      Alert.info(S.current.this_model_does_not_support_batch_inference);
       return;
     }
 
@@ -70,20 +227,35 @@ extension $WebDemo on _WebDemo {
     final prompt = sourceHtml == null || sourceHtml.trim().isEmpty
         ? buildWebDemoPrompt(template: promptTemplate.q, request: raw)
         : buildWebDemoEditPrompt(html: sourceHtml, instruction: raw);
-    final batchSize = P.chat.effectiveBatchEnabled.q ? P.chat.effectiveBatchCount.q : 1;
     final receiveId = await _createWebDemoMessagePair(
       userContent: raw,
-      batchSize: batchSize,
+      batchSize: requestedBatchSize,
       usingCloud: usingCloud,
     );
     if (receiveId == null) return;
 
+    final run = WebDemoRun(
+      prompt: raw,
+      createdAt: DateTime.now(),
+      backendMode: backend,
+      batchSize: requestedBatchSize,
+      rawDecodeParams: P.chat._resolveDecodeParamsSnapshotRaw() ?? "",
+    );
+    currentRun.q = run;
+    _activeReceiveId = receiveId;
+    _activeOutputs = List<String>.filled(requestedBatchSize, "");
+    _activeContent = "";
+    results.q = List<WebDemoResult>.generate(
+      requestedBatchSize,
+      (int index) => WebDemoResult(index: index, raw: "", streaming: true, messageId: receiveId),
+    );
+
     if (usingCloud) {
-      unawaited(_runCloud(prompt: prompt, batchSize: batchSize, receiveId: receiveId));
+      unawaited(_runCloud(prompt: prompt, batchSize: requestedBatchSize, receiveId: receiveId));
       return;
     }
 
-    _runLocal(prompt: prompt, batchSize: batchSize, receiveId: receiveId);
+    _runLocal(prompt: prompt, batchSize: requestedBatchSize, receiveId: receiveId);
   }
 
   Future<void> prepareContinuation({
@@ -95,14 +267,54 @@ extension $WebDemo on _WebDemo {
       return;
     }
     pendingHtmlContext.q = trimmed;
-    P.chat.textInInput.q = "Modify this page: ";
-    if (P.app.pageKey.q != .chat) {
-      push(.chat);
+    const nextPrompt = "Modify this page: ";
+    promptInput.q = nextPrompt;
+    promptController.text = nextPrompt;
+    promptController.selection = TextSelection.collapsed(offset: promptController.text.length);
+    if (P.app.pageKey.q != .webDemo) {
+      push(.webDemo);
     }
     await 100.msLater;
-    P.chat.focusNode.requestFocus();
-    P.chat.textEditingController.selection = TextSelection.collapsed(offset: P.chat.textEditingController.text.length);
+    promptFocusNode.requestFocus();
     Alert.info("HTML context ready");
+  }
+
+  Future<void> prepareContinuationFromResult(WebDemoResult result) async {
+    final html = result.html;
+    if (html == null || html.trim().isEmpty) {
+      Alert.warning("No HTML found");
+      return;
+    }
+    await prepareContinuation(html: html);
+  }
+
+  Future<void> openResultInSystemBrowser(WebDemoResult result) async {
+    final html = result.html;
+    if (html == null || html.trim().isEmpty) {
+      Alert.warning("No HTML found");
+      return;
+    }
+    await openHtmlInSystemBrowser(html: html, label: "web-${result.index + 1}");
+  }
+
+  Future<void> saveResultHtml(WebDemoResult result) async {
+    final html = result.html;
+    if (html == null || html.trim().isEmpty) {
+      Alert.warning("No HTML found");
+      return;
+    }
+    await saveHtml(html: html, label: "web-${result.index + 1}");
+    Alert.success("HTML saved");
+  }
+
+  Future<void> copyResultSource(WebDemoResult result) async {
+    final content = result.html ?? result.raw;
+    if (content.trim().isEmpty) {
+      Alert.warning("No source to copy");
+      return;
+    }
+    await Clipboard.setData(ClipboardData(text: content));
+    Alert.success("Result copied");
   }
 
   Future<void> openHtmlInSystemBrowser({
@@ -128,12 +340,59 @@ extension $WebDemo on _WebDemo {
   }
 
   Future<void> stopActive() async {
+    final receiveId = _activeReceiveId;
     _cloudClient?.close();
     _cloudClient = null;
     _cancelLocalSubscriptions();
     await P.rwkvGeneration.stop();
+    if (receiveId != null) {
+      _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoStopped");
+      return;
+    }
     P.rwkvGeneration.generating.q = false;
     active.q = false;
+    _markResultsStreaming(false);
+  }
+
+  void hydrateFromCurrentConversation({bool force = false}) {
+    if (active.q) return;
+
+    final orderedIds = P.msg.msgNode.q.allMsgIdsFromRoot.where((int id) => id != 0).toList();
+    final signature = _buildHydrationSignature(orderedIds);
+    if (!force && signature == _hydratedSignature) return;
+    _hydratedSignature = signature;
+
+    final hydratedResults = <WebDemoResult>[];
+    WebDemoRun? lastRun;
+    for (int i = 0; i < orderedIds.length; i++) {
+      final msg = P.msg.pool.q[orderedIds[i]];
+      if (msg == null) continue;
+      if (msg.isMine) continue;
+      if (msg.runningMode != "web_demo") continue;
+
+      final parts = splitWebDemoBatchContent(msg.content);
+      final prompt = _promptForWebDemoMessage(botMessage: msg, orderedIds: orderedIds, botIndex: i);
+      lastRun = WebDemoRun(
+        prompt: prompt,
+        createdAt: DateTime.fromMillisecondsSinceEpoch(msg.id),
+        backendMode: _backendModeForMessage(msg),
+        batchSize: parts.length,
+        rawDecodeParams: msg.rawDecodeParams ?? "",
+      );
+      for (int slot = 0; slot < parts.length; slot++) {
+        hydratedResults.add(
+          WebDemoResult(
+            index: hydratedResults.length,
+            raw: parts[slot],
+            streaming: msg.changing,
+            messageId: msg.id,
+          ),
+        );
+      }
+    }
+
+    currentRun.q = lastRun;
+    results.q = hydratedResults;
   }
 
   Future<int?> _createWebDemoMessagePair({
@@ -141,25 +400,6 @@ extension $WebDemo on _WebDemo {
     required int batchSize,
     required bool usingCloud,
   }) async {
-    MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
-    final parentMsg = P.msg.pool.q[parentNode.id];
-    if (parentMsg != null && parentMsg.type == MessageType.text && !parentMsg.isMine && getIsBatch(parentMsg.content)) {
-      final selection = P.msg.batchSelection(parentMsg).q;
-      if (selection == null) {
-        Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.top);
-        return null;
-      }
-      final finalizedContent = parentMsg.content.split(Config.batchMarker)[selection];
-      P.msg._syncMsg(parentMsg.id, parentMsg.copyWith(content: finalizedContent, clearBatchSlotLabels: true));
-      unawaited(
-        P.chat._refreshTokenCountsForMessage(
-          messageId: parentMsg.id,
-          overrideBotContent: finalizedContent,
-          persistToMessage: true,
-        ),
-      );
-    }
-
     final userId = DateTime.now().millisecondsSinceEpoch;
     final userMsg = Message(
       id: userId,
@@ -168,12 +408,12 @@ extension $WebDemo on _WebDemo {
       paused: false,
     );
     await P.msg._syncMsg(userId, userMsg);
-    parentNode = parentNode.add(MsgNode(userId));
+    final parentNode = P.msg.msgNode.q.rootAdd(MsgNode(userId));
 
     final receiveId = userId + 1;
     final currentModel = P.rwkvModel.latest.q;
     final modelName = usingCloud
-        ? "Official RWKV Web Demo ${Config.webDemoOfficialModel}"
+        ? "Official RWKV Web Demo ${_cloudModelLabel(backendMode.q)}"
         : P.albatrossRuntime.enabled.q
         ? "Albatross"
         : currentModel?.name;
@@ -193,10 +433,8 @@ extension $WebDemo on _WebDemo {
     P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
     P.chat.receiveId.q = receiveId;
-    P.chat._setReceivedTokens("", immediateUi: true);
     P.rwkvGeneration.generating.q = true;
     active.q = true;
-    P.chat._scheduleScrollToBottom();
     P.chat._scheduleRefreshLiveTokenCounts(messageId: receiveId, liveBotContent: "");
     return receiveId;
   }
@@ -207,7 +445,6 @@ extension $WebDemo on _WebDemo {
     required int receiveId,
   }) {
     final outputs = List<String>.filled(batchSize, "");
-    _activeContent = "";
     _localSubscription = P.rwkvGeneration
         .completion(prompt, batchSize: batchSize)
         .listen(
@@ -215,8 +452,7 @@ extension $WebDemo on _WebDemo {
             for (int i = 0; i < response.responseBufferContent.length && i < outputs.length; i++) {
               outputs[i] = stripWebDemoPromptPrefix(content: response.responseBufferContent[i], prompt: prompt);
             }
-            _activeContent = _joinOutputs(outputs);
-            P.chat._setReceivedTokens(_activeContent);
+            _setActiveOutputs(outputs: outputs, receiveId: receiveId);
             final complete = response.eosFound.length >= batchSize && response.eosFound.take(batchSize).every((item) => item);
             if (!complete) return;
             _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoLocalComplete");
@@ -258,7 +494,7 @@ extension $WebDemo on _WebDemo {
   }) async {
     final client = _createDirectCloudClient();
     _cloudClient = client;
-    _activeContent = "";
+    final outputs = List<String>.filled(batchSize, "");
 
     try {
       final request = http.Request("POST", _officialChatCompletionsUri());
@@ -276,28 +512,47 @@ extension $WebDemo on _WebDemo {
         "alpha_frequency": P.rwkvParams.arguments(Argument.frequencyPenalty).q,
         "alpha_decay": P.rwkvParams.arguments(Argument.penaltyDecay).q,
         "chunk_size": 8,
-        "stream": false,
+        "stream": true,
         "password": Config.webDemoOfficialApiKey,
       });
 
       final streamedResponse = await client.send(request).timeout(const Duration(seconds: _webDemoCloudTimeoutSeconds));
-      final responseBody = await streamedResponse.stream.bytesToString();
       if (streamedResponse.statusCode < 200 || streamedResponse.statusCode >= 300) {
+        final responseBody = await streamedResponse.stream.bytesToString();
         throw "${streamedResponse.statusCode}: $responseBody";
       }
 
-      final decoded = jsonDecode(responseBody);
-      if (decoded is! Map) {
-        throw "Unexpected RWKV Lightning response";
+      final parser = AlbatrossSseParser();
+      final doneSlots = List<bool>.filled(batchSize, false);
+      await for (final rawChunk in streamedResponse.stream.transform(utf8.decoder)) {
+        final events = parser.add(rawChunk);
+        for (final event in events) {
+          if (event.done) {
+            _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoLightningDone");
+            return;
+          }
+          bool changed = false;
+          for (final choice in event.choices) {
+            if (choice.index < 0 || choice.index >= outputs.length) continue;
+            if (choice.content.isNotEmpty) {
+              outputs[choice.index] = outputs[choice.index] + choice.content;
+              changed = true;
+            }
+            if (choice.finishReason != null) doneSlots[choice.index] = true;
+          }
+          if (changed) {
+            _setActiveOutputs(outputs: outputs, receiveId: receiveId);
+          }
+          if (doneSlots.every((done) => done)) {
+            _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoLightningFinished");
+            return;
+          }
+        }
       }
-      final choices = extractWebDemoCloudChoiceContents(Map<String, Object?>.from(decoded));
-      if (choices.isEmpty) {
-        throw "RWKV Lightning response did not include choices";
+      if (_activeContent.trim().isEmpty) {
+        throw "RWKV Lightning response did not include content";
       }
-      final outputs = buildWebDemoCloudChoiceOutputs(choices: choices, batchSize: batchSize, prompt: prompt);
-      _activeContent = _joinOutputs(outputs);
-      P.chat._setReceivedTokens(_activeContent);
-      _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoLightningComplete");
+      _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoLightningStreamEnd");
     } catch (e) {
       _finishCurrentMessage(
         receiveId: receiveId,
@@ -321,7 +576,6 @@ extension $WebDemo on _WebDemo {
     final client = http.Client();
     _cloudClient = client;
     final outputs = List<String>.filled(batchSize, "");
-    _activeContent = "";
 
     try {
       final request = http.Request("POST", _officialChatCompletionsUri());
@@ -329,7 +583,7 @@ extension $WebDemo on _WebDemo {
       request.headers["Content-Type"] = "application/json";
       request.headers["Authorization"] = "Bearer ${Config.webDemoOfficialApiKey}";
       request.body = jsonEncode({
-        "model": Config.webDemoOfficialModel,
+        "model": _cloudModelName,
         "messages": [
           {"role": "user", "content": prompt},
         ],
@@ -352,12 +606,16 @@ extension $WebDemo on _WebDemo {
             _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoCloudDone");
             return;
           }
+          bool changed = false;
           for (final choice in event.choices) {
             if (choice.index < 0 || choice.index >= outputs.length) continue;
+            if (choice.content.isEmpty) continue;
             outputs[choice.index] = outputs[choice.index] + choice.content;
+            changed = true;
           }
-          _activeContent = _joinOutputs(outputs);
-          P.chat._setReceivedTokens(_activeContent);
+          if (changed) {
+            _setActiveOutputs(outputs: outputs, receiveId: receiveId);
+          }
         }
       }
       _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoCloudStreamEnd");
@@ -374,6 +632,44 @@ extension $WebDemo on _WebDemo {
         _cloudClient = null;
       }
     }
+  }
+
+  void _setActiveOutputs({
+    required List<String> outputs,
+    required int receiveId,
+  }) {
+    _activeOutputs = List<String>.from(outputs);
+    _activeContent = _joinOutputs(_activeOutputs);
+    _syncActiveMessageContent(receiveId: receiveId);
+    _syncResultsFromOutputs(streaming: true);
+  }
+
+  void _syncActiveMessageContent({
+    required int receiveId,
+  }) {
+    final current = P.msg.pool.q[receiveId];
+    if (current == null || !current.changing) return;
+    P.msg.pool.q = {...P.msg.pool.q, receiveId: current.copyWith(content: _activeContent)};
+  }
+
+  void _syncResultsFromOutputs({
+    required bool streaming,
+  }) {
+    final current = results.q;
+    final next = <WebDemoResult>[];
+    for (int i = 0; i < _activeOutputs.length; i++) {
+      final existing = i < current.length
+          ? current[i]
+          : WebDemoResult(index: i, raw: "", streaming: streaming, messageId: _activeReceiveId);
+      next.add(existing.copyWith(raw: _activeOutputs[i], streaming: streaming, clearError: true));
+    }
+    results.q = next;
+  }
+
+  void _markResultsStreaming(bool streaming, {String? error}) {
+    results.q = [
+      for (final result in results.q) result.copyWith(streaming: streaming, error: error),
+    ];
   }
 
   http.Client _createDirectCloudClient() {
@@ -402,6 +698,12 @@ extension $WebDemo on _WebDemo {
 
   String get _effectiveOfficialBaseUrl {
     final configured = Config.webDemoOfficialBaseUrl.trim();
+    if (_officialCloudProtocol == _webDemoProtocolRwkvLightningV1 && backendMode.q == WebDemoBackendMode.cloud13b) {
+      return _webDemoDefault13BBaseUrl;
+    }
+    if (_officialCloudProtocol == _webDemoProtocolRwkvLightningV1 && backendMode.q == WebDemoBackendMode.cloud7b) {
+      return _webDemoDefault7BBaseUrl;
+    }
     final model = Config.webDemoOfficialModel.trim().toLowerCase();
     if (configured == _webDemoDefault7BBaseUrl && (model == "13b" || model == "13.3b")) {
       return _webDemoDefault13BBaseUrl;
@@ -421,8 +723,10 @@ extension $WebDemo on _WebDemo {
 
   int get _maxTokensForCloud {
     final maxTokens = P.rwkvParams.arguments(Argument.maxLength).q.round();
-    if (maxTokens <= 0) return Argument.maxLength.defaults.round();
-    return maxTokens;
+    final resolved = maxTokens <= 0 ? Argument.maxLength.defaults.round() : maxTokens;
+    if (_officialCloudProtocol != _webDemoProtocolRwkvLightningV1) return resolved;
+    if (resolved <= _webDemoLightningMaxTokensCap) return resolved;
+    return _webDemoLightningMaxTokensCap;
   }
 
   String _joinOutputs(List<String> outputs) {
@@ -453,9 +757,17 @@ extension $WebDemo on _WebDemo {
       decodeSpeed: snapshotDecodeSpeed ?? current.decodeSpeed,
       callingFunction: callingFunction,
     );
-    P.chat._setReceivedTokens("", immediateUi: true);
     P.rwkvGeneration.generating.q = false;
     active.q = false;
+    _activeReceiveId = null;
+    _activeContent = finalContent;
+    if (_activeOutputs.isEmpty && finalContent.isNotEmpty) {
+      _activeOutputs = splitWebDemoBatchContent(finalContent);
+    }
+    _syncResultsFromOutputs(streaming: false);
+    if (error != null && error.isNotEmpty) {
+      _markResultsStreaming(false, error: error);
+    }
     P.chat._scheduleRefreshLiveTokenCounts(messageId: receiveId, liveBotContent: finalContent);
     unawaited(
       P.chat._refreshTokenCountsForMessage(
@@ -464,6 +776,7 @@ extension $WebDemo on _WebDemo {
         persistToMessage: true,
       ),
     );
+    unawaited(P.conversation.updateCurrentConvSubtitleFromResponseContent(finalContent, force: true));
   }
 
   void _cancelLocalSubscriptions() {
@@ -472,4 +785,76 @@ extension $WebDemo on _WebDemo {
     _localGeneratingSubscription?.cancel();
     _localGeneratingSubscription = null;
   }
+
+  String _buildHydrationSignature(List<int> orderedIds) {
+    final buffer = StringBuffer();
+    for (final id in orderedIds) {
+      final msg = P.msg.pool.q[id];
+      if (msg == null) continue;
+      if (msg.runningMode != "web_demo") continue;
+      buffer.write(id);
+      buffer.write(":");
+      buffer.write(msg.content.hashCode);
+      buffer.write(":");
+      buffer.write(msg.changing);
+      buffer.write("|");
+    }
+    return buffer.toString();
+  }
+
+  String _promptForWebDemoMessage({
+    required Message botMessage,
+    required List<int> orderedIds,
+    required int botIndex,
+  }) {
+    final parent = P.msg.msgNode.q.findParentByMsgId(botMessage.id);
+    if (parent != null) {
+      final parentMsg = P.msg.pool.q[parent.id];
+      if (parentMsg != null && parentMsg.isMine) return parentMsg.content;
+    }
+
+    for (int i = botIndex - 1; i >= 0; i--) {
+      final candidate = P.msg.pool.q[orderedIds[i]];
+      if (candidate == null) continue;
+      if (candidate.isMine) return candidate.content;
+    }
+    return "";
+  }
+
+  WebDemoBackendMode _backendModeForMessage(Message message) {
+    final modelName = message.modelName?.toLowerCase() ?? "";
+    if (modelName.contains("13.3") || modelName.contains("13b")) {
+      return WebDemoBackendMode.cloud13b;
+    }
+    if (modelName.contains("official") || modelName.contains("cloud")) {
+      return WebDemoBackendMode.cloud7b;
+    }
+    return WebDemoBackendMode.local;
+  }
+
+  bool _isCloudBackend(WebDemoBackendMode mode) {
+    return mode == WebDemoBackendMode.cloud7b || mode == WebDemoBackendMode.cloud13b;
+  }
+
+  String _cloudModelLabel(WebDemoBackendMode mode) {
+    return switch (mode) {
+      WebDemoBackendMode.cloud13b => "13.3B",
+      WebDemoBackendMode.cloud7b => "7.2B",
+      WebDemoBackendMode.local => "local",
+    };
+  }
+
+  String get _cloudModelName {
+    if (backendMode.q == WebDemoBackendMode.cloud13b) return "13.3b";
+    return Config.webDemoOfficialModel;
+  }
+}
+
+int _estimateWebDemoTokens(String value) {
+  final trimmed = value.trim();
+  if (trimmed.isEmpty) return 0;
+  final bytes = utf8.encode(trimmed).length;
+  final estimated = (bytes / 4).round();
+  if (estimated < 1) return 1;
+  return estimated;
 }

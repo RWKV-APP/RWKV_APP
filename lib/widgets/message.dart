@@ -29,7 +29,6 @@ import 'package:zone/widgets/talk/bot_tts_content.dart';
 import 'package:zone/widgets/talk/user_tts_content.dart';
 import 'package:zone/widgets/thinking_content_panel.dart';
 import 'package:zone/widgets/user_message_bottom.dart';
-import 'package:zone/widgets/web_demo_preview.dart';
 
 const double _kBubbleMinHeight = 44.0;
 const double _kBubbleMaxWidthAdjust = .0;
@@ -496,11 +495,6 @@ class _BotMessageBubble extends ConsumerWidget {
               ),
             ),
           if (!thinkingData.reasoning && !isBatch)
-            WebDemoPreviewPanel(
-              raw: finalContent,
-              label: "Web Demo",
-            ),
-          if (!thinkingData.reasoning && !isBatch)
             StreamingMarkdownRender(
               raw: finalContent,
               streaming: thisMessageIsReceiving,
@@ -556,11 +550,6 @@ class _BotMessageBubble extends ConsumerWidget {
               !thinkingData.isQuickThinking &&
               !isBatch)
             const SizedBox(height: _kCotResultTopSpacing),
-          if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && !isBatch)
-            WebDemoPreviewPanel(
-              raw: thinkingData.cotResult,
-              label: "Web Demo",
-            ),
           if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && !isBatch)
             StreamingMarkdownRender(
               raw: thinkingData.cotResult,

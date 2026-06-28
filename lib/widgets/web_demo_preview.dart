@@ -26,19 +26,26 @@ class WebDemoPreviewPanel extends ConsumerWidget {
     super.key,
     required this.raw,
     required this.label,
-    this.height = 300,
+    this.height = 420,
     this.compact = false,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final _ = theme;
     final appTheme = ref.watch(P.app.theme);
     final document = extractFirstWebDemoHtml(raw);
-    if (document == null) return const SizedBox.shrink();
-
-    final html = document.html;
+    final html = document?.html;
     final canInlinePreview = debugWebDemoInlinePreviewSupported ?? (Platform.isMacOS || Platform.isWindows);
+    final bytes = html == null ? raw.length : html.length;
+    final status = document == null
+        ? raw.trim().isEmpty
+              ? "Waiting"
+              : "Parsing"
+        : document.complete
+        ? "Complete"
+        : "Live";
     final titleStyle = theme.textTheme.labelMedium?.copyWith(
       color: appTheme.qb0,
       fontWeight: FontWeight.w600,
@@ -62,36 +69,63 @@ class WebDemoPreviewPanel extends ConsumerWidget {
                 Icon(Icons.web_asset_rounded, size: 16, color: theme.colorScheme.primary),
                 const SizedBox(width: 6),
                 Expanded(
-                  child: Text(
-                    label,
-                    maxLines: 1,
-                    overflow: .ellipsis,
-                    style: titleStyle,
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    children: [
+                      Text(
+                        label,
+                        maxLines: 1,
+                        overflow: .ellipsis,
+                        style: titleStyle,
+                      ),
+                      Text(
+                        "$status · ${_formatBytes(bytes)}",
+                        maxLines: 1,
+                        overflow: .ellipsis,
+                        style: TextStyle(color: appTheme.qb5, fontSize: 11, height: 1.1),
+                      ),
+                    ],
                   ),
                 ),
-                _WebDemoPreviewAction(
-                  tooltip: "Continue editing",
-                  icon: Icons.edit_outlined,
-                  onTap: () => P.webDemo.prepareContinuation(html: html),
-                ),
-                const SizedBox(width: 4),
-                _WebDemoPreviewAction(
-                  tooltip: "Open in browser",
-                  icon: Icons.open_in_browser_rounded,
-                  onTap: () => P.webDemo.openHtmlInSystemBrowser(html: html, label: label),
-                ),
+                if (html != null)
+                  _WebDemoPreviewAction(
+                    tooltip: "View source",
+                    icon: Icons.code_rounded,
+                    onTap: () => showWebDemoSourceSheet(context: context, source: html, label: label),
+                  ),
+                if (html != null) const SizedBox(width: 4),
+                if (html != null)
+                  _WebDemoPreviewAction(
+                    tooltip: "Continue editing",
+                    icon: Icons.edit_outlined,
+                    onTap: () => P.webDemo.prepareContinuation(html: html),
+                  ),
+                if (html != null) const SizedBox(width: 4),
+                if (html != null)
+                  _WebDemoPreviewAction(
+                    tooltip: "Open in browser",
+                    icon: Icons.open_in_browser_rounded,
+                    onTap: () => P.webDemo.openHtmlInSystemBrowser(html: html, label: label),
+                  ),
               ],
             ),
           ),
           Container(height: .5, color: appTheme.qb12),
-          if (canInlinePreview)
+          if (html == null)
+            _WebDemoWaitingPreview(
+              raw: raw,
+              height: height,
+            ),
+          if (html != null && canInlinePreview)
             SizedBox(
               height: height,
-              child: _WebDemoInlineWebView(html: html),
+              child: _WebDemoInlineWebView(
+                html: html,
+                complete: document?.complete ?? false,
+              ),
             ),
-          if (!canInlinePreview)
-            _WebDemoRawPreview(
-              html: html,
+          if (html != null && !canInlinePreview)
+            _WebDemoExternalPreviewFallback(
               height: height,
             ),
         ],
@@ -102,8 +136,12 @@ class WebDemoPreviewPanel extends ConsumerWidget {
 
 class _WebDemoInlineWebView extends StatelessWidget {
   final String html;
+  final bool complete;
 
-  const _WebDemoInlineWebView({required this.html});
+  const _WebDemoInlineWebView({
+    required this.html,
+    required this.complete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +150,7 @@ class _WebDemoInlineWebView extends StatelessWidget {
     final baseUri = WebUri("https://rwkv-web-demo.local/");
 
     return InAppWebView(
-      key: ValueKey<int>(html.hashCode),
+      key: ValueKey<int>(_previewKey(html: html, complete: complete)),
       initialData: InAppWebViewInitialData(
         data: html,
         mimeType: "text/html",
@@ -153,26 +191,144 @@ class _WebDemoInlineWebView extends StatelessWidget {
   }
 }
 
-class _WebDemoRawPreview extends StatelessWidget {
-  final String html;
+class _WebDemoWaitingPreview extends ConsumerWidget {
+  final String raw;
   final double height;
 
-  const _WebDemoRawPreview({
-    required this.html,
+  const _WebDemoWaitingPreview({
+    required this.raw,
     required this.height,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final _ = theme;
+    final appTheme = ref.watch(P.app.theme);
+    final hasText = raw.trim().isNotEmpty;
+
     return SizedBox(
       height: height,
-      child: SingleChildScrollView(
-        padding: const .all(10),
-        child: Text(
-          html,
-          style: theme.textTheme.bodySmall?.copyWith(fontFamily: "monospace"),
+      child: Center(
+        child: Column(
+          mainAxisSize: .min,
+          children: [
+            SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(strokeWidth: 2, color: theme.colorScheme.primary),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              hasText ? "Waiting for HTML document" : "Waiting for first tokens",
+              style: TextStyle(color: appTheme.qb5, fontSize: 12),
+            ),
+          ],
         ),
+      ),
+    );
+  }
+}
+
+class _WebDemoExternalPreviewFallback extends ConsumerWidget {
+  final double height;
+
+  const _WebDemoExternalPreviewFallback({
+    required this.height,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final appTheme = ref.watch(P.app.theme);
+
+    return SizedBox(
+      height: height,
+      child: Center(
+        child: Column(
+          mainAxisSize: .min,
+          children: [
+            Icon(Icons.open_in_browser_rounded, color: theme.colorScheme.primary.withValues(alpha: .72)),
+            const SizedBox(height: 8),
+            Text(
+              "Inline preview is unavailable on this platform.",
+              style: TextStyle(color: appTheme.qb5, fontSize: 12),
+              textAlign: .center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+void showWebDemoSourceSheet({
+  required BuildContext context,
+  required String source,
+  required String label,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return _WebDemoSourceSheet(source: source, label: label);
+    },
+  );
+}
+
+class _WebDemoSourceSheet extends ConsumerWidget {
+  final String source;
+  final String label;
+
+  const _WebDemoSourceSheet({
+    required this.source,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final appTheme = ref.watch(P.app.theme);
+    final height = MediaQuery.sizeOf(context).height * .78;
+
+    return SizedBox(
+      height: height,
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          Padding(
+            padding: const .symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Icon(Icons.code_rounded, size: 18, color: theme.colorScheme.primary),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "$label source",
+                    maxLines: 1,
+                    overflow: .ellipsis,
+                    style: const TextStyle(fontWeight: .w700),
+                  ),
+                ),
+                IconButton(
+                  tooltip: "Close",
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close_rounded),
+                ),
+              ],
+            ),
+          ),
+          Container(height: .5, color: appTheme.qb12),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const .all(16),
+              child: SelectableText(
+                source,
+                style: theme.textTheme.bodySmall?.copyWith(fontFamily: "monospace", height: 1.35),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -207,4 +363,19 @@ class _WebDemoPreviewAction extends ConsumerWidget {
       ),
     );
   }
+}
+
+String _formatBytes(int bytes) {
+  if (bytes < 1024) return "$bytes B";
+  final value = bytes / 1024;
+  if (value < 1024) return "${value.toStringAsFixed(1)} KB";
+  return "${(value / 1024).toStringAsFixed(1)} MB";
+}
+
+int _previewKey({
+  required String html,
+  required bool complete,
+}) {
+  if (complete) return html.hashCode;
+  return html.length ~/ 1800;
 }

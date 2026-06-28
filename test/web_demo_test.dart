@@ -4,10 +4,13 @@ import 'package:zone/func/web_demo.dart';
 
 void main() {
   group('Web Demo prompt helpers', () {
-    test('uses the Alic-style default prompt template', () {
+    test('uses a raw HTML only default prompt template', () {
       final prompt = buildWebDemoPrompt(template: webDemoDefaultPromptTemplate, request: 'make a clock');
 
-      expect(prompt, 'User: Write HTML: make a clock\n\nAssistant: <think></think');
+      expect(prompt, contains('make a clock'));
+      expect(prompt, contains('Return raw HTML only.'));
+      expect(prompt, contains('Do not include Markdown fences'));
+      expect(prompt, contains('Assistant: <think></think>'));
     });
 
     test('builds an edit prompt with the current HTML context', () {
@@ -18,6 +21,8 @@ void main() {
 
       expect(prompt, contains('Modify the HTML below'));
       expect(prompt, contains('make it blue'));
+      expect(prompt, contains('Return raw HTML only.'));
+      expect(prompt, contains('Do not include Markdown fences'));
       expect(prompt, contains('<!doctype html><html><body>Old</body></html>'));
     });
   });
@@ -99,6 +104,22 @@ noise
       final document = extractFirstWebDemoHtml(output);
 
       expect(document?.html, '<!doctype html><html><body>Fenced</body></html>');
+    });
+
+    test('extracts HTML from a prose lead-in and markdown code fence', () {
+      const output = '''
+</think>
+# 打游戏的网站 - HTML实现
+下面是完整的HTML代码实现：
+```html
+<!DOCTYPE html>
+<html><body>Game site</body></html>
+```
+''';
+
+      final document = extractFirstWebDemoHtml(output);
+
+      expect(document?.html, '<!DOCTYPE html>\n<html><body>Game site</body></html>');
     });
   });
 

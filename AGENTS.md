@@ -156,6 +156,14 @@ dart pub global run intl_utils:generate
 - 项目中的 `albatross` 逻辑可忽略，只需保证编译通过。
 - 项目中的 `flutter_roleplay` 逻辑可忽略，只需保证编译通过。
 
+### 4.13 Web Demo 云端配置
+
+- Web Demo 云端 7.2B 默认配置应直接内置在仓库代码中，默认地址使用 `http://47.115.88.183:1801/v1/chat/completions`
+- 认证沿用 RWKV Lightning V1 的 request-body `password` 字段，与 `rwkv_eval` 的 `RWKV_LIGHTNING_PASSWORD` / `RWKV_LIGHTNING_7B_PASSWORD` 路径一致
+- 当用户询问 Web Demo 云端、并发网页生成、`Cloud key missing` 或 7.2B API 相关问题时，严禁要求用户通过 `--dart-define` 或复制一长串 `flutter run` 参数来启动 App
+- 遇到云端 key 缺失，应先检查当前代码默认值、`../rwkv_eval/tools/run_rwkv_lightning_chat_eval.py`、`~/.zshrc` 中的 RWKV Lightning 密码来源，并直接修复仓库配置
+- 不要向用户索要已经存在于本机或关联仓库配置中的 RWKV Lightning 密码
+
 ## 5. 按范围规则
 
 ### 5.1 范围：`**/*.dart`

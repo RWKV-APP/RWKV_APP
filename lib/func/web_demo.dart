@@ -8,7 +8,17 @@ import 'package:path/path.dart' as path;
 import 'package:zone/config.dart';
 
 const String webDemoPromptPlaceholder = "{{prompt}}";
-const String webDemoDefaultPromptTemplate = "User: Write HTML: {{prompt}}\n\nAssistant: <think></think";
+const String webDemoDefaultPromptTemplate = """User: Generate exactly one complete single-file HTML document for this request:
+{{prompt}}
+
+Rules:
+- Return raw HTML only.
+- The first visible tokens after </think> must be <!doctype html> or <html>.
+- Do not include Markdown fences, headings, explanations, or any prose before or after the HTML document.
+- Inline all CSS and JavaScript in the document.
+- Do not depend on external CDN scripts, fonts, stylesheets, or remote images.
+
+Assistant: <think></think>""";
 
 class WebDemoHtmlDocument {
   final String html;
@@ -56,6 +66,9 @@ String buildWebDemoEditPrompt({
 ${instruction.trim()}
 
 Return a complete HTML document.
+Return raw HTML only. Do not include Markdown fences, headings, explanations, or any prose before or after the HTML document.
+The first visible tokens after </think> must be <!doctype html> or <html>.
+Inline all CSS and JavaScript in the document. Do not depend on external CDN scripts, fonts, stylesheets, or remote images.
 
 HTML:
 ```html

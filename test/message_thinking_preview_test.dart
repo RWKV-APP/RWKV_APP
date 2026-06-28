@@ -212,7 +212,7 @@ void main() {
     expect(controller.offset, controller.position.maxScrollExtent);
   });
 
-  testWidgets('bot message with detected HTML renders the Web Demo preview', (tester) async {
+  testWidgets('bot message with detected HTML stays in the chat renderer', (tester) async {
     const msg = model.Message(
       id: 10,
       content: '</think>\n<!doctype html><html><body><h1>Demo</h1></body></html>',
@@ -222,8 +222,24 @@ void main() {
 
     await _pumpMessage(tester: tester, msg: msg);
 
-    expect(find.text("Web Demo"), findsOneWidget);
+    expect(find.text("Web Demo"), findsNothing);
     expect(find.textContaining("<!doctype html>"), findsWidgets);
+  });
+
+  testWidgets('web demo message remains raw in the chat renderer', (tester) async {
+    const msg = model.Message(
+      id: 12,
+      content: '</think>\n<!doctype html><html><body><h1>Demo</h1></body></html>',
+      isMine: false,
+      paused: false,
+      runningMode: "web_demo",
+    );
+
+    await _pumpMessage(tester: tester, msg: msg);
+
+    expect(find.text("Web Demo"), findsNothing);
+    expect(find.textContaining("<!doctype html>"), findsWidgets);
+    expect(find.byIcon(Icons.code_rounded), findsNothing);
   });
 
   testWidgets('bot message without detected HTML keeps the preview hidden', (tester) async {

@@ -366,10 +366,16 @@ extension $Conversation on _Conversation {
     // Pager.toggle();
     final msgNode = _buildMsgNodeFromConversation(conversation);
     final ids = msgNode.latestMsgIdsWithoutRoot;
-    await P.msg._loadMessages(ids);
+    final allIds = msgNode.allMsgIdsFromRoot;
+    await P.msg._loadMessages(allIds);
     P.msg.msgNode.q = msgNode;
     P.msg.ids.q = ids;
-    unawaited(P.msg._loadMessages(msgNode.allMsgIdsFromRoot));
+    final containsWebDemo = allIds.any((int id) => P.msg.pool.q[id]?.runningMode == "web_demo");
+    if (containsWebDemo) {
+      P.webDemo.hydrateFromCurrentConversation(force: true);
+      push(.webDemo);
+      return;
+    }
     push(.chat);
   }
 
