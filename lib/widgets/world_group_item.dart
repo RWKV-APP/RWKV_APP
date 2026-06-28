@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -36,7 +37,8 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   bool _expanded = false;
 
   List<FileInfo> get _fileInfos {
-    final worldWeights = P.remote.seeWeights.q.where((e) => e.worldType == widget.worldType).where((file) {
+    final seeWeights = P.remote.seeWeights.q;
+    final worldWeights = seeWeights.where((e) => e.worldType == widget.worldType).where((file) {
       return file.isEncoder || file.isAdapter || (!file.isEncoder && file.fileName == widget.socPair.$2);
     }).toList();
     return worldWeights;
@@ -266,6 +268,12 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final s = S.of(context);
     if (_fileInfos.isEmpty) {
       qqw("fileInfos is empty, worldType: ${widget.worldType}");
+      if (kDebugMode) {
+        return Text(
+          "fileInfos is empty, worldType: ${widget.worldType}",
+          style: TextStyle(color: Colors.red),
+        );
+      }
       return const SizedBox.shrink();
     }
 
