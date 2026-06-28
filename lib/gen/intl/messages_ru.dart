@@ -1525,6 +1525,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "presence_penalty_with_value": m48,
     "preview": MessageLookupByLibrary.simpleMessage("Предпросмотр"),
+    "processing_image": MessageLookupByLibrary.simpleMessage(
+      "Обработка изображения...",
+    ),
     "prompt": MessageLookupByLibrary.simpleMessage("Промпт"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Шаблон промпта"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("Группа QQ 1"),

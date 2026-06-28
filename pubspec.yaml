@@ -101,6 +101,7 @@ dependencies:
   go_router:
   google_mlkit_text_recognition:
   http:
+  image:
   image_picker:
   intl:
   json_annotation:

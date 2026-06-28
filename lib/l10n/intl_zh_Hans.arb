@@ -344,6 +344,7 @@
   "select_from_library": "从相册选择",
   "select_from_file": "选择图片文件",
   "take_photo": "拍照",
+  "processing_image": "正在处理图片...",
   "please_select_an_image_from_the_following_options": "请从以下选项中选择一个图片",
   "click_to_load_image": "点击加载图片",
   "then_you_can_start_to_chat_with_rwkv": "然后您就可以开始与 RWKV 对话了",

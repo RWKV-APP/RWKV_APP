@@ -2728,6 +2728,16 @@ class S {
     return Intl.message('拍照', name: 'take_photo', desc: '', args: []);
   }
 
+  /// `正在处理图片...`
+  String get processing_image {
+    return Intl.message(
+      '正在处理图片...',
+      name: 'processing_image',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `请从以下选项中选择一个图片`
   String get please_select_an_image_from_the_following_options {
     return Intl.message(

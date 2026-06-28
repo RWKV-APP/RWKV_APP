@@ -37,10 +37,11 @@ class InputTextField extends ConsumerWidget {
     final editingOrRegeneratingIndex = isChat ? ref.watch(P.msg.editingOrRegeneratingIndex) : null;
     final editingMessage = editingOrRegeneratingIndex != null;
 
+    final processingImage = isSee ? ref.watch(P.see.processingImage) : false;
     final imagePath = isSee ? ref.watch(P.see.imagePath) : null;
     final hasAtLeastOneImage = isSee ? ref.watch(P.msg.hasAtLeastOneImage) : false;
     final hasCurrentImage = imagePath != null && imagePath.isNotEmpty;
-    final shouldGuideImageSelection = isSee && !hasCurrentImage && !hasAtLeastOneImage;
+    final shouldGuideImageSelection = isSee && !processingImage && !hasCurrentImage && !hasAtLeastOneImage;
     final selectedSourceWavPath = isTalk ? ref.watch(P.talk.selectSourceAudioPath) : null;
     final selectedSpkName = isTalk ? ref.watch(P.talk.selectedSpkName) : null;
     final sourceWavName = selectedSourceWavPath == null ? null : path.basename(selectedSourceWavPath);
@@ -60,6 +61,7 @@ class InputTextField extends ConsumerWidget {
       case .sudoku:
       case .see:
         hintText = s.send_message_to_rwkv;
+        if (processingImage) hintText = s.processing_image;
         if (shouldGuideImageSelection) hintText = s.please_select_an_image_first;
       case .tts:
         hintText = s.i_want_rwkv_to_say;
@@ -80,7 +82,7 @@ class InputTextField extends ConsumerWidget {
     final inputBarShadowRadius = appTheme.inputBarShadowRadius;
     final inputBarShadowOffset = appTheme.inputBarShadowOffset;
     final inputContentPadding = isSee
-        ? EdgeInsets.only(left: hasCurrentImage ? 12 : 8, top: 10, right: 8, bottom: 10)
+        ? EdgeInsets.only(left: hasCurrentImage || processingImage ? 12 : 8, top: 10, right: 8, bottom: 10)
         : isTalk
         ? EdgeInsets.only(left: hasSelectedVoice ? 12 : 8, top: 10, right: 8, bottom: 10)
         : const EdgeInsets.only(left: 12, top: 10, right: 12, bottom: 10);
@@ -154,11 +156,15 @@ class InputTextField extends ConsumerWidget {
                       ),
                     );
                   },
-                  child: hasCurrentImage
+                  child: processingImage
+                      ? const _SeeImageProcessingSection(
+                          key: ValueKey("see-image-processing"),
+                        )
+                      : hasCurrentImage
                       ? _SeeImageSection(
                           key: const ValueKey("see-image-selected"),
                           imagePath: imagePath,
-                          textFieldEnabled: textFieldEnabled,
+                          textFieldEnabled: textFieldEnabled && !processingImage,
                         )
                       : const SizedBox(
                           key: ValueKey("see-image-empty"),
@@ -204,6 +210,7 @@ class InputTextField extends ConsumerWidget {
                   if (isSee)
                     _SeeImageQuickButton(
                       hasImage: hasCurrentImage,
+                      processingImage: processingImage,
                       shouldGuideImageSelection: shouldGuideImageSelection,
                       textFieldEnabled: textFieldEnabled,
                     ),
@@ -393,6 +400,57 @@ class _EditingMessageBanner extends StatelessWidget {
   }
 }
 
+class _SeeImageProcessingSection extends StatelessWidget {
+  const _SeeImageProcessingSection({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final primary = theme.colorScheme.primary;
+    final surfaceContainer = theme.colorScheme.surfaceContainer;
+    final onSurface = theme.colorScheme.onSurface;
+
+    return Semantics(
+      label: s.processing_image,
+      liveRegion: true,
+      child: Padding(
+        padding: const .fromLTRB(8, 8, 8, 6),
+        child: Container(
+          padding: const .symmetric(horizontal: 12, vertical: 14),
+          decoration: BoxDecoration(
+            color: surfaceContainer.withValues(alpha: .7),
+            borderRadius: .circular(14),
+            border: Border.all(color: primary.withValues(alpha: .16)),
+          ),
+          child: Row(
+            children: [
+              SizedBox.square(
+                dimension: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(primary),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  s.processing_image,
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  style: TextStyle(color: onSurface.withValues(alpha: .88), fontWeight: .w600),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _SeeImageSection extends StatelessWidget {
   final String imagePath;
   final bool textFieldEnabled;
@@ -493,11 +551,13 @@ class _SeeImageSection extends StatelessWidget {
 
 class _SeeImageQuickButton extends ConsumerWidget {
   final bool hasImage;
+  final bool processingImage;
   final bool shouldGuideImageSelection;
   final bool textFieldEnabled;
 
   const _SeeImageQuickButton({
     required this.hasImage,
+    required this.processingImage,
     required this.shouldGuideImageSelection,
     required this.textFieldEnabled,
   });
@@ -510,6 +570,7 @@ class _SeeImageQuickButton extends ConsumerWidget {
     final onSurface = theme.colorScheme.onSurface;
     final appTheme = ref.watch(P.app.theme);
     final sendingButtonTouchMinSize = appTheme.sendingButtonTouchMinSize;
+    final canSelectImage = textFieldEnabled && !processingImage;
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
@@ -531,24 +592,37 @@ class _SeeImageQuickButton extends ConsumerWidget {
               key: ValueKey("see-image-quick-button-hidden"),
             )
           : Container(
-              key: const ValueKey("see-image-quick-button"),
+              key: ValueKey(processingImage ? "see-image-quick-button-processing" : "see-image-quick-button"),
               child: Material(
                 color: Colors.transparent,
                 child: Tooltip(
-                  message: s.select_new_image,
-                  child: GestureDetector(
-                    onTap: textFieldEnabled ? P.see.selectImage : null,
-                    child: Container(
-                      width: sendingButtonTouchMinSize.width,
-                      height: sendingButtonTouchMinSize.height,
-                      decoration: BoxDecoration(
-                        borderRadius: .circular(1000),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.add_photo_alternate_outlined,
-                          size: 22,
-                          color: shouldGuideImageSelection ? primary : onSurface.withValues(alpha: .82),
+                  message: processingImage ? s.processing_image : s.select_new_image,
+                  child: Semantics(
+                    label: processingImage ? s.processing_image : s.select_new_image,
+                    button: true,
+                    enabled: canSelectImage,
+                    child: GestureDetector(
+                      onTap: canSelectImage ? P.see.selectImage : null,
+                      child: Container(
+                        width: sendingButtonTouchMinSize.width,
+                        height: sendingButtonTouchMinSize.height,
+                        decoration: BoxDecoration(
+                          borderRadius: .circular(1000),
+                        ),
+                        child: Center(
+                          child: processingImage
+                              ? SizedBox.square(
+                                  dimension: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(primary),
+                                  ),
+                                )
+                              : Icon(
+                                  Icons.add_photo_alternate_outlined,
+                                  size: 22,
+                                  color: shouldGuideImageSelection ? primary : onSurface.withValues(alpha: .82),
+                                ),
                         ),
                       ),
                     ),

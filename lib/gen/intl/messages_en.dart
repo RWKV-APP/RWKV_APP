@@ -1475,6 +1475,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefix_examples": MessageLookupByLibrary.simpleMessage("Prefix Examples"),
     "presence_penalty_with_value": m48,
     "preview": MessageLookupByLibrary.simpleMessage("Preview"),
+    "processing_image": MessageLookupByLibrary.simpleMessage(
+      "Processing image...",
+    ),
     "prompt": MessageLookupByLibrary.simpleMessage("Prompt"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt Template"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ Group 1"),

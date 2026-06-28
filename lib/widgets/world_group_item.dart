@@ -271,7 +271,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
       if (kDebugMode) {
         return Text(
           "fileInfos is empty, worldType: ${widget.worldType}",
-          style: TextStyle(color: Colors.red),
+          style: const TextStyle(color: Colors.red),
         );
       }
       return const SizedBox.shrink();

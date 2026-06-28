@@ -28,7 +28,9 @@ extension $ChatInputSend on _Chat {
           focusNode.unfocus();
         }
 
-        final imagePath = await showImageSelector();
+        final imagePath = await showImageSelector(
+          onProcessingChanged: (value) => P.see.processingImage.q = value,
+        );
         if (imagePath == null) return;
         P.see.imagePath.q = imagePath;
         return;

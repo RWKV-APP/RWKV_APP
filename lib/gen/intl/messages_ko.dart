@@ -1249,6 +1249,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefix_examples": MessageLookupByLibrary.simpleMessage("접두사 예시"),
     "presence_penalty_with_value": m48,
     "preview": MessageLookupByLibrary.simpleMessage("미리보기"),
+    "processing_image": MessageLookupByLibrary.simpleMessage("이미지를 처리하는 중..."),
     "prompt": MessageLookupByLibrary.simpleMessage("프롬프트"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("프롬프트 템플릿"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 그룹 1"),

@@ -20,6 +20,7 @@ class _See {
   // 🔥 Vision
 
   late final imagePath = qs<String?>(null);
+  late final processingImage = qs(false);
   late final imageHeight = qs<double?>(null);
   late final visualFloatHeight = qs<double?>(null);
 
@@ -159,7 +160,9 @@ extension $See on _See {
 
     if (!checkModelSelection(preferredDemoType: .see)) return;
 
-    final imagePath = await showImageSelector();
+    final imagePath = await showImageSelector(
+      onProcessingChanged: (value) => processingImage.q = value,
+    );
     if (imagePath == null) return;
     this.imagePath.q = imagePath;
 
@@ -271,6 +274,7 @@ extension _$See on _See {
   void _onPageKeyChanged(PageKey? previous, PageKey next) async {
     if (previous == .see && next != .see) {
       imagePath.q = null;
+      processingImage.q = false;
       imageHeight.q = null;
       visualFloatHeight.q = null;
       P.app.demoType.q = .chat;
@@ -282,6 +286,7 @@ extension _$See on _See {
       P.rwkvModel._releaseModelByWeightTypeIfNeeded(weightType: .roleplay);
       P.rwkvModel._releaseModelByWeightTypeIfNeeded(weightType: .tts);
       imagePath.q = null;
+      processingImage.q = false;
       imageHeight.q = null;
       visualFloatHeight.q = null;
       P.rwkvGeneration.clearStates();

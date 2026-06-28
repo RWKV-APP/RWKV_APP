@@ -10,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 
 // Project imports:
+import 'package:zone/func/normalize_image_for_vision.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/router.dart';
 
@@ -19,7 +20,9 @@ enum _Actions {
   selectFromFile,
 }
 
-Future<String?> showImageSelector() async {
+Future<String?> showImageSelector({
+  void Function(bool value)? onProcessingChanged,
+}) async {
   final result = await showModalActionSheet<_Actions>(
     context: getContext()!,
     title: S.current.select_image,
@@ -64,5 +67,11 @@ Future<String?> showImageSelector() async {
       imagePath = result.files.first.path;
       break;
   }
-  return imagePath;
+  if (imagePath == null) return null;
+  onProcessingChanged?.call(true);
+  try {
+    return await normalizeImageForVision(imagePath);
+  } finally {
+    onProcessingChanged?.call(false);
+  }
 }
