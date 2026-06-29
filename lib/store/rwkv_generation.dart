@@ -167,6 +167,7 @@ extension $RWKVGeneration on _RWKVGeneration {
     int? maxLength,
     int? stopToken,
     bool? disableCache,
+    Map<String, Object?>? overrideDecodeParams,
   }) {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
@@ -174,7 +175,7 @@ extension $RWKVGeneration on _RWKVGeneration {
     P.telemetry.resetPeakDecodeSpeed();
 
     if (P.albatrossRuntime.enabled.q) {
-      return P.albatrossRuntime.completion(prompt, batchSize: batchSize);
+      return P.albatrossRuntime.completion(prompt, batchSize: batchSize, decodeParams: overrideDecodeParams);
     }
 
     final sendPort = P.rwkvBridge.sendPort;

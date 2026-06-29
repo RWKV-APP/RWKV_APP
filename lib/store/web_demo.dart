@@ -10,8 +10,26 @@ const int _webDemoDefaultBatchSize = 30;
 const int _webDemoMaxBatchSize = 30;
 const double _webDemoDefaultPreviewScalePercent = 35;
 const double _webDemoDefaultPreviewAutoScrollSeconds = 5;
+const double _webDemoDefaultTemperature = 1;
+const double _webDemoDefaultTopP = .5;
+const double _webDemoDefaultPresencePenalty = 1;
+const double _webDemoDefaultFrequencyPenalty = .1;
+const double _webDemoDefaultPenaltyDecay = .99;
 const Duration _webDemoStreamingResultsSyncInterval = Duration(milliseconds: 120);
 const List<String> _webDemoLightningStopTokens = <String>["\nUser:"];
+
+double _webDemoDefaultArgument(Argument argument) {
+  return switch (argument) {
+    Argument.temperature => _webDemoDefaultTemperature,
+    Argument.topP => _webDemoDefaultTopP,
+    Argument.presencePenalty => _webDemoDefaultPresencePenalty,
+    Argument.frequencyPenalty => _webDemoDefaultFrequencyPenalty,
+    Argument.penaltyDecay => _webDemoDefaultPenaltyDecay,
+    Argument.maxLength => Argument.maxLength.defaults,
+    Argument.topK => Argument.topK.defaults,
+    Argument.batchCount => Argument.batchCount.defaults,
+  };
+}
 
 enum WebDemoBackendMode {
   cloud7b,
@@ -87,6 +105,7 @@ class _WebDemo {
   String? _hydratedSignature;
   Timer? _streamingResultsSyncTimer;
   bool _streamingResultsSyncPending = false;
+  bool _localSamplerParamsApplied = false;
 
   late final promptController = TextEditingController(text: "");
   late final promptFocusNode = FocusNode();
@@ -104,6 +123,7 @@ class _WebDemo {
   late final batchSize = qs<int>(_webDemoDefaultBatchSize);
   late final previewScalePercent = qs(_webDemoDefaultPreviewScalePercent);
   late final previewAutoScrollSeconds = qs(_webDemoDefaultPreviewAutoScrollSeconds);
+  late final arguments = qsff<Argument, double>((ref, argument) => _webDemoDefaultArgument(argument));
   late final currentRun = qs<WebDemoRun?>(null);
   late final results = qs<List<WebDemoResult>>(const <WebDemoResult>[]);
   late final resultByIndex = Provider.family<WebDemoResult?, int>((ref, index) {
@@ -166,21 +186,30 @@ extension $WebDemo on _WebDemo {
   void syncArgument(Argument argument, double value) {
     switch (argument) {
       case Argument.maxLength:
-        unawaited(P.rwkvParams.syncMaxLength(maxLength: value));
       case Argument.temperature:
-        unawaited(P.rwkvParams.syncSamplerParams(temperature: value));
       case Argument.topP:
-        unawaited(P.rwkvParams.syncSamplerParams(topP: value));
       case Argument.presencePenalty:
-        unawaited(P.rwkvParams.syncSamplerParams(presencePenalty: value));
       case Argument.frequencyPenalty:
-        unawaited(P.rwkvParams.syncSamplerParams(frequencyPenalty: value));
       case Argument.penaltyDecay:
-        unawaited(P.rwkvParams.syncSamplerParams(penaltyDecay: value));
+        arguments(argument).q = value;
       case Argument.topK:
       case Argument.batchCount:
         break;
     }
+  }
+
+  SamplerAndPenaltyParam currentSamplerAndPenaltyParam() {
+    return SamplerAndPenaltyParam(
+      temperature: arguments(Argument.temperature).q,
+      topP: arguments(Argument.topP).q,
+      presencePenalty: arguments(Argument.presencePenalty).q,
+      frequencyPenalty: arguments(Argument.frequencyPenalty).q,
+      penaltyDecay: arguments(Argument.penaltyDecay).q,
+    );
+  }
+
+  String resolveDecodeParamsSnapshotRaw() {
+    return <SamplerAndPenaltyParam>[currentSamplerAndPenaltyParam()].rawDecodeParams;
   }
 
   Future<void> sendPresetPrompt(String prompt) async {
@@ -248,7 +277,7 @@ extension $WebDemo on _WebDemo {
       createdAt: DateTime.now(),
       backendMode: backend,
       batchSize: requestedBatchSize,
-      rawDecodeParams: P.chat._resolveDecodeParamsSnapshotRaw() ?? "",
+      rawDecodeParams: resolveDecodeParamsSnapshotRaw(),
     );
     currentRun.q = run;
     _activeReceiveId = receiveId;
@@ -358,6 +387,7 @@ extension $WebDemo on _WebDemo {
       _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoStopped");
       return;
     }
+    _restoreLocalSamplerParamsIfNeeded();
     P.rwkvGeneration.generating.q = false;
     active.q = false;
     _markResultsStreaming(false);
@@ -434,7 +464,7 @@ extension $WebDemo on _WebDemo {
       paused: false,
       modelName: modelName,
       runningMode: "web_demo",
-      rawDecodeParams: P.chat._resolveDecodeParamsSnapshotRaw(),
+      rawDecodeParams: resolveDecodeParamsSnapshotRaw(),
       batchSlotLabels: batchSize > 1 ? List<String>.generate(batchSize, (int index) => "Web ${index + 1}") : null,
     );
     P.msg.pool.q[receiveId] = receiveMsg;
@@ -453,9 +483,15 @@ extension $WebDemo on _WebDemo {
     required int batchSize,
     required int receiveId,
   }) {
+    _applyLocalSamplerParamsIfNeeded();
     final outputs = List<String>.filled(batchSize, "");
     _localSubscription = P.rwkvGeneration
-        .completion(prompt, batchSize: batchSize)
+        .completion(
+          prompt,
+          batchSize: batchSize,
+          maxLength: _maxTokensForLocal,
+          overrideDecodeParams: _decodeParamsForAlbatross(),
+        )
         .listen(
           (response) {
             for (int i = 0; i < response.responseBufferContent.length && i < outputs.length; i++) {
@@ -513,13 +549,13 @@ extension $WebDemo on _WebDemo {
         "contents": List<String>.filled(batchSize, prompt),
         "max_tokens": _maxTokensForCloud,
         "stop_tokens": _webDemoLightningStopTokens,
-        "temperature": P.rwkvParams.arguments(Argument.temperature).q,
-        "top_k": P.rwkvParams.arguments(Argument.topK).q.round(),
-        "top_p": P.rwkvParams.arguments(Argument.topP).q,
+        "temperature": arguments(Argument.temperature).q,
+        "top_k": arguments(Argument.topK).q.round(),
+        "top_p": arguments(Argument.topP).q,
         "pad_zero": true,
-        "alpha_presence": P.rwkvParams.arguments(Argument.presencePenalty).q,
-        "alpha_frequency": P.rwkvParams.arguments(Argument.frequencyPenalty).q,
-        "alpha_decay": P.rwkvParams.arguments(Argument.penaltyDecay).q,
+        "alpha_presence": arguments(Argument.presencePenalty).q,
+        "alpha_frequency": arguments(Argument.frequencyPenalty).q,
+        "alpha_decay": arguments(Argument.penaltyDecay).q,
         "chunk_size": 8,
         "stream": true,
         "password": Config.webDemoOfficialApiKey,
@@ -750,21 +786,76 @@ extension $WebDemo on _WebDemo {
   }
 
   Map<String, Object?> _decodeParamsForCloud() {
+    final param = currentSamplerAndPenaltyParam();
     return {
-      "temperature": P.rwkvParams.arguments(Argument.temperature).q,
-      "top_p": P.rwkvParams.arguments(Argument.topP).q,
+      "temperature": param.temperature,
+      "top_p": param.topP,
       "max_tokens": _maxTokensForCloud,
-      "presence_penalty": P.rwkvParams.arguments(Argument.presencePenalty).q,
-      "frequency_penalty": P.rwkvParams.arguments(Argument.frequencyPenalty).q,
+      "presence_penalty": param.presencePenalty,
+      "frequency_penalty": param.frequencyPenalty,
+    };
+  }
+
+  Map<String, Object?> _decodeParamsForAlbatross() {
+    final param = currentSamplerAndPenaltyParam();
+    return {
+      "temperature": param.temperature,
+      "top_k": arguments(Argument.topK).q,
+      "top_p": param.topP,
+      "alpha_presence": param.presencePenalty,
+      "alpha_frequency": param.frequencyPenalty,
+      "alpha_decay": param.penaltyDecay,
+      "max_tokens": arguments(Argument.maxLength).q,
     };
   }
 
   int get _maxTokensForCloud {
-    final maxTokens = P.rwkvParams.arguments(Argument.maxLength).q.round();
+    final maxTokens = arguments(Argument.maxLength).q.round();
     final resolved = maxTokens <= 0 ? Argument.maxLength.defaults.round() : maxTokens;
     if (_officialCloudProtocol != _webDemoProtocolRwkvLightningV1) return resolved;
     if (resolved <= _webDemoLightningMaxTokensCap) return resolved;
     return _webDemoLightningMaxTokensCap;
+  }
+
+  int get _maxTokensForLocal {
+    final maxTokens = arguments(Argument.maxLength).q.round();
+    if (maxTokens > 0) return maxTokens;
+    return Argument.maxLength.defaults.round();
+  }
+
+  void _applyLocalSamplerParamsIfNeeded() {
+    if (P.albatrossRuntime.enabled.q) return;
+    _syncSamplerParamsToLoadedModels(
+      currentSamplerAndPenaltyParam(),
+      topK: arguments(Argument.topK).q,
+    );
+    _localSamplerParamsApplied = true;
+  }
+
+  void _restoreLocalSamplerParamsIfNeeded() {
+    if (!_localSamplerParamsApplied) return;
+    _localSamplerParamsApplied = false;
+    _syncSamplerParamsToLoadedModels(
+      P.rwkvParams.currentSamplerAndPenaltyParam(),
+      topK: P.rwkvParams.arguments(Argument.topK).q,
+    );
+  }
+
+  void _syncSamplerParamsToLoadedModels(SamplerAndPenaltyParam param, {required double topK}) {
+    for (final entry in P.rwkvModel.allLoaded.q.entries) {
+      final modelID = entry.value;
+      P.rwkvBridge.send(
+        to_rwkv.SetSamplerParams(
+          temperature: param.temperature,
+          topK: topK.round(),
+          topP: param.topP,
+          presencePenalty: param.presencePenalty,
+          frequencyPenalty: param.frequencyPenalty,
+          penaltyDecay: param.penaltyDecay,
+          modelID: modelID,
+        ),
+      );
+    }
   }
 
   String _joinOutputs(List<String> outputs) {
@@ -778,6 +869,7 @@ extension $WebDemo on _WebDemo {
     required String callingFunction,
     String? error,
   }) {
+    _restoreLocalSamplerParamsIfNeeded();
     final current = P.msg.pool.q[receiveId];
     if (current == null || !current.changing) return;
     _cancelLocalSubscriptions();

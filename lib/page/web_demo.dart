@@ -481,7 +481,7 @@ class _WebDemoIntegerControl extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final value = ref.watch(P.rwkvParams.arguments(argument)).clamp(min, max);
+    final value = ref.watch(P.webDemo.arguments(argument)).clamp(min, max);
 
     return _ControlFrame(
       label: label,
@@ -590,7 +590,7 @@ class _WebDemoDecimalControl extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final value = ref.watch(P.rwkvParams.arguments(argument)).clamp(argument.min, argument.max);
+    final value = ref.watch(P.webDemo.arguments(argument)).clamp(argument.min, argument.max);
 
     return _ControlFrame(
       label: label,

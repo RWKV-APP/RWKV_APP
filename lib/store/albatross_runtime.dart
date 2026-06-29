@@ -528,10 +528,12 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     String prompt, {
     int batchSize = 1,
     bool includePromptInOutput = true,
+    Map<String, Object?>? decodeParams,
   }) {
     return _streamContents(
       contents: List<String>.filled(batchSize, prompt),
       includePromptInOutput: includePromptInOutput,
+      decodeParams: decodeParams,
     );
   }
 
@@ -572,6 +574,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     required List<String> contents,
     required bool includePromptInOutput,
     List<String>? initialOutputs,
+    Map<String, Object?>? decodeParams,
   }) async* {
     final batchSize = contents.length;
     final result = includePromptInOutput
@@ -598,7 +601,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
         "chunk_size": _AlbatrossRuntime._chunkSize,
         "stream": true,
         "metrics": true,
-        ..._decodeParams(),
+        ...(decodeParams ?? _decodeParams()),
       });
       final response = await _client!.send(request);
       if (response.statusCode < 200 || response.statusCode >= 300) {
