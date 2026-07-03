@@ -19,6 +19,7 @@ void main() {
     P.webDemo.arguments(Argument.presencePenalty).q = 1;
     P.webDemo.arguments(Argument.frequencyPenalty).q = .1;
     P.webDemo.batchSize.q = 30;
+    P.webDemo.backendMode.q = WebDemoBackendMode.cloud7b;
     P.webDemo.promptInput.q = "";
     P.webDemo.promptController.text = "";
     P.webDemo.results.q = const <WebDemoResult>[];
@@ -37,7 +38,11 @@ void main() {
     expect(find.text("RWKV Web Demo"), findsOneWidget);
     expect(find.byIcon(Icons.arrow_back_rounded), findsOneWidget);
     expect(find.text("Generate HTML Grid"), findsOneWidget);
-    expect(find.text("Batch Size"), findsOneWidget);
+    expect(find.text("Concurrency"), findsOneWidget);
+    expect(find.text("Cloud"), findsOneWidget);
+    expect(find.text("Albatross"), findsOneWidget);
+    expect(find.text("RWKV Mobile"), findsOneWidget);
+    expect(find.text("7.2B"), findsOneWidget);
     expect(find.text("13.3B"), findsOneWidget);
     expect(find.text("30"), findsWidgets);
     expect(find.text("Generate an HTML grid to compare candidates."), findsOneWidget);

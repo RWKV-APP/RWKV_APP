@@ -8,6 +8,7 @@ const String _webDemoDefault13BBaseUrl = "http://47.115.88.183:1800/v1/chat/comp
 const int _webDemoLightningMaxTokensCap = 4096;
 const int _webDemoDefaultBatchSize = 30;
 const int _webDemoMaxBatchSize = 30;
+const int _webDemoAlbatrossMaxBatchSize = 10;
 const double _webDemoDefaultPreviewScalePercent = 35;
 const double _webDemoDefaultPreviewAutoScrollSeconds = 5;
 const double _webDemoDefaultTemperature = 1;
@@ -34,7 +35,47 @@ double _webDemoDefaultArgument(Argument argument) {
 enum WebDemoBackendMode {
   cloud7b,
   cloud13b,
-  local,
+  localAlbatross,
+  localRwkvMobile,
+}
+
+bool webDemoBackendIsCloud(WebDemoBackendMode mode) {
+  return mode == WebDemoBackendMode.cloud7b || mode == WebDemoBackendMode.cloud13b;
+}
+
+int webDemoMaxBatchSizeForBackend(WebDemoBackendMode mode) {
+  return switch (mode) {
+    WebDemoBackendMode.cloud7b => _webDemoMaxBatchSize,
+    WebDemoBackendMode.cloud13b => _webDemoMaxBatchSize,
+    WebDemoBackendMode.localAlbatross => _webDemoAlbatrossMaxBatchSize,
+    WebDemoBackendMode.localRwkvMobile => _webDemoMaxBatchSize,
+  };
+}
+
+String webDemoBackendLabel(WebDemoBackendMode mode) {
+  return switch (mode) {
+    WebDemoBackendMode.cloud7b => "Official cloud 7.2B",
+    WebDemoBackendMode.cloud13b => "Official cloud 13.3B",
+    WebDemoBackendMode.localAlbatross => "Local Albatross",
+    WebDemoBackendMode.localRwkvMobile => "Local RWKV Mobile",
+  };
+}
+
+WebDemoBackendMode webDemoBackendModeForModelName(String? value) {
+  final modelName = value?.toLowerCase() ?? "";
+  if (modelName.contains("local albatross") || modelName == "albatross" || modelName.contains("albatross")) {
+    return WebDemoBackendMode.localAlbatross;
+  }
+  if (modelName.contains("local rwkv mobile")) {
+    return WebDemoBackendMode.localRwkvMobile;
+  }
+  if (modelName.contains("official") || modelName.contains("cloud")) {
+    if (modelName.contains("13.3") || modelName.contains("13b")) {
+      return WebDemoBackendMode.cloud13b;
+    }
+    return WebDemoBackendMode.cloud7b;
+  }
+  return WebDemoBackendMode.localRwkvMobile;
 }
 
 @immutable
@@ -112,7 +153,7 @@ class _WebDemo {
 
   late final promptInput = qs("");
   late final backendMode = qs(
-    Config.webDemoOfficialApiKey.trim().isNotEmpty ? WebDemoBackendMode.cloud7b : WebDemoBackendMode.local,
+    Config.webDemoOfficialApiKey.trim().isNotEmpty ? WebDemoBackendMode.cloud7b : WebDemoBackendMode.localRwkvMobile,
   );
   late final useOfficialCloud = qs(Config.webDemoOfficialApiKey.trim().isNotEmpty);
   late final promptTemplate = qs(webDemoDefaultPromptTemplate);
@@ -126,6 +167,15 @@ class _WebDemo {
   late final arguments = qsff<Argument, double>((ref, argument) => _webDemoDefaultArgument(argument));
   late final currentRun = qs<WebDemoRun?>(null);
   late final results = qs<List<WebDemoResult>>(const <WebDemoResult>[]);
+  late final batchSizeMax = qp<int>((ref) {
+    final mode = ref.watch(backendMode);
+    if (mode != WebDemoBackendMode.localRwkvMobile) {
+      return webDemoMaxBatchSizeForBackend(mode);
+    }
+    final currentModel = ref.watch(P.rwkvModel.latest);
+    if (currentModel?.supportsBatchInference ?? false) return _webDemoMaxBatchSize;
+    return 1;
+  });
   late final resultByIndex = Provider.family<WebDemoResult?, int>((ref, index) {
     final results = ref.watch(this.results);
     if (index < 0 || index >= results.length) return null;
@@ -134,11 +184,18 @@ class _WebDemo {
 }
 
 extension $WebDemo on _WebDemo {
-  Future<void> _init() async {}
+  Future<void> _init() async {
+    final savedBatchSize = await P.preference.loadWebDemoBatchSize();
+    if (savedBatchSize == null) return;
+    final next = _normalizePreferredBatchSize(savedBatchSize);
+    batchSize.q = next;
+    if (next == savedBatchSize) return;
+    await P.preference.saveWebDemoBatchSize(next);
+  }
 
   bool get officialCloudConfigured => Config.webDemoOfficialApiKey.trim().isNotEmpty;
 
-  bool get officialCloudActive => P.app.pageKey.q == .webDemo && _isCloudBackend(backendMode.q) && officialCloudConfigured;
+  bool get officialCloudActive => P.app.pageKey.q == .webDemo && webDemoBackendIsCloud(backendMode.q) && officialCloudConfigured;
 
   void setBackendMode(WebDemoBackendMode value) {
     if (active.q) {
@@ -146,11 +203,11 @@ extension $WebDemo on _WebDemo {
       return;
     }
     backendMode.q = value;
-    useOfficialCloud.q = _isCloudBackend(value);
+    useOfficialCloud.q = webDemoBackendIsCloud(value);
   }
 
   void setUseOfficialCloud(bool value) {
-    setBackendMode(value ? WebDemoBackendMode.cloud7b : WebDemoBackendMode.local);
+    setBackendMode(value ? WebDemoBackendMode.cloud7b : WebDemoBackendMode.localRwkvMobile);
   }
 
   void setPromptInput(String value) {
@@ -158,9 +215,10 @@ extension $WebDemo on _WebDemo {
   }
 
   void setBatchSize(num value) {
-    final next = value.round().clamp(1, _webDemoMaxBatchSize).toInt();
+    final next = _normalizeBatchSizeForCurrentBackend(value);
     if (batchSize.q == next) return;
     batchSize.q = next;
+    unawaited(P.preference.saveWebDemoBatchSize(next));
   }
 
   void setPreviewScalePercent(num value) {
@@ -243,18 +301,14 @@ extension $WebDemo on _WebDemo {
     }
 
     final backend = backendMode.q;
-    final usingCloud = _isCloudBackend(backend);
+    final usingCloud = webDemoBackendIsCloud(backend);
     if (usingCloud && !officialCloudConfigured) {
       Alert.warning("Official Web Demo endpoint key is not configured");
       return;
     }
-    if (!usingCloud && !checkModelSelection(preferredDemoType: .chat)) return;
+    if (!await _prepareBackendForSend(backend)) return;
 
-    final requestedBatchSize = batchSize.q.clamp(1, _webDemoMaxBatchSize);
-    if (!usingCloud && requestedBatchSize > 1 && !P.chat.batchInferenceAvailable.q) {
-      Alert.info(S.current.this_model_does_not_support_batch_inference);
-      return;
-    }
+    final requestedBatchSize = _resolvedBatchSizeForBackend(backend);
 
     _cancelLocalSubscriptions();
     _cloudClient?.close();
@@ -268,7 +322,7 @@ extension $WebDemo on _WebDemo {
     final receiveId = await _createWebDemoMessagePair(
       userContent: raw,
       batchSize: requestedBatchSize,
-      usingCloud: usingCloud,
+      backend: backend,
     );
     if (receiveId == null) return;
 
@@ -293,7 +347,90 @@ extension $WebDemo on _WebDemo {
       return;
     }
 
-    _runLocal(prompt: prompt, batchSize: requestedBatchSize, receiveId: receiveId);
+    if (backend == WebDemoBackendMode.localAlbatross) {
+      _runAlbatross(prompt: prompt, batchSize: requestedBatchSize, receiveId: receiveId);
+      return;
+    }
+
+    _runRwkvMobile(prompt: prompt, batchSize: requestedBatchSize, receiveId: receiveId);
+  }
+
+  Future<bool> _prepareBackendForSend(WebDemoBackendMode backend) async {
+    switch (backend) {
+      case WebDemoBackendMode.cloud7b:
+      case WebDemoBackendMode.cloud13b:
+        return true;
+      case WebDemoBackendMode.localAlbatross:
+        return P.albatrossRuntime.prepareForWebDemo();
+      case WebDemoBackendMode.localRwkvMobile:
+        return _checkRwkvMobileModelSelection();
+    }
+  }
+
+  bool _checkRwkvMobileModelSelection() {
+    final loadedModelsCount = P.rwkvModel.loadedModelsCount.q;
+    if (loadedModelsCount == 0) {
+      Alert.info(S.current.please_load_model_first);
+      ModelSelector.show(preferredDemoType: .chat);
+      return false;
+    }
+
+    final loaded = P.rwkvModel.loaded.q;
+    if (!loaded) {
+      Alert.info(S.current.please_load_model_first);
+      return false;
+    }
+
+    final loading = P.rwkvModel.loading.q;
+    if (loading) {
+      Alert.info(S.current.please_wait_for_the_model_to_load);
+      return false;
+    }
+
+    return true;
+  }
+
+  int _resolvedBatchSizeForBackend(WebDemoBackendMode backend) {
+    return batchSize.q.clamp(1, _maxBatchSizeForBackend(backend)).toInt();
+  }
+
+  int _maxBatchSizeForCurrentBackend() {
+    return _maxBatchSizeForBackend(backendMode.q);
+  }
+
+  int _normalizeBatchSizeForCurrentBackend(num value) {
+    return value.round().clamp(1, _maxBatchSizeForCurrentBackend()).toInt();
+  }
+
+  int _normalizePreferredBatchSize(num value) {
+    return value.round().clamp(1, _webDemoMaxBatchSize).toInt();
+  }
+
+  int _maxBatchSizeForBackend(WebDemoBackendMode backend) {
+    if (backend != WebDemoBackendMode.localRwkvMobile) {
+      return webDemoMaxBatchSizeForBackend(backend);
+    }
+    if (_rwkvMobileBatchInferenceAvailable()) return _webDemoMaxBatchSize;
+    return 1;
+  }
+
+  bool _rwkvMobileBatchInferenceAvailable() {
+    final currentModel = P.rwkvModel.latest.q;
+    return currentModel?.supportsBatchInference ?? false;
+  }
+
+  Future<void> _stopBackend(WebDemoBackendMode backend) async {
+    switch (backend) {
+      case WebDemoBackendMode.cloud7b:
+      case WebDemoBackendMode.cloud13b:
+        return;
+      case WebDemoBackendMode.localAlbatross:
+        await P.albatrossRuntime.stop();
+        return;
+      case WebDemoBackendMode.localRwkvMobile:
+        await P.rwkvGeneration.stop(forceRwkvMobile: true);
+        return;
+    }
   }
 
   Future<void> prepareContinuation({
@@ -379,10 +516,11 @@ extension $WebDemo on _WebDemo {
 
   Future<void> stopActive() async {
     final receiveId = _activeReceiveId;
+    final backend = currentRun.q?.backendMode ?? backendMode.q;
     _cloudClient?.close();
     _cloudClient = null;
     _cancelLocalSubscriptions();
-    await P.rwkvGeneration.stop();
+    await _stopBackend(backend);
     if (receiveId != null) {
       _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoStopped");
       return;
@@ -437,7 +575,7 @@ extension $WebDemo on _WebDemo {
   Future<int?> _createWebDemoMessagePair({
     required String userContent,
     required int batchSize,
-    required bool usingCloud,
+    required WebDemoBackendMode backend,
   }) async {
     final userId = DateTime.now().millisecondsSinceEpoch;
     final userMsg = Message(
@@ -450,12 +588,7 @@ extension $WebDemo on _WebDemo {
     final parentNode = P.msg.msgNode.q.rootAdd(MsgNode(userId));
 
     final receiveId = userId + 1;
-    final currentModel = P.rwkvModel.latest.q;
-    final modelName = usingCloud
-        ? "Official RWKV Web Demo ${_cloudModelLabel(backendMode.q)}"
-        : P.albatrossRuntime.enabled.q
-        ? "Albatross"
-        : currentModel?.name;
+    final modelName = _modelNameForBackend(backend);
     final receiveMsg = Message(
       id: receiveId,
       content: "",
@@ -478,19 +611,53 @@ extension $WebDemo on _WebDemo {
     return receiveId;
   }
 
-  void _runLocal({
+  void _runAlbatross({
     required String prompt,
     required int batchSize,
     required int receiveId,
   }) {
-    _applyLocalSamplerParamsIfNeeded();
+    final outputs = List<String>.filled(batchSize, "");
+    _localSubscription = P.albatrossRuntime
+        .completion(
+          prompt,
+          batchSize: batchSize,
+          includePromptInOutput: false,
+          decodeParams: _decodeParamsForAlbatross(),
+        )
+        .listen(
+          (response) {
+            for (int i = 0; i < response.responseBufferContent.length && i < outputs.length; i++) {
+              outputs[i] = response.responseBufferContent[i];
+            }
+            _setActiveOutputs(outputs: outputs, receiveId: receiveId);
+            final complete = response.eosFound.length >= batchSize && response.eosFound.take(batchSize).every((item) => item);
+            if (!complete) return;
+            _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoAlbatrossComplete");
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            _finishCurrentMessage(
+              receiveId: receiveId,
+              content: _activeContent,
+              callingFunction: "webDemoAlbatrossError",
+              error: error.toString(),
+            );
+          },
+        );
+  }
+
+  void _runRwkvMobile({
+    required String prompt,
+    required int batchSize,
+    required int receiveId,
+  }) {
+    _applyRwkvMobileSamplerParamsIfNeeded();
     final outputs = List<String>.filled(batchSize, "");
     _localSubscription = P.rwkvGeneration
         .completion(
           prompt,
           batchSize: batchSize,
           maxLength: _maxTokensForLocal,
-          overrideDecodeParams: _decodeParamsForAlbatross(),
+          forceRwkvMobile: true,
         )
         .listen(
           (response) {
@@ -500,13 +667,13 @@ extension $WebDemo on _WebDemo {
             _setActiveOutputs(outputs: outputs, receiveId: receiveId);
             final complete = response.eosFound.length >= batchSize && response.eosFound.take(batchSize).every((item) => item);
             if (!complete) return;
-            _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoLocalComplete");
+            _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoRwkvMobileComplete");
           },
           onError: (Object error, StackTrace stackTrace) {
             _finishCurrentMessage(
               receiveId: receiveId,
               content: _activeContent,
-              callingFunction: "webDemoLocalError",
+              callingFunction: "webDemoRwkvMobileError",
               error: error.toString(),
             );
           },
@@ -516,7 +683,7 @@ extension $WebDemo on _WebDemo {
         .where((event) => !event.isGenerating)
         .take(1)
         .listen((_) {
-          _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoLocalStopped");
+          _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoRwkvMobileStopped");
         });
   }
 
@@ -823,8 +990,7 @@ extension $WebDemo on _WebDemo {
     return Argument.maxLength.defaults.round();
   }
 
-  void _applyLocalSamplerParamsIfNeeded() {
-    if (P.albatrossRuntime.enabled.q) return;
+  void _applyRwkvMobileSamplerParamsIfNeeded() {
     _syncSamplerParamsToLoadedModels(
       currentSamplerAndPenaltyParam(),
       topK: arguments(Argument.topK).q,
@@ -952,25 +1118,31 @@ extension $WebDemo on _WebDemo {
   }
 
   WebDemoBackendMode _backendModeForMessage(Message message) {
-    final modelName = message.modelName?.toLowerCase() ?? "";
-    if (modelName.contains("13.3") || modelName.contains("13b")) {
-      return WebDemoBackendMode.cloud13b;
-    }
-    if (modelName.contains("official") || modelName.contains("cloud")) {
-      return WebDemoBackendMode.cloud7b;
-    }
-    return WebDemoBackendMode.local;
+    return webDemoBackendModeForModelName(message.modelName);
   }
 
-  bool _isCloudBackend(WebDemoBackendMode mode) {
-    return mode == WebDemoBackendMode.cloud7b || mode == WebDemoBackendMode.cloud13b;
+  String _modelNameForBackend(WebDemoBackendMode backend) {
+    return switch (backend) {
+      WebDemoBackendMode.cloud7b => "Official RWKV Web Demo ${_cloudModelLabel(backend)}",
+      WebDemoBackendMode.cloud13b => "Official RWKV Web Demo ${_cloudModelLabel(backend)}",
+      WebDemoBackendMode.localAlbatross => "Local Albatross",
+      WebDemoBackendMode.localRwkvMobile => _rwkvMobileModelName(),
+    };
+  }
+
+  String _rwkvMobileModelName() {
+    final currentModel = P.rwkvModel.latest.q;
+    final modelName = currentModel?.name;
+    if (modelName == null || modelName.trim().isEmpty) return "Local RWKV Mobile";
+    return "Local RWKV Mobile - $modelName";
   }
 
   String _cloudModelLabel(WebDemoBackendMode mode) {
     return switch (mode) {
       WebDemoBackendMode.cloud13b => "13.3B",
       WebDemoBackendMode.cloud7b => "7.2B",
-      WebDemoBackendMode.local => "local",
+      WebDemoBackendMode.localAlbatross => "Albatross",
+      WebDemoBackendMode.localRwkvMobile => "RWKV Mobile",
     };
   }
 

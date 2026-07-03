@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zone/config.dart';
 import 'package:zone/func/web_demo.dart';
+import 'package:zone/store/p.dart';
 
 void main() {
   group('Web Demo prompt helpers', () {
@@ -24,6 +26,41 @@ void main() {
       expect(prompt, contains('Return raw HTML only.'));
       expect(prompt, contains('Do not include Markdown fences'));
       expect(prompt, contains('<!doctype html><html><body>Old</body></html>'));
+    });
+  });
+
+  group('Web Demo backend helpers', () {
+    test('labels and caps the three generation paths', () {
+      expect(webDemoBackendIsCloud(WebDemoBackendMode.cloud7b), isTrue);
+      expect(webDemoBackendIsCloud(WebDemoBackendMode.cloud13b), isTrue);
+      expect(webDemoBackendIsCloud(WebDemoBackendMode.localAlbatross), isFalse);
+      expect(webDemoBackendIsCloud(WebDemoBackendMode.localRwkvMobile), isFalse);
+
+      expect(webDemoMaxBatchSizeForBackend(WebDemoBackendMode.cloud7b), 30);
+      expect(webDemoMaxBatchSizeForBackend(WebDemoBackendMode.cloud13b), 30);
+      expect(webDemoMaxBatchSizeForBackend(WebDemoBackendMode.localAlbatross), 10);
+      expect(webDemoMaxBatchSizeForBackend(WebDemoBackendMode.localRwkvMobile), 30);
+
+      expect(webDemoBackendLabel(WebDemoBackendMode.cloud7b), 'Official cloud 7.2B');
+      expect(webDemoBackendLabel(WebDemoBackendMode.localAlbatross), 'Local Albatross');
+      expect(webDemoBackendLabel(WebDemoBackendMode.localRwkvMobile), 'Local RWKV Mobile');
+    });
+
+    test('recovers backend mode from stored Web Demo model names', () {
+      expect(webDemoBackendModeForModelName('Official RWKV Web Demo 13.3B'), WebDemoBackendMode.cloud13b);
+      expect(webDemoBackendModeForModelName('Official RWKV Web Demo 7.2B'), WebDemoBackendMode.cloud7b);
+      expect(webDemoBackendModeForModelName('Local Albatross'), WebDemoBackendMode.localAlbatross);
+      expect(webDemoBackendModeForModelName('Albatross'), WebDemoBackendMode.localAlbatross);
+      expect(webDemoBackendModeForModelName('Local RWKV Mobile - RWKV7 13B'), WebDemoBackendMode.localRwkvMobile);
+      expect(webDemoBackendModeForModelName('RWKV7-G1'), WebDemoBackendMode.localRwkvMobile);
+    });
+
+    test('persists the preferred concurrency', () async {
+      SharedPreferences.setMockInitialValues({});
+
+      await P.preference.saveWebDemoBatchSize(12);
+
+      expect(await P.preference.loadWebDemoBatchSize(), 12);
     });
   });
 

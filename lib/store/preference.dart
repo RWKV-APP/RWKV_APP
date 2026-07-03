@@ -7,6 +7,7 @@ const String _legacyDebugRenderSpaceSymbolPreferenceKey = "halo_state.debug.show
 const String _debugShowPrefillLogOnlyPreferenceKey = "halo_state.debug.showPrefillLogOnly";
 const String _messageLineHeightPreferenceKey = "halo_state.messageLineHeight";
 const String _batchViewportWidthPreferenceKey = "halo_state.batchViewportWidth";
+const String _webDemoBatchSizePreferenceKey = "halo_state.webDemoBatchSize";
 const String _renderThinkingTagAsPreviewPreferenceKey = "halo_state.renderThinkingTagAsPreview";
 const String _thinkingModePreferenceKey = "halo_state.thinkingMode";
 const Set<String> _preservedPreferenceCacheKeys = <String>{
@@ -542,6 +543,16 @@ extension $Preference on _Preference {
   Future<void> saveBatchViewportWidth(int value) async {
     final sp = await SharedPreferences.getInstance();
     await sp.setInt(_batchViewportWidthPreferenceKey, value);
+  }
+
+  Future<int?> loadWebDemoBatchSize() async {
+    final sp = await SharedPreferences.getInstance();
+    return sp.getInt(_webDemoBatchSizePreferenceKey);
+  }
+
+  Future<void> saveWebDemoBatchSize(int value) async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setInt(_webDemoBatchSizePreferenceKey, value);
   }
 
   Future<void> setRenderThinkingTagAsPreviewEnabled(bool value) async {

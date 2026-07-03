@@ -1,3 +1,4 @@
+import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zone/func/albatross_endpoint_input.dart';
@@ -6,8 +7,8 @@ import 'package:zone/model/thinking_mode.dart';
 
 void main() {
   String applyInputFormatters(List<TextInputFormatter> formatters, String value) {
-    var oldValue = TextEditingValue.empty;
-    var newValue = TextEditingValue(
+    TextEditingValue oldValue = TextEditingValue.empty;
+    TextEditingValue newValue = TextEditingValue(
       text: value,
       selection: TextSelection.collapsed(offset: value.length),
     );
@@ -104,6 +105,56 @@ void main() {
     test('keeps macOS as UI-only until a runtime exists', () {
       expect(canLaunchAlbatrossRuntime(isMacOS: false), isTrue);
       expect(canLaunchAlbatrossRuntime(isMacOS: true), isFalse);
+    });
+  });
+
+  group('Albatross local discovery', () {
+    test('builds current and executable roots with parents', () {
+      final roots = buildAlbatrossDiscoveryRoots(
+        currentDirectory: path.join('workspace', 'rwkv_app'),
+        resolvedExecutable: path.join('workspace', 'rwkv_app', 'build', 'windows', 'runner.exe'),
+      );
+
+      expect(roots, contains(path.normalize(path.join('workspace', 'rwkv_app'))));
+      expect(roots, contains(path.normalize('workspace')));
+      expect(roots, contains(path.normalize(path.join('workspace', 'rwkv_app', 'build', 'windows'))));
+    });
+
+    test('finds adjacent CUDA runtime bundle, tokenizer, and model directories', () {
+      final root = path.normalize('workspace');
+      final files = <String>{
+        path.join(root, 'rwkv_lightning_cuda', 'build_agent_sm86', 'bundle', 'rwkv_lighting_cuda', 'rwkv_lighting_cuda.exe'),
+        path.join(root, 'rwkv_lightning_cuda', 'src', 'rwkv_vocab_v20230424.txt'),
+        path.join(root, 'rwkv_lightning_cuda_run', 'V1.0.0', 'rwkv_lighting_cuda.exe'),
+        path.join(root, 'rwkv_lightning_cuda_run', 'V1.0.0', 'rwkv_vocab_v20230424.txt'),
+      }.map(path.normalize).toSet();
+      final directories = <String>{
+        path.join(root, 'rwkv_lightning_cuda_run', 'models'),
+      }.map(path.normalize).toSet();
+
+      final discovery = discoverAlbatrossLocalPaths(
+        roots: <String>[root],
+        isWindows: true,
+        fileExists: files.contains,
+        directoryExists: directories.contains,
+      );
+
+      expect(
+        discovery.executablePaths,
+        contains(
+          path.normalize(
+            path.join(root, 'rwkv_lightning_cuda', 'build_agent_sm86', 'bundle', 'rwkv_lighting_cuda', 'rwkv_lighting_cuda.exe'),
+          ),
+        ),
+      );
+      expect(
+        discovery.tokenizerPaths,
+        contains(path.normalize(path.join(root, 'rwkv_lightning_cuda_run', 'V1.0.0', 'rwkv_vocab_v20230424.txt'))),
+      );
+      expect(
+        discovery.modelDirectories,
+        contains(path.normalize(path.join(root, 'rwkv_lightning_cuda_run', 'models'))),
+      );
     });
   });
 

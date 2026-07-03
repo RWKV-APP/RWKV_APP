@@ -168,13 +168,14 @@ extension $RWKVGeneration on _RWKVGeneration {
     int? stopToken,
     bool? disableCache,
     Map<String, Object?>? overrideDecodeParams,
+    bool forceRwkvMobile = false,
   }) {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     prefillProgress.q = 0;
     P.telemetry.resetPeakDecodeSpeed();
 
-    if (P.albatrossRuntime.enabled.q) {
+    if (P.albatrossRuntime.enabled.q && !forceRwkvMobile) {
       return P.albatrossRuntime.completion(prompt, batchSize: batchSize, decodeParams: overrideDecodeParams);
     }
 
@@ -324,8 +325,8 @@ extension $RWKVGeneration on _RWKVGeneration {
     P.rwkvBridge.send(to_rwkv.GetIsGenerating(modelID: modelID));
   }
 
-  Future<void> stop() async {
-    if (P.albatrossRuntime.enabled.q) return P.albatrossRuntime.stop();
+  Future<void> stop({bool forceRwkvMobile = false}) async {
+    if (P.albatrossRuntime.enabled.q && !forceRwkvMobile) return P.albatrossRuntime.stop();
     for (final entry in P.rwkvModel.allLoaded.q.entries) {
       final modelID = entry.value;
       P.rwkvBridge.send(to_rwkv.Stop(modelID: modelID));

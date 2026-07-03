@@ -155,6 +155,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   Future<void> _init() async {
     _applyConfigDefaults();
     await _loadPreferences();
+    await _applyLocalDiscoveryDefaults();
     unawaited(refreshCudaInfo());
     _lifecycleListener = AppLifecycleListener(
       onStateChange: (state) {
@@ -232,6 +233,38 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     }
   }
 
+  Future<bool> prepareForWebDemo() async {
+    if (connecting.q) {
+      _addLog("web demo start ignored: already connecting");
+      return false;
+    }
+
+    connecting.q = true;
+    lastError.q = "";
+    processExitCode.q = null;
+    try {
+      _addLog("prepare for web demo");
+      final connected = await probe();
+      if (connected) {
+        _addLog("service already running at ${baseUrl.q}");
+        return true;
+      }
+
+      if (!_canLaunchRuntime(showAlert: true)) return false;
+      await _applyLocalDiscoveryDefaults();
+      await _ensureConfiguredAssets();
+      await _startProcess();
+      return await _waitUntilRunning();
+    } catch (e) {
+      lastError.q = e.toString();
+      _addLog("web demo error: $e");
+      Alert.error(e.toString());
+      return false;
+    } finally {
+      connecting.q = false;
+    }
+  }
+
   Future<bool> prepareForChat() async {
     if (connecting.q) {
       _addLog("start ignored: already connecting");
@@ -251,6 +284,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
       }
 
       if (!_canLaunchRuntime(showAlert: true)) return false;
+      await _applyLocalDiscoveryDefaults();
       await _ensureConfiguredAssets();
       await _startProcess();
       return await _waitUntilRunning();
@@ -1196,6 +1230,84 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
     final missingText = missingDlls.join(", ");
     _addLog("missing runtime DLLs: $missingText");
     throw S.current.albatross_missing_runtime_dlls(missingText);
+  }
+
+  Future<void> _applyLocalDiscoveryDefaults() async {
+    final discovery = _discoverLocalPaths();
+    if (await _pathMissing(executablePath.q)) {
+      final executable = discovery.executablePaths.firstOrNull;
+      if (executable != null) {
+        _addLog("auto select binary: $executable");
+        await setExecutablePath(executable);
+      }
+    }
+
+    if (await _pathMissing(tokenizerPath.q)) {
+      final tokenizer = discovery.tokenizerPaths.firstOrNull;
+      if (tokenizer != null) {
+        _addLog("auto select tokenizer: $tokenizer");
+        await setTokenizerPath(tokenizer);
+      }
+    }
+
+    if (await _pathMissing(modelPath.q)) {
+      final model = _downloadedPthPathCandidate() ?? _filesystemPthPathCandidate(discovery.modelDirectories);
+      if (model != null) {
+        _addLog("auto select model: $model");
+        await setModelPath(model);
+      }
+    }
+  }
+
+  Future<bool> _pathMissing(String value) async {
+    if (value.trim().isEmpty) return true;
+    return !await File(value).exists();
+  }
+
+  AlbatrossLocalDiscoveryPaths _discoverLocalPaths() {
+    final roots = buildAlbatrossDiscoveryRoots(
+      currentDirectory: Directory.current.path,
+      resolvedExecutable: Platform.resolvedExecutable,
+    );
+    return discoverAlbatrossLocalPaths(
+      roots: roots,
+      isWindows: Platform.isWindows,
+      fileExists: (filePath) => File(filePath).existsSync(),
+      directoryExists: (directoryPath) => Directory(directoryPath).existsSync(),
+    );
+  }
+
+  String? _downloadedPthPathCandidate() {
+    for (final fileInfo in pthCandidates.q) {
+      if (fileInfo.fromPthFile && File(fileInfo.raw).existsSync()) {
+        return fileInfo.raw;
+      }
+
+      final local = P.remote.locals(fileInfo).q;
+      if (!local.hasFile) continue;
+      if (!File(local.targetPath).existsSync()) continue;
+      return local.targetPath;
+    }
+    return null;
+  }
+
+  String? _filesystemPthPathCandidate(List<String> directories) {
+    final candidates = <File>[];
+    for (final directoryPath in directories) {
+      final directory = Directory(directoryPath);
+      if (!directory.existsSync()) continue;
+
+      final entries = directory.listSync(followLinks: false);
+      for (final entry in entries) {
+        if (entry is! File) continue;
+        if (!entry.path.toLowerCase().endsWith(".pth")) continue;
+        candidates.add(entry);
+      }
+    }
+    if (candidates.isEmpty) return null;
+
+    candidates.sort((a, b) => b.lengthSync().compareTo(a.lengthSync()));
+    return candidates.first.path;
   }
 
   Future<void> _startProcess() async {

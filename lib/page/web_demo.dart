@@ -50,7 +50,7 @@ class _WebDemoShell extends ConsumerWidget {
         children: [
           _WebDemoTopBar(),
           SizedBox(
-            height: 430,
+            height: 456,
             child: _WebDemoControlPanel(),
           ),
           Expanded(child: _WebDemoGrid()),
@@ -90,11 +90,7 @@ class _WebDemoTopBar extends ConsumerWidget {
     final active = ref.watch(P.webDemo.active);
     final backendMode = ref.watch(P.webDemo.backendMode);
     final run = ref.watch(P.webDemo.currentRun);
-    final backendText = switch (backendMode) {
-      WebDemoBackendMode.cloud7b => "Official cloud 7.2B",
-      WebDemoBackendMode.cloud13b => "Official cloud 13.3B",
-      WebDemoBackendMode.local => "Local model",
-    };
+    final backendText = webDemoBackendLabel(backendMode);
     final statusText = active
         ? "Generating"
         : run == null
@@ -227,6 +223,12 @@ class _WebDemoControlPanel extends ConsumerWidget {
               configured: configured,
               enabled: !active,
             ),
+            if (webDemoBackendIsCloud(backendMode)) const SizedBox(height: 8),
+            if (webDemoBackendIsCloud(backendMode))
+              _CloudModelSelector(
+                backendMode: backendMode,
+                enabled: !active && configured,
+              ),
             const SizedBox(height: 14),
             const _WebDemoIntegerControl(
               label: "Max Tokens",
@@ -409,6 +411,29 @@ class _AttachedHtmlNotice extends ConsumerWidget {
   }
 }
 
+enum _WebDemoBackendFamily {
+  cloud,
+  albatross,
+  rwkvMobile,
+}
+
+_WebDemoBackendFamily _webDemoBackendFamilyFor(WebDemoBackendMode mode) {
+  return switch (mode) {
+    WebDemoBackendMode.cloud7b => _WebDemoBackendFamily.cloud,
+    WebDemoBackendMode.cloud13b => _WebDemoBackendFamily.cloud,
+    WebDemoBackendMode.localAlbatross => _WebDemoBackendFamily.albatross,
+    WebDemoBackendMode.localRwkvMobile => _WebDemoBackendFamily.rwkvMobile,
+  };
+}
+
+WebDemoBackendMode _webDemoBackendModeForFamily(_WebDemoBackendFamily family, WebDemoBackendMode currentMode) {
+  return switch (family) {
+    _WebDemoBackendFamily.cloud => webDemoBackendIsCloud(currentMode) ? currentMode : WebDemoBackendMode.cloud7b,
+    _WebDemoBackendFamily.albatross => WebDemoBackendMode.localAlbatross,
+    _WebDemoBackendFamily.rwkvMobile => WebDemoBackendMode.localRwkvMobile,
+  };
+}
+
 class _BackendSelector extends ConsumerWidget {
   final WebDemoBackendMode backendMode;
   final bool configured;
@@ -425,31 +450,75 @@ class _BackendSelector extends ConsumerWidget {
     final theme = Theme.of(context);
     final appTheme = ref.watch(P.app.theme);
 
-    return SegmentedButton<WebDemoBackendMode>(
+    return SegmentedButton<_WebDemoBackendFamily>(
       segments: [
         ButtonSegment(
-          value: WebDemoBackendMode.cloud7b,
+          value: _WebDemoBackendFamily.cloud,
           enabled: enabled && configured,
           icon: const Icon(Icons.cloud_done_outlined, size: 17),
-          label: Text(configured ? "7.2B" : "No key"),
-        ),
-        ButtonSegment(
-          value: WebDemoBackendMode.cloud13b,
-          enabled: enabled && configured,
-          icon: const Icon(Icons.cloud_queue_rounded, size: 17),
-          label: const Text("13.3B"),
+          label: Text(configured ? "Cloud" : "No key"),
         ),
         const ButtonSegment(
-          value: WebDemoBackendMode.local,
+          value: _WebDemoBackendFamily.albatross,
+          icon: Icon(Icons.bolt_rounded, size: 17),
+          label: Text("Albatross"),
+        ),
+        const ButtonSegment(
+          value: _WebDemoBackendFamily.rwkvMobile,
           icon: Icon(Icons.memory_rounded, size: 17),
-          label: Text("Local"),
+          label: Text("RWKV Mobile"),
         ),
       ],
-      selected: {backendMode},
+      selected: {_webDemoBackendFamilyFor(backendMode)},
       showSelectedIcon: false,
       style: ButtonStyle(
         visualDensity: VisualDensity.compact,
         textStyle: WidgetStatePropertyAll(theme.textTheme.labelMedium),
+        side: WidgetStatePropertyAll(BorderSide(color: appTheme.qb12, width: .5)),
+      ),
+      onSelectionChanged: enabled
+          ? (selection) {
+              final next = selection.isEmpty ? null : selection.first;
+              if (next == null) return;
+              P.webDemo.setBackendMode(_webDemoBackendModeForFamily(next, backendMode));
+            }
+          : null,
+    );
+  }
+}
+
+class _CloudModelSelector extends ConsumerWidget {
+  final WebDemoBackendMode backendMode;
+  final bool enabled;
+
+  const _CloudModelSelector({
+    required this.backendMode,
+    required this.enabled,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final appTheme = ref.watch(P.app.theme);
+
+    return SegmentedButton<WebDemoBackendMode>(
+      segments: const [
+        ButtonSegment(
+          value: WebDemoBackendMode.cloud7b,
+          icon: Icon(Icons.cloud_done_outlined, size: 16),
+          label: Text("7.2B"),
+        ),
+        ButtonSegment(
+          value: WebDemoBackendMode.cloud13b,
+          icon: Icon(Icons.cloud_queue_rounded, size: 16),
+          label: Text("13.3B"),
+        ),
+      ],
+      selected: {backendMode == WebDemoBackendMode.cloud13b ? WebDemoBackendMode.cloud13b : WebDemoBackendMode.cloud7b},
+      showSelectedIcon: false,
+      style: ButtonStyle(
+        visualDensity: VisualDensity.compact,
+        textStyle: WidgetStatePropertyAll(theme.textTheme.labelSmall),
         side: WidgetStatePropertyAll(BorderSide(color: appTheme.qb12, width: .5)),
       ),
       onSelectionChanged: enabled
@@ -505,17 +574,18 @@ class _WebDemoBatchControl extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final value = ref.watch(P.webDemo.batchSize);
+    final max = ref.watch(P.webDemo.batchSizeMax);
+    final value = ref.watch(P.webDemo.batchSize).clamp(1, max).toInt();
 
     return _ControlFrame(
-      label: "Batch Size",
+      label: "Concurrency",
       valueText: value.toString(),
       onReset: () => P.webDemo.setBatchSize(30),
       child: Slider(
         value: value.toDouble(),
         min: 1,
-        max: 30,
-        divisions: 29,
+        max: max.toDouble(),
+        divisions: max > 1 ? max - 1 : null,
         onChanged: (next) => P.webDemo.setBatchSize(next),
         activeColor: theme.colorScheme.primary,
       ),
@@ -723,7 +793,7 @@ class _WebDemoGridState extends ConsumerState<_WebDemoGrid> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          "The official 7.2B cloud path starts at batch 30, and local mode stays available when a model is loaded.",
+                          "No generated pages yet.",
                           textAlign: TextAlign.center,
                           style: TextStyle(color: appTheme.qb5, height: 1.35),
                         ),
@@ -748,22 +818,29 @@ class _WebDemoGridState extends ConsumerState<_WebDemoGrid> {
             : 1;
         final itemHeight = width >= 760 ? 390.0 : 520.0;
 
-        return GridView.builder(
-          controller: _gridScrollController,
-          padding: const .all(10),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            mainAxisExtent: itemHeight,
-          ),
-          itemCount: resultCount,
-          itemBuilder: (context, index) {
-            return _WebDemoResultTile(
-              index: index,
-              parentScrollController: _gridScrollController,
+        final itemWidth = ((width - 20 - (10 * (crossAxisCount - 1))) / crossAxisCount).clamp(0, double.infinity).toDouble();
+        final children = List<Widget>.generate(
+          resultCount,
+          (index) {
+            return SizedBox(
+              width: itemWidth,
+              height: itemHeight,
+              child: _WebDemoResultTile(
+                index: index,
+                parentScrollController: _gridScrollController,
+              ),
             );
           },
+        );
+
+        return SingleChildScrollView(
+          controller: _gridScrollController,
+          padding: const .all(10),
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: children,
+          ),
         );
       },
     );

@@ -23,6 +23,18 @@ const List<String> albatrossProbePaths = <String>[
   "/status",
 ];
 
+class AlbatrossLocalDiscoveryPaths {
+  final List<String> executablePaths;
+  final List<String> tokenizerPaths;
+  final List<String> modelDirectories;
+
+  const AlbatrossLocalDiscoveryPaths({
+    required this.executablePaths,
+    required this.tokenizerPaths,
+    required this.modelDirectories,
+  });
+}
+
 class AlbatrossSseChoice {
   final int index;
   final String content;
@@ -149,6 +161,99 @@ bool isAlbatrossCudaBackendAvailable({
 
 bool canLaunchAlbatrossRuntime({required bool isMacOS}) {
   return !isMacOS;
+}
+
+List<String> buildAlbatrossDiscoveryRoots({
+  required String currentDirectory,
+  required String resolvedExecutable,
+}) {
+  final roots = <String>[];
+
+  void add(String value) {
+    final normalized = path.normalize(value.trim());
+    if (normalized.isEmpty) return;
+    if (roots.contains(normalized)) return;
+    roots.add(normalized);
+  }
+
+  void addWithParents(String value) {
+    final normalized = path.normalize(value.trim());
+    if (normalized.isEmpty) return;
+    add(normalized);
+
+    final parent = path.dirname(normalized);
+    if (parent == normalized) return;
+    add(parent);
+
+    final grandparent = path.dirname(parent);
+    if (grandparent == parent) return;
+    add(grandparent);
+  }
+
+  addWithParents(currentDirectory);
+
+  final executableDir = path.dirname(resolvedExecutable.trim());
+  if (executableDir != ".") {
+    addWithParents(executableDir);
+  }
+
+  return roots;
+}
+
+AlbatrossLocalDiscoveryPaths discoverAlbatrossLocalPaths({
+  required Iterable<String> roots,
+  required bool isWindows,
+  required bool Function(String filePath) fileExists,
+  required bool Function(String directoryPath) directoryExists,
+}) {
+  final executablePaths = <String>[];
+  final tokenizerPaths = <String>[];
+  final modelDirectories = <String>[];
+
+  void addFileCandidate(List<String> segments, List<String> target) {
+    final candidate = path.joinAll(segments);
+    final normalized = path.normalize(candidate);
+    if (target.contains(normalized)) return;
+    if (!fileExists(normalized)) return;
+    target.add(normalized);
+  }
+
+  void addDirectoryCandidate(List<String> segments) {
+    final candidate = path.joinAll(segments);
+    final normalized = path.normalize(candidate);
+    if (modelDirectories.contains(normalized)) return;
+    if (!directoryExists(normalized)) return;
+    modelDirectories.add(normalized);
+  }
+
+  final executableFileNames = isWindows
+      ? const <String>["rwkv_lighting_cuda.exe", "rwkv_lightning_cuda.exe"]
+      : const <String>["rwkv_lighting_cuda", "rwkv_lightning_cuda"];
+
+  for (final rawRoot in roots) {
+    final root = path.normalize(rawRoot.trim());
+    if (root.isEmpty) continue;
+
+    for (final executableFileName in executableFileNames) {
+      for (final relative in _albatrossExecutableRelativeSegments(executableFileName)) {
+        addFileCandidate(<String>[root, ...relative], executablePaths);
+      }
+    }
+
+    for (final relative in _albatrossTokenizerRelativeSegments()) {
+      addFileCandidate(<String>[root, ...relative], tokenizerPaths);
+    }
+
+    for (final relative in _albatrossModelDirectoryRelativeSegments()) {
+      addDirectoryCandidate(<String>[root, ...relative]);
+    }
+  }
+
+  return AlbatrossLocalDiscoveryPaths(
+    executablePaths: executablePaths,
+    tokenizerPaths: tokenizerPaths,
+    modelDirectories: modelDirectories,
+  );
 }
 
 List<String> buildAlbatrossLaunchArgs({
@@ -399,6 +504,42 @@ String _replaceAlbatrossLaunchArg(String value, Map<String, String> replacements
     result = result.replaceAll(entry.key, entry.value);
   }
   return result;
+}
+
+List<List<String>> _albatrossExecutableRelativeSegments(String executableFileName) {
+  return <List<String>>[
+    <String>[executableFileName],
+    <String>["V1.0.0", executableFileName],
+    <String>["build_agent_sm86", "bundle", "rwkv_lighting_cuda", executableFileName],
+    <String>["build_win10_sm86", "bundle", "rwkv_lighting_cuda", executableFileName],
+    <String>["build_agent_sm86", "Release", executableFileName],
+    <String>["build_win10_sm86", "Release", executableFileName],
+    <String>["rwkv_lightning_cuda", "build_agent_sm86", "bundle", "rwkv_lighting_cuda", executableFileName],
+    <String>["rwkv_lightning_cuda", "build_win10_sm86", "bundle", "rwkv_lighting_cuda", executableFileName],
+    <String>["rwkv_lightning_cuda", "build_agent_sm86", "Release", executableFileName],
+    <String>["rwkv_lightning_cuda", "build_win10_sm86", "Release", executableFileName],
+    <String>["rwkv_lightning_cuda_run", "V1.0.0", executableFileName],
+  ];
+}
+
+List<List<String>> _albatrossTokenizerRelativeSegments() {
+  const tokenizerFileName = "rwkv_vocab_v20230424.txt";
+  return const <List<String>>[
+    <String>[tokenizerFileName],
+    <String>["V1.0.0", tokenizerFileName],
+    <String>["src", tokenizerFileName],
+    <String>["assets", "config", "chat", tokenizerFileName],
+    <String>["rwkv_lightning_cuda", "src", tokenizerFileName],
+    <String>["rwkv_lightning_cuda_run", "V1.0.0", tokenizerFileName],
+    <String>["rwkv_app", "assets", "config", "chat", tokenizerFileName],
+  ];
+}
+
+List<List<String>> _albatrossModelDirectoryRelativeSegments() {
+  return const <List<String>>[
+    <String>["models"],
+    <String>["rwkv_lightning_cuda_run", "models"],
+  ];
 }
 
 String _formatAlbatrossTimestamp(DateTime dateTime) {
