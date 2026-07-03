@@ -96,15 +96,6 @@ class _FakeBatchInferenceBenchmarkSlotState {
 }
 
 extension $ChatDebugRepro on _Chat {
-  void onFakeBatchInferenceBenchmarkChanged(bool value) async {
-    if (P.rwkvGeneration.generating.q) {
-      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
-      return;
-    }
-    fakeBatchInferenceBenchmarkEnabled.q = value;
-    await P.preference.setFakeBatchInferenceBenchmarkEnabled(value);
-  }
-
   void _startFakeBatchInferenceBenchmark({
     required int messageId,
     required int batchSize,

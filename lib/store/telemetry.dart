@@ -1,6 +1,5 @@
 part of 'p.dart';
 
-const String _telemetryEnabledKey = "halo_state.telemetry.enabled";
 const String _telemetryInstallIdKey = "halo_state.telemetry.installId";
 
 class _Telemetry {
@@ -74,12 +73,6 @@ class _Telemetry {
 /// Public methods
 extension $Telemetry on _Telemetry {
   double snapshotPeakDecodeSpeed() => _peakDecodeSpeed.q;
-
-  Future<void> setEnabled(bool value) async {
-    enabled.q = value;
-    final sp = await SharedPreferences.getInstance();
-    await sp.setBool(_telemetryEnabledKey, value);
-  }
 
   void trackDecodeSpeed(double speed) {
     if (speed > _peakDecodeSpeed.q) {
@@ -187,12 +180,6 @@ extension $Telemetry on _Telemetry {
 extension _$Telemetry on _Telemetry {
   Future<void> _init() async {
     final sp = await SharedPreferences.getInstance();
-
-    // enabled
-    final bool? savedEnabled = sp.getBool(_telemetryEnabledKey);
-    if (savedEnabled != null) {
-      enabled.q = savedEnabled;
-    }
 
     // installId
     String savedId = sp.getString(_telemetryInstallIdKey) ?? "";

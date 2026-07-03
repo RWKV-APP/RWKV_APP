@@ -13,7 +13,6 @@ import 'package:zone/widgets/chat/decode_param_button.dart';
 import 'package:zone/widgets/chat/response_style_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
-import 'package:zone/widgets/chat/web_search_mode_button.dart';
 
 class InputInteractions extends ConsumerWidget {
   final DemoType preferredDemoType;
@@ -48,7 +47,6 @@ class _ItemList extends ConsumerWidget {
     final currentModelIsBefore20250922 = ref.watch(P.rwkvParams.currentModelIsBefore20250922);
 
     final children = [
-      if (preferredDemoType == .chat) const WebSearchModeButton(),
       if (preferredDemoType == .chat) const DecodeParamButton(),
       if (preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
       if (preferredDemoType == .chat) const ThinkingModeButton(),

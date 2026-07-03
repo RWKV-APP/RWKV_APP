@@ -6,9 +6,7 @@ const String _debugRenderSpaceSymbolPreferenceKey = "halo_state.debug.renderSpac
 const String _legacyDebugRenderSpaceSymbolPreferenceKey = "halo_state.debug.showSpaceSymbols";
 const String _debugShowPrefillLogOnlyPreferenceKey = "halo_state.debug.showPrefillLogOnly";
 const String _messageLineHeightPreferenceKey = "halo_state.messageLineHeight";
-const String _fakeBatchInferenceBenchmarkPreferenceKey = "halo_state.fakeBatchInferenceBenchmarkEnabled";
 const String _batchViewportWidthPreferenceKey = "halo_state.batchViewportWidth";
-const String _renderMarkdownAndLatexPreferenceKey = "halo_state.renderMarkdownAndLatex";
 const String _renderThinkingTagAsPreviewPreferenceKey = "halo_state.renderThinkingTagAsPreview";
 const String _thinkingModePreferenceKey = "halo_state.thinkingMode";
 const Set<String> _preservedPreferenceCacheKeys = <String>{
@@ -38,8 +36,6 @@ class _Preference {
 
   bool _showBatteryOptimization = true;
 
-  bool fakeBatchInferenceBenchmarkEnabled = false;
-  bool renderMarkdownAndLatex = true;
   bool renderThinkingTagAsPreview = true;
 
   var promptTemplate = PromptTemplate.empty();
@@ -224,9 +220,7 @@ extension _$Preference on _Preference {
       }
     }
 
-    fakeBatchInferenceBenchmarkEnabled = sp.getBool(_fakeBatchInferenceBenchmarkPreferenceKey) ?? false;
-    renderMarkdownAndLatex = sp.getBool(_renderMarkdownAndLatexPreferenceKey) ?? true;
-    renderMarkdownAndLatexEnabled.q = renderMarkdownAndLatex;
+    renderMarkdownAndLatexEnabled.q = true;
     renderThinkingTagAsPreview = sp.getBool(_renderThinkingTagAsPreviewPreferenceKey) ?? true;
     renderThinkingTagAsPreviewEnabled.q = renderThinkingTagAsPreview;
 
@@ -407,8 +401,6 @@ extension _$Preference on _Preference {
   void _resetInMemoryPreferenceCache() {
     _showBatteryOptimization = true;
     _enableSystemProxy = true;
-    fakeBatchInferenceBenchmarkEnabled = false;
-    renderMarkdownAndLatex = true;
     renderThinkingTagAsPreview = true;
     promptTemplate = PromptTemplate.empty();
 
@@ -542,12 +534,6 @@ extension $Preference on _Preference {
     }
   }
 
-  Future<void> setFakeBatchInferenceBenchmarkEnabled(bool value) async {
-    fakeBatchInferenceBenchmarkEnabled = value;
-    final sp = await SharedPreferences.getInstance();
-    await sp.setBool(_fakeBatchInferenceBenchmarkPreferenceKey, value);
-  }
-
   Future<int?> loadBatchViewportWidth() async {
     final sp = await SharedPreferences.getInstance();
     return sp.getInt(_batchViewportWidthPreferenceKey);
@@ -556,13 +542,6 @@ extension $Preference on _Preference {
   Future<void> saveBatchViewportWidth(int value) async {
     final sp = await SharedPreferences.getInstance();
     await sp.setInt(_batchViewportWidthPreferenceKey, value);
-  }
-
-  Future<void> setRenderMarkdownAndLatexEnabled(bool value) async {
-    renderMarkdownAndLatex = value;
-    renderMarkdownAndLatexEnabled.q = value;
-    final sp = await SharedPreferences.getInstance();
-    await sp.setBool(_renderMarkdownAndLatexPreferenceKey, value);
   }
 
   Future<void> setRenderThinkingTagAsPreviewEnabled(bool value) async {

@@ -5,18 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/prompt_template.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/alert.dart';
 
 class ChatTemplateDialog extends StatefulWidget {
   final bool newChat;
-  final bool webSearch;
   final bool thinking;
   final bool systemPrompt;
 
   const ChatTemplateDialog({
     super.key,
     this.newChat = false,
-    this.webSearch = false,
     this.thinking = false,
     this.systemPrompt = false,
   });
@@ -24,7 +21,6 @@ class ChatTemplateDialog extends StatefulWidget {
   static void show(
     BuildContext context, {
     bool newChat = false,
-    bool webSearch = false,
     bool thinking = false,
     bool systemPrompt = false,
   }) async {
@@ -35,7 +31,6 @@ class ChatTemplateDialog extends StatefulWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       builder: (c) => ChatTemplateDialog(
         newChat: newChat,
-        webSearch: webSearch,
         thinking: thinking,
         systemPrompt: systemPrompt,
       ),
@@ -51,8 +46,6 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
   late final TextEditingController _controllerPreferChinese;
   late final TextEditingController _controllerLighting;
   late final TextEditingController _controllerNewChat;
-  late final TextEditingController _controllerWebSearch;
-  late final TextEditingController _controllerWebSearchChinese;
   late final TextEditingController _controllerSystemPrompt;
   late final TextEditingController _controllerFast;
 
@@ -64,31 +57,22 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
     _controllerPreferChinese = TextEditingController(text: template.thinkingWithChinese);
     _controllerLighting = TextEditingController(text: template.thinkingLighting);
     _controllerNewChat = TextEditingController(text: template.newChatTemplate);
-    _controllerWebSearch = TextEditingController(text: template.webSearchTemplate);
-    _controllerWebSearchChinese = TextEditingController(text: template.webSearchChineseTemplate);
     _controllerSystemPrompt = TextEditingController(text: template.systemPrompt);
     _controllerFast = TextEditingController(text: template.thinkingFast);
   }
 
   void onApplyTap() async {
+    final currentTemplate = P.preference.promptTemplate;
     final template = PromptTemplate(
       thinkingWithChinese: _controllerPreferChinese.text.trim(),
       thinkingLighting: _controllerLighting.text.trim(),
       thinkingFast: _controllerFast.text.trim(),
       thinkingFree: _controllerFree.text.trim(),
       newChatTemplate: _controllerNewChat.text.trim(),
-      webSearchTemplate: _controllerWebSearch.text.trim(),
-      webSearchChineseTemplate: _controllerWebSearchChinese.text.trim(),
+      webSearchTemplate: currentTemplate.webSearchTemplate,
+      webSearchChineseTemplate: currentTemplate.webSearchChineseTemplate,
       systemPrompt: _controllerSystemPrompt.text.trim(),
     );
-    if (!template.webSearchTemplate.startsWith("%s") || !template.webSearchTemplate.endsWith("%s")) {
-      Alert.warning('联网搜索模板格式错误');
-      return;
-    }
-    if (!template.webSearchChineseTemplate.startsWith("%s") || !template.webSearchChineseTemplate.endsWith("%s")) {
-      Alert.warning('联网搜索模板格式错误');
-      return;
-    }
     P.preference.setThinkingModeUserTemplate(template);
     Navigator.of(context).pop();
   }
@@ -108,8 +92,6 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
     String title = '';
     if (widget.newChat) {
       title = S.current.new_chat_template;
-    } else if (widget.webSearch) {
-      title = S.current.web_search_template;
     } else if (widget.thinking) {
       title = S.current.thinking_mode_template;
     } else if (widget.systemPrompt) {
@@ -148,28 +130,6 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                       ),
                     ),
                   if (widget.newChat) const SizedBox(height: 16),
-                  if (widget.webSearch) ...[
-                    TextField(
-                      controller: _controllerWebSearch,
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                        labelText: S.current.web_search_template,
-                        labelStyle: const TextStyle(fontSize: 16),
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _controllerWebSearchChinese,
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                        labelText: S.current.chinese_web_search_template,
-                        labelStyle: const TextStyle(fontSize: 16),
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
                   if (widget.thinking) ...buildThinkingWidget(),
                   const SizedBox(height: 40),
                 ],

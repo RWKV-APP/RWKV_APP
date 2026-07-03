@@ -13,8 +13,6 @@ extension $ChatLifecycle on _Chat {
     }
     qq;
 
-    fakeBatchInferenceBenchmarkEnabled.q = P.preference.fakeBatchInferenceBenchmarkEnabled;
-
     textEditingController.addListener(_onTextEditingControllerValueChanged);
     textInInput.l(_onTextChanged);
 

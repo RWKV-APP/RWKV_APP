@@ -39,17 +39,6 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
                 ChatTemplateDialog.show(context, systemPrompt: true);
               },
             ),
-            item(
-              title: S.current.web_search_template,
-              child: const SizedBox(
-                height: 56,
-                width: 18,
-                child: Icon(Icons.arrow_forward_ios, size: 18),
-              ),
-              onTap: () {
-                ChatTemplateDialog.show(context, webSearch: true);
-              },
-            ),
             const SizedBox(height: 8),
             item(
               title: S.current.thinking_mode_template,
