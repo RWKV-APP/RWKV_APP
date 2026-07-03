@@ -1631,7 +1631,7 @@
   "world": {
     "model_config": [
       {
-        "name": "RWKV-VL-260625 0.4B Vision Encoder",
+        "name": "(Preview) RWKV-VL-260625 0.4B Vision Encoder",
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-0.4B-260625-vision-encoder.mnn",
         "fileSize": 402661632,
         "quantization": "w8a16",
@@ -1641,7 +1641,7 @@
         "date": 1782434995
       },
       {
-        "name": "RWKV-VL-260625 0.4B Vision Adapter",
+        "name": "(Preview) RWKV-VL-260625 0.4B Vision Adapter",
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-0.4B-260625-vision-adapter.mnn",
         "fileSize": 33597608,
         "quantization": "w8a16",
@@ -1651,7 +1651,7 @@
         "date": 1782435009
       },
       {
-        "name": "RWKV-VL-260625 0.4B",
+        "name": "(Preview) RWKV-VL-260625 0.4B",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/rwkv-vl-0.4B-260625-q8_0.gguf",
         "fileSize": 501497920,
@@ -1662,7 +1662,7 @@
         "date": 1782405529
       },
       {
-        "name": "RWKV-VL-260625 0.4B (8 Elite)",
+        "name": "(Preview) RWKV-VL-260625 0.4B (8 Elite)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-0.4B-260625-a16w8-8elite.rmpack",
         "fileSize": 545378304,
@@ -1674,7 +1674,7 @@
         "date": 1782488672
       },
       {
-        "name": "RWKV-VL-260625 0.4B (X Elite)",
+        "name": "(Preview) RWKV-VL-260625 0.4B (X Elite)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-0.4B-260625-a16w8-xelite-nocustomop.rmpack",
         "fileSize": 580464640,
@@ -1686,7 +1686,7 @@
         "date": 1782488587
       },
       {
-        "name": "RWKV-VL-260625 0.4B (X2 Elite)",
+        "name": "(Preview) RWKV-VL-260625 0.4B (X2 Elite)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-0.4B-260625-a16w8-x2elite-nocustomop.rmpack",
         "fileSize": 583675904,
@@ -1698,7 +1698,7 @@
         "date": 1782488609
       },
       {
-        "name": "RWKV-VL-260625 0.4B (8 Elite Gen5)",
+        "name": "(Preview) RWKV-VL-260625 0.4B (8 Elite Gen5)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-0.4B-260625-a16w8-8elitegen5.rmpack",
         "fileSize": 546271232,
@@ -1710,7 +1710,7 @@
         "date": 1782488637
       },
       {
-        "name": "RWKV-VL-260625 0.4B (8 Gen 5)",
+        "name": "(Preview) RWKV-VL-260625 0.4B (8 Gen 5)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-0.4B-260625-a16w8-8gen5.rmpack",
         "fileSize": 545370112,
@@ -1722,7 +1722,7 @@
         "date": 1782488572
       },
       {
-        "name": "RWKV-VL-260625 0.4B (8 Gen 2)",
+        "name": "(Preview) RWKV-VL-260625 0.4B (8 Gen 2)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-0.4B-260625-a16w8-8gen2.rmpack",
         "fileSize": 547966976,
@@ -1734,7 +1734,7 @@
         "date": 1782488658
       },
       {
-        "name": "RWKV-VL-260625 0.4B (8 Gen 3)",
+        "name": "(Preview) RWKV-VL-260625 0.4B (8 Gen 3)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-0.4B-260625-a16w8-8gen3.rmpack",
         "fileSize": 547971072,
@@ -1746,7 +1746,7 @@
         "date": 1782488650
       },
       {
-        "name": "RWKV-VL-260625 0.4B (8s Gen 3)",
+        "name": "(Preview) RWKV-VL-260625 0.4B (8s Gen 3)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-0.4B-260625-a16w8-8sgen3.rmpack",
         "fileSize": 548343808,
@@ -1758,7 +1758,7 @@
         "date": 1782488579
       },
       {
-        "name": "RWKV-VL-260625 0.4B (Dimensity 9300)",
+        "name": "(Preview) RWKV-VL-260625 0.4B (Dimensity 9300)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/rwkv-vl-0.4B-260625-MT6989.rmpack",
         "fileSize": 530042880,
