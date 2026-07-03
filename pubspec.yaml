@@ -129,6 +129,8 @@ dependencies:
   web_socket_channel:
   detect_proxy_setting: ^0.0.9
   flutter_inappwebview: ^6.1.5
+  local_web_search:
+    path: packages/local_web_search
 
 dependency_overrides:
   proxy_setting_android:
