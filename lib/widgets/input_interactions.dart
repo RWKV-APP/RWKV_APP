@@ -13,6 +13,7 @@ import 'package:zone/widgets/chat/decode_param_button.dart';
 import 'package:zone/widgets/chat/response_style_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
+import 'package:zone/widgets/chat/web_search_mode_button.dart';
 
 class InputInteractions extends ConsumerWidget {
   final DemoType preferredDemoType;
@@ -29,6 +30,9 @@ class InputInteractions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
+
     return Container(
       decoration: const BoxDecoration(color: Colors.transparent),
       child: _ItemList(preferredDemoType: preferredDemoType),
@@ -43,6 +47,8 @@ class _ItemList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final currentModelIsBefore20250922 = ref.watch(P.rwkvParams.currentModelIsBefore20250922);
 
@@ -52,6 +58,7 @@ class _ItemList extends ConsumerWidget {
       if (preferredDemoType == .chat) const ThinkingModeButton(),
       if (preferredDemoType == .chat) const BatchButton(),
       if (preferredDemoType == .chat && currentLangIsZh) const ResponseStyleButton(),
+      if (preferredDemoType == .chat) const WebSearchModeButton(),
       if (preferredDemoType == .chat) const AskQuestionButton(),
     ];
 

@@ -28,7 +28,7 @@ class SearchReferenceBuilder {
 
   static SearchReferenceBundle buildBundle({
     required List<String> messages,
-    SearchEngine searchEngine = SearchEngines.google,
+    SearchEngine searchEngine = SearchEngines.bing,
     required String query,
     required SearchExtractionResult extraction,
     int maxSources = defaultMaxSources,

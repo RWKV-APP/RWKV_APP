@@ -389,6 +389,10 @@ extension $ChatInputSend on _Chat {
     P.rwkvGeneration.generating.q = true;
     _liveTokenCountThrottler.cancel();
 
+    final int plainBatchSlotCount = P.app.pageKey.q == .chat && responseStyle.q.activeCount <= 1 && effectiveBatchEnabled.q
+        ? effectiveBatchCount.q
+        : 1;
+
     final receiveMsg = Message(
       id: receiveId,
       content: "",
@@ -400,7 +404,9 @@ extension $ChatInputSend on _Chat {
       rawDecodeParams: _resolveDecodeParamsSnapshotRaw(),
       batchSlotLabels:
           markdownFlickerReproBatchSlotLabels ??
-          (P.app.pageKey.q == .chat && responseStyle.q.activeCount > 1 ? responseStyle.q.enabledLabelsInOrder : null),
+          (P.app.pageKey.q == .chat && responseStyle.q.activeCount > 1
+              ? responseStyle.q.enabledLabelsInOrder
+              : _batchSlotLabelsForCount(plainBatchSlotCount)),
     );
 
     P.msg.pool.q[receiveId] = receiveMsg;

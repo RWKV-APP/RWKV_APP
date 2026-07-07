@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:local_web_search/local_web_search.dart';
 
 // Project imports:
 import 'package:zone/model/message.dart' as model;
@@ -43,23 +44,129 @@ class _Page extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectMessageMode = ref.watch(P.chat.isSharing);
+    final theme = Theme.of(context);
+    final _ = theme;
+    final localWebSearchPanelEnabled = ref.watch(P.chat.localWebSearchPanelEnabled);
+    final localWebSearchPanelSplitRatio = ref.watch(P.chat.localWebSearchPanelSplitRatio);
+    final isDesktop = ref.watch(P.app.isDesktop);
+    final showLocalWebSearchPanel = localWebSearchPanelEnabled && isDesktop;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          const _List(),
-          const Empty(),
-          const Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: ChatAppBar(),
+      body: showLocalWebSearchPanel
+          ? _ChatSearchSplitPane(
+              splitRatio: localWebSearchPanelSplitRatio,
+            )
+          : const _ChatPane(),
+    );
+  }
+}
+
+class _ChatSearchSplitPane extends StatelessWidget {
+  final double splitRatio;
+
+  const _ChatSearchSplitPane({required this.splitRatio});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final _ = theme;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final totalWidth = constraints.maxWidth - _ResizableVerticalSeparator.hitWidth;
+        if (totalWidth <= 0) return const _ChatPane();
+
+        final chatWidth = totalWidth * splitRatio;
+        final searchWidth = totalWidth - chatWidth;
+
+        return Row(
+          children: [
+            SizedBox(width: chatWidth, child: const _ChatPane()),
+            _ResizableVerticalSeparator(totalWidth: totalWidth),
+            SizedBox(width: searchWidth, child: const _LocalWebSearchPane()),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _ChatPane extends ConsumerWidget {
+  const _ChatPane();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
+    final selectMessageMode = ref.watch(P.chat.isSharing);
+
+    return Stack(
+      children: [
+        const _List(),
+        const Empty(),
+        const Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: ChatAppBar(),
+        ),
+        if (!selectMessageMode) const InputBar(),
+        if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
+      ],
+    );
+  }
+}
+
+class _ResizableVerticalSeparator extends ConsumerWidget {
+  static const double hitWidth = 12;
+  final double totalWidth;
+
+  const _ResizableVerticalSeparator({required this.totalWidth});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final qb = ref.watch(P.app.qb);
+    final _ = theme;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.resizeColumn,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onDoubleTap: P.chat.resetLocalWebSearchPanelSplitRatio,
+        onHorizontalDragUpdate: (details) {
+          P.chat.onLocalWebSearchPanelSplitDragged(
+            totalWidth: totalWidth,
+            deltaX: details.delta.dx,
+          );
+        },
+        child: SizedBox(
+          width: hitWidth,
+          child: Center(
+            child: Container(width: 0.5, color: qb),
           ),
-          if (!selectMessageMode) const InputBar(),
-          if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
-        ],
+        ),
       ),
+    );
+  }
+}
+
+class _LocalWebSearchPane extends ConsumerWidget {
+  const _LocalWebSearchPane();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
+    final messages = ref.watch(P.chat.localWebSearchMessages);
+    final engine = ref.watch(P.chat.localWebSearchEngine);
+
+    return SearchBrowserPanel(
+      controller: P.chat.localWebSearchController,
+      initialSearchEngine: engine,
+      messages: messages,
+      onSearchEngineChanged: P.chat.onLocalWebSearchEngineChanged,
+      onReferenceBundleChanged: P.chat.onLocalWebSearchBundleChanged,
     );
   }
 }
@@ -69,6 +176,8 @@ class _List extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final messages = ref.watch(P.msg.list);
     final paddingTop = ref.watch(P.app.paddingTop);
     final paddingLeft = ref.watch(P.app.paddingLeft);
@@ -137,6 +246,8 @@ class _MessageWrap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final selectMessageMode = ref.watch(P.chat.isSharing);
 
     if (!selectMessageMode) {

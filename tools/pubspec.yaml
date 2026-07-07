@@ -1,6 +1,7 @@
 name: tools
 description: A sample command-line application.
 version: 1.0.0
+publish_to: none
 # repository: https://github.com/my_org/my_repo
 
 environment:
@@ -10,6 +11,8 @@ environment:
 dependencies:
   path: ^1.8.0
   image: ^4.0.0
+  local_web_search:
+    path: ../packages/local_web_search
 
 dev_dependencies:
   lints: ^5.0.0

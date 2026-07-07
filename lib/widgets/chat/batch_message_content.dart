@@ -135,7 +135,10 @@ class _BatchSlotsListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final _ = theme;
-    final (batch, _, batchCount, _) = getBatchInfo(finalContent);
+    final (parsedBatch, _, parsedBatchCount, _) = getBatchInfo(finalContent);
+    final labelCount = slotLabels?.length ?? 0;
+    final batchCount = parsedBatchCount > 0 ? parsedBatchCount : labelCount;
+    final batch = parsedBatchCount > 0 ? parsedBatch : List<String>.filled(batchCount, "");
     final appTheme = ref.watch(P.app.theme);
     final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
     final generating = ref.watch(P.rwkvGeneration.generating);

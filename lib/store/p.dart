@@ -31,6 +31,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart' as http_io;
 import 'package:image_picker/image_picker.dart';
+import 'package:local_web_search/local_web_search.dart';
 import 'package:macos_secure_bookmarks/macos_secure_bookmarks.dart';
 import 'package:mp_audio_stream/mp_audio_stream.dart' as mp_audio_stream;
 import 'package:package_info_plus/package_info_plus.dart';
@@ -123,6 +124,7 @@ import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/model/tts_instruction.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/model/version_info.dart';
+import 'package:zone/model/web_search_trace.dart';
 import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';

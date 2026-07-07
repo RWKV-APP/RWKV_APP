@@ -66,12 +66,20 @@ class SearchBrowserPanel extends StatefulWidget {
   final SearchBrowserController? controller;
   final SearchEngineReachabilityProbe? reachabilityProbe;
   final Set<String> simulatedUnavailableEngineIds;
+  final SearchEngine initialSearchEngine;
+  final List<String>? messages;
+  final ValueChanged<SearchEngine>? onSearchEngineChanged;
+  final ValueChanged<SearchReferenceBundle>? onReferenceBundleChanged;
 
   const SearchBrowserPanel({
     super.key,
     this.controller,
     this.reachabilityProbe,
     this.simulatedUnavailableEngineIds = const <String>{},
+    this.initialSearchEngine = SearchEngines.bing,
+    this.messages,
+    this.onSearchEngineChanged,
+    this.onReferenceBundleChanged,
   });
 
   @override
@@ -85,20 +93,18 @@ Assistant: We should cite reliable sources before answering.
 User: Find reliable sources about RWKV Chat and the RWKV language model.''';
 
   late final SearchBrowserController _controller;
-  late final SearchEngineReachabilityProbe _reachabilityProbe;
   late final TextEditingController _inputController;
   late final TextEditingController _messagesController;
   late final bool _ownsController;
-  Map<String, SearchEngineAvailability> _engineAvailability =
-      _initialEngineAvailability();
+  late Map<String, SearchEngineAvailability> _engineAvailability;
   List<_EngineDiagnosticResult> _engineDiagnostics =
       const <_EngineDiagnosticResult>[];
   SearchExtractionResult _result = const SearchExtractionResult.empty();
   SearchReferenceBundle _referenceBundle = const SearchReferenceBundle.empty();
   late SearchQueryGenerationResult _queryGenerationResult;
-  SearchEngine _selectedEngine = SearchEngines.google;
+  late SearchEngine _selectedEngine;
   bool _extracting = false;
-  bool _probingEngines = false;
+  final bool _probingEngines = false;
   bool _runningEngineDiagnostics = false;
 
   @override
@@ -106,18 +112,17 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     super.initState();
     _ownsController = widget.controller == null;
     _controller = widget.controller ?? SearchBrowserController();
-    _reachabilityProbe =
-        widget.reachabilityProbe ?? const SearchEngineReachabilityProbe();
-    _messagesController = TextEditingController(text: _defaultMessages.trim());
+    _engineAvailability = _initialEngineAvailability(
+      widget.simulatedUnavailableEngineIds,
+    );
+    _selectedEngine = widget.initialSearchEngine;
+    _messagesController = TextEditingController(text: _initialMessagesText());
     _queryGenerationResult = SearchQueryGenerator.build(_currentMessages());
     _inputController = TextEditingController(
       text: _queryGenerationResult.query,
     );
     _controller.addListener(_onBrowserChanged);
     _messagesController.addListener(_onMessagesChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _probeSearchEngines();
-    });
   }
 
   @override
@@ -132,9 +137,31 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant SearchBrowserPanel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSearchEngine != oldWidget.initialSearchEngine &&
+        widget.initialSearchEngine != _selectedEngine) {
+      _selectedEngine = widget.initialSearchEngine;
+    }
+
+    final nextMessagesText = _messagesText(widget.messages);
+    final oldMessagesText = _messagesText(oldWidget.messages);
+    if (nextMessagesText == null || nextMessagesText == oldMessagesText) {
+      return;
+    }
+    if (nextMessagesText == _messagesController.text) return;
+
+    _messagesController.text = nextMessagesText;
+    _queryGenerationResult = SearchQueryGenerator.build(_currentMessages());
+    _inputController.text = _queryGenerationResult.query;
+  }
+
   void _onBrowserChanged() {
     if (!mounted) return;
-    setState(() {});
+    setState(() {
+      _referenceBundle = _controller.latestReferenceBundle;
+    });
   }
 
   void _onMessagesChanged() {
@@ -148,10 +175,32 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     return SearchReferenceBuilder.parseMessageLines(_messagesController.text);
   }
 
-  static Map<String, SearchEngineAvailability> _initialEngineAvailability() {
+  String _initialMessagesText() {
+    return _messagesText(widget.messages) ?? _defaultMessages.trim();
+  }
+
+  static String? _messagesText(List<String>? messages) {
+    if (messages == null) return null;
+    final normalized = <String>[];
+    for (final message in messages) {
+      final trimmed = message.trim();
+      if (trimmed.isEmpty) continue;
+      normalized.add(trimmed);
+    }
+    return normalized.join('\n');
+  }
+
+  static Map<String, SearchEngineAvailability> _initialEngineAvailability(
+    Set<String> simulatedUnavailableEngineIds,
+  ) {
     return <String, SearchEngineAvailability>{
       for (final engine in SearchEngines.all)
-        engine.id: SearchEngineAvailability.unknown(engine),
+        engine.id: simulatedUnavailableEngineIds.contains(engine.id)
+            ? SearchEngineAvailability.unavailable(
+                engine: engine,
+                error: 'Simulated unavailable request.',
+              )
+            : SearchEngineAvailability.unknown(engine),
     };
   }
 
@@ -166,54 +215,6 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
 
   String _selectedEngineUnavailableMessage() {
     return _availabilityFor(_selectedEngine).tooltipMessage;
-  }
-
-  Future<void> _probeSearchEngines() async {
-    if (_probingEngines) return;
-    setState(() {
-      _probingEngines = true;
-      _engineAvailability = <String, SearchEngineAvailability>{
-        for (final engine in SearchEngines.all)
-          engine.id: widget.simulatedUnavailableEngineIds.contains(engine.id)
-              ? SearchEngineAvailability.unavailable(
-                  engine: engine,
-                  error: 'Simulated unavailable request.',
-                )
-              : SearchEngineAvailability.checking(engine),
-      };
-    });
-
-    final futures = <Future<SearchEngineAvailability>>[];
-    for (final engine in SearchEngines.all) {
-      if (widget.simulatedUnavailableEngineIds.contains(engine.id)) {
-        futures.add(
-          Future<SearchEngineAvailability>.value(
-            SearchEngineAvailability.unavailable(
-              engine: engine,
-              error: 'Simulated unavailable request.',
-            ),
-          ),
-        );
-        continue;
-      }
-      futures.add(_reachabilityProbe.probe(engine));
-    }
-
-    final results = await Future.wait(futures);
-    for (final result in results) {
-      debugPrint(
-        '[local_web_search] reachability ${result.engine.id}: '
-        '${result.status.name}, status=${result.statusCode}, error=${result.error}',
-      );
-    }
-
-    if (!mounted) return;
-    setState(() {
-      _engineAvailability = <String, SearchEngineAvailability>{
-        for (final result in results) result.engine.id: result,
-      };
-      _probingEngines = false;
-    });
   }
 
   void _buildQueryFromMessages() {
@@ -234,13 +235,15 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
       _referenceBundle = const SearchReferenceBundle.empty();
       _engineDiagnostics = const <_EngineDiagnosticResult>[];
     });
+    _controller.clearReferenceBundle();
+    widget.onReferenceBundleChanged?.call(const SearchReferenceBundle.empty());
   }
 
   Future<void> _loadAsUrl() async {
     await _controller.loadUrl(_inputController.text);
   }
 
-  Future<void> _loadGoogleSearch() async {
+  Future<void> _loadSelectedEngineSearch() async {
     if (!_canUseSelectedEngine()) {
       _controller.markError(_selectedEngineUnavailableMessage());
       return;
@@ -255,6 +258,28 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     await _extractSearchResults();
   }
 
+  Future<void> _selectSearchEngine(SearchEngine engine) async {
+    final availability = _availabilityFor(engine);
+    setState(() {
+      _selectedEngine = engine;
+      _result = const SearchExtractionResult.empty();
+      _referenceBundle = const SearchReferenceBundle.empty();
+    });
+    _controller.clearReferenceBundle();
+    widget.onSearchEngineChanged?.call(engine);
+    widget.onReferenceBundleChanged?.call(const SearchReferenceBundle.empty());
+
+    if (!availability.canSearch) {
+      _controller.markError(availability.tooltipMessage);
+      return;
+    }
+
+    final query = _inputController.text.trim();
+    if (query.isEmpty) return;
+
+    await _controller.loadSearch(engine: engine, query: query);
+  }
+
   Future<void> _runReferenceSearchFromMessages() async {
     if (!_canUseSelectedEngine()) {
       _controller.markError(_selectedEngineUnavailableMessage());
@@ -264,19 +289,22 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     final messages = _currentMessages();
     final queryGeneration = SearchQueryGenerator.build(messages);
     final query = queryGeneration.query;
-    if (!queryGeneration.shouldSearch || query.isEmpty) {
+    if (query.isEmpty) {
       final extraction = SearchExtractionResult.failure(queryGeneration.reason);
+      final bundle = SearchReferenceBuilder.buildBundle(
+        messages: messages,
+        searchEngine: _selectedEngine,
+        query: '',
+        extraction: extraction,
+      );
       setState(() {
         _queryGenerationResult = queryGeneration;
         _inputController.text = query;
         _result = extraction;
-        _referenceBundle = SearchReferenceBuilder.buildBundle(
-          messages: messages,
-          searchEngine: _selectedEngine,
-          query: '',
-          extraction: extraction,
-        );
+        _referenceBundle = bundle;
       });
+      _controller.markReferenceBundle(bundle);
+      widget.onReferenceBundleChanged?.call(bundle);
       return;
     }
 
@@ -291,17 +319,20 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     await _controller.loadSearch(engine: _selectedEngine, query: query);
     await Future<void>.delayed(const Duration(seconds: 3));
     final result = await _runExtractionWithRetry(_selectedEngine);
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: messages,
+      searchEngine: _selectedEngine,
+      query: query,
+      extraction: result,
+    );
     if (!mounted) return;
     setState(() {
       _result = result;
-      _referenceBundle = SearchReferenceBuilder.buildBundle(
-        messages: messages,
-        searchEngine: _selectedEngine,
-        query: query,
-        extraction: result,
-      );
+      _referenceBundle = bundle;
       _extracting = false;
     });
+    _controller.markReferenceBundle(bundle);
+    widget.onReferenceBundleChanged?.call(bundle);
   }
 
   Future<SearchExtractionResult> _runExtractionWithRetry(
@@ -329,17 +360,20 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
       _extracting = true;
     });
     final result = await _runExtractionWithRetry(_selectedEngine);
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: _currentMessages(),
+      searchEngine: _selectedEngine,
+      query: _inputController.text,
+      extraction: result,
+    );
     if (!mounted) return;
     setState(() {
       _result = result;
-      _referenceBundle = SearchReferenceBuilder.buildBundle(
-        messages: _currentMessages(),
-        searchEngine: _selectedEngine,
-        query: _inputController.text,
-        extraction: result,
-      );
+      _referenceBundle = bundle;
       _extracting = false;
     });
+    _controller.markReferenceBundle(bundle);
+    widget.onReferenceBundleChanged?.call(bundle);
   }
 
   Future<void> _runAllEngineDiagnostics() async {
@@ -347,7 +381,7 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     final messages = _currentMessages();
     final queryGeneration = SearchQueryGenerator.build(messages);
     final query = queryGeneration.query;
-    if (!queryGeneration.shouldSearch || query.isEmpty) {
+    if (query.isEmpty) {
       setState(() {
         _queryGenerationResult = queryGeneration;
         _inputController.text = query;
@@ -418,6 +452,8 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
           ),
         ];
       });
+      _controller.markReferenceBundle(bundle);
+      widget.onReferenceBundleChanged?.call(bundle);
     }
 
     if (!mounted) return;
@@ -430,6 +466,13 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final latestBundle = _controller.latestReferenceBundle;
+    final visibleReferenceBundle =
+        latestBundle.hasSources ||
+            latestBundle.hasError ||
+            latestBundle.rawJson.isNotEmpty
+        ? latestBundle
+        : _referenceBundle;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -445,20 +488,16 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
               probingEngines: _probingEngines,
               runningEngineDiagnostics: _runningEngineDiagnostics,
               onLoadUrl: _loadAsUrl,
-              onGoogleSearch: _loadGoogleSearch,
+              onSelectedEngineSearch: _loadSelectedEngineSearch,
               onExtract: _extractSearchResults,
               onRunAllEngines: _runAllEngineDiagnostics,
-              onEngineChanged: (engine) {
-                setState(() {
-                  _selectedEngine = engine;
-                });
-              },
+              onEngineChanged: _selectSearchEngine,
             ),
             Expanded(
               child: _SearchBrowserBody(
                 controller: _controller,
                 messagesController: _messagesController,
-                referenceBundle: _referenceBundle,
+                referenceBundle: visibleReferenceBundle,
                 result: _result,
                 queryGenerationResult: _queryGenerationResult,
                 selectedEngine: _selectedEngine,
@@ -489,7 +528,7 @@ class _SearchBrowserToolbar extends StatelessWidget {
   final bool probingEngines;
   final bool runningEngineDiagnostics;
   final VoidCallback onLoadUrl;
-  final VoidCallback onGoogleSearch;
+  final VoidCallback onSelectedEngineSearch;
   final VoidCallback onExtract;
   final VoidCallback onRunAllEngines;
   final ValueChanged<SearchEngine> onEngineChanged;
@@ -503,7 +542,7 @@ class _SearchBrowserToolbar extends StatelessWidget {
     required this.probingEngines,
     required this.runningEngineDiagnostics,
     required this.onLoadUrl,
-    required this.onGoogleSearch,
+    required this.onSelectedEngineSearch,
     required this.onExtract,
     required this.onRunAllEngines,
     required this.onEngineChanged,
@@ -526,7 +565,7 @@ class _SearchBrowserToolbar extends StatelessWidget {
     final canExtract = canRun && selectedEngineAvailable && !loading;
     final canRunDiagnostics = canRun && !loading && !probingEngines;
     final searchTooltip = selectedEngineAvailable
-        ? 'Search with ${selectedEngine.label}'
+        ? 'Search the query field with ${selectedEngine.label}, then extract result titles, links, and snippets.'
         : selectedAvailability.tooltipMessage;
 
     return Padding(
@@ -554,7 +593,7 @@ class _SearchBrowserToolbar extends StatelessWidget {
               Expanded(
                 child: TextField(
                   controller: inputController,
-                  onSubmitted: (_) => onGoogleSearch(),
+                  onSubmitted: (_) => onSelectedEngineSearch(),
                   decoration: InputDecoration(
                     hintText: 'Query or URL',
                     isDense: true,
@@ -574,19 +613,21 @@ class _SearchBrowserToolbar extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               IconButton.filledTonal(
-                tooltip: 'Load URL',
-                onPressed: canRun ? onLoadUrl : null,
+                tooltip:
+                    'Open the query field as a URL in the embedded browser.',
+                onPressed: canRun && !loading ? onLoadUrl : null,
                 icon: const Icon(Icons.open_in_browser),
               ),
               const SizedBox(width: 6),
               IconButton.filledTonal(
                 tooltip: searchTooltip,
-                onPressed: canSearch ? onGoogleSearch : null,
+                onPressed: canSearch ? onSelectedEngineSearch : null,
                 icon: const Icon(Icons.search),
               ),
               const SizedBox(width: 6),
               IconButton.filled(
-                tooltip: 'Extract search results',
+                tooltip:
+                    'Extract result titles, links, and snippets from the current search page into Reference Data.',
                 onPressed: canExtract ? onExtract : null,
                 icon: const Icon(Icons.data_object),
               ),
@@ -594,7 +635,7 @@ class _SearchBrowserToolbar extends StatelessWidget {
               IconButton.filledTonal(
                 tooltip: probingEngines
                     ? 'Checking search engine availability.'
-                    : 'Run all search engines',
+                    : 'Diagnostic: run the generated query on every search engine and compare extraction results.',
                 onPressed: canRunDiagnostics ? onRunAllEngines : null,
                 icon: runningEngineDiagnostics
                     ? const SizedBox(
@@ -879,12 +920,14 @@ class _MessageInputPane extends StatelessWidget {
             trailing: '${messages.length}',
             actions: [
               IconButton(
-                tooltip: 'Build query',
+                tooltip:
+                    'Build the search query from Input Messages without opening a browser page.',
                 onPressed: onBuildQuery,
                 icon: const Icon(Icons.manage_search),
               ),
               IconButton.filled(
-                tooltip: 'Run reference search',
+                tooltip:
+                    'Build the query, search with the selected engine, extract sources, and update Reference Data.',
                 onPressed: canRun ? onRunReferenceSearch : null,
                 icon: extracting
                     ? const SizedBox(

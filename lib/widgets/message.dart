@@ -123,6 +123,7 @@ class _MessageState extends ConsumerState<Message> {
     final batchData = _resolveBatchData(
       isMine: isMine,
       finalContent: finalContent,
+      slotLabels: msg.batchSlotLabels,
     );
 
     // 多问题并行的用户消息不渲染，finalization 后 isBatch 为 false 会正常显示
@@ -744,11 +745,13 @@ _ThinkingData _resolveThinkingData({
 _BatchData _resolveBatchData({
   required bool isMine,
   required String finalContent,
+  required List<String>? slotLabels,
 }) {
   final (_, bool isBatch, int batchCount, _) = getBatchInfo(finalContent);
+  final labelCount = slotLabels?.length ?? 0;
   return _BatchData(
-    isBatch: isBatch,
-    batchCount: batchCount,
+    isBatch: isBatch || (!isMine && labelCount > 1),
+    batchCount: isBatch ? batchCount : labelCount,
   );
 }
 

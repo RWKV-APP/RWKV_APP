@@ -68,7 +68,7 @@ void main() {
     final controller = SearchBrowserController();
     final delegate = _FakeBrowserDelegate();
     delegate.scriptResult = '''
-{"href":"https://www.google.com/search?q=RWKV","title":"RWKV - Google Search","items":[{"title":"RWKV","url":"https://www.rwkv.com/","snippet":"RWKV language model"}]}
+{"href":"https://www.bing.com/search?q=RWKV","title":"RWKV - Bing","items":[{"title":"RWKV","url":"https://www.rwkv.com/","snippet":"RWKV language model"}]}
 ''';
     controller.attach(delegate);
 
@@ -78,8 +78,8 @@ void main() {
     expect(result.items.length, 1);
     expect(result.items.first.title, 'RWKV');
     expect(result.items.first.url, 'https://www.rwkv.com/');
-    expect(result.pageUrl, 'https://www.google.com/search?q=RWKV');
-    expect(result.pageTitle, 'RWKV - Google Search');
+    expect(result.pageUrl, 'https://www.bing.com/search?q=RWKV');
+    expect(result.pageTitle, 'RWKV - Bing');
   });
 
   test('SearchExtractionResult rejects stale engine pages', () {
@@ -205,17 +205,24 @@ void main() {
     expect(query, isNot(contains('Assistant')));
   });
 
-  test('SearchQueryGenerator disables casual short messages', () {
+  test('SearchQueryGenerator builds queries for casual short messages', () {
     final result = SearchQueryGenerator.build(<String>[
       'User: 你好G7!k9#rVq2@Xz8LpY4m%',
     ]);
     final laugh = SearchQueryGenerator.build(<String>['User: 哈哈哈']);
 
-    expect(result.shouldSearch, false);
-    expect(result.query, isEmpty);
+    expect(result.shouldSearch, true);
+    expect(result.query, '你好');
     expect(result.latestUserMessage?.content, '你好');
-    expect(laugh.shouldSearch, false);
-    expect(laugh.query, isEmpty);
+    expect(laugh.shouldSearch, true);
+    expect(laugh.query, '哈哈哈');
+  });
+
+  test('SearchQueryGenerator builds a query for simple Chinese prompts', () {
+    final result = SearchQueryGenerator.build(<String>['User: 给我讲讲中国']);
+
+    expect(result.shouldSearch, true);
+    expect(result.query, '中国');
   });
 
   test('SearchQueryGenerator uses lightweight history for references', () {
@@ -250,15 +257,15 @@ void main() {
     expect(result.query, isNot(contains('有什么坑')));
   });
 
-  test('SearchQueryGenerator skips context references without history', () {
+  test('SearchQueryGenerator searches context references without history', () {
     final result = SearchQueryGenerator.build(<String>['User: 这个有什么坑？']);
 
-    expect(result.shouldSearch, false);
-    expect(result.query, isEmpty);
+    expect(result.shouldSearch, true);
+    expect(result.query, '这个有什么坑');
     expect(result.usedHistory, false);
   });
 
-  test('SearchQueryGenerator skips pure references after offline tasks', () {
+  test('SearchQueryGenerator searches pure references after prior tasks', () {
     final htmlTask = SearchQueryGenerator.build(<String>[
       'User: Create a single-file HTML page with polished layout.',
       'Assistant: Done.',
@@ -275,24 +282,24 @@ void main() {
       'User: 这个有什么坑？',
     ]);
 
-    expect(htmlTask.shouldSearch, false);
-    expect(htmlTask.query, isEmpty);
-    expect(mathTask.shouldSearch, false);
-    expect(mathTask.query, isEmpty);
-    expect(opaqueTask.shouldSearch, false);
-    expect(opaqueTask.query, isEmpty);
+    expect(htmlTask.shouldSearch, true);
+    expect(htmlTask.query, isNotEmpty);
+    expect(mathTask.shouldSearch, true);
+    expect(mathTask.query, isNotEmpty);
+    expect(opaqueTask.shouldSearch, true);
+    expect(opaqueTask.query, isNotEmpty);
   });
 
-  test('SearchQueryGenerator skips under-specific history references', () {
+  test('SearchQueryGenerator searches under-specific history references', () {
     final result = SearchQueryGenerator.build(<String>[
       'User: 打游戏的网站',
       'Assistant: 你想做哪类游戏网站？',
       'User: 这个有什么坑？',
     ]);
 
-    expect(result.shouldSearch, false);
-    expect(result.query, isEmpty);
-    expect(result.usedHistory, false);
+    expect(result.shouldSearch, true);
+    expect(result.query, isNotEmpty);
+    expect(result.usedHistory, true);
   });
 
   test('SearchQueryGenerator handles RWKV Chat database sample prompts', () {
@@ -313,7 +320,8 @@ void main() {
     expect(moonlight.shouldSearch, true);
     expect(moonlight.query, contains('植物'));
     expect(moonlight.query, isNot(contains('G7!k9')));
-    expect(pressRelease.shouldSearch, false);
+    expect(pressRelease.shouldSearch, true);
+    expect(pressRelease.query, contains('press'));
   });
 
   test(
@@ -333,7 +341,7 @@ void main() {
     },
   );
 
-  test('SearchQueryGenerator ignores opaque tokens and roleplay prompts', () {
+  test('SearchQueryGenerator searches opaque tokens and roleplay prompts', () {
     final opaque = SearchQueryGenerator.build(<String>[
       'User: 3OHseuuRnX+m+BrJ28/oVYhxXWShsMwHHKSZBkUNzQJZq6P6',
     ]);
@@ -341,13 +349,13 @@ void main() {
       'User: 请扮演一个挑剔的甲方客户，我来向你汇报我的产品方案。',
     ]);
 
-    expect(opaque.shouldSearch, false);
-    expect(opaque.query, isEmpty);
-    expect(roleplay.shouldSearch, false);
-    expect(roleplay.query, isEmpty);
+    expect(opaque.shouldSearch, true);
+    expect(opaque.query, '3OHseuuRnX+m+BrJ28/oVYhxXWShsMwHHKSZBkUNzQJZq6P6');
+    expect(roleplay.shouldSearch, true);
+    expect(roleplay.query, isNotEmpty);
   });
 
-  test('SearchQueryGenerator skips pure math workout prompts', () {
+  test('SearchQueryGenerator searches pure math workout prompts', () {
     final derivative = SearchQueryGenerator.build(<String>[
       'User: 请求函数 f(x)=x³-3x 的极大值和极小值，包括求导、令导数为零、判断极值类型的完整步骤？',
     ]);
@@ -355,10 +363,10 @@ void main() {
       'User: Using the limit definition of the derivative, find the derivative of f(x)=x^2+3x. Show every algebraic step.',
     ]);
 
-    expect(derivative.shouldSearch, false);
-    expect(derivative.query, isEmpty);
-    expect(firstPrinciples.shouldSearch, false);
-    expect(firstPrinciples.query, isEmpty);
+    expect(derivative.shouldSearch, true);
+    expect(derivative.query, isNotEmpty);
+    expect(firstPrinciples.shouldSearch, true);
+    expect(firstPrinciples.query, isNotEmpty);
   });
 
   test('SearchQueryGenerator trims low-signal words from advice queries', () {
@@ -419,5 +427,144 @@ void main() {
     expect(bundle.sources.first.summary, contains('RNN'));
     expect(bundle.promptContext, contains('Search query: RWKV language model'));
     expect(bundle.promptContext, contains('https://www.rwkv.com/'));
+  });
+
+  test('SearchReferenceBuilder filters unrelated extracted results', () {
+    const extraction = SearchExtractionResult(
+      items: <SearchResultItem>[
+        SearchResultItem(
+          title: 'Axis Max Life Insurance',
+          url: 'https://www.maxlifeinsurance.com/',
+          snippet: 'Offers protection plans and retirement information.',
+        ),
+        SearchResultItem(
+          title: 'Publish-subscribe pattern',
+          url: 'https://example.com/pubsub',
+          snippet:
+              'The publish subscribe design pattern routes events through a bus.',
+        ),
+      ],
+      rawJson: '{"items":[]}',
+    );
+
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 解释发布-订阅设计模式'],
+      query: 'Publish-Subscribe 发布 订阅 设计模式 简单事件总线',
+      extraction: extraction,
+    );
+
+    expect(bundle.hasError, false);
+    expect(bundle.sources.length, 1);
+    expect(bundle.sources.first.title, 'Publish-subscribe pattern');
+    expect(bundle.sources.first.url, 'https://example.com/pubsub');
+  });
+
+  test('SearchReferenceBuilder reports unrelated result pages', () {
+    const extraction = SearchExtractionResult(
+      items: <SearchResultItem>[
+        SearchResultItem(
+          title: 'Axis Max Life Insurance',
+          url: 'https://www.maxlifeinsurance.com/',
+          snippet: 'Offers protection plans and retirement information.',
+        ),
+      ],
+      rawJson: '{"items":[]}',
+    );
+
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 给我讲讲中国'],
+      query: '中国',
+      extraction: extraction,
+    );
+
+    expect(bundle.hasError, true);
+    expect(bundle.sources, isEmpty);
+    expect(bundle.error, contains('did not match query'));
+  });
+
+  test('SearchReferenceBuilder matches common Chinese query aliases', () {
+    const extraction = SearchExtractionResult(
+      items: <SearchResultItem>[
+        SearchResultItem(
+          title: 'China overview',
+          url: 'https://example.com/china',
+          snippet: 'China is a country in East Asia.',
+        ),
+      ],
+      rawJson: '{"items":[]}',
+    );
+
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 给我讲讲中国'],
+      query: '中国',
+      extraction: extraction,
+    );
+
+    expect(bundle.hasError, false);
+    expect(bundle.sources.length, 1);
+  });
+
+  test(
+    'SearchReferenceService loads search page and stores latest bundle',
+    () async {
+      final controller = SearchBrowserController();
+      final delegate = _FakeBrowserDelegate();
+      delegate.scriptResult = '''
+{"href":"https://www.bing.com/search?q=RWKV","title":"RWKV - Bing","items":[{"title":"RWKV","url":"https://www.rwkv.com/","snippet":"RWKV language model"}]}
+''';
+      controller.attach(delegate);
+
+      final bundle = await SearchReferenceService.searchWithBrowser(
+        controller: controller,
+        messages: <String>[
+          'User: Find reliable sources about RWKV language model.',
+        ],
+        pageLoadDelay: Duration.zero,
+        retryDelay: Duration.zero,
+      );
+
+      expect(delegate.loadedUrl, contains('https://www.bing.com/search'));
+      expect(bundle.sources.length, 1);
+      expect(bundle.promptContext, contains('RWKV language model'));
+      expect(controller.latestReferenceBundle.sources.length, 1);
+    },
+  );
+
+  test('SearchReferenceService searches simple Chinese prompts', () async {
+    final controller = SearchBrowserController();
+    final delegate = _FakeBrowserDelegate();
+    delegate.scriptResult = '''
+{"href":"https://www.bing.com/search?q=%E7%BB%99%E6%88%91%E8%AE%B2%E8%AE%B2%E4%B8%AD%E5%9B%BD","title":"China - Bing","items":[{"title":"China","url":"https://example.com/china","snippet":"China overview"}]}
+''';
+    controller.attach(delegate);
+
+    final bundle = await SearchReferenceService.searchWithBrowser(
+      controller: controller,
+      messages: <String>['User: 给我讲讲中国'],
+      pageLoadDelay: Duration.zero,
+      retryDelay: Duration.zero,
+    );
+
+    expect(delegate.loadedUrl, contains('https://www.bing.com/search'));
+    expect(delegate.loadedUrl, contains('%E4%B8%AD%E5%9B%BD'));
+    expect(bundle.hasError, false);
+    expect(bundle.sources.length, 1);
+  });
+
+  test('SearchReferenceService reports missing browser adapter', () async {
+    final controller = SearchBrowserController();
+
+    final bundle = await SearchReferenceService.searchWithBrowser(
+      controller: controller,
+      messages: <String>[
+        'User: Find reliable sources about RWKV language model.',
+      ],
+      pageLoadDelay: Duration.zero,
+      retryDelay: Duration.zero,
+    );
+
+    expect(bundle.hasError, true);
+    expect(bundle.error, contains('Browser adapter is not ready'));
+    expect(controller.latestReferenceBundle.hasError, true);
   });
 }

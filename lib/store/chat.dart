@@ -78,6 +78,13 @@ class _Chat {
   late final completionMode = qs(false);
 
   late final webSearchMode = qs(WebSearchMode.off);
+  late final localWebSearchPanelEnabled = qs(false);
+  late final localWebSearchPanelSplitRatio = qs(0.5);
+  late final localWebSearchRunning = qs(false);
+  late final localWebSearchEngine = qs<SearchEngine>(SearchEngines.bing);
+  late final localWebSearchMessages = qs<List<String>>(const <String>[]);
+  late final localWebSearchBundle = qs(const SearchReferenceBundle.empty());
+  late final localWebSearchController = SearchBrowserController();
 
   late final responseStyle = qs(const ResponseStyleState());
 
@@ -136,4 +143,20 @@ class _Chat {
     }
     return ref.watch(batchCount);
   });
+
+  void onLocalWebSearchPanelSplitDragged({
+    required double totalWidth,
+    required double deltaX,
+  }) {
+    if (totalWidth <= 0) return;
+
+    final currentRatio = localWebSearchPanelSplitRatio.q;
+    final nextRatio = (currentRatio + deltaX / totalWidth).clamp(.25, .75).toDouble();
+    if (nextRatio == currentRatio) return;
+    localWebSearchPanelSplitRatio.q = nextRatio;
+  }
+
+  void resetLocalWebSearchPanelSplitRatio() {
+    localWebSearchPanelSplitRatio.q = 0.5;
+  }
 }

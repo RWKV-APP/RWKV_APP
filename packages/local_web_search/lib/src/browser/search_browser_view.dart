@@ -17,7 +17,7 @@ class SearchBrowserView extends StatelessWidget {
   const SearchBrowserView({
     super.key,
     required this.controller,
-    this.initialUrl = 'https://www.google.com/',
+    this.initialUrl = 'about:blank',
   });
 
   @override

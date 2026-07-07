@@ -28,6 +28,11 @@ extension $ChatBatch on _Chat {
     return true;
   }
 
+  List<String>? _batchSlotLabelsForCount(int count, {String prefix = "Batch"}) {
+    if (count <= 1) return null;
+    return List<String>.generate(count, (int index) => "$prefix ${index + 1}");
+  }
+
   void onBatchSlotSelected({
     required Message msg,
     required int slotIndex,

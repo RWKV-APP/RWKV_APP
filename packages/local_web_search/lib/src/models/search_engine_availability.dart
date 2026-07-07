@@ -68,7 +68,7 @@ class SearchEngineAvailability {
 
   bool get isUnavailable => status == .unavailable;
 
-  bool get canSearch => isAvailable;
+  bool get canSearch => status == .available || status == .unknown;
 
   String get statusLabel {
     if (status == .available) return 'Available';
@@ -88,7 +88,7 @@ class SearchEngineAvailability {
       final detail = error == null || error!.isEmpty ? '' : ' $error';
       return '当前请求不可用。$detail';
     }
-    return '${engine.label} request availability has not been checked yet.';
+    return '${engine.label} has not been checked yet. Search will try it directly; run diagnostics only when you want to test every engine.';
   }
 
   Map<String, dynamic> toJson() {

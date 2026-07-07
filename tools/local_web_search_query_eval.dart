@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-// ignore: depend_on_referenced_packages
 import 'package:local_web_search/src/models/search_query_generation_result.dart';
-// ignore: depend_on_referenced_packages
 import 'package:local_web_search/src/query/search_query_generator.dart';
 
 const String _defaultContainerDb =
@@ -31,6 +29,7 @@ final Set<String> _taskShellQueryTerms = <String>{
   'complete',
   'document',
 };
+final RegExp _shellTermSeparatorPattern = RegExp(r'[^a-z0-9-]+');
 
 Future<void> main(List<String> args) async {
   final options = _EvalOptions.parse(args);
@@ -502,13 +501,21 @@ List<String> _qualityIssues(_ConversationSample sample) {
     issues.add('under_specific_history_query');
   }
   if (sample.sampleKind == 'history_probe' && result.usedHistory) {
-    final lowerQuery = query.toLowerCase();
     for (final term in _taskShellQueryTerms) {
-      if (!lowerQuery.contains(term)) continue;
+      if (!_containsShellTerm(query, term)) continue;
       issues.add('history_query_contains_task_shell:$term');
     }
   }
   return issues;
+}
+
+bool _containsShellTerm(String query, String term) {
+  final tokens = query
+      .toLowerCase()
+      .split(_shellTermSeparatorPattern)
+      .where((token) => token.isNotEmpty)
+      .toSet();
+  return tokens.contains(term);
 }
 
 int _queryWordCount(String query) {

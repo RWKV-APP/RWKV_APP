@@ -209,6 +209,7 @@ extension $MultiQuestion on _MultiQuestion {
       modelName: albatrossCanUse ? "Albatross" : currentModel?.name,
       runningMode: thinkingMode.toString(),
       rawDecodeParams: P.chat._resolveDecodeParamsSnapshotRaw(),
+      batchSlotLabels: P.chat._batchSlotLabelsForCount(effectiveQuestions.length, prefix: "Q"),
     );
     P.msg._syncMsg(botMsgId, botMsg);
     parentNode.add(MsgNode(botMsgId));
@@ -231,7 +232,7 @@ extension $MultiQuestion on _MultiQuestion {
     final List<String> history = P.chat._history();
     final List<String> historyPrefix = history.length > 2 ? history.sublist(0, history.length - 2) : [];
 
-    final List<List<String>> batchMessages = [];
+    List<List<String>> batchMessages = [];
     for (final question in effectiveQuestions) {
       String userContent = question;
       if (thinkingMode.userMsgFooter.isNotEmpty) {
@@ -239,6 +240,7 @@ extension $MultiQuestion on _MultiQuestion {
       }
       batchMessages.add([...historyPrefix, userContent]);
     }
+    batchMessages = await P.chat._batchHistoriesWithWebSearch(botMsgId, batchMessages);
 
     // 9. 发送
     final int batchSize = batchMessages.length;

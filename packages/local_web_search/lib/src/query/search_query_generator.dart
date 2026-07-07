@@ -41,18 +41,6 @@ class SearchQueryGenerator {
     r'\b(this|that|it|they|those|these|above|previous|same)\b|这个|它|他们|它们|上面|刚才|前面|继续|同样|这个问题',
     caseSensitive: false,
   );
-  static final RegExp _searchCuePattern = RegExp(
-    r'\b(what|why|how|explain|compare|difference|latest|release|price|pricing|docs|api|error|failed|crash|search|find)\b|是什么|为什么|如何|怎么|解释|比较|区别|最新|版本|价格|文档|报错|搜索|查找|查询',
-    caseSensitive: false,
-  );
-  static final RegExp _explicitSearchCuePattern = RegExp(
-    r'\b(search|web\s+search|look\s+up|google|bing|baidu)\b|搜索|查找|查询|搜一下|查一下',
-    caseSensitive: false,
-  );
-  static final RegExp _offlineActionPattern = RegExp(
-    r'^\s*(write|draft|translate|summarize|rewrite|polish|act as|roleplay|create|build|make|implement)\b|^\s*(请|帮我|你帮我)?\s*(写|改写|润色|翻译|总结|扮演|继续写|创建|制作|实现|生成|策划)',
-    caseSensitive: false,
-  );
   static final RegExp _historyBlockingActionPattern = RegExp(
     r'^\s*(write|draft|translate|summarize|rewrite|polish|act as|roleplay|create|build|make|implement)\b|^\s*(请|帮我|你帮我)?\s*(写|改写|润色|翻译|总结|扮演|继续写|创建|制作|实现|生成|策划)',
     caseSensitive: false,
@@ -73,7 +61,7 @@ class SearchQueryGenerator {
     caseSensitive: false,
   );
   static final RegExp _queryShellPrefixPattern = RegExp(
-    r'^\s*(please\s+)?((can|could|would)\s+you\s+)?(help\s+me\s+)?(search\s+for|look\s+up|find|帮我|请|麻烦|能不能|你能不能|搜索一下|查一下|查找|搜一下)\s*',
+    r'^\s*(please\s+)?((can|could|would)\s+you\s+)?(help\s+me\s+)?(search\s+for|look\s+up|find|帮我|请|麻烦|能不能|你能不能|搜索一下|查一下|查找|搜一下|给我讲讲|我讲讲|讲讲|介绍一下|给我介绍一下|说说|给我说说|聊聊|告诉我)\s*',
     caseSensitive: false,
   );
 
@@ -265,6 +253,15 @@ class SearchQueryGenerator {
     '算进去',
     '做一个',
     '实现一个',
+    '给我讲讲',
+    '我讲讲',
+    '讲讲',
+    '介绍一下',
+    '给我介绍一下',
+    '说说',
+    '给我说说',
+    '聊聊',
+    '告诉我',
     '列一份',
     '拆成',
     '谈话',
@@ -303,6 +300,15 @@ class SearchQueryGenerator {
     '不是',
     '帮我',
     '你帮我',
+    '给我讲讲',
+    '我讲讲',
+    '讲讲',
+    '介绍一下',
+    '给我介绍一下',
+    '说说',
+    '给我说说',
+    '聊聊',
+    '告诉我',
     '我最近在',
     '我想找',
     '我想',
@@ -374,13 +380,6 @@ class SearchQueryGenerator {
       index: index,
       latestTerms: latestTerms,
     );
-    final shouldSearch = _shouldSearch(
-      latestUserMessage.content,
-      latestTerms,
-      hasSpecificSupportingHistory: _hasSpecificHistorySupport(
-        supportingMessages,
-      ),
-    );
     final candidateTerms = _scoreTerms(
       latestUserMessage: latestUserMessage,
       latestTerms: latestTerms,
@@ -388,15 +387,14 @@ class SearchQueryGenerator {
       rollingContext: rollingContext,
       maxCandidateTerms: config.maxCandidateTerms,
     );
-    final query = shouldSearch
-        ? _buildQueryFromTerms(
-            latestTerms: latestTerms,
-            candidateTerms: candidateTerms,
-            needsHistory: needsHistory,
-            config: config,
-            latestFallback: latestUserMessage.content,
-          )
-        : '';
+    final query = _buildQueryFromTerms(
+      latestTerms: latestTerms,
+      candidateTerms: candidateTerms,
+      needsHistory: needsHistory,
+      config: config,
+      latestFallback: latestUserMessage.content,
+    );
+    final shouldSearch = query.isNotEmpty;
 
     return SearchQueryGenerationResult(
       shouldSearch: shouldSearch,
@@ -558,46 +556,6 @@ class SearchQueryGenerator {
       recentUserTerms: recentUserTerms.take(12).toList(),
       latestUserTerms: latestTerms.take(12).toList(),
     );
-  }
-
-  static bool _shouldSearch(
-    String latestContent,
-    List<String> latestTerms, {
-    required bool hasSpecificSupportingHistory,
-  }) {
-    final normalized = latestContent.trim();
-    if (normalized.isEmpty) return false;
-    if (_casualShortPattern.hasMatch(normalized)) return false;
-    if (_opaqueStandalonePattern.hasMatch(normalized)) return false;
-    if (_mathWorkoutPattern.hasMatch(normalized) &&
-        !_explicitSearchCuePattern.hasMatch(normalized)) {
-      return false;
-    }
-    if (_offlineActionPattern.hasMatch(normalized) &&
-        !_explicitSearchCuePattern.hasMatch(normalized)) {
-      return false;
-    }
-    if (_contextReferencePattern.hasMatch(normalized)) {
-      return latestTerms.isNotEmpty || hasSpecificSupportingHistory;
-    }
-    if (latestTerms.isEmpty) return false;
-    if (_searchCuePattern.hasMatch(normalized)) return true;
-    if (latestTerms.length >= 2) return true;
-    return normalized.length >= 18;
-  }
-
-  static bool _hasSpecificHistorySupport(
-    List<SearchHistoryIndexEntry> supportingMessages,
-  ) {
-    final uniqueTerms = <String>{};
-    for (final message in supportingMessages) {
-      for (final term in message.terms) {
-        uniqueTerms.add(_termKey(term));
-        if (_looksLikeEntity(term)) return true;
-        if (term.length >= 8) return true;
-      }
-    }
-    return uniqueTerms.length >= 2;
   }
 
   static bool _needsHistoryAssist(
@@ -775,7 +733,8 @@ class SearchQueryGenerator {
       queryTerms.add(normalized);
     }
 
-    for (final term in latestTerms.take(config.maxLatestTerms)) {
+    final prioritizedLatestTerms = _prioritizeLatestTerms(latestTerms);
+    for (final term in prioritizedLatestTerms.take(config.maxLatestTerms)) {
       add(term);
     }
 
@@ -798,6 +757,19 @@ class SearchQueryGenerator {
     return _fitQueryLength(queryTerms.join(' '), config.maxQueryLength);
   }
 
+  static List<String> _prioritizeLatestTerms(List<String> latestTerms) {
+    final entityTerms = <String>[];
+    final otherTerms = <String>[];
+    for (final term in latestTerms) {
+      if (_looksLikeEntity(term)) {
+        entityTerms.add(term);
+        continue;
+      }
+      otherTerms.add(term);
+    }
+    return <String>[...entityTerms, ...otherTerms];
+  }
+
   static String _buildReason({
     required bool shouldSearch,
     required bool needsHistory,
@@ -805,7 +777,7 @@ class SearchQueryGenerator {
     required List<SearchHistoryIndexEntry> supportingMessages,
   }) {
     if (!shouldSearch) {
-      return 'Latest user message does not look like a web-search request.';
+      return 'No query could be built from the latest user message.';
     }
     if (needsHistory && supportingMessages.isNotEmpty) {
       return 'Latest user message needs lightweight history support.';
@@ -848,6 +820,10 @@ class SearchQueryGenerator {
 
   static List<String> _extractSearchTerms(String text) {
     final clean = _stripQueryShell(_normalizeMessageContent(text));
+    final opaqueTerm = _normalizeTerm(clean);
+    if (_opaqueStandalonePattern.hasMatch(opaqueTerm)) {
+      return <String>[_fitQueryLength(opaqueTerm, 80)];
+    }
     final terms = <String>[];
     final seenKeys = <String>{};
     final matches = _tokenPattern.allMatches(clean);

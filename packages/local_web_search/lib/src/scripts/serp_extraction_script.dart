@@ -87,25 +87,115 @@ const String serpExtractionScript = r'''
       anchor.closest('[data-testid="result"]') ||
       anchor.closest('[data-layout="organic"]') ||
       anchor.closest('.web-result') ||
-      anchor.closest('[data-sokoban-container]') ||
-      anchor.closest('div[jscontroller]') ||
       anchor.parentElement
     );
+  }
+
+  function cleanText(text) {
+    return (text || '')
+      .replace(/\u00a0/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function removeFirstText(text, needle) {
+    if (!needle) return text;
+    const index = text.indexOf(needle);
+    if (index < 0) return text;
+    return cleanText(text.slice(0, index) + ' ' + text.slice(index + needle.length));
+  }
+
+  function looksLikeSnippet(text, title) {
+    const clean = cleanText(text);
+    if (!clean) return false;
+    if (title && clean === cleanText(title)) return false;
+    if (/^https?:\/\//i.test(clean) || /^www\./i.test(clean)) return false;
+    if (/^(cached|similar|translate this page|images|videos|news|maps)$/i.test(clean)) return false;
+    if (clean.length < 12 && !/[\u4e00-\u9fff]/.test(clean)) return false;
+    return true;
+  }
+
+  function extractSelectedSnippet(root, title) {
+    if (!root) return '';
+    const selectors = [
+      '.VwiC3b',
+      '.hgKElc',
+      '.yXK7lf',
+      '.b_caption p',
+      '.b_snippet',
+      '.b_factrow',
+      '.compText',
+      '.result__snippet',
+      '.snippet',
+      '.snippet-content',
+      '[data-result="snippet"]',
+      '.c-abstract',
+      '.c-span-last',
+      '.fz-mid',
+      '.vrwrap .str_info',
+      '.organic__content-wrapper',
+      '.OrganicTextContentSpan',
+      '.web-result__snippet',
+      '.Description'
+    ];
+    for (const selector of selectors) {
+      const nodes = Array.from(root.querySelectorAll(selector));
+      for (const node of nodes) {
+        const text = cleanText(node.innerText || node.textContent || '');
+        if (looksLikeSnippet(text, title)) return text.slice(0, 300);
+      }
+    }
+    return '';
+  }
+
+  function stripNoisyNodes(root) {
+    const clone = root.cloneNode(true);
+    const selectors = [
+      'script',
+      'style',
+      'noscript',
+      'svg',
+      'button',
+      'input',
+      'textarea',
+      'select',
+      'nav',
+      '[role="button"]',
+      '[aria-hidden="true"]',
+      '.action-menu',
+      '.b_attribution',
+      '.b_ad',
+      '.ads-ad',
+      '.uEierd'
+    ];
+    for (const node of clone.querySelectorAll(selectors.join(','))) {
+      node.remove();
+    }
+    return clone;
   }
 
   function extractTitle(anchor, root, requireHeading) {
     const heading = anchor.querySelector('h3') || (root ? root.querySelector('h3') : null);
     if (requireHeading && !heading) return '';
     const text = heading ? heading.innerText : anchor.innerText;
-    return (text || '').replace(/\s+/g, ' ').trim();
+    return cleanText(text);
   }
 
   function extractSnippet(root, title) {
     if (!root) return '';
-    const text = (root.innerText || '').replace(/\s+/g, ' ').trim();
+    const selected = extractSelectedSnippet(root, title);
+    if (selected) return selected;
+
+    const clone = stripNoisyNodes(root);
+    let text = cleanText(clone.innerText || clone.textContent || '');
     if (!text) return '';
-    if (!title) return text.slice(0, 300);
-    return text.replace(title, '').trim().slice(0, 300);
+    text = removeFirstText(text, title);
+    text = text
+      .replace(/\b(Cached|Similar|Translate this page|About featured snippets)\b/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (!looksLikeSnippet(text, title)) return '';
+    return text.slice(0, 300);
   }
 
   function addAnchor(anchor, requireHeading) {
@@ -131,6 +221,8 @@ const String serpExtractionScript = r'''
     if (bodyText.includes('one last step')) return 'Search page requires human verification.';
     if (bodyText.includes('captcha')) return 'Search page requires CAPTCHA verification.';
     if (bodyText.includes('unusual traffic')) return 'Search page blocked automated traffic.';
+    if (bodyText.includes('not a robot')) return 'Search page requires robot verification.';
+    if (bodyText.includes('our systems have detected unusual traffic')) return 'Search page blocked automated traffic.';
     return '';
   }
 

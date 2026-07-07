@@ -70,7 +70,7 @@ class WebSearchModeButton extends ConsumerWidget {
       message: tooltip,
       child: IntrinsicWidth(
         child: GestureDetector(
-          onTap: _onTap,
+          onTap: canEnable ? _onTap : null,
           child: ClipRRect(
             borderRadius: .circular(60),
             child: BackdropFilter(

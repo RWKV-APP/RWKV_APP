@@ -8,8 +8,10 @@ import 'package:sprintf/sprintf.dart';
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/ref_info.dart' as model;
+import 'package:zone/model/web_search_trace.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/search_reference_dialog.dart';
+import 'package:zone/widgets/chat/web_search_trace_panel.dart';
 
 class ReferenceInfo extends ConsumerStatefulWidget {
   final model.RefInfo refInfo;
@@ -24,13 +26,17 @@ class ReferenceInfo extends ConsumerStatefulWidget {
 class _ReferenceInfoState extends ConsumerState<ReferenceInfo> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final prefill = ref.watch(P.rwkvGeneration.prefillProgress).clamp(0, 1).toDouble();
+    final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
 
     final hasError = widget.refInfo.error.isNotEmpty;
     final showProgress = prefill > 0 && prefill < 1 && widget.generating && !hasError;
 
-    final primary = Theme.of(context).colorScheme.primary;
+    final primary = theme.colorScheme.primary;
     final searching = widget.refInfo.list.isEmpty && widget.generating && !hasError;
+    final trace = widget.refInfo.trace;
+    final canShowTrace = trace != null && trace.hasData;
 
     return Column(
       crossAxisAlignment: .stretch,
@@ -39,22 +45,34 @@ class _ReferenceInfoState extends ConsumerState<ReferenceInfo> {
         if (widget.refInfo.enable)
           Align(
             alignment: .centerLeft,
-            child: InkWell(
-              borderRadius: .circular(20),
-              onTap: hasError || searching ? null : () => SearchReferenceDialog.show(context, widget.refInfo),
-              child: Container(
-                padding: const .symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: primary.withValues(alpha: .1),
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                InkWell(
                   borderRadius: .circular(20),
+                  onTap: hasError || searching ? null : () => SearchReferenceDialog.show(context, widget.refInfo),
+                  child: Container(
+                    padding: const .symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: primary.withValues(alpha: .1),
+                      borderRadius: .circular(20),
+                    ),
+                    child: searching
+                        ? _AdvancedBlinkText(text: S.current.searching, color: primary)
+                        : Text(
+                            hasError ? S.current.search_failed : sprintf(S.current.x_pages_found, [widget.refInfo.list.length]),
+                            style: TextStyle(color: primary, fontSize: 12),
+                          ),
+                  ),
                 ),
-                child: searching
-                    ? _AdvancedBlinkText(text: S.current.searching, color: primary)
-                    : Text(
-                        hasError ? S.current.search_failed : sprintf(S.current.x_pages_found, [widget.refInfo.list.length]),
-                        style: TextStyle(color: primary, fontSize: 12),
-                      ),
-              ),
+                if (canShowTrace)
+                  _WebSearchTraceButton(
+                    trace: trace,
+                    label: currentLangIsZh ? '步骤' : 'Details',
+                  ),
+              ],
             ),
           ),
         if (showProgress) const SizedBox(height: 8),
@@ -84,6 +102,43 @@ class _ReferenceInfoState extends ConsumerState<ReferenceInfo> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _WebSearchTraceButton extends StatelessWidget {
+  final WebSearchTrace trace;
+  final String label;
+
+  const _WebSearchTraceButton({required this.trace, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+
+    return Tooltip(
+      message: label,
+      child: InkWell(
+        borderRadius: .circular(20),
+        onTap: () => WebSearchTracePanel.show(trace),
+        child: Container(
+          padding: const .symmetric(horizontal: 9, vertical: 4),
+          decoration: BoxDecoration(
+            color: primary.withValues(alpha: .1),
+            borderRadius: .circular(20),
+            border: Border.all(color: primary.withValues(alpha: .18), width: 0.5),
+          ),
+          child: Row(
+            mainAxisSize: .min,
+            children: [
+              Icon(Icons.receipt_long, size: 14, color: primary),
+              const SizedBox(width: 4),
+              Text(label, style: TextStyle(color: primary, fontSize: 12)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -118,6 +173,9 @@ class _AdvancedBlinkTextState extends State<_AdvancedBlinkText> with SingleTicke
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final _ = theme;
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {

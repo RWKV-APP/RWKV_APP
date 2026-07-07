@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 // Package imports:
 import 'package:local_web_search/src/models/search_engine.dart';
 import 'package:local_web_search/src/models/search_extraction_result.dart';
+import 'package:local_web_search/src/models/search_reference_bundle.dart';
 import 'package:local_web_search/src/scripts/serp_extraction_script.dart';
 
 abstract interface class SearchBrowserControllerDelegate {
@@ -19,6 +20,8 @@ class SearchBrowserController extends ChangeNotifier {
   String _currentUrl = '';
   bool _loading = false;
   String? _error;
+  SearchReferenceBundle _latestReferenceBundle =
+      const SearchReferenceBundle.empty();
 
   String get currentUrl => _currentUrl;
 
@@ -27,6 +30,8 @@ class SearchBrowserController extends ChangeNotifier {
   String? get error => _error;
 
   bool get canRunBrowserActions => _delegate?.supportsBrowserActions ?? false;
+
+  SearchReferenceBundle get latestReferenceBundle => _latestReferenceBundle;
 
   void attach(SearchBrowserControllerDelegate delegate) {
     _delegate = delegate;
@@ -105,6 +110,15 @@ class SearchBrowserController extends ChangeNotifier {
     if (_error == error) return;
     _error = error;
     notifyListeners();
+  }
+
+  void markReferenceBundle(SearchReferenceBundle bundle) {
+    _latestReferenceBundle = bundle;
+    notifyListeners();
+  }
+
+  void clearReferenceBundle() {
+    markReferenceBundle(const SearchReferenceBundle.empty());
   }
 
   String _normalizeInputUrl(String input) {

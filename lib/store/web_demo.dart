@@ -147,6 +147,7 @@ class _WebDemo {
   Timer? _streamingResultsSyncTimer;
   bool _streamingResultsSyncPending = false;
   bool _localSamplerParamsApplied = false;
+  bool _stopRequested = false;
 
   late final promptController = TextEditingController(text: "");
   late final promptFocusNode = FocusNode();
@@ -314,6 +315,7 @@ extension $WebDemo on _WebDemo {
     _cloudClient?.close();
     _cloudClient = null;
     _cancelStreamingResultsSync();
+    _stopRequested = false;
     lastError.q = null;
 
     final prompt = sourceHtml == null || sourceHtml.trim().isEmpty
@@ -517,6 +519,7 @@ extension $WebDemo on _WebDemo {
   Future<void> stopActive() async {
     final receiveId = _activeReceiveId;
     final backend = currentRun.q?.backendMode ?? backendMode.q;
+    _stopRequested = true;
     _cloudClient?.close();
     _cloudClient = null;
     _cancelLocalSubscriptions();
@@ -528,6 +531,7 @@ extension $WebDemo on _WebDemo {
     _restoreLocalSamplerParamsIfNeeded();
     P.rwkvGeneration.generating.q = false;
     active.q = false;
+    _stopRequested = false;
     _markResultsStreaming(false);
   }
 
@@ -766,6 +770,10 @@ extension $WebDemo on _WebDemo {
       }
       _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoLightningStreamEnd");
     } catch (e) {
+      if (_stopRequested) {
+        _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoLightningStopped");
+        return;
+      }
       _finishCurrentMessage(
         receiveId: receiveId,
         content: _activeContent,
@@ -832,6 +840,10 @@ extension $WebDemo on _WebDemo {
       }
       _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoCloudStreamEnd");
     } catch (e) {
+      if (_stopRequested) {
+        _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoCloudStopped");
+        return;
+      }
       _finishCurrentMessage(
         receiveId: receiveId,
         content: _activeContent,
@@ -1037,7 +1049,10 @@ extension $WebDemo on _WebDemo {
   }) {
     _restoreLocalSamplerParamsIfNeeded();
     final current = P.msg.pool.q[receiveId];
-    if (current == null || !current.changing) return;
+    if (current == null || !current.changing) {
+      if (_stopRequested) _stopRequested = false;
+      return;
+    }
     _cancelLocalSubscriptions();
     if (error != null && error.isNotEmpty) {
       lastError.q = error;
@@ -1055,6 +1070,7 @@ extension $WebDemo on _WebDemo {
     );
     P.rwkvGeneration.generating.q = false;
     active.q = false;
+    _stopRequested = false;
     _activeReceiveId = null;
     _activeContent = finalContent;
     if (_activeOutputs.isEmpty && finalContent.isNotEmpty) {
