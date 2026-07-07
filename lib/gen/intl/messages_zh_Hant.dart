@@ -679,7 +679,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "解碼速度（tokens 每秒）",
     ),
-    "deep_web_search": MessageLookupByLibrary.simpleMessage("深度網路搜尋"),
     "default_font": MessageLookupByLibrary.simpleMessage("預設"),
     "delete": MessageLookupByLibrary.simpleMessage("刪除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("全部刪除"),

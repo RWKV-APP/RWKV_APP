@@ -727,7 +727,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "デコード速度（1秒あたりのトークン数）",
     ),
-    "deep_web_search": MessageLookupByLibrary.simpleMessage("ディープネットワーク検索"),
     "default_font": MessageLookupByLibrary.simpleMessage("デフォルト"),
     "delete": MessageLookupByLibrary.simpleMessage("削除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("すべて削除"),
@@ -1644,7 +1643,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "we_support_npu_socs": MessageLookupByLibrary.simpleMessage(
       "現在、以下の SoC チップの NPU に対応しています",
     ),
-    "web_search": MessageLookupByLibrary.simpleMessage("ネットワーク検索"),
+    "web_search": MessageLookupByLibrary.simpleMessage("ウェブ検索"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("ウェブ検索テンプレート"),
     "websocket_service_port": m67,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("重みファイル管理"),

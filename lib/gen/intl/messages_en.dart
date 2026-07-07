@@ -845,9 +845,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "Decode Speed (tokens per second)",
     ),
-    "deep_web_search": MessageLookupByLibrary.simpleMessage(
-      "Deep Network Search",
-    ),
     "default_font": MessageLookupByLibrary.simpleMessage("Default"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Delete All"),
@@ -1921,7 +1918,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "we_support_npu_socs": MessageLookupByLibrary.simpleMessage(
       "We currently support NPU on the following SoC chips:",
     ),
-    "web_search": MessageLookupByLibrary.simpleMessage("Network Search"),
+    "web_search": MessageLookupByLibrary.simpleMessage("Web Search"),
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Web Search Template",
     ),

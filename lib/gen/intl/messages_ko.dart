@@ -723,7 +723,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "디코딩 속도(초당 토큰 수)",
     ),
-    "deep_web_search": MessageLookupByLibrary.simpleMessage("심층 네트워크 검색"),
     "default_font": MessageLookupByLibrary.simpleMessage("기본값"),
     "delete": MessageLookupByLibrary.simpleMessage("삭제"),
     "delete_all": MessageLookupByLibrary.simpleMessage("모두 삭제"),
@@ -1628,7 +1627,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "we_support_npu_socs": MessageLookupByLibrary.simpleMessage(
       "현재 다음 SoC 칩의 NPU를 지원합니다",
     ),
-    "web_search": MessageLookupByLibrary.simpleMessage("네트워크 검색"),
+    "web_search": MessageLookupByLibrary.simpleMessage("웹 검색"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("웹 검색 템플릿"),
     "websocket_service_port": m67,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("가중치 파일 관리"),

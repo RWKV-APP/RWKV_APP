@@ -415,7 +415,6 @@
   "x_pages_found": "已找到 %d 個相關網頁",
   "off": "關閉",
   "web_search": "網路搜尋",
-  "deep_web_search": "深度網路搜尋",
   "download_failed": "下載失敗",
   "allow_background_downloads": "允許背景下載",
   "str_please_disable_battery_opt_": "請關閉電池優化以允許背景下載，否則切換到其他應用程式時下載可能會被暫停",

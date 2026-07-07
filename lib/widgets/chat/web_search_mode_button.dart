@@ -39,8 +39,7 @@ class WebSearchModeButton extends ConsumerWidget {
     final interactionState = switch ((canEnable, webSearchMode)) {
       (false, _) => InteractionVisualState.unavailable,
       (true, .off) => InteractionVisualState.idleInteractive,
-      (true, .search) => InteractionVisualState.available,
-      (true, .deepSearch) => InteractionVisualState.enabled,
+      (true, .search) => InteractionVisualState.enabled,
     };
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final color = colors.background;
@@ -52,12 +51,10 @@ class WebSearchModeButton extends ConsumerWidget {
     final label = switch (webSearchMode) {
       .off => currentLangIsZh ? "联网" : "Search",
       .search => currentLangIsZh ? "联网" : "Search",
-      .deepSearch => currentLangIsZh ? "深度" : "Deep",
     };
     final tooltip = switch (webSearchMode) {
       .off => s.web_search,
       .search => s.web_search,
-      .deepSearch => s.deep_web_search,
     };
     final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);

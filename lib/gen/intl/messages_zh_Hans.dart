@@ -682,7 +682,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "解码速度（tokens 每秒）",
     ),
-    "deep_web_search": MessageLookupByLibrary.simpleMessage("深度联网"),
     "default_font": MessageLookupByLibrary.simpleMessage("默认"),
     "delete": MessageLookupByLibrary.simpleMessage("删除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("全部删除"),
@@ -1504,7 +1503,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "we_support_npu_socs": MessageLookupByLibrary.simpleMessage(
       "我们目前支持以下 SoC 芯片中的 NPU：",
     ),
-    "web_search": MessageLookupByLibrary.simpleMessage("联网"),
+    "web_search": MessageLookupByLibrary.simpleMessage("联网搜索"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
     "websocket_service_port": m67,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("权重文件管理"),

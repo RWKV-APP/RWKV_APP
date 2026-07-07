@@ -40,7 +40,7 @@ extension $ChatWebSearch on _Chat {
     localWebSearchBundle.q = bundle;
   }
 
-  Future<void> onWebSearchModeTapped() async {
+  void onWebSearchModeTapped() {
     final loading = P.rwkvModel.loading.q;
     if (loading) return;
 
@@ -51,37 +51,9 @@ extension $ChatWebSearch on _Chat {
     }
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
-    final context = getContext();
-    if (context == null) return;
-
     P.app.hapticLight();
-
-    final s = S.current;
-    final current = webSearchMode.q;
-    final actionPairs = <({String label, WebSearchMode key})>[
-      (label: s.off, key: .off),
-      (label: s.web_search, key: .search),
-      (label: s.deep_web_search, key: .deepSearch),
-    ];
-
-    final actions = actionPairs.map((entry) {
-      final isCurrent = entry.key == current;
-      final label = isCurrent ? "☑ ${entry.label}" : entry.label;
-      final key = entry.key;
-      return SheetAction(label: label, key: key);
-    }).toList();
-
-    final selectedMode = await showModalActionSheet<WebSearchMode>(
-      context: context,
-      title: s.web_search,
-      message: "${s.web_search} / ${s.deep_web_search}",
-      cancelLabel: s.cancel,
-      actions: actions,
-    );
-
-    if (selectedMode == null) return;
-
-    onSwitchWebSearchMode(selectedMode);
+    final nextMode = webSearchMode.q == WebSearchMode.off ? WebSearchMode.search : WebSearchMode.off;
+    onSwitchWebSearchMode(nextMode);
   }
 
   Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {
@@ -132,7 +104,6 @@ extension $ChatWebSearch on _Chat {
         prompt: prompt,
         userMsgFooter: P.rwkvParams.thinkingMode.q.userMsgFooter,
       );
-      final deepSearch = webSearchMode.q == WebSearchMode.deepSearch;
       final localWebSearch = await _runLocalWebSearchForPrompt(
         allMessage: history,
         query: promptParts.query,
@@ -163,7 +134,6 @@ extension $ChatWebSearch on _Chat {
                 body: {
                   "query": promptParts.query,
                   "top_n": 3,
-                  'is_deepsearch': deepSearch,
                 },
               ).timeout(const Duration(seconds: 10))
               as dynamic;
@@ -184,7 +154,6 @@ extension $ChatWebSearch on _Chat {
         trace: _remoteWebSearchTrace(
           endpoint: 'https://auth.rwkvos.com/api/internet_search',
           query: promptParts.query,
-          deepSearch: deepSearch,
           refs: refs,
           searchResult: searchResult,
           finalPrompt: msg,
@@ -247,7 +216,7 @@ extension $ChatWebSearch on _Chat {
     try {
       final messages = _localWebSearchMessagesForPrompt(query: query);
       localWebSearchMessages.q = messages;
-      final maxSources = webSearchMode.q == WebSearchMode.deepSearch ? 8 : 5;
+      const maxSources = 5;
       final bundle = await SearchReferenceService.searchWithBrowser(
         controller: localWebSearchController,
         messages: messages,
@@ -403,7 +372,7 @@ extension $ChatWebSearch on _Chat {
       pageUrl: '',
       pageTitle: '',
       extractedItemCount: 0,
-      sourceLimit: webSearchMode.q == WebSearchMode.deepSearch ? 8 : 5,
+      sourceLimit: 5,
       sources: const <WebSearchTraceSource>[],
       steps: <WebSearchTraceStep>[
         WebSearchTraceStep(title: 'Input captured', detail: query),
@@ -418,7 +387,6 @@ extension $ChatWebSearch on _Chat {
   WebSearchTrace _remoteWebSearchTrace({
     required String endpoint,
     required String query,
-    required bool deepSearch,
     required List<Reference> refs,
     required String searchResult,
     required String finalPrompt,
@@ -437,8 +405,8 @@ extension $ChatWebSearch on _Chat {
     }
     return WebSearchTrace(
       searchProvider: 'Remote Web Search API',
-      searchEngineId: deepSearch ? 'remote_deep_search' : 'remote_search',
-      searchEngineLabel: deepSearch ? 'Remote Deep Search' : 'Remote Search',
+      searchEngineId: 'remote_search',
+      searchEngineLabel: 'Remote Search',
       userQuery: query,
       query: query,
       searchUrl: endpoint,
@@ -451,7 +419,7 @@ extension $ChatWebSearch on _Chat {
         WebSearchTraceStep(title: 'Input captured', detail: query),
         WebSearchTraceStep(
           title: 'Remote search requested',
-          detail: 'top_n=3, is_deepsearch=$deepSearch',
+          detail: 'top_n=3',
         ),
         WebSearchTraceStep(
           title: 'Reference summaries received',

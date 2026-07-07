@@ -3203,14 +3203,9 @@ class S {
     return Intl.message('关闭', name: 'off', desc: '', args: []);
   }
 
-  /// `联网`
+  /// `联网搜索`
   String get web_search {
-    return Intl.message('联网', name: 'web_search', desc: '', args: []);
-  }
-
-  /// `深度联网`
-  String get deep_web_search {
-    return Intl.message('深度联网', name: 'deep_web_search', desc: '', args: []);
+    return Intl.message('联网搜索', name: 'web_search', desc: '', args: []);
   }
 
   /// `下载失败`

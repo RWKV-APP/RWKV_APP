@@ -873,7 +873,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "Скорость декодирования (токенов в секунду)",
     ),
-    "deep_web_search": MessageLookupByLibrary.simpleMessage("Глубокий поиск"),
     "default_font": MessageLookupByLibrary.simpleMessage("По умолчанию"),
     "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Удалить все"),
@@ -1986,7 +1985,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "we_support_npu_socs": MessageLookupByLibrary.simpleMessage(
       "В настоящее время поддерживается NPU следующих чипов SoC:",
     ),
-    "web_search": MessageLookupByLibrary.simpleMessage("Поиск в сети"),
+    "web_search": MessageLookupByLibrary.simpleMessage("Веб-поиск"),
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон веб-поиска",
     ),
