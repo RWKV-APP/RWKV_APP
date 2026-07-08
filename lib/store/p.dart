@@ -80,6 +80,7 @@ import 'package:zone/func/open_folder.dart';
 import 'package:zone/func/random_utils.dart';
 import 'package:zone/func/rate_limit.dart';
 import 'package:zone/func/save_asset_to_file.dart';
+import 'package:zone/func/sensitive_filter.dart';
 import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/func/string_utils.dart';
 import 'package:zone/func/sudoku.dart' as func_sudoku;

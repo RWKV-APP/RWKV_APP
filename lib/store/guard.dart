@@ -11,7 +11,7 @@ class _Guard {
   // StateProvider
   // ===========================================================================
 
-  late final _blockedWords = qs<Set<String>>({});
+  late final _blockedRules = qs<SensitiveFilterRules>(emptySensitiveFilterRules);
   late final checkingLatency = qs<int>(0);
 }
 
@@ -19,35 +19,35 @@ class _Guard {
 extension $Guard on _Guard {
   Future<bool> isSensitive(String text) async {
     if (_maxLength == 0) return false;
-    // only use substring to check long words, from the end
-    final index = text.length - _maxLength;
-    final subString = index >= 0 ? text.substring(index) : text;
-    final blockedWords = _blockedWords.q;
-    if (blockedWords.isEmpty) return false;
+    final rules = _blockedRules.q;
+    if (isSensitiveFilterRulesEmpty(rules)) return false;
     final start = DateTime.now().millisecondsSinceEpoch;
-    final res = await compute((args) {
-      final (text, blockedWords) = args;
-      for (final word in blockedWords) {
-        final contains = text.contains(word);
-        if (contains) qqw(word);
-        if (contains) return true;
-      }
-      return false;
-    }, (subString, blockedWords));
+    final matchedRule = findSensitiveFilterMatchInWindows(
+      (
+        index: rules.index,
+        maxLength: _maxLength,
+        text: text,
+      ),
+    );
+    if (matchedRule != null) qqw(matchedRule);
     final end = DateTime.now().millisecondsSinceEpoch;
     checkingLatency.q = end - start;
-    return res;
+    return matchedRule != null;
   }
 
   bool isSensitiveSync(String text) {
-    final blockedWords = _blockedWords.q;
-    if (blockedWords.isEmpty) return false;
-    for (final word in blockedWords) {
-      final contains = text.contains(word);
-      if (contains) qqw(word);
-      if (contains) return true;
-    }
-    return false;
+    final rules = _blockedRules.q;
+    if (isSensitiveFilterRulesEmpty(rules)) return false;
+    final matchedRule = findSensitiveFilterMatchInWindows(
+      (
+        index: rules.index,
+        maxLength: _maxLength,
+        text: text,
+      ),
+    );
+    if (matchedRule == null) return false;
+    qqw(matchedRule);
+    return true;
   }
 }
 
@@ -76,16 +76,10 @@ extension _$Guard on _Guard {
 
     final start = DateTime.now().millisecondsSinceEpoch;
     final filter = await rootBundle.loadString("assets/filter.txt");
-    final (res, maxLength) = await compute((filter) async {
-      final lines = filter.split("\n");
-      final words = lines.map((e) => e.trim()).where((e) => e.isNotEmpty).toSet();
-      if (words.isEmpty) return (words, 0);
-      final maxLength = words.map((e) => e.length).reduce((a, b) => a > b ? a : b);
-      return (words, maxLength);
-    }, filter);
+    final rules = await compute(parseSensitiveFilterRules, filter);
     final end = DateTime.now().millisecondsSinceEpoch;
-    _maxLength = maxLength;
-    _blockedWords.q = res;
+    _maxLength = rules.maxLength;
+    _blockedRules.q = rules;
     qqw("加载敏感词耗时: ${end - start}ms, 最大长度: $_maxLength");
   }
 }
