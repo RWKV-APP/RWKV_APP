@@ -4,8 +4,6 @@ import FlutterMacOS
 @main
 class AppDelegate: FlutterAppDelegate {
   override func applicationDidFinishLaunching(_ notification: Notification) {
-    super.applicationDidFinishLaunching(notification)
-    
     // Update menu bar items to use display name with space
     let displayName = "RWKV Chat"
     if let mainMenu = NSApplication.shared.mainMenu {

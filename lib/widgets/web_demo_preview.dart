@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // Project imports:
 import 'package:zone/func/web_demo.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/web_demo_grayscale_theme.dart';
 
 @visibleForTesting
 bool? debugWebDemoInlinePreviewSupported;
@@ -33,7 +34,7 @@ class WebDemoPreviewPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final _ = theme;
+    final grayscaleTheme = webDemoGrayscaleTheme(theme);
     final appTheme = ref.watch(P.app.theme);
     final document = extractFirstWebDemoHtml(raw);
     final html = document?.html;
@@ -51,84 +52,87 @@ class WebDemoPreviewPanel extends ConsumerWidget {
       fontWeight: FontWeight.w600,
     );
 
-    return Container(
-      margin: EdgeInsets.only(bottom: compact ? 8 : 12),
-      decoration: BoxDecoration(
-        color: appTheme.settingItem,
-        borderRadius: .circular(8),
-        border: Border.all(color: appTheme.qb12, width: .5),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          Padding(
-            padding: const .symmetric(horizontal: 10, vertical: 8),
-            child: Row(
-              children: [
-                Icon(Icons.web_asset_rounded, size: 16, color: theme.colorScheme.primary),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        label,
-                        maxLines: 1,
-                        overflow: .ellipsis,
-                        style: titleStyle,
-                      ),
-                      Text(
-                        "$status · ${_formatBytes(bytes)}",
-                        maxLines: 1,
-                        overflow: .ellipsis,
-                        style: TextStyle(color: appTheme.qb5, fontSize: 11, height: 1.1),
-                      ),
-                    ],
+    return Theme(
+      data: grayscaleTheme,
+      child: Container(
+        margin: EdgeInsets.only(bottom: compact ? 8 : 12),
+        decoration: BoxDecoration(
+          color: appTheme.settingItem,
+          borderRadius: .circular(8),
+          border: Border.all(color: appTheme.qb12, width: .5),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Padding(
+              padding: const .symmetric(horizontal: 10, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(Icons.web_asset_rounded, size: 16, color: grayscaleTheme.colorScheme.primary),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: .start,
+                      children: [
+                        Text(
+                          label,
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          style: titleStyle,
+                        ),
+                        Text(
+                          "$status · ${_formatBytes(bytes)}",
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          style: TextStyle(color: appTheme.qb5, fontSize: 11, height: 1.1),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                if (html != null)
-                  _WebDemoPreviewAction(
-                    tooltip: "View source",
-                    icon: Icons.code_rounded,
-                    onTap: () => showWebDemoSourceSheet(context: context, source: html, label: label),
-                  ),
-                if (html != null) const SizedBox(width: 4),
-                if (html != null)
-                  _WebDemoPreviewAction(
-                    tooltip: "Continue editing",
-                    icon: Icons.edit_outlined,
-                    onTap: () => P.webDemo.prepareContinuation(html: html),
-                  ),
-                if (html != null) const SizedBox(width: 4),
-                if (html != null)
-                  _WebDemoPreviewAction(
-                    tooltip: "Open in browser",
-                    icon: Icons.open_in_browser_rounded,
-                    onTap: () => P.webDemo.openHtmlInSystemBrowser(html: html, label: label),
-                  ),
-              ],
-            ),
-          ),
-          Container(height: .5, color: appTheme.qb12),
-          if (html == null)
-            _WebDemoWaitingPreview(
-              raw: raw,
-              height: height,
-            ),
-          if (html != null && canInlinePreview)
-            SizedBox(
-              height: height,
-              child: _WebDemoInlineWebView(
-                html: html,
-                complete: document?.complete ?? false,
+                  if (html != null)
+                    _WebDemoPreviewAction(
+                      tooltip: "View source",
+                      icon: Icons.code_rounded,
+                      onTap: () => showWebDemoSourceSheet(context: context, source: html, label: label),
+                    ),
+                  if (html != null) const SizedBox(width: 4),
+                  if (html != null)
+                    _WebDemoPreviewAction(
+                      tooltip: "Continue editing",
+                      icon: Icons.edit_outlined,
+                      onTap: () => P.webDemo.prepareContinuation(html: html),
+                    ),
+                  if (html != null) const SizedBox(width: 4),
+                  if (html != null)
+                    _WebDemoPreviewAction(
+                      tooltip: "Open in browser",
+                      icon: Icons.open_in_browser_rounded,
+                      onTap: () => P.webDemo.openHtmlInSystemBrowser(html: html, label: label),
+                    ),
+                ],
               ),
             ),
-          if (html != null && !canInlinePreview)
-            _WebDemoExternalPreviewFallback(
-              height: height,
-            ),
-        ],
+            Container(height: .5, color: appTheme.qb12),
+            if (html == null)
+              _WebDemoWaitingPreview(
+                raw: raw,
+                height: height,
+              ),
+            if (html != null && canInlinePreview)
+              SizedBox(
+                height: height,
+                child: _WebDemoInlineWebView(
+                  html: html,
+                  complete: document?.complete ?? false,
+                ),
+              ),
+            if (html != null && !canInlinePreview)
+              _WebDemoExternalPreviewFallback(
+                height: height,
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -271,7 +275,11 @@ void showWebDemoSourceSheet({
     context: context,
     isScrollControlled: true,
     builder: (context) {
-      return _WebDemoSourceSheet(source: source, label: label);
+      final theme = Theme.of(context);
+      return Theme(
+        data: webDemoGrayscaleTheme(theme),
+        child: _WebDemoSourceSheet(source: source, label: label),
+      );
     },
   );
 }

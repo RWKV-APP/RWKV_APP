@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:io';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -115,11 +118,13 @@ enum PageKey {
     if (PageKey.tabs.contains(this)) {
       return GoRoute(
         path: path,
+        redirect: this == webDemo ? _redirectMobileHiddenPage : null,
         pageBuilder: (context, state) => NoTransitionPage(child: scaffold({})),
       );
     }
     return GoRoute(
       path: path,
+      redirect: this == webDemo ? _redirectMobileHiddenPage : null,
       builder: (context, state) {
         return scaffold(state.extra as Map<String, String>? ?? {});
       },
@@ -133,4 +138,10 @@ enum PageKey {
   }
 
   static List<PageKey> get tabs => [home, conversation, settings];
+}
+
+String? _redirectMobileHiddenPage(BuildContext context, GoRouterState state) {
+  final _ = (context, state);
+  if (Platform.isAndroid || Platform.isIOS) return PageKey.home.path;
+  return null;
 }

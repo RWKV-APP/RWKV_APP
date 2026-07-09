@@ -51,6 +51,7 @@ class _ItemList extends ConsumerWidget {
     final _ = theme;
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final currentModelIsBefore20250922 = ref.watch(P.rwkvParams.currentModelIsBefore20250922);
+    final isDesktop = ref.watch(P.app.isDesktop);
 
     final children = [
       if (preferredDemoType == .chat) const DecodeParamButton(),
@@ -58,7 +59,7 @@ class _ItemList extends ConsumerWidget {
       if (preferredDemoType == .chat) const ThinkingModeButton(),
       if (preferredDemoType == .chat) const BatchButton(),
       if (preferredDemoType == .chat && currentLangIsZh) const ResponseStyleButton(),
-      if (preferredDemoType == .chat) const WebSearchModeButton(),
+      if (preferredDemoType == .chat && isDesktop) const WebSearchModeButton(),
       if (preferredDemoType == .chat) const AskQuestionButton(),
     ];
 

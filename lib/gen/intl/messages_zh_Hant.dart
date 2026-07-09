@@ -389,6 +389,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_url": MessageLookupByLibrary.simpleMessage("伺服器位址"),
     "app_is_already_up_to_date": MessageLookupByLibrary.simpleMessage("已是最新版本"),
     "appearance": MessageLookupByLibrary.simpleMessage("外觀"),
+    "appearance_mode": MessageLookupByLibrary.simpleMessage("外觀模式"),
     "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
       "快取已清除，重新啟動應用後完整生效",
     ),
@@ -708,6 +709,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disabled": MessageLookupByLibrary.simpleMessage("關閉"),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+    "display": MessageLookupByLibrary.simpleMessage("顯示設定"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("不再詢問"),
     "download_all": MessageLookupByLibrary.simpleMessage("下載全部"),
     "download_all_missing": MessageLookupByLibrary.simpleMessage("下載全部缺失檔案"),
@@ -1267,6 +1269,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("掃描二維碼"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
       "正在掃描該資料夾中的 .pth 檔案和 RWKV .gguf 檔案",
+    ),
+    "screen_orientation": MessageLookupByLibrary.simpleMessage("螢幕方向"),
+    "screen_rotation": MessageLookupByLibrary.simpleMessage("螢幕旋轉"),
+    "screen_rotation_subtitle": MessageLookupByLibrary.simpleMessage(
+      "允許直向和橫向佈局",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("螢幕寬度"),
     "search": MessageLookupByLibrary.simpleMessage("搜尋"),

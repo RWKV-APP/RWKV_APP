@@ -1,4 +1,5 @@
 export 'package:local_web_search/src/browser/search_browser_controller.dart';
+export 'package:local_web_search/src/models/search_deep_result.dart';
 export 'package:local_web_search/src/models/search_engine.dart';
 export 'package:local_web_search/src/models/search_engine_availability.dart';
 export 'package:local_web_search/src/models/search_extraction_result.dart';

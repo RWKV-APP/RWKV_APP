@@ -2913,6 +2913,16 @@ class S {
     return Intl.message('外观', name: 'appearance', desc: '', args: []);
   }
 
+  /// `显示设置`
+  String get display {
+    return Intl.message('显示设置', name: 'display', desc: '', args: []);
+  }
+
+  /// `外观模式`
+  String get appearance_mode {
+    return Intl.message('外观模式', name: 'appearance_mode', desc: '', args: []);
+  }
+
   /// `深色模式`
   String get dark_mode {
     return Intl.message('深色模式', name: 'dark_mode', desc: '', args: []);
@@ -2946,6 +2956,26 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `屏幕旋转`
+  String get screen_rotation {
+    return Intl.message('屏幕旋转', name: 'screen_rotation', desc: '', args: []);
+  }
+
+  /// `允许竖屏和横屏布局`
+  String get screen_rotation_subtitle {
+    return Intl.message(
+      '允许竖屏和横屏布局',
+      name: 'screen_rotation_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `屏幕方向`
+  String get screen_orientation {
+    return Intl.message('屏幕方向', name: 'screen_orientation', desc: '', args: []);
   }
 
   /// `深色模式主题`

@@ -160,12 +160,15 @@ class _LocalWebSearchPane extends ConsumerWidget {
     final _ = theme;
     final messages = ref.watch(P.chat.localWebSearchMessages);
     final engine = ref.watch(P.chat.localWebSearchEngine);
+    final deepResultsEnabled = ref.watch(P.chat.localWebSearchDeepResultsEnabled);
 
     return SearchBrowserPanel(
       controller: P.chat.localWebSearchController,
       initialSearchEngine: engine,
       messages: messages,
+      initialDeepResultsEnabled: deepResultsEnabled,
       onSearchEngineChanged: P.chat.onLocalWebSearchEngineChanged,
+      onDeepResultsEnabledChanged: P.chat.onLocalWebSearchDeepResultsEnabledChanged,
       onReferenceBundleChanged: P.chat.onLocalWebSearchBundleChanged,
     );
   }

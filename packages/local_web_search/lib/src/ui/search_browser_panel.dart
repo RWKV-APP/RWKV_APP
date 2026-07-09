@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:local_web_search/src/browser/search_browser_controller.dart';
 import 'package:local_web_search/src/browser/search_browser_view.dart';
+import 'package:local_web_search/src/models/search_deep_result.dart';
 import 'package:local_web_search/src/models/search_engine.dart';
 import 'package:local_web_search/src/models/search_engine_availability.dart';
 import 'package:local_web_search/src/models/search_extraction_result.dart';
@@ -16,6 +17,7 @@ import 'package:local_web_search/src/models/search_reference_source.dart';
 import 'package:local_web_search/src/query/search_query_generator.dart';
 import 'package:local_web_search/src/reachability/search_engine_reachability_probe.dart';
 import 'package:local_web_search/src/reference/search_reference_builder.dart';
+import 'package:local_web_search/src/reference/search_reference_service.dart';
 
 const JsonEncoder _debugJsonEncoder = JsonEncoder.withIndent('  ');
 
@@ -68,7 +70,9 @@ class SearchBrowserPanel extends StatefulWidget {
   final Set<String> simulatedUnavailableEngineIds;
   final SearchEngine initialSearchEngine;
   final List<String>? messages;
+  final bool initialDeepResultsEnabled;
   final ValueChanged<SearchEngine>? onSearchEngineChanged;
+  final ValueChanged<bool>? onDeepResultsEnabledChanged;
   final ValueChanged<SearchReferenceBundle>? onReferenceBundleChanged;
 
   const SearchBrowserPanel({
@@ -78,7 +82,9 @@ class SearchBrowserPanel extends StatefulWidget {
     this.simulatedUnavailableEngineIds = const <String>{},
     this.initialSearchEngine = SearchEngines.bing,
     this.messages,
+    this.initialDeepResultsEnabled = false,
     this.onSearchEngineChanged,
+    this.onDeepResultsEnabledChanged,
     this.onReferenceBundleChanged,
   });
 
@@ -104,6 +110,7 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
   late SearchQueryGenerationResult _queryGenerationResult;
   late SearchEngine _selectedEngine;
   bool _extracting = false;
+  late bool _deepResultsEnabled;
   final bool _probingEngines = false;
   bool _runningEngineDiagnostics = false;
 
@@ -123,6 +130,7 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     );
     _controller.addListener(_onBrowserChanged);
     _messagesController.addListener(_onMessagesChanged);
+    _deepResultsEnabled = widget.initialDeepResultsEnabled;
   }
 
   @override
@@ -143,6 +151,11 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     if (widget.initialSearchEngine != oldWidget.initialSearchEngine &&
         widget.initialSearchEngine != _selectedEngine) {
       _selectedEngine = widget.initialSearchEngine;
+    }
+    if (widget.initialDeepResultsEnabled !=
+            oldWidget.initialDeepResultsEnabled &&
+        widget.initialDeepResultsEnabled != _deepResultsEnabled) {
+      _deepResultsEnabled = widget.initialDeepResultsEnabled;
     }
 
     final nextMessagesText = _messagesText(widget.messages);
@@ -225,6 +238,17 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     });
   }
 
+  void _setDeepResultsEnabled(bool enabled) {
+    if (_deepResultsEnabled == enabled) return;
+    setState(() {
+      _deepResultsEnabled = enabled;
+      _referenceBundle = const SearchReferenceBundle.empty();
+    });
+    _controller.clearReferenceBundle();
+    widget.onDeepResultsEnabledChanged?.call(enabled);
+    widget.onReferenceBundleChanged?.call(const SearchReferenceBundle.empty());
+  }
+
   void _loadDebugSample(_SearchDebugSample sample) {
     _messagesController.text = sample.messages.trim();
     final queryGeneration = SearchQueryGenerator.build(_currentMessages());
@@ -296,6 +320,7 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
         searchEngine: _selectedEngine,
         query: '',
         extraction: extraction,
+        enableDeepResults: _deepResultsEnabled,
       );
       setState(() {
         _queryGenerationResult = queryGeneration;
@@ -316,22 +341,20 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
       _extracting = true;
     });
 
-    await _controller.loadSearch(engine: _selectedEngine, query: query);
-    await Future<void>.delayed(const Duration(seconds: 3));
-    final result = await _runExtractionWithRetry(_selectedEngine);
-    final bundle = SearchReferenceBuilder.buildBundle(
+    final bundle = await SearchReferenceService.searchWithBrowser(
+      controller: _controller,
       messages: messages,
       searchEngine: _selectedEngine,
-      query: query,
-      extraction: result,
+      enableDeepResults: _deepResultsEnabled,
     );
+    final result = _resultFromBundle(bundle);
     if (!mounted) return;
     setState(() {
+      _selectedEngine = bundle.searchEngine;
       _result = result;
       _referenceBundle = bundle;
       _extracting = false;
     });
-    _controller.markReferenceBundle(bundle);
     widget.onReferenceBundleChanged?.call(bundle);
   }
 
@@ -365,15 +388,33 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
       searchEngine: _selectedEngine,
       query: _inputController.text,
       extraction: result,
+      enableDeepResults: _deepResultsEnabled,
     );
+    final hydratedBundle =
+        await SearchReferenceService.hydrateDeepResultsForBundle(
+          controller: _controller,
+          bundle: bundle,
+          detailPageLoadDelay: const Duration(seconds: 2),
+          detailPageLoadTimeout: const Duration(seconds: 12),
+        );
     if (!mounted) return;
     setState(() {
       _result = result;
-      _referenceBundle = bundle;
+      _referenceBundle = hydratedBundle;
       _extracting = false;
     });
-    _controller.markReferenceBundle(bundle);
-    widget.onReferenceBundleChanged?.call(bundle);
+    _controller.markReferenceBundle(hydratedBundle);
+    widget.onReferenceBundleChanged?.call(hydratedBundle);
+  }
+
+  SearchExtractionResult _resultFromBundle(SearchReferenceBundle bundle) {
+    if (bundle.rawJson.isNotEmpty) {
+      return SearchExtractionResult.fromJavaScriptResult(bundle.rawJson);
+    }
+    if (bundle.hasError) {
+      return SearchExtractionResult.failure(bundle.error!);
+    }
+    return const SearchExtractionResult.empty();
   }
 
   Future<void> _runAllEngineDiagnostics() async {
@@ -466,6 +507,7 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final grayscaleTheme = _searchBrowserGrayscaleTheme(theme);
     final latestBundle = _controller.latestReferenceBundle;
     final visibleReferenceBundle =
         latestBundle.hasSources ||
@@ -474,49 +516,128 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
         ? latestBundle
         : _referenceBundle;
 
-    return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _SearchBrowserToolbar(
-              controller: _controller,
-              inputController: _inputController,
-              selectedEngine: _selectedEngine,
-              engineAvailability: _engineAvailability,
-              extracting: _extracting,
-              probingEngines: _probingEngines,
-              runningEngineDiagnostics: _runningEngineDiagnostics,
-              onLoadUrl: _loadAsUrl,
-              onSelectedEngineSearch: _loadSelectedEngineSearch,
-              onExtract: _extractSearchResults,
-              onRunAllEngines: _runAllEngineDiagnostics,
-              onEngineChanged: _selectSearchEngine,
-            ),
-            Expanded(
-              child: _SearchBrowserBody(
+    return Theme(
+      data: grayscaleTheme,
+      child: Scaffold(
+        backgroundColor: grayscaleTheme.colorScheme.surface,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _SearchBrowserToolbar(
                 controller: _controller,
-                messagesController: _messagesController,
-                referenceBundle: visibleReferenceBundle,
-                result: _result,
-                queryGenerationResult: _queryGenerationResult,
+                inputController: _inputController,
                 selectedEngine: _selectedEngine,
                 engineAvailability: _engineAvailability,
-                engineDiagnostics: _engineDiagnostics,
-                query: _inputController.text,
                 extracting: _extracting,
+                probingEngines: _probingEngines,
                 runningEngineDiagnostics: _runningEngineDiagnostics,
-                samples: _debugSamples,
-                onBuildQuery: _buildQueryFromMessages,
-                onSampleSelected: _loadDebugSample,
-                onRunReferenceSearch: _runReferenceSearchFromMessages,
+                deepResultsEnabled: _deepResultsEnabled,
+                onLoadUrl: _loadAsUrl,
+                onSelectedEngineSearch: _loadSelectedEngineSearch,
+                onExtract: _extractSearchResults,
+                onRunAllEngines: _runAllEngineDiagnostics,
+                onEngineChanged: _selectSearchEngine,
+                onDeepResultsChanged: _setDeepResultsEnabled,
               ),
-            ),
-          ],
+              Expanded(
+                child: _SearchBrowserBody(
+                  controller: _controller,
+                  messagesController: _messagesController,
+                  referenceBundle: visibleReferenceBundle,
+                  result: _result,
+                  queryGenerationResult: _queryGenerationResult,
+                  selectedEngine: _selectedEngine,
+                  engineAvailability: _engineAvailability,
+                  engineDiagnostics: _engineDiagnostics,
+                  query: _inputController.text,
+                  extracting: _extracting,
+                  runningEngineDiagnostics: _runningEngineDiagnostics,
+                  samples: _debugSamples,
+                  onBuildQuery: _buildQueryFromMessages,
+                  onSampleSelected: _loadDebugSample,
+                  onRunReferenceSearch: _runReferenceSearchFromMessages,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+ThemeData _searchBrowserGrayscaleTheme(ThemeData theme) {
+  final scheme = _searchBrowserGrayscaleScheme(theme.brightness);
+  final disabledColor = theme.brightness == Brightness.dark
+      ? const Color(0xFF777777)
+      : const Color(0xFFB8B8B8);
+
+  return theme.copyWith(
+    colorScheme: scheme,
+    disabledColor: disabledColor,
+    scaffoldBackgroundColor: scheme.surface,
+    progressIndicatorTheme: ProgressIndicatorThemeData(color: scheme.onSurface),
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
+        if (states.contains(WidgetState.disabled)) return disabledColor;
+        if (states.contains(WidgetState.selected)) return scheme.surface;
+        return scheme.surface;
+      }),
+      trackColor: WidgetStateProperty.resolveWith<Color>((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return scheme.surfaceContainerHighest;
+        }
+        if (states.contains(WidgetState.selected)) return scheme.onSurface;
+        return scheme.surfaceContainerHighest;
+      }),
+      trackOutlineColor: WidgetStatePropertyAll(scheme.outlineVariant),
+    ),
+  );
+}
+
+ColorScheme _searchBrowserGrayscaleScheme(Brightness brightness) {
+  if (brightness == Brightness.dark) {
+    return ColorScheme.fromSeed(
+      seedColor: const Color(0xFF808080),
+      brightness: Brightness.dark,
+    ).copyWith(
+      primary: const Color(0xFFE8E8E8),
+      onPrimary: const Color(0xFF111111),
+      primaryContainer: const Color(0xFF3A3A3A),
+      onPrimaryContainer: const Color(0xFFF2F2F2),
+      secondary: const Color(0xFFD0D0D0),
+      onSecondary: const Color(0xFF181818),
+      secondaryContainer: const Color(0xFF303030),
+      onSecondaryContainer: const Color(0xFFF0F0F0),
+      surface: const Color(0xFF101010),
+      onSurface: const Color(0xFFF0F0F0),
+      surfaceContainerHighest: const Color(0xFF303030),
+      onSurfaceVariant: const Color(0xFFC0C0C0),
+      outline: const Color(0xFF707070),
+      outlineVariant: const Color(0xFF444444),
+      error: const Color(0xFFE0E0E0),
+      onError: const Color(0xFF101010),
+    );
+  }
+
+  return ColorScheme.fromSeed(seedColor: const Color(0xFF808080)).copyWith(
+    primary: const Color(0xFF202020),
+    onPrimary: const Color(0xFFFFFFFF),
+    primaryContainer: const Color(0xFFE0E0E0),
+    onPrimaryContainer: const Color(0xFF202020),
+    secondary: const Color(0xFF404040),
+    onSecondary: const Color(0xFFFFFFFF),
+    secondaryContainer: const Color(0xFFE8E8E8),
+    onSecondaryContainer: const Color(0xFF202020),
+    surface: const Color(0xFFFFFFFF),
+    onSurface: const Color(0xFF202020),
+    surfaceContainerHighest: const Color(0xFFE0E0E0),
+    onSurfaceVariant: const Color(0xFF666666),
+    outline: const Color(0xFF8A8A8A),
+    outlineVariant: const Color(0xFFC8C8C8),
+    error: const Color(0xFF202020),
+    onError: const Color(0xFFFFFFFF),
+  );
 }
 
 class _SearchBrowserToolbar extends StatelessWidget {
@@ -527,11 +648,13 @@ class _SearchBrowserToolbar extends StatelessWidget {
   final bool extracting;
   final bool probingEngines;
   final bool runningEngineDiagnostics;
+  final bool deepResultsEnabled;
   final VoidCallback onLoadUrl;
   final VoidCallback onSelectedEngineSearch;
   final VoidCallback onExtract;
   final VoidCallback onRunAllEngines;
   final ValueChanged<SearchEngine> onEngineChanged;
+  final ValueChanged<bool> onDeepResultsChanged;
 
   const _SearchBrowserToolbar({
     required this.controller,
@@ -541,11 +664,13 @@ class _SearchBrowserToolbar extends StatelessWidget {
     required this.extracting,
     required this.probingEngines,
     required this.runningEngineDiagnostics,
+    required this.deepResultsEnabled,
     required this.onLoadUrl,
     required this.onSelectedEngineSearch,
     required this.onExtract,
     required this.onRunAllEngines,
     required this.onEngineChanged,
+    required this.onDeepResultsChanged,
   });
 
   SearchEngineAvailability _availabilityFor(SearchEngine engine) {
@@ -567,6 +692,24 @@ class _SearchBrowserToolbar extends StatelessWidget {
     final searchTooltip = selectedEngineAvailable
         ? 'Search the query field with ${selectedEngine.label}, then extract result titles, links, and snippets.'
         : selectedAvailability.tooltipMessage;
+    final neutralButtonStyle = IconButton.styleFrom(
+      backgroundColor: theme.colorScheme.surfaceContainerHighest,
+      foregroundColor: theme.colorScheme.onSurface,
+      disabledBackgroundColor: theme.colorScheme.surfaceContainerHighest,
+      disabledForegroundColor: theme.disabledColor,
+    );
+    final strongButtonStyle = IconButton.styleFrom(
+      backgroundColor: theme.colorScheme.onSurface,
+      foregroundColor: theme.colorScheme.surface,
+      disabledBackgroundColor: theme.colorScheme.surfaceContainerHighest,
+      disabledForegroundColor: theme.disabledColor,
+    );
+    final textFieldBorder = OutlineInputBorder(
+      borderSide: BorderSide(color: theme.colorScheme.outlineVariant),
+    );
+    final focusedTextFieldBorder = OutlineInputBorder(
+      borderSide: BorderSide(color: theme.colorScheme.onSurface),
+    );
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -589,6 +732,33 @@ class _SearchBrowserToolbar extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Tooltip(
+                message: 'Read result pages before building prompt data.',
+                child: Switch.adaptive(
+                  value: deepResultsEnabled,
+                  onChanged: loading ? null : onDeepResultsChanged,
+                  activeThumbColor: theme.colorScheme.surface,
+                  activeTrackColor: theme.colorScheme.onSurface,
+                  inactiveThumbColor: theme.colorScheme.surface,
+                  inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
+                  trackOutlineColor: WidgetStatePropertyAll(
+                    theme.colorScheme.outlineVariant,
+                  ),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ),
+              Text(
+                'Deep results',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
             children: [
               Expanded(
                 child: TextField(
@@ -597,14 +767,19 @@ class _SearchBrowserToolbar extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: 'Query or URL',
                     isDense: true,
-                    border: const OutlineInputBorder(),
+                    border: textFieldBorder,
+                    enabledBorder: textFieldBorder,
+                    focusedBorder: focusedTextFieldBorder,
                     suffixIcon: loading
-                        ? const Padding(
-                            padding: EdgeInsets.all(12),
+                        ? Padding(
+                            padding: const EdgeInsets.all(12),
                             child: SizedBox(
                               width: 16,
                               height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: theme.colorScheme.onSurface,
+                              ),
                             ),
                           )
                         : null,
@@ -613,6 +788,7 @@ class _SearchBrowserToolbar extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               IconButton.filledTonal(
+                style: neutralButtonStyle,
                 tooltip:
                     'Open the query field as a URL in the embedded browser.',
                 onPressed: canRun && !loading ? onLoadUrl : null,
@@ -620,12 +796,14 @@ class _SearchBrowserToolbar extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               IconButton.filledTonal(
+                style: neutralButtonStyle,
                 tooltip: searchTooltip,
                 onPressed: canSearch ? onSelectedEngineSearch : null,
                 icon: const Icon(Icons.search),
               ),
               const SizedBox(width: 6),
               IconButton.filled(
+                style: strongButtonStyle,
                 tooltip:
                     'Extract result titles, links, and snippets from the current search page into Reference Data.',
                 onPressed: canExtract ? onExtract : null,
@@ -633,15 +811,19 @@ class _SearchBrowserToolbar extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               IconButton.filledTonal(
+                style: neutralButtonStyle,
                 tooltip: probingEngines
                     ? 'Checking search engine availability.'
                     : 'Diagnostic: run the generated query on every search engine and compare extraction results.',
                 onPressed: canRunDiagnostics ? onRunAllEngines : null,
                 icon: runningEngineDiagnostics
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 18,
                         height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       )
                     : const Icon(Icons.playlist_play),
               ),
@@ -652,7 +834,7 @@ class _SearchBrowserToolbar extends StatelessWidget {
                     controller.error!,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.error,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -684,10 +866,10 @@ class _SearchEngineTag extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final canSelect = enabled && availability.canSearch;
-    final selectedColor = theme.colorScheme.primaryContainer;
-    final unselectedColor = theme.colorScheme.surfaceContainerHighest;
+    final selectedColor = theme.colorScheme.onSurface;
+    final unselectedColor = theme.colorScheme.surface;
     final disabledColor = theme.colorScheme.surfaceContainerHighest;
-    final selectedLabelColor = theme.colorScheme.onPrimaryContainer;
+    final selectedLabelColor = theme.colorScheme.surface;
     final normalLabelColor = theme.colorScheme.onSurface;
     final disabledLabelColor = theme.disabledColor;
     final labelColor = !canSelect && !selected
@@ -696,9 +878,12 @@ class _SearchEngineTag extends StatelessWidget {
         ? selectedLabelColor
         : normalLabelColor;
     final borderColor = selected
-        ? theme.colorScheme.primary
+        ? theme.colorScheme.onSurface
         : theme.colorScheme.outlineVariant;
-    final iconColor = canSelect || selected
+    final icon = _engineTagIcon(availability: availability, selected: selected);
+    final iconColor = selected
+        ? selectedLabelColor
+        : canSelect
         ? _statusColor(theme, availability)
         : theme.disabledColor;
 
@@ -707,11 +892,13 @@ class _SearchEngineTag extends StatelessWidget {
       child: ChoiceChip(
         selected: selected,
         onSelected: canSelect ? (_) => onSelected(engine) : null,
-        avatar: Icon(_statusIcon(availability), size: 14, color: iconColor),
+        avatar: icon == null ? null : Icon(icon, size: 14, color: iconColor),
         label: Text(engine.label, overflow: TextOverflow.ellipsis),
         labelStyle: theme.textTheme.labelMedium?.copyWith(color: labelColor),
         visualDensity: VisualDensity.compact,
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        showCheckmark: false,
+        checkmarkColor: selectedLabelColor,
         backgroundColor: unselectedColor,
         selectedColor: selectedColor,
         disabledColor: disabledColor,
@@ -905,11 +1092,22 @@ class _MessageInputPane extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final messages = SearchReferenceBuilder.parseMessageLines(controller.text);
+    final neutralButtonStyle = IconButton.styleFrom(
+      foregroundColor: theme.colorScheme.onSurfaceVariant,
+      disabledForegroundColor: theme.disabledColor,
+    );
+    final strongButtonStyle = IconButton.styleFrom(
+      backgroundColor: theme.colorScheme.onSurface,
+      foregroundColor: theme.colorScheme.surface,
+      disabledBackgroundColor: theme.colorScheme.surfaceContainerHighest,
+      disabledForegroundColor: theme.disabledColor,
+    );
 
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: theme.colorScheme.outlineVariant),
         borderRadius: BorderRadius.circular(8),
+        color: theme.colorScheme.surface,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -920,20 +1118,25 @@ class _MessageInputPane extends StatelessWidget {
             trailing: '${messages.length}',
             actions: [
               IconButton(
+                style: neutralButtonStyle,
                 tooltip:
                     'Build the search query from Input Messages without opening a browser page.',
                 onPressed: onBuildQuery,
                 icon: const Icon(Icons.manage_search),
               ),
               IconButton.filled(
+                style: strongButtonStyle,
                 tooltip:
                     'Build the query, search with the selected engine, extract sources, and update Reference Data.',
                 onPressed: canRun ? onRunReferenceSearch : null,
                 icon: extracting
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 18,
                         height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       )
                     : const Icon(Icons.travel_explore),
               ),
@@ -948,8 +1151,17 @@ class _MessageInputPane extends StatelessWidget {
               children: [
                 for (final sample in samples)
                   ActionChip(
-                    avatar: const Icon(Icons.bolt, size: 14),
+                    avatar: Icon(
+                      Icons.bolt,
+                      size: 14,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                    side: BorderSide(color: theme.colorScheme.outlineVariant),
                     label: Text(sample.label),
+                    labelStyle: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                    ),
                     visualDensity: VisualDensity.compact,
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     onPressed: () => onSampleSelected(sample),
@@ -1016,6 +1228,7 @@ class _ReferenceDebugPane extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final sources = bundle.sources;
+    final deepResults = bundle.deepResults;
     final inputJson = _debugJsonEncoder.convert(messages);
     final queryGenerationJson = _debugJsonEncoder.convert(
       queryGenerationResult.toJson(),
@@ -1028,6 +1241,9 @@ class _ReferenceDebugPane extends StatelessWidget {
     final promptContext = bundle.promptContext.isEmpty
         ? 'No prompt context yet.'
         : bundle.promptContext;
+    final deepPromptContext = bundle.deepPromptContext.isEmpty
+        ? 'No deep prompt context yet.'
+        : bundle.deepPromptContext;
     final rawOutput = bundle.rawJson.isEmpty && !bundle.hasSources
         ? 'No output yet.'
         : outputJson;
@@ -1041,6 +1257,7 @@ class _ReferenceDebugPane extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: theme.colorScheme.outlineVariant),
         borderRadius: BorderRadius.circular(8),
+        color: theme.colorScheme.surface,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1115,10 +1332,24 @@ class _ReferenceDebugPane extends StatelessWidget {
                   for (final source in sources)
                     _ReferenceSourceTile(source: source),
                 _DebugSectionLabel(
+                  icon: Icons.travel_explore,
+                  title: 'Deep Results',
+                ),
+                if (deepResults.isEmpty)
+                  const _DebugTextBlock(text: 'No deep results yet.')
+                else
+                  for (final result in deepResults)
+                    _DeepResultTile(result: result),
+                _DebugSectionLabel(
                   icon: Icons.article_outlined,
                   title: 'Prompt Context',
                 ),
                 _DebugTextBlock(text: promptContext),
+                _DebugSectionLabel(
+                  icon: Icons.article,
+                  title: 'Deep Prompt Context',
+                ),
+                _DebugTextBlock(text: deepPromptContext),
                 _DebugSectionLabel(
                   icon: Icons.data_object,
                   title: 'Raw Output JSON',
@@ -1275,8 +1506,8 @@ class _EngineDiagnosticTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final color = diagnostic.usable
-        ? theme.colorScheme.primary
-        : theme.colorScheme.error;
+        ? theme.colorScheme.onSurface
+        : theme.colorScheme.onSurfaceVariant;
     final elapsed = diagnostic.elapsed == null
         ? ''
         : ' ${diagnostic.elapsed!.inMilliseconds}ms';
@@ -1345,6 +1576,17 @@ class _EngineDiagnosticTile extends StatelessWidget {
   }
 }
 
+IconData? _engineTagIcon({
+  required SearchEngineAvailability availability,
+  required bool selected,
+}) {
+  if (selected) return Icons.check;
+  if (availability.isAvailable) return Icons.check_circle_outline;
+  if (availability.isUnavailable) return Icons.block;
+  if (availability.isChecking) return Icons.sync;
+  return null;
+}
+
 IconData _statusIcon(SearchEngineAvailability availability) {
   if (availability.isAvailable) return Icons.check_circle_outline;
   if (availability.isUnavailable) return Icons.block;
@@ -1353,8 +1595,7 @@ IconData _statusIcon(SearchEngineAvailability availability) {
 }
 
 Color _statusColor(ThemeData theme, SearchEngineAvailability availability) {
-  if (availability.isAvailable) return theme.colorScheme.primary;
-  if (availability.isUnavailable) return theme.colorScheme.error;
+  if (availability.isAvailable) return theme.colorScheme.onSurface;
   return theme.colorScheme.onSurfaceVariant;
 }
 
@@ -1379,7 +1620,7 @@ class _PanelHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: theme.colorScheme.primary),
+          Icon(icon, size: 18, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
@@ -1411,7 +1652,7 @@ class _DebugSectionLabel extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 14, 12, 6),
       child: Row(
         children: [
-          Icon(icon, size: 16, color: theme.colorScheme.primary),
+          Icon(icon, size: 16, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(width: 8),
           Text(title, style: theme.textTheme.labelLarge),
         ],
@@ -1472,7 +1713,7 @@ class _ReferenceSourceTile extends StatelessWidget {
               Text(
                 '${source.rank}.',
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.primary,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(width: 8),
@@ -1490,7 +1731,7 @@ class _ReferenceSourceTile extends StatelessWidget {
           Text(
             source.url,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.primary,
+              color: theme.colorScheme.onSurfaceVariant,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -1503,6 +1744,85 @@ class _ReferenceSourceTile extends StatelessWidget {
                 color: theme.colorScheme.onSurfaceVariant,
               ),
               maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _DeepResultTile extends StatelessWidget {
+  final SearchDeepResult result;
+
+  const _DeepResultTile({required this.result});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = result.hasContent
+        ? theme.colorScheme.onSurface
+        : theme.colorScheme.onSurfaceVariant;
+    final detail = result.hasError
+        ? result.error!
+        : '${result.markdown.length}/${result.markdownLength} chars';
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                result.hasContent
+                    ? Icons.check_circle_outline
+                    : Icons.error_outline,
+                size: 16,
+                color: color,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '${result.rank}. ${result.title}',
+                  style: theme.textTheme.titleSmall?.copyWith(color: color),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            result.url,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            detail,
+            style: theme.textTheme.labelMedium?.copyWith(color: color),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (result.markdown.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(
+              result.markdown,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              maxLines: 5,
               overflow: TextOverflow.ellipsis,
             ),
           ],

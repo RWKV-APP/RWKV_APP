@@ -402,6 +402,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "アプリは既に最新です",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("外観"),
+    "appearance_mode": MessageLookupByLibrary.simpleMessage("外観モード"),
     "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
       "キャッシュをクリアしました。完全に反映するにはアプリを再起動してください。",
     ),
@@ -758,6 +759,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disabled": MessageLookupByLibrary.simpleMessage("無効"),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+    "display": MessageLookupByLibrary.simpleMessage("表示設定"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("次回から表示しない"),
     "download_all": MessageLookupByLibrary.simpleMessage("すべてダウンロード"),
     "download_all_missing": MessageLookupByLibrary.simpleMessage(
@@ -1389,6 +1391,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("QRコードをスキャン"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
       "このフォルダ内の .pth ファイルと RWKV .gguf ファイルをスキャン中",
+    ),
+    "screen_orientation": MessageLookupByLibrary.simpleMessage("画面の向き"),
+    "screen_rotation": MessageLookupByLibrary.simpleMessage("画面回転"),
+    "screen_rotation_subtitle": MessageLookupByLibrary.simpleMessage(
+      "縦向きと横向きのレイアウトを許可",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("画面幅"),
     "search": MessageLookupByLibrary.simpleMessage("検索"),

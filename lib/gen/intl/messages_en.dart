@@ -451,6 +451,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "App is already up to date",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+    "appearance_mode": MessageLookupByLibrary.simpleMessage("Appearance Mode"),
     "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
       "Cache cleared. Restart the app to fully apply the reset.",
     ),
@@ -880,6 +881,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disabled": MessageLookupByLibrary.simpleMessage("Disabled"),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+    "display": MessageLookupByLibrary.simpleMessage("Display Settings"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("Don\'t ask again"),
     "download_all": MessageLookupByLibrary.simpleMessage("Download All"),
     "download_all_missing": MessageLookupByLibrary.simpleMessage(
@@ -1621,6 +1623,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
       "Scanning this folder for .pth files and RWKV .gguf files",
+    ),
+    "screen_orientation": MessageLookupByLibrary.simpleMessage(
+      "Screen Orientation",
+    ),
+    "screen_rotation": MessageLookupByLibrary.simpleMessage("Screen Rotation"),
+    "screen_rotation_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Allow portrait and landscape layouts",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("Screen width"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),

@@ -64,7 +64,7 @@ class ThemeSelector extends ConsumerWidget {
       child: Scaffold(
         backgroundColor: appTheme.settingBg,
         appBar: AppBar(
-          title: Text(s.appearance),
+          title: Text(s.display),
           automaticallyImplyLeading: false,
           backgroundColor: appTheme.settingBg,
           actions: [
@@ -110,11 +110,27 @@ class ThemeColorSettingSection extends ConsumerWidget {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
     final renderThinkingTagAsPreview = ref.watch(P.preference.renderThinkingTagAsPreviewEnabled);
+    final respondToMobileOrientationChanges = ref.watch(P.preference.respondToMobileOrientationChanges);
+    final isMobile = ref.watch(P.app.isMobile);
     final isLight = appTheme.isLight;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (showDarkThemeTitle)
+          Row(
+            mainAxisAlignment: .start,
+            children: [
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  s.appearance_mode,
+                  style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+        if (showDarkThemeTitle) const SizedBox(height: 12),
         FormItem(
           icon: Icon(Icons.dark_mode_outlined, color: qb.withValues(alpha: .667), size: 16),
           title: s.dark_mode,
@@ -185,6 +201,36 @@ class ThemeColorSettingSection extends ConsumerWidget {
           ),
         ),
         if (showDarkThemeTitle) const SizedBox(height: 12),
+        if (showDarkThemeTitle && isMobile)
+          Row(
+            mainAxisAlignment: .start,
+            children: [
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  s.screen_orientation,
+                  style: TextStyle(fontWeight: .w500, color: qb.withValues(alpha: .8), fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+        if (showDarkThemeTitle && isMobile) const SizedBox(height: 12),
+        if (showDarkThemeTitle && isMobile)
+          FormItem(
+            icon: Icon(Icons.screen_rotation, color: qb.withValues(alpha: .667), size: 16),
+            title: s.screen_rotation,
+            subtitle: s.screen_rotation_subtitle,
+            showArrow: false,
+            isSectionStart: true,
+            isSectionEnd: true,
+            onTap: null,
+            trailing: Switch.adaptive(
+              value: respondToMobileOrientationChanges,
+              onChanged: P.preference.setRespondToMobileOrientationChanges,
+              activeThumbColor: appTheme.themePrimary,
+            ),
+          ),
+        if (showDarkThemeTitle && isMobile) const SizedBox(height: 12),
         if (showDarkThemeTitle)
           Row(
             mainAxisAlignment: .start,

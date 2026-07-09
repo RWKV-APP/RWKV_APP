@@ -371,7 +371,7 @@ extension $Conversation on _Conversation {
     P.msg.msgNode.q = msgNode;
     P.msg.ids.q = ids;
     final containsWebDemo = allIds.any((int id) => P.msg.pool.q[id]?.runningMode == "web_demo");
-    if (containsWebDemo) {
+    if (containsWebDemo && !Platform.isAndroid && !Platform.isIOS) {
       P.webDemo.hydrateFromCurrentConversation(force: true);
       push(.webDemo);
       return;

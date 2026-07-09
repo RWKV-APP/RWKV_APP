@@ -51,8 +51,6 @@ class Settings extends ConsumerWidget {
     final paddingRight = ref.watch(P.app.paddingRight);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
-    final isLightMode = appTheme.isLight;
-    final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final checkingLatestVersion = ref.watch(P.app.checkingLatestVersion);
     final tabBarHeight = appTheme.tabBarHeight;
     final useBottomTabBar = ref.watch(P.app.useBottomTabBar);
@@ -206,9 +204,8 @@ class Settings extends ConsumerWidget {
                       ),
                     FormItem(
                       isSectionEnd: false,
-                      icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.withValues(alpha: .667), size: 16),
-                      title: s.appearance,
-                      infoText: preferredThemeMode.displayName,
+                      icon: Icon(Icons.display_settings, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.display,
                       onTap: P.preference.showThemeSettings,
                     ),
                     FormItem(
@@ -418,12 +415,4 @@ class Settings extends ConsumerWidget {
     if (!context.mounted) return;
     await S.load(locale);
   }
-}
-
-extension _LocalizedThemeMode on ThemeMode {
-  String get displayName => switch (this) {
-    ThemeMode.light => S.current.light_mode,
-    ThemeMode.dark => S.current.dark_mode,
-    ThemeMode.system => S.current.follow_system,
-  };
 }

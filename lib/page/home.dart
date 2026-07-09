@@ -53,7 +53,7 @@ class PageHome extends ConsumerWidget {
     final widgets = [
       const _ChatButton(),
       const _CompletionButton(),
-      const _WebDemoButton(),
+      if (isDesktop) const _WebDemoButton(),
       const _VisualButton(),
       const _TTSButton(),
       const _RolePlayButton(),

@@ -402,6 +402,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "앱이 이미 최신 버전입니다",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("외관"),
+    "appearance_mode": MessageLookupByLibrary.simpleMessage("외관 모드"),
     "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
       "캐시를 지웠습니다. 완전히 적용하려면 앱을 다시 시작하세요.",
     ),
@@ -752,6 +753,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disabled": MessageLookupByLibrary.simpleMessage("비활성화됨"),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+    "display": MessageLookupByLibrary.simpleMessage("디스플레이 설정"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("다시 묻지 않음"),
     "download_all": MessageLookupByLibrary.simpleMessage("모두 다운로드"),
     "download_all_missing": MessageLookupByLibrary.simpleMessage(
@@ -1375,6 +1377,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("QR 코드 스캔"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
       "이 폴더에서 .pth 파일과 RWKV .gguf 파일 스캔 중",
+    ),
+    "screen_orientation": MessageLookupByLibrary.simpleMessage("화면 방향"),
+    "screen_rotation": MessageLookupByLibrary.simpleMessage("화면 회전"),
+    "screen_rotation_subtitle": MessageLookupByLibrary.simpleMessage(
+      "세로 및 가로 레이아웃 허용",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("화면 너비"),
     "search": MessageLookupByLibrary.simpleMessage("검색"),

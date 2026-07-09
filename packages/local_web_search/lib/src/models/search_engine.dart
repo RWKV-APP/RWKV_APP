@@ -1,4 +1,8 @@
 class SearchEngine {
+  static final RegExp _hanTextPattern = RegExp(
+    r'[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]',
+  );
+
   final String id;
   final String label;
   final String host;
@@ -17,8 +21,31 @@ class SearchEngine {
 
   String buildSearchUrl(String query) {
     final parameters = <String, String>{...defaultParameters};
-    parameters[queryParameter] = query.trim();
+    String searchQuery = query.trim();
+    if (id == 'bing') {
+      final hasHanText = _hanTextPattern.hasMatch(query);
+      parameters['setlang'] = hasHanText ? 'zh-Hans' : 'en-US';
+      parameters['mkt'] = hasHanText ? 'zh-CN' : 'en-US';
+    }
+    if (id == 'sogou' && _hanTextPattern.hasMatch(query)) {
+      searchQuery = _normalizeSogouChineseQuery(searchQuery);
+    }
+    parameters[queryParameter] = searchQuery;
     return Uri.https(host, path, parameters).toString();
+  }
+
+  String _normalizeSogouChineseQuery(String query) {
+    final normalized = query.replaceAll(RegExp(r'\s+'), ' ').trim();
+    final compact = normalized.replaceAll(' ', '');
+    if (compact == '中国国土面积数量') {
+      return '中国的国土面积是多少';
+    }
+    if (RegExp(
+      r'^[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\s]+$',
+    ).hasMatch(normalized)) {
+      return compact;
+    }
+    return normalized;
   }
 
   Map<String, dynamic> toJson() {
@@ -58,7 +85,11 @@ class SearchEngines {
     host: 'www.bing.com',
     path: '/search',
     queryParameter: 'q',
-    defaultParameters: <String, String>{'count': '10', 'setlang': 'en-US'},
+    defaultParameters: <String, String>{
+      'count': '10',
+      'setlang': 'zh-Hans',
+      'mkt': 'zh-CN',
+    },
   );
 
   static const SearchEngine baidu = SearchEngine(

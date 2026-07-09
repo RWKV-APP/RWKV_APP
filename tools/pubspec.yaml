@@ -6,13 +6,31 @@ publish_to: none
 
 environment:
   sdk: ^3.12.0
+  flutter: ">=3.44.0"
 
 # Add regular dependencies here.
 dependencies:
+  flutter:
+    sdk: flutter
   path: ^1.8.0
   image: ^4.0.0
   local_web_search:
     path: ../packages/local_web_search
+  zone:
+    path: ..
+
+dependency_overrides:
+  proxy_setting_android:
+    git:
+      url: https://github.com/dengzii/proxy_setting.git
+      path: packages/proxy_setting_android
+      ref: main
+  rwkv_downloader:
+    git:
+      url: https://github.com/RWKV-APP/rwkv_downloader.git
+      ref: v1
+  rwkv_mobile_flutter:
+    path: ../../rwkv_mobile_flutter
 
 dev_dependencies:
   lints: ^5.0.0

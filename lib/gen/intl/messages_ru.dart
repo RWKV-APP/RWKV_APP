@@ -462,6 +462,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "У вас последняя версия",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Внешний вид"),
+    "appearance_mode": MessageLookupByLibrary.simpleMessage(
+      "Режим внешнего вида",
+    ),
     "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
       "Кэш очищен. Перезапустите приложение, чтобы сброс полностью вступил в силу.",
     ),
@@ -910,6 +913,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disabled": MessageLookupByLibrary.simpleMessage("Выключено"),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+    "display": MessageLookupByLibrary.simpleMessage("Настройки экрана"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage(
       "Больше не спрашивать",
     ),
@@ -1679,6 +1683,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("Сканировать QR-код"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
       "Сканирование папки на наличие .pth файлов и RWKV .gguf файлов",
+    ),
+    "screen_orientation": MessageLookupByLibrary.simpleMessage(
+      "Ориентация экрана",
+    ),
+    "screen_rotation": MessageLookupByLibrary.simpleMessage("Поворот экрана"),
+    "screen_rotation_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Разрешить портретный и альбомный режимы",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("Ширина экрана"),
     "search": MessageLookupByLibrary.simpleMessage("Поиск"),

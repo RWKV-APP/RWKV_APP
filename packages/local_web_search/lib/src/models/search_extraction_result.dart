@@ -177,7 +177,7 @@ class SearchExtractionResult {
     final scheme = parsed.scheme.toLowerCase();
     if (scheme != 'http' && scheme != 'https') return '';
 
-    final filteredQuery = _filteredQuery(parsed.queryParametersAll);
+    final filteredQuery = _filteredRawQuery(parsed.query);
     final int? port = parsed.hasPort ? parsed.port : null;
     return Uri(
       scheme: scheme,
@@ -189,19 +189,20 @@ class SearchExtractionResult {
     ).toString();
   }
 
-  static String _filteredQuery(Map<String, List<String>> queryParameters) {
+  static String _filteredRawQuery(String rawQuery) {
+    if (rawQuery.isEmpty) return '';
     final pairs = <String>[];
-    final keys = queryParameters.keys.toList()..sort();
-    for (final key in keys) {
+    final rawPairs = rawQuery.split('&');
+    for (final rawPair in rawPairs) {
+      if (rawPair.isEmpty) continue;
+      final separatorIndex = rawPair.indexOf('=');
+      final key = separatorIndex < 0
+          ? rawPair
+          : rawPair.substring(0, separatorIndex);
       final lowerKey = key.toLowerCase();
       if (lowerKey.startsWith('utm_')) continue;
       if (_trackingQueryParams.contains(lowerKey)) continue;
-      final values = queryParameters[key] ?? const <String>[];
-      for (final value in values) {
-        pairs.add(
-          '${Uri.encodeQueryComponent(key)}=${Uri.encodeQueryComponent(value)}',
-        );
-      }
+      pairs.add(rawPair);
     }
     return pairs.join('&');
   }

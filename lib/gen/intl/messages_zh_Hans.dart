@@ -391,6 +391,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "已经是最新版本",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("外观"),
+    "appearance_mode": MessageLookupByLibrary.simpleMessage("外观模式"),
     "application_cache_cleared": MessageLookupByLibrary.simpleMessage(
       "缓存已清除，重启应用后完全生效",
     ),
@@ -711,6 +712,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disabled": MessageLookupByLibrary.simpleMessage("关闭"),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+    "display": MessageLookupByLibrary.simpleMessage("显示设置"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("不再询问"),
     "download_all": MessageLookupByLibrary.simpleMessage("下载全部"),
     "download_all_missing": MessageLookupByLibrary.simpleMessage("下载全部缺失文件"),
@@ -1274,6 +1276,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("扫描二维码"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
       "正在扫描该文件夹中的 .pth 文件和 RWKV .gguf 文件",
+    ),
+    "screen_orientation": MessageLookupByLibrary.simpleMessage("屏幕方向"),
+    "screen_rotation": MessageLookupByLibrary.simpleMessage("屏幕旋转"),
+    "screen_rotation_subtitle": MessageLookupByLibrary.simpleMessage(
+      "允许竖屏和横屏布局",
     ),
     "screen_width": MessageLookupByLibrary.simpleMessage("屏幕宽度"),
     "search": MessageLookupByLibrary.simpleMessage("搜索"),

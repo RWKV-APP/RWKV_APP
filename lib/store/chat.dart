@@ -81,6 +81,7 @@ class _Chat {
   late final localWebSearchPanelEnabled = qs(false);
   late final localWebSearchPanelSplitRatio = qs(0.5);
   late final localWebSearchRunning = qs(false);
+  late final localWebSearchDeepResultsEnabled = qs(false);
   late final localWebSearchEngine = qs<SearchEngine>(SearchEngines.bing);
   late final localWebSearchMessages = qs<List<String>>(const <String>[]);
   late final localWebSearchBundle = qs(const SearchReferenceBundle.empty());

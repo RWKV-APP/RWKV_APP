@@ -10,6 +10,7 @@ const String _batchViewportWidthPreferenceKey = "halo_state.batchViewportWidth";
 const String _webDemoBatchSizePreferenceKey = "halo_state.webDemoBatchSize";
 const String _renderThinkingTagAsPreviewPreferenceKey = "halo_state.renderThinkingTagAsPreview";
 const String _thinkingModePreferenceKey = "halo_state.thinkingMode";
+const String _respondToMobileOrientationChangesPreferenceKey = "halo_state.respondToMobileOrientationChanges";
 const Set<String> _preservedPreferenceCacheKeys = <String>{
   "halo_state.customModelsDir",
   "halo_state.customModelsDirBookmark",
@@ -87,6 +88,7 @@ class _Preference {
   late final preferredMessageLineHeight = qs<double>(0.0);
   late final renderMarkdownAndLatexEnabled = qs(true);
   late final renderThinkingTagAsPreviewEnabled = qs(true);
+  late final respondToMobileOrientationChanges = qs<bool>(!Platform.isAndroid && !Platform.isIOS);
 
   late final preferredThinkingMode = qs<thinking_mode.ThinkingMode>(.fast);
 
@@ -150,6 +152,8 @@ class _Preference {
     }
     return preferredMessageLineHeight;
   });
+
+  bool get _defaultRespondToMobileOrientationChanges => !Platform.isAndroid && !Platform.isIOS;
 }
 
 /// Private methods
@@ -224,6 +228,10 @@ extension _$Preference on _Preference {
     renderMarkdownAndLatexEnabled.q = true;
     renderThinkingTagAsPreview = sp.getBool(_renderThinkingTagAsPreviewPreferenceKey) ?? true;
     renderThinkingTagAsPreviewEnabled.q = renderThinkingTagAsPreview;
+    respondToMobileOrientationChanges.q = Platform.isAndroid || Platform.isIOS
+        ? sp.getBool(_respondToMobileOrientationChangesPreferenceKey) ?? false
+        : true;
+    await _syncPreferredOrientations();
 
     final thinkingMode = sp.getString(_thinkingModePreferenceKey);
     final validThinkingMode = thinking_mode.ThinkingMode.values.map((e) => e.toString()).contains(thinkingMode);
@@ -411,6 +419,7 @@ extension _$Preference on _Preference {
     preferredMessageLineHeight.q = messageLineHeightDefault;
     renderMarkdownAndLatexEnabled.q = true;
     renderThinkingTagAsPreviewEnabled.q = true;
+    respondToMobileOrientationChanges.q = _defaultRespondToMobileOrientationChanges;
     preferredThinkingMode.q = .fast;
     themeMode.q = ThemeMode.system;
     preferredDarkCustomTheme.q = .lightsOut;
@@ -428,6 +437,21 @@ extension _$Preference on _Preference {
     P.rwkvDebug.renderNewlineDirectly.q = false;
     P.rwkvDebug.renderSpaceSymbol.q = false;
     P.rwkvDebug.showPrefillLogOnly.q = true;
+    unawaited(_syncPreferredOrientations());
+  }
+
+  Future<void> _syncPreferredOrientations() async {
+    if (!Platform.isAndroid && !Platform.isIOS) return;
+    if (!respondToMobileOrientationChanges.q) {
+      await SystemChrome.setPreferredOrientations(const <DeviceOrientation>[DeviceOrientation.portraitUp]);
+      return;
+    }
+    await SystemChrome.setPreferredOrientations(const <DeviceOrientation>[
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
   }
 }
 
@@ -560,6 +584,13 @@ extension $Preference on _Preference {
     renderThinkingTagAsPreviewEnabled.q = value;
     final sp = await SharedPreferences.getInstance();
     await sp.setBool(_renderThinkingTagAsPreviewPreferenceKey, value);
+  }
+
+  Future<void> setRespondToMobileOrientationChanges(bool value) async {
+    respondToMobileOrientationChanges.q = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setBool(_respondToMobileOrientationChangesPreferenceKey, value);
+    await _syncPreferredOrientations();
   }
 
   Future<void> saveThinkingMode(thinking_mode.ThinkingMode value) async {

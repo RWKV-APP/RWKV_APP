@@ -37,48 +37,54 @@ class WebSearchTracePanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final _ = theme;
+    final grayscaleTheme = _traceGrayscaleTheme(theme);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final strings = _TraceStrings(currentLangIsZh);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
 
-    return ClipRRect(
-      borderRadius: const .only(
-        topLeft: .circular(16),
-        topRight: .circular(16),
-      ),
-      child: Column(
-        children: [
-          _TracePanelBar(title: strings.title),
-          Expanded(
-            child: ListView(
-              controller: scrollController,
-              padding: .only(left: 14, right: 14, bottom: 18 + paddingBottom),
-              physics: const BouncingScrollPhysics(),
-              children: [
-                _TraceOverview(trace: trace, strings: strings),
-                _TraceSectionTitle(title: strings.steps),
-                _TraceSteps(steps: trace.steps),
-                _TraceSectionTitle(title: strings.pages),
-                _TraceSources(sources: trace.sources, emptyText: strings.noPages),
-                _TraceSectionTitle(title: strings.referenceData),
-                _TraceTextBlock(
-                  text: trace.promptContext,
-                  emptyText: strings.noReferenceData,
-                ),
-                _TraceSectionTitle(title: strings.finalPrompt),
-                _TraceTextBlock(
-                  text: trace.finalPrompt,
-                  emptyText: strings.noPrompt,
-                ),
-                if (trace.error.isNotEmpty) ...[
-                  _TraceSectionTitle(title: strings.error),
-                  _TraceTextBlock(text: trace.error, emptyText: ''),
+    return Theme(
+      data: grayscaleTheme,
+      child: ClipRRect(
+        borderRadius: const .only(
+          topLeft: .circular(16),
+          topRight: .circular(16),
+        ),
+        child: Column(
+          children: [
+            _TracePanelBar(title: strings.title),
+            Expanded(
+              child: ListView(
+                controller: scrollController,
+                padding: .only(left: 14, right: 14, bottom: 18 + paddingBottom),
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  _TraceOverview(trace: trace, strings: strings),
+                  _TraceSectionTitle(title: strings.steps),
+                  _TraceSteps(steps: trace.steps),
+                  _TraceSectionTitle(title: strings.pages),
+                  _TraceSources(
+                    sources: trace.sources,
+                    emptyText: strings.noPages,
+                  ),
+                  _TraceSectionTitle(title: strings.referenceData),
+                  _TraceTextBlock(
+                    text: trace.promptContext,
+                    emptyText: strings.noReferenceData,
+                  ),
+                  _TraceSectionTitle(title: strings.finalPrompt),
+                  _TraceTextBlock(
+                    text: trace.finalPrompt,
+                    emptyText: strings.noPrompt,
+                  ),
+                  if (trace.error.isNotEmpty) ...[
+                    _TraceSectionTitle(title: strings.error),
+                    _TraceTextBlock(text: trace.error, emptyText: ''),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -106,17 +112,21 @@ class _TracePanelBar extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.manage_search, color: theme.colorScheme.primary),
+          Icon(Icons.manage_search, color: _traceTextColor(theme)),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               title,
               style: theme.textTheme.titleMedium?.copyWith(
+                color: _traceTextColor(theme),
                 fontWeight: .w600,
               ),
             ),
           ),
-          const IconButton(onPressed: pop, icon: Icon(Icons.close)),
+          IconButton(
+            onPressed: pop,
+            icon: Icon(Icons.close, color: _traceTextColor(theme)),
+          ),
         ],
       ),
     );
@@ -137,9 +147,9 @@ class _TraceOverview extends StatelessWidget {
       margin: const .only(top: 14, bottom: 8),
       padding: const .all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainer,
+        color: _traceOverviewColor(theme),
         borderRadius: .circular(8),
-        border: Border.all(color: theme.colorScheme.outlineVariant, width: 0.5),
+        border: Border.all(color: _traceBorderColor(theme), width: 0.5),
       ),
       child: Column(
         crossAxisAlignment: .stretch,
@@ -170,7 +180,7 @@ class _TraceKeyValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final text = value.trim().isEmpty ? '-' : value.trim();
+    final text = _traceDisplayText(value);
 
     return Padding(
       padding: const .symmetric(vertical: 4),
@@ -182,11 +192,18 @@ class _TraceKeyValue extends StatelessWidget {
             child: Text(
               label,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                color: _traceMutedTextColor(theme),
               ),
             ),
           ),
-          Expanded(child: SelectableText(text, style: theme.textTheme.bodySmall)),
+          Expanded(
+            child: SelectableText(
+              text,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: _traceTextColor(theme),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -206,7 +223,10 @@ class _TraceSectionTitle extends StatelessWidget {
       padding: const .only(top: 16, bottom: 8),
       child: Text(
         title,
-        style: theme.textTheme.titleSmall?.copyWith(fontWeight: .w700),
+        style: theme.textTheme.titleSmall?.copyWith(
+          color: _traceTextColor(theme),
+          fontWeight: .w700,
+        ),
       ),
     );
   }
@@ -244,16 +264,17 @@ class _TraceStepItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final title = step.title.trim().isEmpty ? 'Step $index' : step.title.trim();
-    final detail = step.detail.trim().isEmpty ? '-' : step.detail.trim();
+    final rawTitle = step.title.trim().isEmpty ? 'Step $index' : step.title;
+    final title = _traceDisplayText(rawTitle);
+    final detail = _traceDisplayText(step.detail);
 
     return Container(
       margin: const .only(bottom: 8),
       padding: const .all(10),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerLow,
+        color: _traceItemColor(theme),
         borderRadius: .circular(8),
-        border: Border.all(color: theme.colorScheme.outlineVariant, width: 0.5),
+        border: Border.all(color: _traceBorderColor(theme), width: 0.5),
       ),
       child: Row(
         crossAxisAlignment: .start,
@@ -264,12 +285,12 @@ class _TraceStepItem extends StatelessWidget {
             alignment: .center,
             decoration: BoxDecoration(
               shape: .circle,
-              color: theme.colorScheme.primaryContainer,
+              color: _traceBadgeColor(theme),
             ),
             child: Text(
               '$index',
               style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onPrimaryContainer,
+                color: _traceBadgeTextColor(theme),
                 fontWeight: .w700,
               ),
             ),
@@ -279,9 +300,19 @@ class _TraceStepItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: .stretch,
               children: [
-                Text(title, style: theme.textTheme.labelLarge),
+                Text(
+                  title,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: _traceTextColor(theme),
+                  ),
+                ),
                 const SizedBox(height: 4),
-                SelectableText(detail, style: theme.textTheme.bodySmall),
+                SelectableText(
+                  detail,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: _traceMutedTextColor(theme),
+                  ),
+                ),
               ],
             ),
           ),
@@ -325,9 +356,9 @@ class _TraceSourceItem extends StatelessWidget {
       margin: const .only(bottom: 8),
       padding: const .all(10),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerLow,
+        color: _traceItemColor(theme),
         borderRadius: .circular(8),
-        border: Border.all(color: theme.colorScheme.outlineVariant, width: 0.5),
+        border: Border.all(color: _traceBorderColor(theme), width: 0.5),
       ),
       child: Column(
         crossAxisAlignment: .stretch,
@@ -338,30 +369,34 @@ class _TraceSourceItem extends StatelessWidget {
               Text(
                 '#${source.rank}',
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.primary,
+                  color: _traceTextColor(theme),
                   fontWeight: .w700,
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: SelectableText(
-                  source.title.trim().isEmpty ? '-' : source.title.trim(),
-                  style: theme.textTheme.labelLarge,
+                  _traceDisplayText(source.title),
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: _traceTextColor(theme),
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 6),
           SelectableText(
-            source.url.trim().isEmpty ? '-' : source.url.trim(),
+            _traceDisplayText(source.url),
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.primary,
+              color: _traceTextColor(theme),
             ),
           ),
           const SizedBox(height: 6),
           SelectableText(
-            source.summary.trim().isEmpty ? '-' : source.summary.trim(),
-            style: theme.textTheme.bodySmall,
+            _traceDisplayText(source.summary),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: _traceMutedTextColor(theme),
+            ),
           ),
         ],
       ),
@@ -378,19 +413,20 @@ class _TraceTextBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final displayText = text.trim().isEmpty ? emptyText : text.trim();
+    final displayText = _traceDisplayText(text.trim().isEmpty ? emptyText : text);
     if (displayText.isEmpty) return const SizedBox.shrink();
 
     return Container(
       padding: const .all(10),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerLow,
+        color: _traceItemColor(theme),
         borderRadius: .circular(8),
-        border: Border.all(color: theme.colorScheme.outlineVariant, width: 0.5),
+        border: Border.all(color: _traceBorderColor(theme), width: 0.5),
       ),
       child: SelectableText(
         displayText,
         style: theme.textTheme.bodySmall?.copyWith(
+          color: _traceTextColor(theme),
           fontFamily: 'monospace',
           height: 1.35,
         ),
@@ -411,10 +447,110 @@ class _TraceEmptyText extends StatelessWidget {
     return Text(
       text,
       style: theme.textTheme.bodySmall?.copyWith(
-        color: theme.colorScheme.onSurfaceVariant,
+        color: _traceMutedTextColor(theme),
       ),
     );
   }
+}
+
+bool _traceIsDark(ThemeData theme) => theme.brightness == Brightness.dark;
+
+ThemeData _traceGrayscaleTheme(ThemeData theme) {
+  final scheme = _traceGrayscaleScheme(theme.brightness);
+  return theme.copyWith(
+    colorScheme: scheme,
+    disabledColor: _traceIsDark(theme) ? const Color(0xFF777777) : const Color(0xFFB8B8B8),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: scheme.onSurface,
+    ),
+  );
+}
+
+ColorScheme _traceGrayscaleScheme(Brightness brightness) {
+  if (brightness == Brightness.dark) {
+    return ColorScheme.fromSeed(
+      seedColor: const Color(0xFF808080),
+      brightness: Brightness.dark,
+    ).copyWith(
+      primary: const Color(0xFFE8E8E8),
+      onPrimary: const Color(0xFF111111),
+      primaryContainer: const Color(0xFF3A3A3A),
+      onPrimaryContainer: const Color(0xFFF2F2F2),
+      surface: const Color(0xFF101010),
+      onSurface: const Color(0xFFF0F0F0),
+      surfaceContainer: const Color(0xFF252525),
+      surfaceContainerLow: const Color(0xFF202020),
+      surfaceContainerHighest: const Color(0xFF303030),
+      onSurfaceVariant: const Color(0xFFC0C0C0),
+      outline: const Color(0xFF707070),
+      outlineVariant: const Color(0xFF444444),
+      error: const Color(0xFFE0E0E0),
+      onError: const Color(0xFF101010),
+    );
+  }
+
+  return ColorScheme.fromSeed(seedColor: const Color(0xFF808080)).copyWith(
+    primary: const Color(0xFF202020),
+    onPrimary: const Color(0xFFFFFFFF),
+    primaryContainer: const Color(0xFFE0E0E0),
+    onPrimaryContainer: const Color(0xFF202020),
+    surface: const Color(0xFFFFFFFF),
+    onSurface: const Color(0xFF202020),
+    surfaceContainer: const Color(0xFFEEEEEE),
+    surfaceContainerLow: const Color(0xFFF2F2F2),
+    surfaceContainerHighest: const Color(0xFFE0E0E0),
+    onSurfaceVariant: const Color(0xFF666666),
+    outline: const Color(0xFF8A8A8A),
+    outlineVariant: const Color(0xFFC8C8C8),
+    error: const Color(0xFF202020),
+    onError: const Color(0xFFFFFFFF),
+  );
+}
+
+final RegExp _traceColorGlyphPattern = RegExp(
+  r'[\u{1F1E6}-\u{1FAFF}\u{2600}-\u{27BF}]',
+  unicode: true,
+);
+
+String _traceDisplayText(String text) {
+  final normalized = text.replaceAll(_traceColorGlyphPattern, '').replaceAll(RegExp(r'[ \t]{2,}'), ' ').trim();
+  if (normalized.isEmpty) return '-';
+  return normalized;
+}
+
+Color _traceTextColor(ThemeData theme) {
+  if (_traceIsDark(theme)) return const Color(0xFFF2F2F2);
+  return const Color(0xFF202020);
+}
+
+Color _traceMutedTextColor(ThemeData theme) {
+  if (_traceIsDark(theme)) return const Color(0xFFB8B8B8);
+  return const Color(0xFF666666);
+}
+
+Color _traceOverviewColor(ThemeData theme) {
+  if (_traceIsDark(theme)) return const Color(0xFF252525);
+  return const Color(0xFFEEEEEE);
+}
+
+Color _traceItemColor(ThemeData theme) {
+  if (_traceIsDark(theme)) return const Color(0xFF202020);
+  return const Color(0xFFF2F2F2);
+}
+
+Color _traceBorderColor(ThemeData theme) {
+  if (_traceIsDark(theme)) return const Color(0xFF444444);
+  return const Color(0xFFD0D0D0);
+}
+
+Color _traceBadgeColor(ThemeData theme) {
+  if (_traceIsDark(theme)) return const Color(0xFF404040);
+  return const Color(0xFFE0E0E0);
+}
+
+Color _traceBadgeTextColor(ThemeData theme) {
+  if (_traceIsDark(theme)) return const Color(0xFFF2F2F2);
+  return const Color(0xFF202020);
 }
 
 class _TraceStrings {

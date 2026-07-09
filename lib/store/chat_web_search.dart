@@ -7,6 +7,11 @@ extension $ChatWebSearch on _Chat {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
+    if (Platform.isAndroid || Platform.isIOS) {
+      webSearchMode.q = WebSearchMode.off;
+      localWebSearchPanelEnabled.q = false;
+      return;
+    }
     webSearchMode.q = mode;
     if (mode == WebSearchMode.off) {
       localWebSearchPanelEnabled.q = false;
@@ -36,11 +41,17 @@ extension $ChatWebSearch on _Chat {
     localWebSearchEngine.q = engine;
   }
 
+  void onLocalWebSearchDeepResultsEnabledChanged(bool enabled) {
+    localWebSearchDeepResultsEnabled.q = enabled;
+  }
+
   void onLocalWebSearchBundleChanged(SearchReferenceBundle bundle) {
     localWebSearchBundle.q = bundle;
   }
 
   void onWebSearchModeTapped() {
+    if (Platform.isAndroid || Platform.isIOS) return;
+
     final loading = P.rwkvModel.loading.q;
     if (loading) return;
 
@@ -58,6 +69,7 @@ extension $ChatWebSearch on _Chat {
 
   Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {
     if (webSearchMode.q == WebSearchMode.off) return allMessage;
+    if (Platform.isAndroid || Platform.isIOS) return allMessage;
 
     final searchingRef = RefInfo.empty().copyWith(enable: true);
     _updateMessageById(id: receiveId, reference: searchingRef);
@@ -71,6 +83,7 @@ extension $ChatWebSearch on _Chat {
     List<List<String>> batchMessages,
   ) async {
     if (webSearchMode.q == WebSearchMode.off) return batchMessages;
+    if (Platform.isAndroid || Platform.isIOS) return batchMessages;
 
     final searchingRef = RefInfo.empty().copyWith(enable: true);
     _updateMessageById(id: receiveId, reference: searchingRef);
@@ -217,11 +230,13 @@ extension $ChatWebSearch on _Chat {
       final messages = _localWebSearchMessagesForPrompt(query: query);
       localWebSearchMessages.q = messages;
       const maxSources = 5;
+      final deepResultsEnabled = localWebSearchDeepResultsEnabled.q;
       final bundle = await SearchReferenceService.searchWithBrowser(
         controller: localWebSearchController,
         messages: messages,
         searchEngine: localWebSearchEngine.q,
         maxSources: maxSources,
+        enableDeepResults: deepResultsEnabled,
       );
       qqq(
         'local web search: engine=${bundle.searchEngine.id}, query=${bundle.query}, sources=${bundle.sources.length}, error=${bundle.error ?? ""}',
@@ -232,6 +247,10 @@ extension $ChatWebSearch on _Chat {
         );
       }
       localWebSearchBundle.q = bundle;
+      final promptContext = _promptContextFromLocalWebSearchBundle(
+        bundle: bundle,
+        deepResultsEnabled: deepResultsEnabled,
+      );
       final ref = RefInfo(
         list: _referencesFromLocalWebSearchBundle(bundle),
         enable: true,
@@ -240,9 +259,10 @@ extension $ChatWebSearch on _Chat {
           bundle: bundle,
           userQuery: query,
           sourceLimit: maxSources,
+          promptContext: promptContext,
         ),
       );
-      return (ref: ref, promptContext: bundle.promptContext);
+      return (ref: ref, promptContext: promptContext);
     } catch (e) {
       qqe(e);
       return (
@@ -260,6 +280,16 @@ extension $ChatWebSearch on _Chat {
 
   List<String> _localWebSearchMessagesForPrompt({required String query}) {
     return <String>["User: $query"];
+  }
+
+  String _promptContextFromLocalWebSearchBundle({
+    required SearchReferenceBundle bundle,
+    required bool deepResultsEnabled,
+  }) {
+    if (deepResultsEnabled && bundle.deepPromptContext.isNotEmpty) {
+      return bundle.deepPromptContext;
+    }
+    return bundle.promptContext;
   }
 
   List<Reference> _referencesFromLocalWebSearchBundle(SearchReferenceBundle bundle) {
@@ -298,6 +328,7 @@ extension $ChatWebSearch on _Chat {
     required SearchReferenceBundle bundle,
     required String userQuery,
     required int sourceLimit,
+    required String promptContext,
   }) {
     final searchUrl = bundle.searchEngine.buildSearchUrl(bundle.query);
     final extractedItemCount = _itemsLengthFromRawJson(bundle.rawJson);
@@ -333,6 +364,12 @@ extension $ChatWebSearch on _Chat {
         title: 'Result page parsed',
         detail: '${bundle.sources.length} source(s) kept from $extractedItemCount parsed result(s).',
       ),
+      if (bundle.request.enableDeepResults)
+        WebSearchTraceStep(
+          title: 'Deep result pages parsed',
+          detail:
+              '${bundle.deepResults.where((result) => result.hasContent).length} readable page(s) from ${bundle.deepResults.length} attempted page(s).',
+        ),
       if (bundle.error != null && bundle.error!.isNotEmpty)
         WebSearchTraceStep(
           title: 'Search reported an issue',
@@ -352,7 +389,7 @@ extension $ChatWebSearch on _Chat {
       sourceLimit: sourceLimit,
       sources: sources,
       steps: steps,
-      promptContext: bundle.promptContext,
+      promptContext: promptContext,
       finalPrompt: '',
       error: bundle.error ?? '',
     );

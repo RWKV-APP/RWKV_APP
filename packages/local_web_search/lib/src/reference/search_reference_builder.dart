@@ -32,11 +32,17 @@ class SearchReferenceBuilder {
     required String query,
     required SearchExtractionResult extraction,
     int maxSources = defaultMaxSources,
+    bool enableDeepResults = false,
+    int maxDeepResults = 3,
+    int maxDeepCharactersPerResult = 2200,
   }) {
     return SearchReferenceBundle.fromExtraction(
       request: SearchReferenceRequest(
         messages: messages,
         maxSources: maxSources,
+        enableDeepResults: enableDeepResults,
+        maxDeepResults: maxDeepResults,
+        maxDeepCharactersPerResult: maxDeepCharactersPerResult,
       ),
       searchEngine: searchEngine,
       query: query,

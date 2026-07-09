@@ -1,10 +1,17 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zone/config.dart';
 import 'package:zone/func/web_demo.dart';
+import 'package:zone/model/message.dart';
+import 'package:zone/model/msg_node.dart';
 import 'package:zone/store/p.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('Web Demo prompt helpers', () {
     test('uses a raw HTML only default prompt template', () {
       final prompt = buildWebDemoPrompt(template: webDemoDefaultPromptTemplate, request: 'make a clock');
@@ -227,6 +234,117 @@ noise
       expect(parts, hasLength(2));
       expect(parts.first, '<!doctype html><html><body>One</body></html>');
       expect(parts.last, '<!doctype html><html><body>Two</body></html>');
+    });
+  });
+
+  group('Web Demo result actions', () {
+    test('copies result source to clipboard', () async {
+      final copiedTexts = <String>[];
+      final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method != 'Clipboard.setData') return null;
+        final arguments = Map<String, dynamic>.from(call.arguments as Map);
+        copiedTexts.add(arguments['text'] as String);
+        return null;
+      });
+      addTearDown(() {
+        messenger.setMockMethodCallHandler(SystemChannels.platform, null);
+      });
+      const result = WebDemoResult(
+        index: 0,
+        raw: '<!doctype html><html><body>Copy me</body></html>',
+        streaming: false,
+      );
+
+      await P.webDemo.copyResultSource(result);
+
+      expect(copiedTexts, ['<!doctype html><html><body>Copy me</body></html>']);
+    });
+
+    test('prepares continuation from existing HTML', () async {
+      P.webDemo.pendingHtmlContext.q = null;
+      P.webDemo.promptInput.q = '';
+      P.webDemo.promptController.text = '';
+
+      await P.webDemo.prepareContinuation(
+        html: '<!doctype html><html><body>Old page</body></html>',
+      );
+
+      expect(P.webDemo.pendingHtmlContext.q, '<!doctype html><html><body>Old page</body></html>');
+      expect(P.webDemo.promptInput.q, 'Modify this page: ');
+      expect(P.webDemo.promptController.text, 'Modify this page: ');
+    });
+
+    test('saves HTML into the web demo directory', () async {
+      final root = Directory.systemTemp.createTempSync('rwkv_web_demo_test_');
+      addTearDown(() {
+        if (root.existsSync()) root.deleteSync(recursive: true);
+      });
+      P.app.documentsDir.q = root;
+
+      final file = await P.webDemo.saveHtml(
+        html: '<!doctype html><html><body>Saved page</body></html>',
+        label: 'unit',
+      );
+
+      expect(file.existsSync(), isTrue);
+      expect(file.path, contains('/web_demo/'));
+      expect(file.readAsStringSync(), '<!doctype html><html><body>Saved page</body></html>');
+      expect(P.webDemo.lastSavedHtmlPath.q, file.path);
+    });
+
+    test('stops an active cloud run and marks streaming results complete', () async {
+      P.msg.ids.q = [];
+      P.msg.msgNode.q = MsgNode(0);
+      P.rwkvGeneration.generating.q = true;
+      P.webDemo.active.q = true;
+      P.webDemo.currentRun.q = WebDemoRun(
+        prompt: 'make html',
+        createdAt: DateTime(2026),
+        backendMode: WebDemoBackendMode.cloud7b,
+        batchSize: 1,
+        rawDecodeParams: '{}',
+      );
+      P.webDemo.results.q = const <WebDemoResult>[
+        WebDemoResult(index: 0, raw: '<html><body>Streaming</body>', streaming: true),
+      ];
+
+      await P.webDemo.stopActive();
+
+      expect(P.webDemo.active.q, isFalse);
+      expect(P.rwkvGeneration.generating.q, isFalse);
+      expect(P.webDemo.results.q.first.streaming, isFalse);
+    });
+
+    test('hydrates previous batch results from conversation history', () {
+      P.webDemo.active.q = false;
+      const firstHtml = '<!doctype html><html><body>One</body></html>';
+      const secondHtml = '<!doctype html><html><body>Two</body></html>';
+      final batchContent = '$firstHtml${Config.batchMarker}$secondHtml';
+      final root = MsgNode(0);
+      final userNode = root.rootAdd(MsgNode(100));
+      userNode.add(MsgNode(101));
+      P.msg.msgNode.q = root;
+      P.msg.pool.q = {
+        100: const Message(id: 100, content: 'make two pages', isMine: true, paused: false),
+        101: Message(
+          id: 101,
+          content: batchContent,
+          isMine: false,
+          paused: false,
+          modelName: 'Official RWKV Web Demo 13.3B',
+          runningMode: 'web_demo',
+          rawDecodeParams: '{}',
+        ),
+      };
+
+      P.webDemo.hydrateFromCurrentConversation(force: true);
+
+      expect(P.webDemo.results.q, hasLength(2));
+      expect(P.webDemo.results.q.first.raw, firstHtml);
+      expect(P.webDemo.results.q.last.raw, secondHtml);
+      expect(P.webDemo.currentRun.q?.prompt, 'make two pages');
+      expect(P.webDemo.currentRun.q?.backendMode, WebDemoBackendMode.cloud13b);
     });
   });
 }

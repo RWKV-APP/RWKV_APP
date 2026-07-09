@@ -4,7 +4,10 @@ import 'package:flutter/foundation.dart';
 // Package imports:
 import 'package:local_web_search/src/models/search_engine.dart';
 import 'package:local_web_search/src/models/search_extraction_result.dart';
+import 'package:local_web_search/src/models/search_deep_result.dart';
 import 'package:local_web_search/src/models/search_reference_bundle.dart';
+import 'package:local_web_search/src/models/search_reference_source.dart';
+import 'package:local_web_search/src/scripts/page_markdown_extraction_script.dart';
 import 'package:local_web_search/src/scripts/serp_extraction_script.dart';
 
 abstract interface class SearchBrowserControllerDelegate {
@@ -90,6 +93,35 @@ class SearchBrowserController extends ChangeNotifier {
       return SearchExtractionResult.fromJavaScriptResult(result);
     } catch (error) {
       return SearchExtractionResult.failure(error.toString());
+    }
+  }
+
+  Future<SearchDeepResult> runDeepExtraction({
+    required SearchReferenceSource source,
+    int maxCharacters = 2200,
+  }) async {
+    final delegate = _delegate;
+    if (delegate == null) {
+      return SearchDeepResult.failure(
+        source: source,
+        message: 'Browser adapter is not ready.',
+      );
+    }
+
+    try {
+      final result = await delegate.evaluateJavaScript(
+        pageMarkdownExtractionScript,
+      );
+      return SearchDeepResult.fromJavaScriptResult(
+        source: source,
+        result: result,
+        maxCharacters: maxCharacters,
+      );
+    } catch (error) {
+      return SearchDeepResult.failure(
+        source: source,
+        message: error.toString(),
+      );
     }
   }
 

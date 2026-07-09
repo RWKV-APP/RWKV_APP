@@ -9,7 +9,9 @@ import 'package:local_web_search/local_web_search.dart';
 
 class _FakeBrowserDelegate implements SearchBrowserControllerDelegate {
   String? loadedUrl;
+  final loadedUrls = <String>[];
   Object? scriptResult;
+  Object? Function(String url)? scriptResultForUrl;
 
   @override
   bool get supportsBrowserActions => true;
@@ -23,6 +25,10 @@ class _FakeBrowserDelegate implements SearchBrowserControllerDelegate {
   @override
   Future<void> loadUrl(String url) async {
     loadedUrl = url;
+    loadedUrls.add(url);
+    final resultForUrl = scriptResultForUrl;
+    if (resultForUrl == null) return;
+    scriptResult = resultForUrl(url);
   }
 }
 
@@ -60,7 +66,52 @@ void main() {
 
     expect(
       delegate.loadedUrl,
-      'https://www.bing.com/search?count=10&setlang=en-US&q=RWKV+Chat+search',
+      'https://www.bing.com/search?count=10&setlang=en-US&mkt=en-US&q=RWKV+Chat+search',
+    );
+  });
+
+  test('loadSearch builds localized Bing URL for Chinese queries', () async {
+    final controller = SearchBrowserController();
+    final delegate = _FakeBrowserDelegate();
+    controller.attach(delegate);
+
+    await controller.loadSearch(engine: SearchEngines.bing, query: '中国');
+
+    expect(
+      delegate.loadedUrl,
+      'https://www.bing.com/search?count=10&setlang=zh-Hans&mkt=zh-CN&q=%E4%B8%AD%E5%9B%BD',
+    );
+  });
+
+  test('loadSearch normalizes Sogou Chinese question URLs', () async {
+    final controller = SearchBrowserController();
+    final delegate = _FakeBrowserDelegate();
+    controller.attach(delegate);
+
+    await controller.loadSearch(
+      engine: SearchEngines.sogou,
+      query: '中国 国土面积 数量',
+    );
+
+    expect(
+      delegate.loadedUrl,
+      'https://www.sogou.com/web?query=%E4%B8%AD%E5%9B%BD%E7%9A%84%E5%9B%BD%E5%9C%9F%E9%9D%A2%E7%A7%AF%E6%98%AF%E5%A4%9A%E5%B0%91',
+    );
+  });
+
+  test('loadSearch preserves mixed Latin terms for Sogou URLs', () async {
+    final controller = SearchBrowserController();
+    final delegate = _FakeBrowserDelegate();
+    controller.attach(delegate);
+
+    await controller.loadSearch(
+      engine: SearchEngines.sogou,
+      query: 'RWKV Transformer 区别',
+    );
+
+    expect(
+      delegate.loadedUrl,
+      'https://www.sogou.com/web?query=RWKV+Transformer+%E5%8C%BA%E5%88%AB',
     );
   });
 
@@ -80,6 +131,29 @@ void main() {
     expect(result.items.first.url, 'https://www.rwkv.com/');
     expect(result.pageUrl, 'https://www.bing.com/search?q=RWKV');
     expect(result.pageTitle, 'RWKV - Bing');
+  });
+
+  test('runDeepExtraction parses page markdown JSON', () async {
+    final controller = SearchBrowserController();
+    final delegate = _FakeBrowserDelegate();
+    delegate.scriptResult = '''
+{"href":"https://example.com/china","title":"China overview","markdown":"# China\\nChina is a country in East Asia.","rawTextLength":120,"markdownLength":42}
+''';
+    controller.attach(delegate);
+
+    const source = SearchReferenceSource(
+      rank: 1,
+      title: 'China',
+      url: 'https://example.com/china',
+      summary: 'China overview',
+    );
+    final result = await controller.runDeepExtraction(source: source);
+
+    expect(result.hasContent, true);
+    expect(result.title, 'China overview');
+    expect(result.url, 'https://example.com/china');
+    expect(result.markdown, contains('# China'));
+    expect(result.toPromptBlock(), contains('Extracted page content'));
   });
 
   test('SearchExtractionResult rejects stale engine pages', () {
@@ -136,6 +210,19 @@ void main() {
     expect(result.items.first.title, 'Result One');
     expect(result.items.first.url, 'https://example.com/path?id=42');
     expect(result.items.first.snippet, 'first snippet');
+  });
+
+  test('SearchExtractionResult preserves non-UTF8 percent-encoded queries', () {
+    final result = SearchExtractionResult.fromJavaScriptResult('''
+{"href":"https://yandex.com/search/?text=dog","title":"dog - Yandex","items":[{"title":"深圳流浪狗吧-百度贴吧","url":"https://tieba.baidu.com/f?kw=%C9%EE%DB%DA%C1%F7%C0%CB%B9%B7","snippet":"贴吧结果"}]}
+''');
+
+    expect(result.hasError, false);
+    expect(result.items.length, 1);
+    expect(
+      result.items.first.url,
+      'https://tieba.baidu.com/f?kw=%C9%EE%DB%DA%C1%F7%C0%CB%B9%B7',
+    );
   });
 
   test('SearchExtractionResult caps script items at ten', () {
@@ -223,6 +310,62 @@ void main() {
 
     expect(result.shouldSearch, true);
     expect(result.query, '中国');
+  });
+
+  test('SearchQueryGenerator keywordizes Chinese dog count prompts', () {
+    final result = SearchQueryGenerator.build(<String>['User: 告诉我深圳有多少条狗？']);
+
+    expect(result.shouldSearch, true);
+    expect(result.query, '深圳 养犬 登记 犬只 数量');
+  });
+
+  test('SearchQueryGenerator keywordizes Chinese dog license prompts', () {
+    final result = SearchQueryGenerator.build(<String>[
+      'User: 帮我查一下深圳养狗需要办什么证？',
+    ]);
+
+    expect(result.shouldSearch, true);
+    expect(result.query, '深圳 狗证 办理 养犬登记');
+  });
+
+  test('SearchQueryGenerator compacts RWKV Transformer comparison prompts', () {
+    final result = SearchQueryGenerator.build(<String>[
+      'User: RWKV 和 Transformer 有什么区别？',
+    ]);
+
+    expect(result.shouldSearch, true);
+    expect(result.query, 'RWKV vs Transformer');
+  });
+
+  test('SearchQueryGenerator expands bare RWKV introduction prompts', () {
+    final result = SearchQueryGenerator.build(<String>['User: 给我介绍一下 RWKV。']);
+
+    expect(result.shouldSearch, true);
+    expect(result.query, 'RWKV language model');
+  });
+
+  test('SearchQueryGenerator avoids treating recent years as quantity', () {
+    final result = SearchQueryGenerator.build(<String>[
+      'User: 比亚迪最近几年为什么增长这么快？',
+    ]);
+
+    expect(result.shouldSearch, true);
+    expect(result.query, '比亚迪 增长 原因');
+  });
+
+  test('SearchQueryGenerator splits compact Chinese quantity prompts', () {
+    final area = SearchQueryGenerator.build(<String>['User: 中国的国土面积是多少？']);
+    final population = SearchQueryGenerator.build(<String>[
+      'User: 深圳现在大概有多少人口？',
+    ]);
+    final regions = SearchQueryGenerator.build(<String>['User: 中国有多少个省级行政区？']);
+
+    expect(area.shouldSearch, true);
+    expect(area.query, '中国 国土面积 数量');
+    expect(population.shouldSearch, true);
+    expect(population.query, '深圳 人口 数量');
+    expect(regions.shouldSearch, true);
+    expect(regions.query, '中国 省级行政区 数量');
   });
 
   test('SearchQueryGenerator uses lightweight history for references', () {
@@ -504,6 +647,135 @@ void main() {
     expect(bundle.sources.length, 1);
   });
 
+  test('SearchReferenceBuilder matches Chinese regional script aliases', () {
+    const extraction = SearchExtractionResult(
+      items: <SearchResultItem>[
+        SearchResultItem(
+          title: '中華人民共和國- 維基百科',
+          url: 'https://zh.wikipedia.org/zh-hk/china',
+          snippet: '其後被世界多數國家承認為中國的唯一合法政權。',
+        ),
+      ],
+      rawJson: '{"items":[]}',
+    );
+
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 给我讲讲中国'],
+      query: '中国',
+      extraction: extraction,
+    );
+
+    expect(bundle.hasError, false);
+    expect(bundle.sources.length, 1);
+  });
+
+  test('SearchReferenceBuilder matches Chinese question terms', () {
+    const extraction = SearchExtractionResult(
+      items: <SearchResultItem>[
+        SearchResultItem(
+          title: '深圳官方发布犬只登记数据',
+          url: 'https://example.com/shenzhen-dogs',
+          snippet: '截至 2023 年 5 月，全市登记犬只 23.8 万只。',
+        ),
+      ],
+      rawJson: '{"items":[]}',
+    );
+
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 告诉我深圳有多少条狗？'],
+      query: '深圳有多少条狗',
+      extraction: extraction,
+    );
+
+    expect(bundle.hasError, false);
+    expect(bundle.sources.length, 1);
+    expect(bundle.sources.first.title, '深圳官方发布犬只登记数据');
+  });
+
+  test('SearchReferenceBuilder matches dog and canine aliases', () {
+    const extraction = SearchExtractionResult(
+      items: <SearchResultItem>[
+        SearchResultItem(
+          title: '犬只登记管理数据',
+          url: 'https://example.com/canine-registration',
+          snippet: '本年度登记犬只数量持续更新。',
+        ),
+      ],
+      rawJson: '{"items":[]}',
+    );
+
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 狗数量'],
+      query: '狗数量',
+      extraction: extraction,
+    );
+
+    expect(bundle.hasError, false);
+    expect(bundle.sources.length, 1);
+    expect(bundle.sources.first.title, '犬只登记管理数据');
+  });
+
+  test(
+    'SearchReferenceBuilder rejects city-only results for dog questions',
+    () {
+      const extraction = SearchExtractionResult(
+        items: <SearchResultItem>[
+          SearchResultItem(
+            title: '深圳市_百度百科',
+            url: 'https://baike.baidu.com/item/shenzhen',
+            snippet: '深圳市的前身是宝安县，是广东省辖地级市。',
+          ),
+        ],
+        rawJson: '{"items":[]}',
+      );
+
+      final bundle = SearchReferenceBuilder.buildBundle(
+        messages: <String>['User: 告诉我深圳有多少条狗？'],
+        query: '深圳 养犬 登记 犬只 数量',
+        extraction: extraction,
+      );
+
+      expect(bundle.hasError, true);
+      expect(bundle.sources, isEmpty);
+    },
+  );
+
+  test('SearchReferenceBuilder matches compact Chinese quantity terms', () {
+    const extraction = SearchExtractionResult(
+      items: <SearchResultItem>[
+        SearchResultItem(
+          title: '国情_中国政府网',
+          url: 'https://www.gov.cn/guoqing/',
+          snippet: '中国陆地总面积约960万平方千米。',
+        ),
+        SearchResultItem(
+          title: '深圳市统计局人口数据',
+          url: 'https://tjj.sz.gov.cn/',
+          snippet: '深圳市常住人口数据持续发布。',
+        ),
+      ],
+      rawJson: '{"items":[]}',
+    );
+
+    final area = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 中国的国土面积是多少？'],
+      query: '中国国土面积 数量',
+      extraction: extraction,
+    );
+    final population = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 深圳现在大概有多少人口？'],
+      query: '深圳现在大概人口 数量',
+      extraction: extraction,
+    );
+
+    expect(area.hasError, false);
+    expect(area.sources.length, 1);
+    expect(area.sources.first.title, '国情_中国政府网');
+    expect(population.hasError, false);
+    expect(population.sources.length, 1);
+    expect(population.sources.first.title, '深圳市统计局人口数据');
+  });
+
   test(
     'SearchReferenceService loads search page and stores latest bundle',
     () async {
@@ -530,6 +802,113 @@ void main() {
     },
   );
 
+  test('SearchReferenceService reads deep page results when enabled', () async {
+    final controller = SearchBrowserController();
+    final delegate = _FakeBrowserDelegate();
+    delegate.scriptResultForUrl = (url) {
+      if (url.contains('www.bing.com/search')) {
+        return '''
+{"href":"https://www.bing.com/search?q=%E4%B8%AD%E5%9B%BD","title":"China - Bing","items":[{"title":"China overview","url":"https://example.com/china","snippet":"China is a country in East Asia."}]}
+''';
+      }
+      if (url == 'https://example.com/china') {
+        return '''
+{"href":"https://example.com/china","title":"China overview page","markdown":"# China\\nChina has provinces, cities, and a large population.","rawTextLength":320,"markdownLength":58}
+''';
+      }
+      return '''
+{"href":"$url","title":"Empty","markdown":"","rawTextLength":0,"markdownLength":0,"error":"Unexpected URL"}
+''';
+    };
+    controller.attach(delegate);
+
+    final bundle = await SearchReferenceService.searchWithBrowser(
+      controller: controller,
+      messages: <String>['User: 给我讲讲中国'],
+      pageLoadDelay: Duration.zero,
+      retryDelay: Duration.zero,
+      enableDeepResults: true,
+      detailPageLoadDelay: Duration.zero,
+    );
+
+    expect(delegate.loadedUrls.length, 2);
+    expect(delegate.loadedUrls.first, contains('www.bing.com/search'));
+    expect(delegate.loadedUrls.last, 'https://example.com/china');
+    expect(bundle.hasError, false);
+    expect(bundle.sources.length, 1);
+    expect(bundle.hasDeepResults, true);
+    expect(bundle.deepResults.length, 1);
+    expect(bundle.deepPromptContext, contains('Deep page results'));
+    expect(bundle.deepPromptContext, contains('China has provinces'));
+    expect(controller.latestReferenceBundle.hasDeepResults, true);
+  });
+
+  test(
+    'SearchReferenceService skips deep page results when disabled',
+    () async {
+      final controller = SearchBrowserController();
+      final delegate = _FakeBrowserDelegate();
+      delegate.scriptResultForUrl = (url) {
+        return '''
+{"href":"https://www.bing.com/search?q=%E4%B8%AD%E5%9B%BD","title":"China - Bing","items":[{"title":"China overview","url":"https://example.com/china","snippet":"China is a country in East Asia."}]}
+''';
+      };
+      controller.attach(delegate);
+
+      final bundle = await SearchReferenceService.searchWithBrowser(
+        controller: controller,
+        messages: <String>['User: 给我讲讲中国'],
+        pageLoadDelay: Duration.zero,
+        retryDelay: Duration.zero,
+      );
+
+      expect(delegate.loadedUrls.length, 1);
+      expect(bundle.sources.length, 1);
+      expect(bundle.deepResults, isEmpty);
+      expect(bundle.deepPromptContext, isEmpty);
+    },
+  );
+
+  test(
+    'SearchReferenceService keeps reading sources after a deep miss',
+    () async {
+      final controller = SearchBrowserController();
+      final delegate = _FakeBrowserDelegate();
+      delegate.scriptResultForUrl = (url) {
+        if (url.contains('www.bing.com/search')) {
+          return '''
+{"href":"https://www.bing.com/search?q=%E4%B8%AD%E5%9B%BD","title":"China - Bing","items":[{"title":"Bad China mirror","url":"https://bad.example/china","snippet":"China overview"},{"title":"China overview","url":"https://example.com/china","snippet":"China overview"}]}
+''';
+        }
+        if (url == 'https://bad.example/china') {
+          return '''
+{"href":"https://bad.example/china","title":"Bad China mirror","markdown":"","rawTextLength":0,"markdownLength":0,"error":"Deep extraction found no readable page content."}
+''';
+        }
+        return '''
+{"href":"https://example.com/china","title":"China overview","markdown":"# China\\nReadable page content.","rawTextLength":180,"markdownLength":32}
+''';
+      };
+      controller.attach(delegate);
+
+      final bundle = await SearchReferenceService.searchWithBrowser(
+        controller: controller,
+        messages: <String>['User: 给我讲讲中国'],
+        pageLoadDelay: Duration.zero,
+        retryDelay: Duration.zero,
+        enableDeepResults: true,
+        maxDeepResults: 1,
+        detailPageLoadDelay: Duration.zero,
+      );
+
+      expect(bundle.sources.length, 2);
+      expect(bundle.deepResults.length, 2);
+      expect(bundle.deepResults.first.hasError, true);
+      expect(bundle.deepResults.last.hasContent, true);
+      expect(bundle.deepPromptContext, contains('Readable page content'));
+    },
+  );
+
   test('SearchReferenceService searches simple Chinese prompts', () async {
     final controller = SearchBrowserController();
     final delegate = _FakeBrowserDelegate();
@@ -550,6 +929,78 @@ void main() {
     expect(bundle.hasError, false);
     expect(bundle.sources.length, 1);
   });
+
+  test(
+    'SearchReferenceService retries relevance failures with a fallback engine',
+    () async {
+      final controller = SearchBrowserController();
+      final delegate = _FakeBrowserDelegate();
+      delegate.scriptResultForUrl = (url) {
+        if (url.contains('duckduckgo.com')) {
+          return '''
+{"href":"https://duckduckgo.com/?q=%E6%B7%B1%E5%9C%B3+%E5%85%BB%E7%8A%AC+%E7%99%BB%E8%AE%B0+%E7%8A%AC%E5%8F%AA+%E6%95%B0%E9%87%8F","title":"深圳 养犬 登记 犬只 数量 at DuckDuckGo","items":[{"title":"深圳登记犬只达23.8万只","url":"https://cgj.sz.gov.cn/zjcg/zh/content/post_10616673.html","snippet":"深圳登记犬只达23.8万只，市民可了解犬只芯片、疫苗注射、犬只办证及养犬健康等知识。"}]}
+''';
+        }
+        return '''
+{"href":"https://www.bing.com/search?q=%E6%B7%B1%E5%9C%B3+%E5%85%BB%E7%8A%AC+%E7%99%BB%E8%AE%B0+%E7%8A%AC%E5%8F%AA+%E6%95%B0%E9%87%8F","title":"深圳 养犬 登记 犬只 数量 - 搜索","items":[{"title":"深圳市_百度百科","url":"https://baike.baidu.com/item/%E6%B7%B1%E5%9C%B3%E5%B8%82/11044365","snippet":"深圳市地处中国华南地区，广东南部。"}]}
+''';
+      };
+      controller.attach(delegate);
+
+      final bundle = await SearchReferenceService.searchWithBrowser(
+        controller: controller,
+        messages: <String>['User: 告诉我深圳有多少条狗？'],
+        searchEngine: SearchEngines.bing,
+        pageLoadDelay: Duration.zero,
+        retryDelay: Duration.zero,
+      );
+
+      expect(delegate.loadedUrls.length, 2);
+      expect(delegate.loadedUrls.first, contains('www.bing.com/search'));
+      expect(delegate.loadedUrls.last, contains('duckduckgo.com'));
+      expect(bundle.searchEngine, SearchEngines.duckDuckGo);
+      expect(bundle.hasError, false);
+      expect(bundle.sources.length, 1);
+      expect(bundle.sources.first.title, '深圳登记犬只达23.8万只');
+      expect(controller.latestReferenceBundle.sources.length, 1);
+    },
+  );
+
+  test(
+    'SearchReferenceService retries blocked pages with a fallback engine',
+    () async {
+      final controller = SearchBrowserController();
+      final delegate = _FakeBrowserDelegate();
+      delegate.scriptResultForUrl = (url) {
+        if (url.contains('www.bing.com')) {
+          return '''
+{"href":"https://www.bing.com/search?q=%E4%B8%AD%E5%9B%BD","title":"中国 - 搜索","items":[{"title":"中国概况","url":"https://example.com/china","snippet":"中国是位于东亚的国家。"}]}
+''';
+        }
+        return '''
+{"href":"https://www.google.com/sorry/index?continue=https://www.google.com/search?q=%E4%B8%AD%E5%9B%BD","title":"About this page","error":"Search page blocked automated traffic.","items":[{"title":"Learn more","url":"https://support.google.com/websearch/answer/86640","snippet":"captcha"}]}
+''';
+      };
+      controller.attach(delegate);
+
+      final bundle = await SearchReferenceService.searchWithBrowser(
+        controller: controller,
+        messages: <String>['User: 给我讲讲中国'],
+        searchEngine: SearchEngines.google,
+        pageLoadDelay: Duration.zero,
+        retryDelay: Duration.zero,
+      );
+
+      expect(delegate.loadedUrls.length, 2);
+      expect(delegate.loadedUrls.first, contains('www.google.com/search'));
+      expect(delegate.loadedUrls.last, contains('www.bing.com/search'));
+      expect(bundle.searchEngine, SearchEngines.bing);
+      expect(bundle.hasError, false);
+      expect(bundle.sources.length, 1);
+      expect(bundle.sources.first.title, '中国概况');
+      expect(controller.latestReferenceBundle.searchEngine, SearchEngines.bing);
+    },
+  );
 
   test('SearchReferenceService reports missing browser adapter', () async {
     final controller = SearchBrowserController();

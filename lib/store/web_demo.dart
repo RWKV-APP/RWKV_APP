@@ -296,6 +296,8 @@ extension $WebDemo on _WebDemo {
   }
 
   Future<void> sendPrompt(String raw, {String? sourceHtml}) async {
+    if (Platform.isAndroid || Platform.isIOS) return;
+
     if (active.q || P.rwkvGeneration.generating.q) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -438,6 +440,8 @@ extension $WebDemo on _WebDemo {
   Future<void> prepareContinuation({
     required String html,
   }) async {
+    if (Platform.isAndroid || Platform.isIOS) return;
+
     final trimmed = html.trim();
     if (trimmed.isEmpty) {
       Alert.warning("No HTML found");

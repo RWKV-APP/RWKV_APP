@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/web_demo_grayscale_theme.dart';
 import 'package:zone/widgets/web_demo_preview.dart';
 
 class PageWebDemo extends ConsumerWidget {
@@ -26,10 +27,13 @@ class PageWebDemo extends ConsumerWidget {
       P.webDemo.hydrateFromCurrentConversation();
     });
 
-    return const Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: _WebDemoShell(),
+    return Theme(
+      data: webDemoGrayscaleTheme(theme),
+      child: const Scaffold(
+        body: SafeArea(
+          bottom: false,
+          child: _WebDemoShell(),
+        ),
       ),
     );
   }
