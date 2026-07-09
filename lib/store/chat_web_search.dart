@@ -314,7 +314,7 @@ extension $ChatWebSearch on _Chat {
     if (trace == null) return ref;
     final nextSteps = <WebSearchTraceStep>[
       ...trace.steps,
-      WebSearchTraceStep(
+      const WebSearchTraceStep(
         title: 'Prompt constructed',
         detail: 'The prompt below was passed to the inference engine.',
       ),
@@ -454,7 +454,7 @@ extension $ChatWebSearch on _Chat {
       sources: sources,
       steps: <WebSearchTraceStep>[
         WebSearchTraceStep(title: 'Input captured', detail: query),
-        WebSearchTraceStep(
+        const WebSearchTraceStep(
           title: 'Remote search requested',
           detail: 'top_n=3',
         ),
@@ -462,7 +462,7 @@ extension $ChatWebSearch on _Chat {
           title: 'Reference summaries received',
           detail: searchResult,
         ),
-        WebSearchTraceStep(
+        const WebSearchTraceStep(
           title: 'Prompt constructed',
           detail: 'The prompt below was passed to the inference engine.',
         ),
