@@ -55,6 +55,8 @@ class Settings extends ConsumerWidget {
     final tabBarHeight = appTheme.tabBarHeight;
     final useBottomTabBar = ref.watch(P.app.useBottomTabBar);
     final tabBarReservedHeight = useBottomTabBar ? tabBarHeight : 0.0;
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final iconCacheSize = (64 * devicePixelRatio).ceil();
 
     final totalUsage = formatBytes(ref.watch(P.remote.totalSizeInModelsDir));
 
@@ -63,7 +65,11 @@ class Settings extends ConsumerWidget {
       height: 64,
       child: ClipRRect(
         borderRadius: .circular(12),
-        child: Image.asset(iconPath),
+        child: Image.asset(
+          iconPath,
+          cacheHeight: iconCacheSize,
+          cacheWidth: iconCacheSize,
+        ),
       ),
     );
 

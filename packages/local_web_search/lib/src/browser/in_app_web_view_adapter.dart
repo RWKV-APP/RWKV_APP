@@ -7,6 +7,12 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:local_web_search/src/browser/search_browser_controller.dart';
+import 'package:local_web_search/src/debug/search_debug_log.dart';
+
+@visibleForTesting
+bool webViewErrorAffectsMainPage(bool? isForMainFrame) {
+  return isForMainFrame == true;
+}
 
 class InAppWebViewBrowserAdapter extends StatefulWidget {
   final SearchBrowserController controller;
@@ -27,10 +33,6 @@ class _InAppWebViewBrowserAdapterState extends State<InAppWebViewBrowserAdapter>
     implements SearchBrowserControllerDelegate {
   static const String _desktopChromeUserAgent =
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
-  static const bool _logWebViewLoads = bool.fromEnvironment(
-    'LOCAL_WEB_SEARCH_LOG_WEBVIEW_LOADS',
-    defaultValue: true,
-  );
   static const Duration _resizePlaceholderDuration = Duration(
     milliseconds: 320,
   );
@@ -125,7 +127,9 @@ class _InAppWebViewBrowserAdapterState extends State<InAppWebViewBrowserAdapter>
                       await loadUrl(pendingUrl);
                     },
                     onLoadStart: (controller, url) {
-                      _debugLog('[local_web_search] load start: $url');
+                      logLocalWebSearchDebug(
+                        '[local_web_search] load start: $url',
+                      );
                       _markPageCommitted(false);
                       widget.controller.markLoading(true);
                       widget.controller.markCurrentUrl(url?.toString());
@@ -134,7 +138,9 @@ class _InAppWebViewBrowserAdapterState extends State<InAppWebViewBrowserAdapter>
                       _markPageCommitted(_isVisiblePageUrl(url));
                     },
                     onLoadStop: (controller, url) {
-                      _debugLog('[local_web_search] load stop: $url');
+                      logLocalWebSearchDebug(
+                        '[local_web_search] load stop: $url',
+                      );
                       _markPageCommitted(_isVisiblePageUrl(url));
                       widget.controller.markLoading(false);
                       widget.controller.markCurrentUrl(url?.toString());
@@ -145,17 +151,20 @@ class _InAppWebViewBrowserAdapterState extends State<InAppWebViewBrowserAdapter>
                       }
                     },
                     onReceivedError: (controller, request, error) {
-                      _debugLog(
+                      logLocalWebSearchDebug(
                         '[local_web_search] load error: ${request.url} ${error.description}',
                       );
-                      if (request.isForMainFrame ?? true) {
-                        _markPageCommitted(false);
+                      if (!webViewErrorAffectsMainPage(
+                        request.isForMainFrame,
+                      )) {
+                        return;
                       }
+                      _markPageCommitted(false);
                       widget.controller.markLoading(false);
                       widget.controller.markError(error.description);
                     },
                     onWebContentProcessDidTerminate: (controller) {
-                      _debugLog(
+                      logLocalWebSearchDebug(
                         '[local_web_search] web content process terminated',
                       );
                       _markPageCommitted(false);
@@ -176,11 +185,6 @@ class _InAppWebViewBrowserAdapterState extends State<InAppWebViewBrowserAdapter>
         );
       },
     );
-  }
-
-  void _debugLog(String message) {
-    if (!_logWebViewLoads) return;
-    debugPrint(message);
   }
 
   void _handleViewSize(Size size) {

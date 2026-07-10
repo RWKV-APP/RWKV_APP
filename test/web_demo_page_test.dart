@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/msg_node.dart';
 import 'package:zone/page/web_demo.dart';
@@ -9,6 +10,9 @@ import 'package:zone/widgets/web_demo_preview.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async {
+    await S.load(const Locale('en'));
+  });
 
   testWidgets('Web Demo opens as an independent grid tool', (tester) async {
     await _pumpWebDemoPage(tester);
@@ -103,7 +107,7 @@ void main() {
     stopButton = tester.widget<OutlinedButton>(
       find.widgetWithText(OutlinedButton, "Stop"),
     );
-    expect(find.text("Generating"), findsOneWidget);
+    expect(find.text("Generating..."), findsOneWidget);
     expect(generateButton.onPressed, isNull);
     expect(stopButton.onPressed, isNotNull);
 
@@ -175,7 +179,7 @@ void main() {
     await _pumpPreviewPanel(tester, raw: '', label: 'Preview');
 
     expect(find.text('Waiting · 0 B'), findsOneWidget);
-    expect(find.text('Waiting for first tokens'), findsOneWidget);
+    expect(find.text('Waiting for first tokens...'), findsOneWidget);
 
     await _pumpPreviewPanel(tester, raw: 'partial stream without html yet', label: 'Preview');
     expect(find.textContaining('Parsing'), findsOneWidget);
@@ -200,6 +204,23 @@ void main() {
     expect(P.webDemo.pendingHtmlContext.q, html);
     expect(P.webDemo.promptInput.q, 'Modify this page: ');
     expect(find.text('Inline preview is unavailable on this platform.'), findsOneWidget);
+  });
+
+  testWidgets('Web Demo uses the selected app language', (tester) async {
+    await S.load(
+      const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+    );
+    addTearDown(() async {
+      await S.load(const Locale('en'));
+    });
+
+    await _pumpWebDemoPage(tester);
+
+    expect(find.text('生成 HTML 网格'), findsOneWidget);
+    expect(find.text('并发数'), findsOneWidget);
+    expect(find.text('云端'), findsOneWidget);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 1));
   });
 }
 

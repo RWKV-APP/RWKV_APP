@@ -161,19 +161,31 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m66(count) => "總測試項: ${count}";
 
-  static String m67(port) => "WebSocket 服務 (連接埠: ${port})";
+  static String m67(model) => "官方雲端 ${model}";
 
-  static String m68(id) => "視窗 ${id}";
+  static String m68(error) => "Web Demo 失敗：${error}";
 
-  static String m69(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m69(count, backend) => "${count} 個頁面 · ${backend}";
+
+  static String m70(index) => "網頁 ${index}";
+
+  static String m71(label) => "${label} 原始碼";
+
+  static String m72(tokens, bytes) => "${tokens} tokens，${bytes} bytes";
+
+  static String m73(port) => "WebSocket 服務 (連接埠: ${port})";
+
+  static String m74(id) => "視窗 ${id}";
+
+  static String m75(buildArchitecture, operatingSystemArchitecture, url) =>
       "目前應用程式 Build Architecture 為 ${buildArchitecture}，但 Windows Operating System 為 ${operatingSystemArchitecture}。\n\n請前往官方下載頁下載相符架構的可執行檔：\n${url}";
 
-  static String m70(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m76(buildArchitecture, operatingSystemArchitecture, url) =>
       "偵測到架構不相符：目前應用程式 Build Architecture 為 ${buildArchitecture}，但 Windows Operating System 為 ${operatingSystemArchitecture}。請前往官方下載頁下載相符版本：${url}";
 
-  static String m71(count) => "${count} 個分頁";
+  static String m77(count) => "${count} 個分頁";
 
-  static String m72(modelName) => "您目前正在使用 ${modelName}";
+  static String m78(modelName) => "您目前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -593,6 +605,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm_forget_location_title": MessageLookupByLibrary.simpleMessage(
       "確定要忘記該位置嗎？",
     ),
+    "continue2": MessageLookupByLibrary.simpleMessage("續寫"),
     "continue_download": MessageLookupByLibrary.simpleMessage("繼續下載"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "繼續使用較小模型",
@@ -736,6 +749,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "edit": MessageLookupByLibrary.simpleMessage("編輯"),
     "editing": MessageLookupByLibrary.simpleMessage("編輯中"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("英->中"),
+    "enable_system_proxy": MessageLookupByLibrary.simpleMessage("啟用系統代理"),
     "enabled": MessageLookupByLibrary.simpleMessage("開啟"),
     "end": MessageLookupByLibrary.simpleMessage("完"),
     "english": MessageLookupByLibrary.simpleMessage("English"),
@@ -744,6 +758,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "ensure_you_have_enough_memory_to_load_the_model":
         MessageLookupByLibrary.simpleMessage("請確保裝置記憶體充足，否則可能導致應用程式崩潰"),
+    "enter_text_to_expand": MessageLookupByLibrary.simpleMessage("輸入要續寫的段落"),
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "輸入要翻譯的文字...",
     ),
@@ -1061,6 +1076,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "other_files": MessageLookupByLibrary.simpleMessage(
       "其他檔案 (這些檔案可能是已經過期或不再支援的權重 RWKV Chat 無需再使用它們)",
     ),
+    "other_settings": MessageLookupByLibrary.simpleMessage("其他設定"),
     "output": MessageLookupByLibrary.simpleMessage("輸出"),
     "overseas": MessageLookupByLibrary.simpleMessage("(境外)"),
     "overwrite": MessageLookupByLibrary.simpleMessage("覆蓋"),
@@ -1095,6 +1111,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "請輸入難度",
+    ),
+    "please_entry_some_text_to_continue": MessageLookupByLibrary.simpleMessage(
+      "請先輸入要續寫的段落",
     ),
     "please_grant_permission_to_use_microphone":
         MessageLookupByLibrary.simpleMessage("請授予使用麥克風的權限"),
@@ -1380,6 +1399,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "syncing": MessageLookupByLibrary.simpleMessage("同步中"),
     "system_mode": MessageLookupByLibrary.simpleMessage("跟隨系統"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("系統提示詞"),
+    "tag_date": MessageLookupByLibrary.simpleMessage("日期"),
+    "tag_day_of_week": MessageLookupByLibrary.simpleMessage("星期"),
+    "tag_time": MessageLookupByLibrary.simpleMessage("時間"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
     "target_text": m56,
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技術研發群"),
@@ -1501,9 +1523,93 @@ class MessageLookup extends MessageLookupByLibrary {
     "we_support_npu_socs": MessageLookupByLibrary.simpleMessage(
       "我們目前支援以下 SoC 晶片中的 NPU：",
     ),
+    "web_demo_backend_local_albatross": MessageLookupByLibrary.simpleMessage(
+      "本機 Albatross",
+    ),
+    "web_demo_backend_local_rwkv_mobile": MessageLookupByLibrary.simpleMessage(
+      "本機 RWKV Mobile",
+    ),
+    "web_demo_backend_official_cloud": m67,
+    "web_demo_cloud": MessageLookupByLibrary.simpleMessage("雲端"),
+    "web_demo_concurrency": MessageLookupByLibrary.simpleMessage("並行數"),
+    "web_demo_continue_editing": MessageLookupByLibrary.simpleMessage("繼續編輯"),
+    "web_demo_copy_result": MessageLookupByLibrary.simpleMessage("複製結果"),
+    "web_demo_count_penalty": MessageLookupByLibrary.simpleMessage("計數懲罰"),
+    "web_demo_custom_prompt": MessageLookupByLibrary.simpleMessage("自訂提示詞"),
+    "web_demo_empty_description": MessageLookupByLibrary.simpleMessage(
+      "尚無已產生頁面。",
+    ),
+    "web_demo_empty_title": MessageLookupByLibrary.simpleMessage(
+      "產生 HTML 網格來比較候選結果。",
+    ),
+    "web_demo_endpoint_key_missing": MessageLookupByLibrary.simpleMessage(
+      "尚未設定官方 Web Demo 端點金鑰",
+    ),
+    "web_demo_failed": m68,
+    "web_demo_failed_to_open_html": MessageLookupByLibrary.simpleMessage(
+      "開啟 HTML 失敗",
+    ),
+    "web_demo_generate_html_grid": MessageLookupByLibrary.simpleMessage(
+      "產生 HTML 網格",
+    ),
+    "web_demo_html_attached": MessageLookupByLibrary.simpleMessage(
+      "已將選取的 HTML 加入下一次請求。",
+    ),
+    "web_demo_html_context_ready": MessageLookupByLibrary.simpleMessage(
+      "HTML 內容已就緒",
+    ),
+    "web_demo_html_saved": MessageLookupByLibrary.simpleMessage("HTML 已儲存"),
+    "web_demo_inline_preview_unavailable": MessageLookupByLibrary.simpleMessage(
+      "目前平台無法使用內嵌預覽。",
+    ),
+    "web_demo_max_tokens": MessageLookupByLibrary.simpleMessage("最大 Token 數"),
+    "web_demo_no_html_found": MessageLookupByLibrary.simpleMessage("找不到 HTML"),
+    "web_demo_no_key": MessageLookupByLibrary.simpleMessage("未設定金鑰"),
+    "web_demo_no_source_to_copy": MessageLookupByLibrary.simpleMessage(
+      "沒有可複製的原始碼",
+    ),
+    "web_demo_open_in_browser": MessageLookupByLibrary.simpleMessage("在瀏覽器中開啟"),
+    "web_demo_pages_status": m69,
+    "web_demo_penalty_decay": MessageLookupByLibrary.simpleMessage("懲罰衰減"),
+    "web_demo_presence_penalty": MessageLookupByLibrary.simpleMessage("存在懲罰"),
+    "web_demo_preset_animation": MessageLookupByLibrary.simpleMessage(
+      "森林動物與汽車的 3D 動畫",
+    ),
+    "web_demo_preset_dashboard": MessageLookupByLibrary.simpleMessage(
+      "SaaS 儀表板",
+    ),
+    "web_demo_preset_product": MessageLookupByLibrary.simpleMessage("產品頁面"),
+    "web_demo_preview_scale_percent": MessageLookupByLibrary.simpleMessage(
+      "預覽縮放 %",
+    ),
+    "web_demo_preview_scroll_seconds": MessageLookupByLibrary.simpleMessage(
+      "預覽捲動秒數",
+    ),
+    "web_demo_prompt_hint": MessageLookupByLibrary.simpleMessage("描述要產生的網頁..."),
+    "web_demo_response_missing_content": MessageLookupByLibrary.simpleMessage(
+      "RWKV Lightning 回應中沒有內容",
+    ),
+    "web_demo_result_copied": MessageLookupByLibrary.simpleMessage("結果已複製"),
+    "web_demo_result_label": m70,
+    "web_demo_save_html": MessageLookupByLibrary.simpleMessage("儲存 HTML"),
+    "web_demo_source_title": m71,
+    "web_demo_status_complete": MessageLookupByLibrary.simpleMessage("已完成"),
+    "web_demo_status_live": MessageLookupByLibrary.simpleMessage("即時"),
+    "web_demo_status_parsing": MessageLookupByLibrary.simpleMessage("解析中"),
+    "web_demo_status_waiting": MessageLookupByLibrary.simpleMessage("等待中"),
+    "web_demo_temperature": MessageLookupByLibrary.simpleMessage("溫度"),
+    "web_demo_tokens_and_bytes": m72,
+    "web_demo_top_p": MessageLookupByLibrary.simpleMessage("Top P"),
+    "web_demo_view_source": MessageLookupByLibrary.simpleMessage("檢視原始碼"),
+    "web_demo_waiting_for_first_tokens": MessageLookupByLibrary.simpleMessage(
+      "正在等待首批 Token...",
+    ),
+    "web_demo_waiting_for_html_document": MessageLookupByLibrary.simpleMessage(
+      "正在等待 HTML 文件",
+    ),
     "web_search": MessageLookupByLibrary.simpleMessage("網路搜尋"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("網路搜尋範本"),
-    "websocket_service_port": m67,
+    "websocket_service_port": m73,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("權重檔案管理"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "權重文件保存目錄",
@@ -1521,16 +1627,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方獲勝！"),
-    "window_id": m68,
-    "windows_architecture_mismatch_dialog_message": m69,
+    "window_id": m74,
+    "windows_architecture_mismatch_dialog_message": m75,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("架構不相符"),
-    "windows_architecture_mismatch_warning": m70,
+    "windows_architecture_mismatch_warning": m76,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 個相關網頁"),
-    "x_tabs": m71,
-    "you_are_now_using": m72,
+    "x_tabs": m77,
+    "you_are_now_using": m78,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "現在可以開始與 RWKV 聊天了",
     ),

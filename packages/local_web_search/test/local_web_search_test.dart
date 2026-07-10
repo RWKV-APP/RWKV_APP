@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 // Package imports:
 import 'package:local_web_search/local_web_search.dart';
+import 'package:local_web_search/src/browser/in_app_web_view_adapter.dart';
 
 class _FakeBrowserDelegate implements SearchBrowserControllerDelegate {
   String? loadedUrl;
@@ -33,6 +34,12 @@ class _FakeBrowserDelegate implements SearchBrowserControllerDelegate {
 }
 
 void main() {
+  test('only main-frame WebView errors affect the page state', () {
+    expect(webViewErrorAffectsMainPage(true), isTrue);
+    expect(webViewErrorAffectsMainPage(false), isFalse);
+    expect(webViewErrorAffectsMainPage(null), isFalse);
+  });
+
   test('loadGoogleSearch builds a Google search URL', () async {
     final controller = SearchBrowserController();
     final delegate = _FakeBrowserDelegate();

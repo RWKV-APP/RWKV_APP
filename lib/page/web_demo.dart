@@ -10,6 +10,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
@@ -96,10 +97,10 @@ class _WebDemoTopBar extends ConsumerWidget {
     final run = ref.watch(P.webDemo.currentRun);
     final backendText = webDemoBackendLabel(backendMode);
     final statusText = active
-        ? "Generating"
+        ? S.current.generating
         : run == null
         ? backendText
-        : "${run.batchSize} pages · $backendText";
+        : S.current.web_demo_pages_status(run.batchSize, backendText);
 
     return Container(
       height: 64,
@@ -111,7 +112,7 @@ class _WebDemoTopBar extends ConsumerWidget {
       child: Row(
         children: [
           Tooltip(
-            message: "Back",
+            message: MaterialLocalizations.of(context).backButtonTooltip,
             child: IconButton(
               onPressed: () => _onBackPressed(context),
               icon: const Icon(Icons.arrow_back_rounded),
@@ -198,8 +199,8 @@ class _WebDemoControlPanel extends ConsumerWidget {
                       minimumSize: const Size.fromHeight(48),
                       shape: RoundedRectangleBorder(borderRadius: .circular(6)),
                     ),
-                    child: const Text(
-                      "Generate HTML Grid",
+                    child: Text(
+                      S.current.web_demo_generate_html_grid,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontWeight: .w700),
                     ),
@@ -213,8 +214,8 @@ class _WebDemoControlPanel extends ConsumerWidget {
                       minimumSize: const Size.fromHeight(48),
                       shape: RoundedRectangleBorder(borderRadius: .circular(6)),
                     ),
-                    child: const Text(
-                      "Stop",
+                    child: Text(
+                      S.current.stop,
                       style: TextStyle(fontWeight: .w700),
                     ),
                   ),
@@ -234,50 +235,50 @@ class _WebDemoControlPanel extends ConsumerWidget {
                 enabled: !active && configured,
               ),
             const SizedBox(height: 14),
-            const _WebDemoIntegerControl(
-              label: "Max Tokens",
+            _WebDemoIntegerControl(
+              label: S.current.web_demo_max_tokens,
               min: 50,
               max: 16000,
               resetValue: 16000,
               argument: Argument.maxLength,
             ),
             const _WebDemoBatchControl(),
-            const _PreviewControl(
-              label: "Preview Scale %",
+            _PreviewControl(
+              label: S.current.web_demo_preview_scale_percent,
               min: 20,
               max: 100,
               resetValue: 35,
               kind: _PreviewControlKind.scale,
             ),
-            const _PreviewControl(
-              label: "Preview Scroll Seconds",
+            _PreviewControl(
+              label: S.current.web_demo_preview_scroll_seconds,
               min: 0,
               max: 10,
               resetValue: 5,
               kind: _PreviewControlKind.scrollSeconds,
             ),
-            const _WebDemoDecimalControl(
-              label: "Temperature",
+            _WebDemoDecimalControl(
+              label: S.current.web_demo_temperature,
               argument: Argument.temperature,
               resetValue: 1,
             ),
-            const _WebDemoDecimalControl(
-              label: "Top P",
+            _WebDemoDecimalControl(
+              label: S.current.web_demo_top_p,
               argument: Argument.topP,
               resetValue: .5,
             ),
-            const _WebDemoDecimalControl(
-              label: "Presence Penalty",
+            _WebDemoDecimalControl(
+              label: S.current.web_demo_presence_penalty,
               argument: Argument.presencePenalty,
               resetValue: 1,
             ),
-            const _WebDemoDecimalControl(
-              label: "Count Penalty",
+            _WebDemoDecimalControl(
+              label: S.current.web_demo_count_penalty,
               argument: Argument.frequencyPenalty,
               resetValue: .1,
             ),
-            const _WebDemoDecimalControl(
-              label: "Penalty Decay",
+            _WebDemoDecimalControl(
+              label: S.current.web_demo_penalty_decay,
               argument: Argument.penaltyDecay,
               resetValue: .99,
             ),
@@ -313,11 +314,11 @@ class _PromptPicker extends ConsumerWidget {
           icon: const Icon(Icons.expand_more_rounded, size: 18),
           style: theme.textTheme.bodySmall?.copyWith(color: appTheme.qb0),
           onChanged: enabled ? _onPresetChanged : null,
-          items: const [
-            DropdownMenuItem(value: "custom", child: Text("Custom prompt")),
-            DropdownMenuItem(value: "animation", child: Text("3D animation of cars in forest with animals")),
-            DropdownMenuItem(value: "dashboard", child: Text("SaaS dashboard")),
-            DropdownMenuItem(value: "product", child: Text("Product page")),
+          items: [
+            DropdownMenuItem(value: "custom", child: Text(S.current.web_demo_custom_prompt)),
+            DropdownMenuItem(value: "animation", child: Text(S.current.web_demo_preset_animation)),
+            DropdownMenuItem(value: "dashboard", child: Text(S.current.web_demo_preset_dashboard)),
+            DropdownMenuItem(value: "product", child: Text(S.current.web_demo_preset_product)),
           ],
         ),
       ),
@@ -355,7 +356,7 @@ class _PromptInput extends ConsumerWidget {
       crossAxisAlignment: .stretch,
       children: [
         Text(
-          "Prompt",
+          S.current.prompt,
           style: TextStyle(color: appTheme.qb5, fontSize: 13, fontWeight: .w600),
         ),
         const SizedBox(height: 6),
@@ -370,7 +371,7 @@ class _PromptInput extends ConsumerWidget {
           decoration: InputDecoration(
             filled: true,
             fillColor: appTheme.settingItem,
-            hintText: "Describe the web page to generate...",
+            hintText: S.current.web_demo_prompt_hint,
             hintStyle: TextStyle(color: appTheme.qb7),
             contentPadding: const .all(10),
             border: OutlineInputBorder(
@@ -408,7 +409,7 @@ class _AttachedHtmlNotice extends ConsumerWidget {
         border: Border.all(color: theme.colorScheme.primary.withValues(alpha: .2), width: .5),
       ),
       child: Text(
-        "Selected HTML is attached to the next request.",
+        S.current.web_demo_html_attached,
         style: TextStyle(color: appTheme.qb2, fontSize: 12, fontWeight: .w600),
       ),
     );
@@ -460,7 +461,7 @@ class _BackendSelector extends ConsumerWidget {
           value: _WebDemoBackendFamily.cloud,
           enabled: enabled && configured,
           icon: const Icon(Icons.cloud_done_outlined, size: 17),
-          label: Text(configured ? "Cloud" : "No key"),
+          label: Text(configured ? S.current.web_demo_cloud : S.current.web_demo_no_key),
         ),
         const ButtonSegment(
           value: _WebDemoBackendFamily.albatross,
@@ -582,7 +583,7 @@ class _WebDemoBatchControl extends ConsumerWidget {
     final value = ref.watch(P.webDemo.batchSize).clamp(1, max).toInt();
 
     return _ControlFrame(
-      label: "Concurrency",
+      label: S.current.web_demo_concurrency,
       valueText: value.toString(),
       onReset: () => P.webDemo.setBatchSize(30),
       child: Slider(
@@ -735,7 +736,7 @@ class _ControlFrame extends ConsumerWidget {
               ),
               const SizedBox(width: 6),
               Tooltip(
-                message: "Reset",
+                message: S.current.reset,
                 child: IconButton(
                   onPressed: onReset,
                   visualDensity: VisualDensity.compact,
@@ -790,14 +791,14 @@ class _WebDemoGridState extends ConsumerState<_WebDemoGrid> {
                       children: [
                         Icon(Icons.grid_view_rounded, size: 36, color: theme.colorScheme.primary.withValues(alpha: .82)),
                         const SizedBox(height: 14),
-                        const Text(
-                          "Generate an HTML grid to compare candidates.",
+                        Text(
+                          S.current.web_demo_empty_title,
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18, fontWeight: .w700),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          "No generated pages yet.",
+                          S.current.web_demo_empty_description,
                           textAlign: TextAlign.center,
                           style: TextStyle(color: appTheme.qb5, height: 1.35),
                         ),
@@ -941,7 +942,7 @@ class _ResultHeader extends ConsumerWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              "${result.tokens} tokens, ${result.bytes} bytes",
+              S.current.web_demo_tokens_and_bytes(result.tokens, result.bytes),
               maxLines: 1,
               overflow: .ellipsis,
               style: TextStyle(color: mutedColor, fontSize: 11, fontWeight: .w700, fontFamily: "monospace"),
@@ -955,31 +956,35 @@ class _ResultHeader extends ConsumerWidget {
             ),
           const SizedBox(width: 4),
           _HeaderAction(
-            tooltip: "Copy result",
+            tooltip: S.current.web_demo_copy_result,
             icon: Icons.content_copy_rounded,
             onPressed: () => P.webDemo.copyResultSource(result),
           ),
           if (html != null)
             _HeaderAction(
-              tooltip: "View source",
+              tooltip: S.current.web_demo_view_source,
               icon: Icons.code_rounded,
-              onPressed: () => showWebDemoSourceSheet(context: context, source: html, label: "Web ${result.index + 1}"),
+              onPressed: () => showWebDemoSourceSheet(
+                context: context,
+                source: html,
+                label: S.current.web_demo_result_label(result.index + 1),
+              ),
             ),
           if (html != null)
             _HeaderAction(
-              tooltip: "Continue editing",
+              tooltip: S.current.web_demo_continue_editing,
               icon: Icons.edit_outlined,
               onPressed: () => P.webDemo.prepareContinuationFromResult(result),
             ),
           if (html != null)
             _HeaderAction(
-              tooltip: "Save HTML",
+              tooltip: S.current.web_demo_save_html,
               icon: Icons.save_alt_rounded,
               onPressed: () => P.webDemo.saveResultHtml(result),
             ),
           if (html != null)
             _HeaderAction(
-              tooltip: "Open in browser",
+              tooltip: S.current.web_demo_open_in_browser,
               icon: Icons.open_in_browser_rounded,
               onPressed: () => P.webDemo.openResultInSystemBrowser(result),
             ),
@@ -1169,7 +1174,7 @@ class _SourceStream extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final appTheme = ref.watch(P.app.theme);
-    final display = raw.isEmpty ? "Waiting for first tokens..." : raw;
+    final display = raw.isEmpty ? S.current.web_demo_waiting_for_first_tokens : raw;
 
     return Container(
       color: appTheme.isLight ? const Color(0xFFF7F7F7) : const Color(0xFF101010),

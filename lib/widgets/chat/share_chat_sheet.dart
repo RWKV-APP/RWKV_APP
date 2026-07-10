@@ -415,6 +415,9 @@ class _PreviewState extends ConsumerState<_Preview> {
   }
 
   Widget _buildHeader() {
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final iconCacheSize = (42 * devicePixelRatio).ceil();
+
     return Row(
       children: [
         const SizedBox(width: 16),
@@ -424,6 +427,8 @@ class _PreviewState extends ConsumerState<_Preview> {
             "assets/img/chat/icon.png",
             width: 42,
             height: 42,
+            cacheHeight: iconCacheSize,
+            cacheWidth: iconCacheSize,
             filterQuality: FilterQuality.low,
             fit: BoxFit.cover,
           ),

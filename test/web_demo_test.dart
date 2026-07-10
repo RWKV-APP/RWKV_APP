@@ -1,16 +1,21 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zone/config.dart';
 import 'package:zone/func/web_demo.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart';
 import 'package:zone/model/msg_node.dart';
 import 'package:zone/store/p.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async {
+    await S.load(const Locale('en'));
+  });
 
   group('Web Demo prompt helpers', () {
     test('uses a raw HTML only default prompt template', () {

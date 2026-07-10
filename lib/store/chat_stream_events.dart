@@ -54,9 +54,6 @@ extension $ChatStreamEvents on _Chat {
             messageId: currentReceiveId,
             liveBotContent: responseBufferContent,
           );
-          _sensitiveThrottler.call(() {
-            _checkSensitive(responseBufferContent);
-          });
         }
         break;
 

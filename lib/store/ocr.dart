@@ -340,7 +340,11 @@ extension $Ocr on _Ocr {
     // Get image size
     final data = await photo.readAsBytes();
     final decoded = await decodeImageFromList(data);
-    imageSize.q = Size(decoded.width.toDouble(), decoded.height.toDouble());
+    try {
+      imageSize.q = Size(decoded.width.toDouble(), decoded.height.toDouble());
+    } finally {
+      decoded.dispose();
+    }
 
     final inputImage = InputImage.fromFilePath(photo.path);
     await _processImage(inputImage);

@@ -196,7 +196,8 @@ class _TabItem extends ConsumerWidget {
     final theme = Theme.of(context);
     final selectedIndex = ref.watch(P.app.tabIndex);
     final qb = ref.watch(P.app.qb);
-    final color = qb.withValues(alpha: selectedIndex == index ? 1 : .4);
+    final appTheme = ref.watch(P.app.theme);
+    final color = selectedIndex == index ? qb : appTheme.qb6;
 
     return GestureDetector(
       onTap: () => P.app.onTabSelected(index),

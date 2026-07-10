@@ -137,14 +137,10 @@ class ModelItem extends ConsumerWidget {
     final hasFile = localFile.hasFile;
     final currentModel = ref.watch(P.rwkvModel.latest);
     final isCurrentModel = this.isCurrentModel || currentModel == fileInfo;
-    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus);
-    final loadingProgress = ref.watch(P.rwkvModel.loadingProgress);
+    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus.select((value) => value[fileInfo]));
+    final modelLoadingProgress = ref.watch(P.rwkvModel.loadingProgress.select((value) => value[fileInfo]));
 
-    final loading =
-        loadingStatus[fileInfo] == .loading ||
-        loadingStatus[fileInfo] == .loadModelWithExtra ||
-        loadingStatus[fileInfo] == .setQnnLibraryPath;
-    final modelLoadingProgress = loadingProgress[fileInfo];
+    final loading = loadingStatus == .loading || loadingStatus == .loadModelWithExtra || loadingStatus == .setQnnLibraryPath;
 
     final demoType = ref.watch(P.app.demoType);
     final appTheme = ref.watch(P.app.theme);

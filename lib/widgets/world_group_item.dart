@@ -312,13 +312,9 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
       return const SizedBox.shrink();
     }
 
-    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus);
-    final modelLoading =
-        loadingStatus[modelFileKey] == .loading ||
-        loadingStatus[modelFileKey] == .loadModelWithExtra ||
-        loadingStatus[modelFileKey] == .setQnnLibraryPath;
-    final loadingProgress = ref.watch(P.rwkvModel.loadingProgress);
-    final modelLoadingProgress = loadingProgress[modelFileKey];
+    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus.select((value) => value[modelFileKey]));
+    final modelLoading = loadingStatus == .loading || loadingStatus == .loadModelWithExtra || loadingStatus == .setQnnLibraryPath;
+    final modelLoadingProgress = ref.watch(P.rwkvModel.loadingProgress.select((value) => value[modelFileKey]));
 
     String startTitle = s.start_to_chat;
     if (loading || modelLoading) {

@@ -80,6 +80,29 @@ class _RWKVModel {
 }
 
 extension $RWKVModel on _RWKVModel {
+  void _stopTtsPerformanceTimer() {
+    final timer = _ttsPerformanceTimer;
+    if (timer == null) return;
+    timer.cancel();
+    _ttsPerformanceTimer = null;
+  }
+
+  void _setLoadingStatus({
+    required FileInfo fileInfo,
+    required LoadingStatus value,
+  }) {
+    if (loadingStatus.q[fileInfo] == value) return;
+    loadingStatus.q = {...loadingStatus.q, fileInfo: value};
+  }
+
+  void _setLoadingProgress({
+    required FileInfo fileInfo,
+    required double value,
+  }) {
+    if (loadingProgress.q[fileInfo] == value) return;
+    loadingProgress.q = {...loadingProgress.q, fileInfo: value};
+  }
+
   Future<(SendPort?, int?)> loadChat({
     required FileInfo fileInfo,
     bool Function()? shouldKeepLoadedModel,
@@ -255,12 +278,9 @@ extension $RWKVModel on _RWKVModel {
       fileInfo: modelID,
     };
 
-    if (_ttsPerformanceTimer != null) {
-      _ttsPerformanceTimer!.cancel();
-      _ttsPerformanceTimer = null;
-    }
+    _stopTtsPerformanceTimer();
 
-    _ttsPerformanceTimer = Timer.periodic(const Duration(milliseconds: 225), (timer) async {
+    _ttsPerformanceTimer = Timer.periodic(const Duration(milliseconds: 225), (timer) {
       P.rwkvBridge.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
 
@@ -515,8 +535,8 @@ extension $RWKVModel on _RWKVModel {
             extra: fileInfo,
           );
     P.rwkvBridge.send(req);
-    loadingStatus.q = {...loadingStatus.q, fileInfo: .loading};
-    loadingProgress.q = {...loadingProgress.q, fileInfo: 0.0};
+    _setLoadingStatus(fileInfo: fileInfo, value: .loading);
+    _setLoadingProgress(fileInfo: fileInfo, value: 0.0);
     try {
       final modelID = await completer.future;
       // 如果我们得到的 modelID 为 null, 则表示加载失败
@@ -590,6 +610,10 @@ extension $RWKVModel on _RWKVModel {
   }
 
   Future<void> _releaseLoadedModelByFileInfoIfNeeded(FileInfo fileInfo) async {
+    if (fileInfo.weightType == .tts) {
+      _stopTtsPerformanceTimer();
+    }
+
     final modelID = allLoaded.q[fileInfo];
     if (modelID == null) {
       final msg = "ModelID is null, maybe model is not loaded: ${fileInfo.name}";
@@ -612,6 +636,10 @@ extension $RWKVModel on _RWKVModel {
   }
 
   Future<void> _releaseModelByWeightTypeIfNeeded({required WeightType weightType}) async {
+    if (weightType == .tts) {
+      _stopTtsPerformanceTimer();
+    }
+
     final loaded = allLoaded.q.entries.firstWhereOrNull((e) => e.key.weightType == weightType);
     final modelID = loaded?.value;
     final fileInfo = loaded?.key;
@@ -634,6 +662,7 @@ extension $RWKVModel on _RWKVModel {
   }
 
   Future<void> _releaseAllModels() async {
+    _stopTtsPerformanceTimer();
     P.rwkvContext.currentGroupInfo.q = null;
     P.rwkvContext.currentWorldType.q = null;
     rolePlayCurrentModel = null;
@@ -727,7 +756,7 @@ extension $RWKVModel on _RWKVModel {
 
       case .loading:
         final progress = response.progress;
-        if (progress != null) loadingProgress.q = {...loadingProgress.q, extra: progress};
+        if (progress != null) _setLoadingProgress(fileInfo: extra, value: progress);
       case .none:
       case .releasing:
       case .setQnnLibraryPath:
@@ -747,7 +776,7 @@ extension $RWKVModel on _RWKVModel {
         activeLoadingFile.q = null;
       }
     }
-    loadingStatus.q = {...loadingStatus.q, extra: status};
+    _setLoadingStatus(fileInfo: extra, value: status);
   }
 
   Future<void> _requestSupportedBatchSizesLater({

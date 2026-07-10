@@ -162,19 +162,31 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m66(count) => "総テスト項目: ${count}";
 
-  static String m67(port) => "WebSocketサービス（ポート：${port}）";
+  static String m67(model) => "公式クラウド ${model}";
 
-  static String m68(id) => "ウィンドウ ${id}";
+  static String m68(error) => "Web Demo に失敗しました：${error}";
 
-  static String m69(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m69(count, backend) => "${count} ページ · ${backend}";
+
+  static String m70(index) => "Web ${index}";
+
+  static String m71(label) => "${label} のソース";
+
+  static String m72(tokens, bytes) => "${tokens} tokens、${bytes} bytes";
+
+  static String m73(port) => "WebSocketサービス（ポート：${port}）";
+
+  static String m74(id) => "ウィンドウ ${id}";
+
+  static String m75(buildArchitecture, operatingSystemArchitecture, url) =>
       "このアプリの Build Architecture は ${buildArchitecture} ですが、Windows Operating System の Architecture は ${operatingSystemArchitecture} です。\n\n公式ダウンロードページから一致する実行ファイルをダウンロードしてください：\n${url}";
 
-  static String m70(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m76(buildArchitecture, operatingSystemArchitecture, url) =>
       "アーキテクチャの不一致を検出しました：このアプリの Build Architecture は ${buildArchitecture} ですが、Windows Operating System の Architecture は ${operatingSystemArchitecture} です。公式ダウンロードページから一致する版をダウンロードしてください：${url}";
 
-  static String m71(count) => "${count}個のタブ";
+  static String m77(count) => "${count}個のタブ";
 
-  static String m72(modelName) => "現在、${modelName}を使用しています";
+  static String m78(modelName) => "現在、${modelName}を使用しています";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -627,6 +639,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm_forget_location_title": MessageLookupByLibrary.simpleMessage(
       "この場所を忘れますか？",
     ),
+    "continue2": MessageLookupByLibrary.simpleMessage("続きを生成"),
     "continue_download": MessageLookupByLibrary.simpleMessage("ダウンロードを続行"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "より小さいモデルの使用を続行",
@@ -794,6 +807,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "edit": MessageLookupByLibrary.simpleMessage("編集"),
     "editing": MessageLookupByLibrary.simpleMessage("編集中"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("英->中"),
+    "enable_system_proxy": MessageLookupByLibrary.simpleMessage(
+      "システムプロキシを有効にする",
+    ),
     "enabled": MessageLookupByLibrary.simpleMessage("有効"),
     "end": MessageLookupByLibrary.simpleMessage("終"),
     "english": MessageLookupByLibrary.simpleMessage("English"),
@@ -804,6 +820,9 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "デバイスのメモリが十分であることを確認してください。そうでない場合、アプリケーションがクラッシュする可能性があります。",
         ),
+    "enter_text_to_expand": MessageLookupByLibrary.simpleMessage(
+      "続きを生成するテキストを入力",
+    ),
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "翻訳するテキストを入力...",
     ),
@@ -1163,6 +1182,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "other_files": MessageLookupByLibrary.simpleMessage(
       "その他のファイル (これらのファイルは期限切れまたはサポートされなくなった重みファイルであり、RWKV Chat ではもう使用されていない可能性があります)",
     ),
+    "other_settings": MessageLookupByLibrary.simpleMessage("その他の設定"),
     "output": MessageLookupByLibrary.simpleMessage("出力"),
     "overseas": MessageLookupByLibrary.simpleMessage("(海外)"),
     "overwrite": MessageLookupByLibrary.simpleMessage("上書き"),
@@ -1199,6 +1219,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "難易度を入力してください",
+    ),
+    "please_entry_some_text_to_continue": MessageLookupByLibrary.simpleMessage(
+      "続きを生成するテキストを入力してください",
     ),
     "please_grant_permission_to_use_microphone":
         MessageLookupByLibrary.simpleMessage("マイクの使用許可を付与してください"),
@@ -1514,6 +1537,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "syncing": MessageLookupByLibrary.simpleMessage("同期中"),
     "system_mode": MessageLookupByLibrary.simpleMessage("システムに従う"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("システムプロンプト"),
+    "tag_date": MessageLookupByLibrary.simpleMessage("日付"),
+    "tag_day_of_week": MessageLookupByLibrary.simpleMessage("曜日"),
+    "tag_time": MessageLookupByLibrary.simpleMessage("時刻"),
     "take_photo": MessageLookupByLibrary.simpleMessage("写真を撮る"),
     "target_text": m56,
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
@@ -1651,9 +1677,105 @@ class MessageLookup extends MessageLookupByLibrary {
     "we_support_npu_socs": MessageLookupByLibrary.simpleMessage(
       "現在、以下の SoC チップの NPU に対応しています",
     ),
+    "web_demo_backend_local_albatross": MessageLookupByLibrary.simpleMessage(
+      "ローカル Albatross",
+    ),
+    "web_demo_backend_local_rwkv_mobile": MessageLookupByLibrary.simpleMessage(
+      "ローカル RWKV Mobile",
+    ),
+    "web_demo_backend_official_cloud": m67,
+    "web_demo_cloud": MessageLookupByLibrary.simpleMessage("クラウド"),
+    "web_demo_concurrency": MessageLookupByLibrary.simpleMessage("同時実行数"),
+    "web_demo_continue_editing": MessageLookupByLibrary.simpleMessage("編集を続ける"),
+    "web_demo_copy_result": MessageLookupByLibrary.simpleMessage("結果をコピー"),
+    "web_demo_count_penalty": MessageLookupByLibrary.simpleMessage(
+      "Count Penalty",
+    ),
+    "web_demo_custom_prompt": MessageLookupByLibrary.simpleMessage("カスタムプロンプト"),
+    "web_demo_empty_description": MessageLookupByLibrary.simpleMessage(
+      "生成済みのページはまだありません。",
+    ),
+    "web_demo_empty_title": MessageLookupByLibrary.simpleMessage(
+      "HTML グリッドを生成して候補を比較します。",
+    ),
+    "web_demo_endpoint_key_missing": MessageLookupByLibrary.simpleMessage(
+      "公式 Web Demo エンドポイントのキーが設定されていません",
+    ),
+    "web_demo_failed": m68,
+    "web_demo_failed_to_open_html": MessageLookupByLibrary.simpleMessage(
+      "HTML を開けませんでした",
+    ),
+    "web_demo_generate_html_grid": MessageLookupByLibrary.simpleMessage(
+      "HTML グリッドを生成",
+    ),
+    "web_demo_html_attached": MessageLookupByLibrary.simpleMessage(
+      "選択した HTML を次のリクエストに添付しました。",
+    ),
+    "web_demo_html_context_ready": MessageLookupByLibrary.simpleMessage(
+      "HTML コンテキストの準備ができました",
+    ),
+    "web_demo_html_saved": MessageLookupByLibrary.simpleMessage("HTML を保存しました"),
+    "web_demo_inline_preview_unavailable": MessageLookupByLibrary.simpleMessage(
+      "このプラットフォームではインラインプレビューを利用できません。",
+    ),
+    "web_demo_max_tokens": MessageLookupByLibrary.simpleMessage("最大トークン数"),
+    "web_demo_no_html_found": MessageLookupByLibrary.simpleMessage(
+      "HTML が見つかりません",
+    ),
+    "web_demo_no_key": MessageLookupByLibrary.simpleMessage("キーなし"),
+    "web_demo_no_source_to_copy": MessageLookupByLibrary.simpleMessage(
+      "コピーできるソースがありません",
+    ),
+    "web_demo_open_in_browser": MessageLookupByLibrary.simpleMessage("ブラウザで開く"),
+    "web_demo_pages_status": m69,
+    "web_demo_penalty_decay": MessageLookupByLibrary.simpleMessage(
+      "Penalty Decay",
+    ),
+    "web_demo_presence_penalty": MessageLookupByLibrary.simpleMessage(
+      "Presence Penalty",
+    ),
+    "web_demo_preset_animation": MessageLookupByLibrary.simpleMessage(
+      "動物のいる森を走る車の 3D アニメーション",
+    ),
+    "web_demo_preset_dashboard": MessageLookupByLibrary.simpleMessage(
+      "SaaS ダッシュボード",
+    ),
+    "web_demo_preset_product": MessageLookupByLibrary.simpleMessage("製品ページ"),
+    "web_demo_preview_scale_percent": MessageLookupByLibrary.simpleMessage(
+      "プレビュー倍率 %",
+    ),
+    "web_demo_preview_scroll_seconds": MessageLookupByLibrary.simpleMessage(
+      "プレビューのスクロール秒数",
+    ),
+    "web_demo_prompt_hint": MessageLookupByLibrary.simpleMessage(
+      "生成する Web ページを説明してください...",
+    ),
+    "web_demo_response_missing_content": MessageLookupByLibrary.simpleMessage(
+      "RWKV Lightning の応答にコンテンツが含まれていません",
+    ),
+    "web_demo_result_copied": MessageLookupByLibrary.simpleMessage(
+      "結果をコピーしました",
+    ),
+    "web_demo_result_label": m70,
+    "web_demo_save_html": MessageLookupByLibrary.simpleMessage("HTML を保存"),
+    "web_demo_source_title": m71,
+    "web_demo_status_complete": MessageLookupByLibrary.simpleMessage("完了"),
+    "web_demo_status_live": MessageLookupByLibrary.simpleMessage("ライブ"),
+    "web_demo_status_parsing": MessageLookupByLibrary.simpleMessage("解析中"),
+    "web_demo_status_waiting": MessageLookupByLibrary.simpleMessage("待機中"),
+    "web_demo_temperature": MessageLookupByLibrary.simpleMessage("Temperature"),
+    "web_demo_tokens_and_bytes": m72,
+    "web_demo_top_p": MessageLookupByLibrary.simpleMessage("Top P"),
+    "web_demo_view_source": MessageLookupByLibrary.simpleMessage("ソースを表示"),
+    "web_demo_waiting_for_first_tokens": MessageLookupByLibrary.simpleMessage(
+      "最初のトークンを待っています...",
+    ),
+    "web_demo_waiting_for_html_document": MessageLookupByLibrary.simpleMessage(
+      "HTML ドキュメントを待っています",
+    ),
     "web_search": MessageLookupByLibrary.simpleMessage("ウェブ検索"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("ウェブ検索テンプレート"),
-    "websocket_service_port": m67,
+    "websocket_service_port": m73,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("重みファイル管理"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "重みファイル保存ディレクトリ",
@@ -1671,18 +1793,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白"),
     "white_score": MessageLookupByLibrary.simpleMessage("白のスコア"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白の勝ち！"),
-    "window_id": m68,
-    "windows_architecture_mismatch_dialog_message": m69,
+    "window_id": m74,
+    "windows_architecture_mismatch_dialog_message": m75,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("アーキテクチャ不一致"),
-    "windows_architecture_mismatch_warning": m70,
+    "windows_architecture_mismatch_warning": m76,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%dページ見つかりました"),
-    "x_tabs": m71,
-    "you_are_now_using": m72,
+    "x_tabs": m77,
+    "you_are_now_using": m78,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "これでRWKVとのチャットを開始できます",
     ),

@@ -478,16 +478,6 @@ extension _$App on _App {
       syncConfig();
     });
 
-    await Highlighter.initialize(['dart', 'yaml', 'sql', 'python', "javascript"]);
-    1000.msLater.then((_) async {
-      qqr("load light theme");
-      final theme = await HighlighterTheme.loadDarkTheme();
-      Highlighter(
-        language: 'javascript',
-        theme: theme,
-      );
-    });
-
     2500.msLater.then((_) {
       checkUpdates();
     });

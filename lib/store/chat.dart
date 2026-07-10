@@ -44,6 +44,9 @@ class _Chat {
   bool _sensitiveCheckRunning = false;
   String? _pendingSensitiveContent;
   int? _pendingSensitiveReceiveId;
+  int? _sensitiveBatchReceiveId;
+  Set<int> _sensitiveBatchSlotIndexes = const <int>{};
+  Map<int, String> _sensitiveBatchLastCheckedContents = <int, String>{};
   final math.Random _fakeBatchInferenceBenchmarkRandom = math.Random();
 
   // ===========================================================================

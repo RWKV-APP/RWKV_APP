@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
 import 'package:zone/func/web_demo.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/web_demo_grayscale_theme.dart';
 
@@ -42,11 +43,11 @@ class WebDemoPreviewPanel extends ConsumerWidget {
     final bytes = html == null ? raw.length : html.length;
     final status = document == null
         ? raw.trim().isEmpty
-              ? "Waiting"
-              : "Parsing"
+              ? S.current.web_demo_status_waiting
+              : S.current.web_demo_status_parsing
         : document.complete
-        ? "Complete"
-        : "Live";
+        ? S.current.web_demo_status_complete
+        : S.current.web_demo_status_live;
     final titleStyle = theme.textTheme.labelMedium?.copyWith(
       color: appTheme.qb0,
       fontWeight: FontWeight.w600,
@@ -92,21 +93,21 @@ class WebDemoPreviewPanel extends ConsumerWidget {
                   ),
                   if (html != null)
                     _WebDemoPreviewAction(
-                      tooltip: "View source",
+                      tooltip: S.current.web_demo_view_source,
                       icon: Icons.code_rounded,
                       onTap: () => showWebDemoSourceSheet(context: context, source: html, label: label),
                     ),
                   if (html != null) const SizedBox(width: 4),
                   if (html != null)
                     _WebDemoPreviewAction(
-                      tooltip: "Continue editing",
+                      tooltip: S.current.web_demo_continue_editing,
                       icon: Icons.edit_outlined,
                       onTap: () => P.webDemo.prepareContinuation(html: html),
                     ),
                   if (html != null) const SizedBox(width: 4),
                   if (html != null)
                     _WebDemoPreviewAction(
-                      tooltip: "Open in browser",
+                      tooltip: S.current.web_demo_open_in_browser,
                       icon: Icons.open_in_browser_rounded,
                       onTap: () => P.webDemo.openHtmlInSystemBrowser(html: html, label: label),
                     ),
@@ -224,7 +225,7 @@ class _WebDemoWaitingPreview extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              hasText ? "Waiting for HTML document" : "Waiting for first tokens",
+              hasText ? S.current.web_demo_waiting_for_html_document : S.current.web_demo_waiting_for_first_tokens,
               style: TextStyle(color: appTheme.qb5, fontSize: 12),
             ),
           ],
@@ -255,7 +256,7 @@ class _WebDemoExternalPreviewFallback extends ConsumerWidget {
             Icon(Icons.open_in_browser_rounded, color: theme.colorScheme.primary.withValues(alpha: .72)),
             const SizedBox(height: 8),
             Text(
-              "Inline preview is unavailable on this platform.",
+              S.current.web_demo_inline_preview_unavailable,
               style: TextStyle(color: appTheme.qb5, fontSize: 12),
               textAlign: .center,
             ),
@@ -312,14 +313,14 @@ class _WebDemoSourceSheet extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    "$label source",
+                    S.current.web_demo_source_title(label),
                     maxLines: 1,
                     overflow: .ellipsis,
                     style: const TextStyle(fontWeight: .w700),
                   ),
                 ),
                 IconButton(
-                  tooltip: "Close",
+                  tooltip: S.current.close,
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.close_rounded),
                 ),

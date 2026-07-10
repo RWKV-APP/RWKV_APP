@@ -161,19 +161,31 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m66(count) => "总测试项: ${count}";
 
-  static String m67(port) => "WebSocket 服务 (端口: ${port})";
+  static String m67(model) => "官方云端 ${model}";
 
-  static String m68(id) => "窗口 ${id}";
+  static String m68(error) => "Web Demo 失败：${error}";
 
-  static String m69(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m69(count, backend) => "${count} 个页面 · ${backend}";
+
+  static String m70(index) => "网页 ${index}";
+
+  static String m71(label) => "${label} 源代码";
+
+  static String m72(tokens, bytes) => "${tokens} tokens，${bytes} bytes";
+
+  static String m73(port) => "WebSocket 服务 (端口: ${port})";
+
+  static String m74(id) => "窗口 ${id}";
+
+  static String m75(buildArchitecture, operatingSystemArchitecture, url) =>
       "当前应用 Build Architecture 为 ${buildArchitecture}，但 Windows Operating System 为 ${operatingSystemArchitecture}。\n\n请前往官方下载页下载匹配架构的可执行文件：\n${url}";
 
-  static String m70(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m76(buildArchitecture, operatingSystemArchitecture, url) =>
       "检测到架构不匹配：当前应用 Build Architecture 为 ${buildArchitecture}，但 Windows Operating System 为 ${operatingSystemArchitecture}。请前往官方下载页下载匹配版本：${url}";
 
-  static String m71(count) => "${count} 个标签页";
+  static String m77(count) => "${count} 个标签页";
 
-  static String m72(modelName) => "您当前正在使用 ${modelName}";
+  static String m78(modelName) => "您当前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1511,9 +1523,93 @@ class MessageLookup extends MessageLookupByLibrary {
     "we_support_npu_socs": MessageLookupByLibrary.simpleMessage(
       "我们目前支持以下 SoC 芯片中的 NPU：",
     ),
+    "web_demo_backend_local_albatross": MessageLookupByLibrary.simpleMessage(
+      "本地 Albatross",
+    ),
+    "web_demo_backend_local_rwkv_mobile": MessageLookupByLibrary.simpleMessage(
+      "本地 RWKV Mobile",
+    ),
+    "web_demo_backend_official_cloud": m67,
+    "web_demo_cloud": MessageLookupByLibrary.simpleMessage("云端"),
+    "web_demo_concurrency": MessageLookupByLibrary.simpleMessage("并发数"),
+    "web_demo_continue_editing": MessageLookupByLibrary.simpleMessage("继续编辑"),
+    "web_demo_copy_result": MessageLookupByLibrary.simpleMessage("复制结果"),
+    "web_demo_count_penalty": MessageLookupByLibrary.simpleMessage("计数惩罚"),
+    "web_demo_custom_prompt": MessageLookupByLibrary.simpleMessage("自定义提示词"),
+    "web_demo_empty_description": MessageLookupByLibrary.simpleMessage(
+      "暂无已生成页面。",
+    ),
+    "web_demo_empty_title": MessageLookupByLibrary.simpleMessage(
+      "生成 HTML 网格来比较候选结果。",
+    ),
+    "web_demo_endpoint_key_missing": MessageLookupByLibrary.simpleMessage(
+      "尚未配置官方 Web Demo 接口密钥",
+    ),
+    "web_demo_failed": m68,
+    "web_demo_failed_to_open_html": MessageLookupByLibrary.simpleMessage(
+      "打开 HTML 失败",
+    ),
+    "web_demo_generate_html_grid": MessageLookupByLibrary.simpleMessage(
+      "生成 HTML 网格",
+    ),
+    "web_demo_html_attached": MessageLookupByLibrary.simpleMessage(
+      "已将选中的 HTML 添加到下一次请求。",
+    ),
+    "web_demo_html_context_ready": MessageLookupByLibrary.simpleMessage(
+      "HTML 上下文已就绪",
+    ),
+    "web_demo_html_saved": MessageLookupByLibrary.simpleMessage("HTML 已保存"),
+    "web_demo_inline_preview_unavailable": MessageLookupByLibrary.simpleMessage(
+      "当前平台无法使用内嵌预览。",
+    ),
+    "web_demo_max_tokens": MessageLookupByLibrary.simpleMessage("最大 Token 数"),
+    "web_demo_no_html_found": MessageLookupByLibrary.simpleMessage("未找到 HTML"),
+    "web_demo_no_key": MessageLookupByLibrary.simpleMessage("未配置密钥"),
+    "web_demo_no_source_to_copy": MessageLookupByLibrary.simpleMessage(
+      "没有可复制的源代码",
+    ),
+    "web_demo_open_in_browser": MessageLookupByLibrary.simpleMessage("在浏览器中打开"),
+    "web_demo_pages_status": m69,
+    "web_demo_penalty_decay": MessageLookupByLibrary.simpleMessage("惩罚衰减"),
+    "web_demo_presence_penalty": MessageLookupByLibrary.simpleMessage("存在惩罚"),
+    "web_demo_preset_animation": MessageLookupByLibrary.simpleMessage(
+      "森林动物与汽车的 3D 动画",
+    ),
+    "web_demo_preset_dashboard": MessageLookupByLibrary.simpleMessage(
+      "SaaS 仪表盘",
+    ),
+    "web_demo_preset_product": MessageLookupByLibrary.simpleMessage("产品页面"),
+    "web_demo_preview_scale_percent": MessageLookupByLibrary.simpleMessage(
+      "预览缩放 %",
+    ),
+    "web_demo_preview_scroll_seconds": MessageLookupByLibrary.simpleMessage(
+      "预览滚动秒数",
+    ),
+    "web_demo_prompt_hint": MessageLookupByLibrary.simpleMessage("描述要生成的网页..."),
+    "web_demo_response_missing_content": MessageLookupByLibrary.simpleMessage(
+      "RWKV Lightning 响应中没有内容",
+    ),
+    "web_demo_result_copied": MessageLookupByLibrary.simpleMessage("结果已复制"),
+    "web_demo_result_label": m70,
+    "web_demo_save_html": MessageLookupByLibrary.simpleMessage("保存 HTML"),
+    "web_demo_source_title": m71,
+    "web_demo_status_complete": MessageLookupByLibrary.simpleMessage("已完成"),
+    "web_demo_status_live": MessageLookupByLibrary.simpleMessage("实时"),
+    "web_demo_status_parsing": MessageLookupByLibrary.simpleMessage("解析中"),
+    "web_demo_status_waiting": MessageLookupByLibrary.simpleMessage("等待中"),
+    "web_demo_temperature": MessageLookupByLibrary.simpleMessage("温度"),
+    "web_demo_tokens_and_bytes": m72,
+    "web_demo_top_p": MessageLookupByLibrary.simpleMessage("Top P"),
+    "web_demo_view_source": MessageLookupByLibrary.simpleMessage("查看源代码"),
+    "web_demo_waiting_for_first_tokens": MessageLookupByLibrary.simpleMessage(
+      "正在等待首批 Token...",
+    ),
+    "web_demo_waiting_for_html_document": MessageLookupByLibrary.simpleMessage(
+      "正在等待 HTML 文档",
+    ),
     "web_search": MessageLookupByLibrary.simpleMessage("联网搜索"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
-    "websocket_service_port": m67,
+    "websocket_service_port": m73,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("权重文件管理"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "权重文件保存目录",
@@ -1531,16 +1627,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
-    "window_id": m68,
-    "windows_architecture_mismatch_dialog_message": m69,
+    "window_id": m74,
+    "windows_architecture_mismatch_dialog_message": m75,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("架构不匹配"),
-    "windows_architecture_mismatch_warning": m70,
+    "windows_architecture_mismatch_warning": m76,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 个相关网页"),
-    "x_tabs": m71,
-    "you_are_now_using": m72,
+    "x_tabs": m77,
+    "you_are_now_using": m78,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
     ),

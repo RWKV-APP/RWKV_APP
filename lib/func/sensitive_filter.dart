@@ -13,6 +13,10 @@ typedef SensitiveFilterWindowMatchPayload = ({
   int maxLength,
   String text,
 });
+typedef SensitiveBatchFilterResult = ({
+  List<String> contents,
+  Set<int> sensitiveIndexes,
+});
 
 const String sensitiveFilterCompoundSeparator = '|';
 const SensitiveFilterPatternIndex emptySensitiveFilterPatternIndex = SensitiveFilterPatternIndex(
@@ -169,6 +173,35 @@ SensitiveFilterRules parseSensitiveFilterRules(String filter) {
 bool isSensitiveFilterRulesEmpty(SensitiveFilterRules rules) {
   if (rules.plainWords.isNotEmpty) return false;
   return rules.compoundRules.isEmpty;
+}
+
+SensitiveBatchFilterResult filterSensitiveBatchContents({
+  required List<String> contents,
+  required bool Function(int index, String content) isSensitive,
+  required String replacement,
+  required Set<int> sensitiveIndexes,
+}) {
+  if (contents.isEmpty) {
+    return (
+      contents: const <String>[],
+      sensitiveIndexes: Set<int>.unmodifiable(sensitiveIndexes),
+    );
+  }
+
+  final nextSensitiveIndexes = <int>{...sensitiveIndexes};
+  final filteredContents = <String>[];
+  for (int index = 0; index < contents.length; index++) {
+    final content = contents[index];
+    if (!nextSensitiveIndexes.contains(index) && content.isNotEmpty && isSensitive(index, content)) {
+      nextSensitiveIndexes.add(index);
+    }
+    filteredContents.add(nextSensitiveIndexes.contains(index) ? replacement : content);
+  }
+
+  return (
+    contents: List<String>.unmodifiable(filteredContents),
+    sensitiveIndexes: Set<int>.unmodifiable(nextSensitiveIndexes),
+  );
 }
 
 String? findSensitiveFilterMatch(SensitiveFilterMatchPayload payload) {

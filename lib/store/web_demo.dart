@@ -54,10 +54,10 @@ int webDemoMaxBatchSizeForBackend(WebDemoBackendMode mode) {
 
 String webDemoBackendLabel(WebDemoBackendMode mode) {
   return switch (mode) {
-    WebDemoBackendMode.cloud7b => "Official cloud 7.2B",
-    WebDemoBackendMode.cloud13b => "Official cloud 13.3B",
-    WebDemoBackendMode.localAlbatross => "Local Albatross",
-    WebDemoBackendMode.localRwkvMobile => "Local RWKV Mobile",
+    WebDemoBackendMode.cloud7b => S.current.web_demo_backend_official_cloud("7.2B"),
+    WebDemoBackendMode.cloud13b => S.current.web_demo_backend_official_cloud("13.3B"),
+    WebDemoBackendMode.localAlbatross => S.current.web_demo_backend_local_albatross,
+    WebDemoBackendMode.localRwkvMobile => S.current.web_demo_backend_local_rwkv_mobile,
   };
 }
 
@@ -306,7 +306,7 @@ extension $WebDemo on _WebDemo {
     final backend = backendMode.q;
     final usingCloud = webDemoBackendIsCloud(backend);
     if (usingCloud && !officialCloudConfigured) {
-      Alert.warning("Official Web Demo endpoint key is not configured");
+      Alert.warning(S.current.web_demo_endpoint_key_missing);
       return;
     }
     if (!await _prepareBackendForSend(backend)) return;
@@ -444,7 +444,7 @@ extension $WebDemo on _WebDemo {
 
     final trimmed = html.trim();
     if (trimmed.isEmpty) {
-      Alert.warning("No HTML found");
+      Alert.warning(S.current.web_demo_no_html_found);
       return;
     }
     pendingHtmlContext.q = trimmed;
@@ -457,13 +457,13 @@ extension $WebDemo on _WebDemo {
     }
     await 100.msLater;
     promptFocusNode.requestFocus();
-    Alert.info("HTML context ready");
+    Alert.info(S.current.web_demo_html_context_ready);
   }
 
   Future<void> prepareContinuationFromResult(WebDemoResult result) async {
     final html = result.html;
     if (html == null || html.trim().isEmpty) {
-      Alert.warning("No HTML found");
+      Alert.warning(S.current.web_demo_no_html_found);
       return;
     }
     await prepareContinuation(html: html);
@@ -472,7 +472,7 @@ extension $WebDemo on _WebDemo {
   Future<void> openResultInSystemBrowser(WebDemoResult result) async {
     final html = result.html;
     if (html == null || html.trim().isEmpty) {
-      Alert.warning("No HTML found");
+      Alert.warning(S.current.web_demo_no_html_found);
       return;
     }
     await openHtmlInSystemBrowser(html: html, label: "web-${result.index + 1}");
@@ -481,21 +481,21 @@ extension $WebDemo on _WebDemo {
   Future<void> saveResultHtml(WebDemoResult result) async {
     final html = result.html;
     if (html == null || html.trim().isEmpty) {
-      Alert.warning("No HTML found");
+      Alert.warning(S.current.web_demo_no_html_found);
       return;
     }
     await saveHtml(html: html, label: "web-${result.index + 1}");
-    Alert.success("HTML saved");
+    Alert.success(S.current.web_demo_html_saved);
   }
 
   Future<void> copyResultSource(WebDemoResult result) async {
     final content = result.html ?? result.raw;
     if (content.trim().isEmpty) {
-      Alert.warning("No source to copy");
+      Alert.warning(S.current.web_demo_no_source_to_copy);
       return;
     }
     await Clipboard.setData(ClipboardData(text: content));
-    Alert.success("Result copied");
+    Alert.success(S.current.web_demo_result_copied);
   }
 
   Future<void> openHtmlInSystemBrowser({
@@ -505,7 +505,7 @@ extension $WebDemo on _WebDemo {
     final file = await saveHtml(html: html, label: label);
     final launched = await launchUrl(Uri.file(file.path), mode: LaunchMode.externalApplication);
     if (!launched) {
-      Alert.error("Failed to open HTML");
+      Alert.error(S.current.web_demo_failed_to_open_html);
     }
   }
 
@@ -606,7 +606,7 @@ extension $WebDemo on _WebDemo {
       modelName: modelName,
       runningMode: "web_demo",
       rawDecodeParams: resolveDecodeParamsSnapshotRaw(),
-      batchSlotLabels: batchSize > 1 ? List<String>.generate(batchSize, (int index) => "Web ${index + 1}") : null,
+      batchSlotLabels: batchSize > 1 ? List<String>.generate(batchSize, (int index) => S.current.web_demo_result_label(index + 1)) : null,
     );
     P.msg.pool.q[receiveId] = receiveMsg;
     parentNode.add(MsgNode(receiveId));
@@ -770,7 +770,7 @@ extension $WebDemo on _WebDemo {
         }
       }
       if (_activeContent.trim().isEmpty) {
-        throw "RWKV Lightning response did not include content";
+        throw S.current.web_demo_response_missing_content;
       }
       _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoLightningStreamEnd");
     } catch (e) {
@@ -1062,7 +1062,7 @@ extension $WebDemo on _WebDemo {
       lastError.q = error;
       Alert.error(error);
     }
-    final finalContent = content.trim().isEmpty && error != null ? "Web Demo failed: $error" : content;
+    final finalContent = content.trim().isEmpty && error != null ? S.current.web_demo_failed(error) : content;
     final (double? snapshotPrefillSpeed, double? snapshotDecodeSpeed) = P.chat._currentSpeedSnapshotForStore();
     P.chat._updateMessageById(
       id: receiveId,

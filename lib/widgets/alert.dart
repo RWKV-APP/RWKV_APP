@@ -70,7 +70,6 @@ class Alert extends StatelessWidget {
   static Color? Function()? defaultErrorColor;
   static Color? Function()? defaultInfoColor;
 
-  static ThemeMode? preferredThemeMode;
   static double topAdjustment = 0.0;
   static double centerAdjustment = 0.0;
   static double bottomAdjustment = 0.0;
@@ -147,9 +146,14 @@ class Alert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return UncontrolledProviderScope(
       container: _AlertStates.container,
-      child: const IgnorePointer(child: _AlertHud()),
+      child: Theme(
+        data: theme,
+        child: const IgnorePointer(child: _AlertHud()),
+      ),
     );
   }
 }
@@ -215,6 +219,7 @@ class _AlertHud extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final items = ref.watch(_AlertStates.items);
 
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -222,18 +227,14 @@ class _AlertHud extends ConsumerWidget {
     final paddingTop = MediaQuery.paddingOf(context).top;
     final paddingBottom = MediaQuery.paddingOf(context).bottom;
 
-    final themeMode = Alert.preferredThemeMode ?? ThemeMode.system;
+    final isLight = theme.brightness == Brightness.light;
+    final backgroundColor = theme.colorScheme.surface;
+    final textColor = theme.colorScheme.onSurface;
 
     return Material(
       color: Colors.transparent,
       child: Stack(
         children: mapIndexed(items, (index, value) {
-          final isLight = switch (themeMode) {
-            ThemeMode.system => View.of(context).platformDispatcher.platformBrightness == Brightness.light,
-            ThemeMode.light => true,
-            ThemeMode.dark => false,
-          };
-
           final item = items[index];
           final message = item.message;
           final notifyStatus = item.status;
@@ -274,7 +275,9 @@ class _AlertHud extends ConsumerWidget {
           };
 
           final key = Key("Alert${item.id}");
-          final duration = item.displayStatus == _AlertDisplayStatus.show ? const Duration(milliseconds: 250) : const Duration(milliseconds: 150);
+          final duration = item.displayStatus == _AlertDisplayStatus.show
+              ? const Duration(milliseconds: 250)
+              : const Duration(milliseconds: 150);
           const iconHorizontalDistance = 8.0;
           final borderWidth = isLight ? 0.0 : 1.0;
 
@@ -297,41 +300,48 @@ class _AlertHud extends ConsumerWidget {
                     Positioned(
                       child: Align(
                         alignment: alignment,
-                        child: Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: isLight ? Colors.white : Colors.black,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: color.withValues(alpha: 0.33),
-                              width: borderWidth,
-                            ),
-                            boxShadow: [
-                              if (isLight)
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.4),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 1),
+                        child: Semantics(
+                          container: true,
+                          liveRegion: true,
+                          label: message,
+                          child: ExcludeSemantics(
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: backgroundColor,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: color.withValues(alpha: 0.33),
+                                  width: borderWidth,
                                 ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(iconData, color: color),
-                              const SizedBox(width: iconHorizontalDistance),
-                              ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxWidth: screenWidth * 0.85 - 16 - iconHorizontalDistance - borderWidth * 2,
-                                ),
-                                child: Text(
-                                  message,
-                                  style: TextStyle(color: color, fontWeight: .w600),
-                                  maxLines: 10,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                boxShadow: [
+                                  if (isLight)
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.4),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 1),
+                                    ),
+                                ],
                               ),
-                            ],
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(iconData, color: color),
+                                  const SizedBox(width: iconHorizontalDistance),
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxWidth: screenWidth * 0.85 - 16 - iconHorizontalDistance - borderWidth * 2,
+                                    ),
+                                    child: Text(
+                                      message,
+                                      style: TextStyle(color: textColor, fontWeight: .w600),
+                                      maxLines: 10,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),

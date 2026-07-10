@@ -115,9 +115,12 @@ extension _$Msg on _Msg {
     try {
       final db = P.app._db;
       final messages = await db.getMessagesByIds(ids);
-      for (var message in messages) {
-        pool.q = {...pool.q, message.id: message};
+      if (messages.isEmpty) return;
+      final nextPool = {...pool.q};
+      for (final message in messages) {
+        nextPool[message.id] = message;
       }
+      pool.q = nextPool;
     } catch (e) {
       qqr("Failed to load messages: $e");
     } finally {

@@ -291,13 +291,11 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     final currentModel = ref.watch(P.rwkvModel.latest);
     bool alreadyStarted = currentModel == widget.fileInfo;
     final loading = ref.watch(P.rwkvModel.loading);
-    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus);
-    final loadingProgress = ref.watch(P.rwkvModel.loadingProgress);
-    final modelLoading =
-        loadingStatus[widget.fileInfo] == .loading ||
-        loadingStatus[widget.fileInfo] == .loadModelWithExtra ||
-        loadingStatus[widget.fileInfo] == .setQnnLibraryPath;
-    final modelLoadingProgress = loadingProgress[widget.fileInfo];
+    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus.select((value) => value[widget.fileInfo]));
+    final modelLoadingProgress = ref.watch(
+      P.rwkvModel.loadingProgress.select((value) => value[widget.fileInfo]),
+    );
+    final modelLoading = loadingStatus == .loading || loadingStatus == .loadModelWithExtra || loadingStatus == .setQnnLibraryPath;
 
     if (P.app.pageKey.q == .rolePlaying) {
       alreadyStarted = widget.fileInfo.fileName == rolePlayTTSModel?.id;

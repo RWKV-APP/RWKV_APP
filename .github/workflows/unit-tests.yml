@@ -9,8 +9,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  chat-history:
-    name: Chat History
+  analyze-and-test:
+    name: Analyze and Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -48,8 +48,28 @@ jobs:
               path: ./rwkv_mobile_flutter
           YAML
 
+      - name: Create minimal test environment
+        uses: ./.github/actions/create-env
+        with:
+          x_api_key: ""
+
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run chat history tests
-        run: flutter test test/chat_history_test.dart
+      - name: Analyze app
+        run: dart analyze
+
+      - name: Test app
+        run: flutter test
+
+      - name: Install local web search dependencies
+        working-directory: packages/local_web_search
+        run: flutter pub get
+
+      - name: Analyze local web search
+        working-directory: packages/local_web_search
+        run: dart analyze
+
+      - name: Test local web search
+        working-directory: packages/local_web_search
+        run: flutter test

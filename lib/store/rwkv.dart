@@ -98,6 +98,26 @@ extension _$RWKVBridge on _RWKVBridge {
     }
   }
 
+  void _setGenerating(bool value) {
+    if (P.rwkvGeneration.generating.q == value) return;
+    P.rwkvGeneration.generating.q = value;
+  }
+
+  void _setPrefillSpeed(double value) {
+    if (P.rwkvGeneration.prefillSpeed.q == value) return;
+    P.rwkvGeneration.prefillSpeed.q = value;
+  }
+
+  void _setDecodeSpeed(double value) {
+    if (P.rwkvGeneration.decodeSpeed.q == value) return;
+    P.rwkvGeneration.decodeSpeed.q = value;
+  }
+
+  void _setPrefillProgress(double value) {
+    if (P.rwkvGeneration.prefillProgress.q == value) return;
+    P.rwkvGeneration.prefillProgress.q = value;
+  }
+
   void _onMessage(dynamic message) {
     if (message is SendPort) {
       _sendPort = message;
@@ -160,12 +180,15 @@ extension _$RWKVBridge on _RWKVBridge {
           type: _RWKVMessageType.streamResponse,
         ),
       );
-      if (message["prefillSpeed"] != null && message["prefillSpeed"] != -1.0) {
-        P.rwkvGeneration.prefillSpeed.q = message["prefillSpeed"];
+      final rawPrefillSpeed = message["prefillSpeed"];
+      if (rawPrefillSpeed != null && rawPrefillSpeed != -1.0) {
+        _setPrefillSpeed((rawPrefillSpeed as num).toDouble());
       }
-      if (message["decodeSpeed"] != null && message["decodeSpeed"] != -1.0) {
-        P.rwkvGeneration.decodeSpeed.q = message["decodeSpeed"];
-        P.telemetry.trackDecodeSpeed(message["decodeSpeed"] as double);
+      final rawDecodeSpeed = message["decodeSpeed"];
+      if (rawDecodeSpeed != null && rawDecodeSpeed != -1.0) {
+        final decodeSpeed = (rawDecodeSpeed as num).toDouble();
+        _setDecodeSpeed(decodeSpeed);
+        P.telemetry.trackDecodeSpeed(decodeSpeed);
       }
       return;
     }
@@ -204,7 +227,7 @@ extension _$RWKVBridge on _RWKVBridge {
         P.lambada._onResultsReceived(res);
 
       case from_rwkv.IsGenerating res:
-        P.rwkvGeneration.generating.q = res.isGenerating;
+        _setGenerating(res.isGenerating);
 
       case from_rwkv.StateInfo response:
         P.rwkvDebug.rawStateInfo.q = response.stateInfo;
@@ -232,19 +255,19 @@ extension _$RWKVBridge on _RWKVBridge {
         Alert.error(response.message);
 
       case from_rwkv.Speed response:
-        P.rwkvGeneration.prefillSpeed.q = response.prefillSpeed;
-        P.rwkvGeneration.decodeSpeed.q = response.decodeSpeed;
+        _setPrefillSpeed(response.prefillSpeed);
+        _setDecodeSpeed(response.decodeSpeed);
         P.telemetry.trackDecodeSpeed(response.decodeSpeed);
-        P.rwkvGeneration.prefillProgress.q = response.prefillProgress.clamp(0, 1).toDouble();
+        _setPrefillProgress(response.prefillProgress.clamp(0, 1).toDouble());
 
       case from_rwkv.StreamResponse response:
         final decodeSpeed = response.decodeSpeed;
         final prefillSpeed = response.prefillSpeed;
         if (decodeSpeed != -1.0) {
-          P.rwkvGeneration.decodeSpeed.q = decodeSpeed;
+          _setDecodeSpeed(decodeSpeed);
           P.telemetry.trackDecodeSpeed(decodeSpeed);
         }
-        if (prefillSpeed != -1.0) P.rwkvGeneration.prefillSpeed.q = prefillSpeed;
+        if (prefillSpeed != -1.0) _setPrefillSpeed(prefillSpeed);
 
       case from_rwkv.SupportedBatchSizes response:
         P.rwkvParams.supportedBatchSizes.q = response.supportedBatchSizes;

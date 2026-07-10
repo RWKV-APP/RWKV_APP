@@ -229,9 +229,10 @@ class BotMessageBottom extends ConsumerWidget {
     }
 
     final detailsScope = bottomDetailsScope ?? (disableDefaultActions ? "preview_bot_message_bottom" : "chat_bot_message_bottom");
-    final detailsExpandedMap = ref.watch(P.msg.bottomDetailsExpanded);
     final detailsStateKey = "$detailsScope::${msg.id}";
-    final detailsExpanded = detailsExpandedMap[detailsStateKey] ?? false;
+    final detailsExpanded = ref.watch(
+      P.msg.bottomDetailsExpanded.select((value) => value[detailsStateKey] ?? false),
+    );
 
     final verticalPaddingAdditions = isMobile ? 8.0 : 0.0;
     final branchSwitcherAvailable = P.msg.siblingCount(msg) > 1;
@@ -248,10 +249,12 @@ class BotMessageBottom extends ConsumerWidget {
     final showEditAction = showEditButton && !changing;
     ref.watch(P.msg.msgNode);
 
-    final messageTokensCountMap = ref.watch(P.msg.bottomMessageTokensCount);
-    final conversationTokensCountMap = ref.watch(P.msg.bottomConversationTokensCount);
-    final adapterMessageTokenCount = messageTokensCountMap[msg.id];
-    final adapterConversationTokenCount = conversationTokensCountMap[msg.id];
+    final adapterMessageTokenCount = ref.watch(
+      P.msg.bottomMessageTokensCount.select((value) => value[msg.id]),
+    );
+    final adapterConversationTokenCount = ref.watch(
+      P.msg.bottomConversationTokensCount.select((value) => value[msg.id]),
+    );
     final persistedMessageTokenCount = msg.messageTokensCount;
     final persistedConversationTokenCount = msg.conversationTokensCount;
 
@@ -278,8 +281,8 @@ class BotMessageBottom extends ConsumerWidget {
         ? "$inlineConversationTokenCoreText · ${s.conversation_token_limit_hint_short}"
         : inlineConversationTokenCoreText;
 
-    final livePrefillSpeed = ref.watch(P.rwkvGeneration.prefillSpeed);
-    final liveDecodeSpeed = ref.watch(P.rwkvGeneration.decodeSpeed);
+    final livePrefillSpeed = changing ? ref.watch(P.rwkvGeneration.prefillSpeed) : .0;
+    final liveDecodeSpeed = changing ? ref.watch(P.rwkvGeneration.decodeSpeed) : .0;
     final effectiveLivePrefillSpeed = livePrefillSpeed > 0 ? livePrefillSpeed : (msg.prefillSpeed ?? .0);
     final effectiveLiveDecodeSpeed = liveDecodeSpeed > 0 ? liveDecodeSpeed : (msg.decodeSpeed ?? .0);
     final changingInlinePrefillSpeedText = _formatCompactSpeed(speed: effectiveLivePrefillSpeed);
@@ -292,14 +295,15 @@ class BotMessageBottom extends ConsumerWidget {
     final detailsDecodeSpeedDisplay = detailsDecodeSpeedText == "--" ? "--" : "$detailsDecodeSpeedText t/s";
 
     final parsedDecodeParams = msg.parsedDecodeParams;
-    final currentDecodeParamType = ref.watch(P.rwkvParams.decodeParamType);
-    final currentDecodeParamDisplayName = SamplerAndPenaltyParam.fromDecodeParamType(currentDecodeParamType).displayName;
     String? decodeParamSummary = _localizedDecodeParamSummary(parsedDecodeParams: parsedDecodeParams);
     if (decodeParamSummary == null && (msg.changing || msg.paused || receiveId == msg.id)) {
+      final currentDecodeParamType = ref.watch(P.rwkvParams.decodeParamType);
+      final currentDecodeParamDisplayName = SamplerAndPenaltyParam.fromDecodeParamType(currentDecodeParamType).displayName;
       decodeParamSummary = currentDecodeParamDisplayName;
     }
-    final latestModel = ref.watch(P.rwkvModel.latest);
-    final currentGroupInfo = ref.watch(P.rwkvContext.currentGroupInfo);
+    final needsLiveModelName = isTTSDemo && msg.modelName?.isNotEmpty != true;
+    final latestModel = needsLiveModelName ? ref.watch(P.rwkvModel.latest) : null;
+    final currentGroupInfo = needsLiveModelName ? ref.watch(P.rwkvContext.currentGroupInfo) : null;
     final liveModelName = isTTSDemo ? (latestModel?.name ?? currentGroupInfo?.displayName) : null;
     final modelNameText = msg.modelName?.isNotEmpty == true ? msg.modelName! : (liveModelName ?? "--");
     final showChangingPrefillProgress = changing && !isTTSDemo;

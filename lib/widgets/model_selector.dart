@@ -716,14 +716,13 @@ class _LocalPthFileItem extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final currentModel = ref.watch(P.rwkvModel.latest);
     final isCurrent = currentModel == fileInfo;
-    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus);
-    final loadingProgress = ref.watch(P.rwkvModel.loadingProgress);
+    final loadingStatus = ref.watch(P.rwkvModel.loadingStatus.select((value) => value[fileInfo]));
+    final modelLoadingProgress = ref.watch(P.rwkvModel.loadingProgress.select((value) => value[fileInfo]));
 
     final loading =
-        loadingStatus[fileInfo] == LoadingStatus.loading ||
-        loadingStatus[fileInfo] == LoadingStatus.loadModelWithExtra ||
-        loadingStatus[fileInfo] == LoadingStatus.setQnnLibraryPath;
-    final modelLoadingProgress = loadingProgress[fileInfo];
+        loadingStatus == LoadingStatus.loading ||
+        loadingStatus == LoadingStatus.loadModelWithExtra ||
+        loadingStatus == LoadingStatus.setQnnLibraryPath;
     final showLoadingProgress = loading;
 
     final qb = ref.watch(P.app.qb);

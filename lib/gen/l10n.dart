@@ -7000,6 +7000,461 @@ class S {
       args: [],
     );
   }
+
+  /// `{count} 个页面 · {backend}`
+  String web_demo_pages_status(Object count, Object backend) {
+    return Intl.message(
+      '$count 个页面 · $backend',
+      name: 'web_demo_pages_status',
+      desc: '',
+      args: [count, backend],
+    );
+  }
+
+  /// `生成 HTML 网格`
+  String get web_demo_generate_html_grid {
+    return Intl.message(
+      '生成 HTML 网格',
+      name: 'web_demo_generate_html_grid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `最大 Token 数`
+  String get web_demo_max_tokens {
+    return Intl.message(
+      '最大 Token 数',
+      name: 'web_demo_max_tokens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `预览缩放 %`
+  String get web_demo_preview_scale_percent {
+    return Intl.message(
+      '预览缩放 %',
+      name: 'web_demo_preview_scale_percent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `预览滚动秒数`
+  String get web_demo_preview_scroll_seconds {
+    return Intl.message(
+      '预览滚动秒数',
+      name: 'web_demo_preview_scroll_seconds',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `温度`
+  String get web_demo_temperature {
+    return Intl.message('温度', name: 'web_demo_temperature', desc: '', args: []);
+  }
+
+  /// `Top P`
+  String get web_demo_top_p {
+    return Intl.message('Top P', name: 'web_demo_top_p', desc: '', args: []);
+  }
+
+  /// `存在惩罚`
+  String get web_demo_presence_penalty {
+    return Intl.message(
+      '存在惩罚',
+      name: 'web_demo_presence_penalty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `计数惩罚`
+  String get web_demo_count_penalty {
+    return Intl.message(
+      '计数惩罚',
+      name: 'web_demo_count_penalty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `惩罚衰减`
+  String get web_demo_penalty_decay {
+    return Intl.message(
+      '惩罚衰减',
+      name: 'web_demo_penalty_decay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `自定义提示词`
+  String get web_demo_custom_prompt {
+    return Intl.message(
+      '自定义提示词',
+      name: 'web_demo_custom_prompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `森林动物与汽车的 3D 动画`
+  String get web_demo_preset_animation {
+    return Intl.message(
+      '森林动物与汽车的 3D 动画',
+      name: 'web_demo_preset_animation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SaaS 仪表盘`
+  String get web_demo_preset_dashboard {
+    return Intl.message(
+      'SaaS 仪表盘',
+      name: 'web_demo_preset_dashboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `产品页面`
+  String get web_demo_preset_product {
+    return Intl.message(
+      '产品页面',
+      name: 'web_demo_preset_product',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `描述要生成的网页...`
+  String get web_demo_prompt_hint {
+    return Intl.message(
+      '描述要生成的网页...',
+      name: 'web_demo_prompt_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已将选中的 HTML 添加到下一次请求。`
+  String get web_demo_html_attached {
+    return Intl.message(
+      '已将选中的 HTML 添加到下一次请求。',
+      name: 'web_demo_html_attached',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `云端`
+  String get web_demo_cloud {
+    return Intl.message('云端', name: 'web_demo_cloud', desc: '', args: []);
+  }
+
+  /// `未配置密钥`
+  String get web_demo_no_key {
+    return Intl.message('未配置密钥', name: 'web_demo_no_key', desc: '', args: []);
+  }
+
+  /// `并发数`
+  String get web_demo_concurrency {
+    return Intl.message(
+      '并发数',
+      name: 'web_demo_concurrency',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `生成 HTML 网格来比较候选结果。`
+  String get web_demo_empty_title {
+    return Intl.message(
+      '生成 HTML 网格来比较候选结果。',
+      name: 'web_demo_empty_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂无已生成页面。`
+  String get web_demo_empty_description {
+    return Intl.message(
+      '暂无已生成页面。',
+      name: 'web_demo_empty_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{tokens} tokens，{bytes} bytes`
+  String web_demo_tokens_and_bytes(Object tokens, Object bytes) {
+    return Intl.message(
+      '$tokens tokens，$bytes bytes',
+      name: 'web_demo_tokens_and_bytes',
+      desc: '',
+      args: [tokens, bytes],
+    );
+  }
+
+  /// `复制结果`
+  String get web_demo_copy_result {
+    return Intl.message(
+      '复制结果',
+      name: 'web_demo_copy_result',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `查看源代码`
+  String get web_demo_view_source {
+    return Intl.message(
+      '查看源代码',
+      name: 'web_demo_view_source',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `继续编辑`
+  String get web_demo_continue_editing {
+    return Intl.message(
+      '继续编辑',
+      name: 'web_demo_continue_editing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `保存 HTML`
+  String get web_demo_save_html {
+    return Intl.message(
+      '保存 HTML',
+      name: 'web_demo_save_html',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `在浏览器中打开`
+  String get web_demo_open_in_browser {
+    return Intl.message(
+      '在浏览器中打开',
+      name: 'web_demo_open_in_browser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `网页 {index}`
+  String web_demo_result_label(Object index) {
+    return Intl.message(
+      '网页 $index',
+      name: 'web_demo_result_label',
+      desc: '',
+      args: [index],
+    );
+  }
+
+  /// `正在等待首批 Token...`
+  String get web_demo_waiting_for_first_tokens {
+    return Intl.message(
+      '正在等待首批 Token...',
+      name: 'web_demo_waiting_for_first_tokens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `等待中`
+  String get web_demo_status_waiting {
+    return Intl.message(
+      '等待中',
+      name: 'web_demo_status_waiting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `解析中`
+  String get web_demo_status_parsing {
+    return Intl.message(
+      '解析中',
+      name: 'web_demo_status_parsing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已完成`
+  String get web_demo_status_complete {
+    return Intl.message(
+      '已完成',
+      name: 'web_demo_status_complete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `实时`
+  String get web_demo_status_live {
+    return Intl.message('实时', name: 'web_demo_status_live', desc: '', args: []);
+  }
+
+  /// `正在等待 HTML 文档`
+  String get web_demo_waiting_for_html_document {
+    return Intl.message(
+      '正在等待 HTML 文档',
+      name: 'web_demo_waiting_for_html_document',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前平台无法使用内嵌预览。`
+  String get web_demo_inline_preview_unavailable {
+    return Intl.message(
+      '当前平台无法使用内嵌预览。',
+      name: 'web_demo_inline_preview_unavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{label} 源代码`
+  String web_demo_source_title(Object label) {
+    return Intl.message(
+      '$label 源代码',
+      name: 'web_demo_source_title',
+      desc: '',
+      args: [label],
+    );
+  }
+
+  /// `尚未配置官方 Web Demo 接口密钥`
+  String get web_demo_endpoint_key_missing {
+    return Intl.message(
+      '尚未配置官方 Web Demo 接口密钥',
+      name: 'web_demo_endpoint_key_missing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未找到 HTML`
+  String get web_demo_no_html_found {
+    return Intl.message(
+      '未找到 HTML',
+      name: 'web_demo_no_html_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `HTML 上下文已就绪`
+  String get web_demo_html_context_ready {
+    return Intl.message(
+      'HTML 上下文已就绪',
+      name: 'web_demo_html_context_ready',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `HTML 已保存`
+  String get web_demo_html_saved {
+    return Intl.message(
+      'HTML 已保存',
+      name: 'web_demo_html_saved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `没有可复制的源代码`
+  String get web_demo_no_source_to_copy {
+    return Intl.message(
+      '没有可复制的源代码',
+      name: 'web_demo_no_source_to_copy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `结果已复制`
+  String get web_demo_result_copied {
+    return Intl.message(
+      '结果已复制',
+      name: 'web_demo_result_copied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `打开 HTML 失败`
+  String get web_demo_failed_to_open_html {
+    return Intl.message(
+      '打开 HTML 失败',
+      name: 'web_demo_failed_to_open_html',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Web Demo 失败：{error}`
+  String web_demo_failed(Object error) {
+    return Intl.message(
+      'Web Demo 失败：$error',
+      name: 'web_demo_failed',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `RWKV Lightning 响应中没有内容`
+  String get web_demo_response_missing_content {
+    return Intl.message(
+      'RWKV Lightning 响应中没有内容',
+      name: 'web_demo_response_missing_content',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `官方云端 {model}`
+  String web_demo_backend_official_cloud(Object model) {
+    return Intl.message(
+      '官方云端 $model',
+      name: 'web_demo_backend_official_cloud',
+      desc: '',
+      args: [model],
+    );
+  }
+
+  /// `本地 Albatross`
+  String get web_demo_backend_local_albatross {
+    return Intl.message(
+      '本地 Albatross',
+      name: 'web_demo_backend_local_albatross',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `本地 RWKV Mobile`
+  String get web_demo_backend_local_rwkv_mobile {
+    return Intl.message(
+      '本地 RWKV Mobile',
+      name: 'web_demo_backend_local_rwkv_mobile',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

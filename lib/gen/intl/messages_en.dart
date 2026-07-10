@@ -173,19 +173,31 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m66(count) => "Total Test Items: ${count}";
 
-  static String m67(port) => "WebSocket Service (Port: ${port})";
+  static String m67(model) => "Official cloud ${model}";
 
-  static String m68(id) => "Window ${id}";
+  static String m68(error) => "Web Demo failed: ${error}";
 
-  static String m69(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m69(count, backend) => "${count} pages · ${backend}";
+
+  static String m70(index) => "Web ${index}";
+
+  static String m71(label) => "${label} source";
+
+  static String m72(tokens, bytes) => "${tokens} tokens, ${bytes} bytes";
+
+  static String m73(port) => "WebSocket Service (Port: ${port})";
+
+  static String m74(id) => "Window ${id}";
+
+  static String m75(buildArchitecture, operatingSystemArchitecture, url) =>
       "This app is built for ${buildArchitecture}, but your Windows operating system architecture is ${operatingSystemArchitecture}.\n\nPlease go to the official download page and download the matching executable:\n${url}";
 
-  static String m70(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m76(buildArchitecture, operatingSystemArchitecture, url) =>
       "Architecture mismatch detected: this app is built for ${buildArchitecture}, but your Windows operating system architecture is ${operatingSystemArchitecture}. Please download the matching build from the official page: ${url}";
 
-  static String m71(count) => "${count} tabs";
+  static String m77(count) => "${count} tabs";
 
-  static String m72(modelName) => "You are now using ${modelName}";
+  static String m78(modelName) => "You are now using ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1928,11 +1940,117 @@ class MessageLookup extends MessageLookupByLibrary {
     "we_support_npu_socs": MessageLookupByLibrary.simpleMessage(
       "We currently support NPU on the following SoC chips:",
     ),
+    "web_demo_backend_local_albatross": MessageLookupByLibrary.simpleMessage(
+      "Local Albatross",
+    ),
+    "web_demo_backend_local_rwkv_mobile": MessageLookupByLibrary.simpleMessage(
+      "Local RWKV Mobile",
+    ),
+    "web_demo_backend_official_cloud": m67,
+    "web_demo_cloud": MessageLookupByLibrary.simpleMessage("Cloud"),
+    "web_demo_concurrency": MessageLookupByLibrary.simpleMessage("Concurrency"),
+    "web_demo_continue_editing": MessageLookupByLibrary.simpleMessage(
+      "Continue editing",
+    ),
+    "web_demo_copy_result": MessageLookupByLibrary.simpleMessage("Copy result"),
+    "web_demo_count_penalty": MessageLookupByLibrary.simpleMessage(
+      "Count Penalty",
+    ),
+    "web_demo_custom_prompt": MessageLookupByLibrary.simpleMessage(
+      "Custom prompt",
+    ),
+    "web_demo_empty_description": MessageLookupByLibrary.simpleMessage(
+      "No generated pages yet.",
+    ),
+    "web_demo_empty_title": MessageLookupByLibrary.simpleMessage(
+      "Generate an HTML grid to compare candidates.",
+    ),
+    "web_demo_endpoint_key_missing": MessageLookupByLibrary.simpleMessage(
+      "Official Web Demo endpoint key is not configured",
+    ),
+    "web_demo_failed": m68,
+    "web_demo_failed_to_open_html": MessageLookupByLibrary.simpleMessage(
+      "Failed to open HTML",
+    ),
+    "web_demo_generate_html_grid": MessageLookupByLibrary.simpleMessage(
+      "Generate HTML Grid",
+    ),
+    "web_demo_html_attached": MessageLookupByLibrary.simpleMessage(
+      "Selected HTML is attached to the next request.",
+    ),
+    "web_demo_html_context_ready": MessageLookupByLibrary.simpleMessage(
+      "HTML context ready",
+    ),
+    "web_demo_html_saved": MessageLookupByLibrary.simpleMessage("HTML saved"),
+    "web_demo_inline_preview_unavailable": MessageLookupByLibrary.simpleMessage(
+      "Inline preview is unavailable on this platform.",
+    ),
+    "web_demo_max_tokens": MessageLookupByLibrary.simpleMessage("Max Tokens"),
+    "web_demo_no_html_found": MessageLookupByLibrary.simpleMessage(
+      "No HTML found",
+    ),
+    "web_demo_no_key": MessageLookupByLibrary.simpleMessage("No key"),
+    "web_demo_no_source_to_copy": MessageLookupByLibrary.simpleMessage(
+      "No source to copy",
+    ),
+    "web_demo_open_in_browser": MessageLookupByLibrary.simpleMessage(
+      "Open in browser",
+    ),
+    "web_demo_pages_status": m69,
+    "web_demo_penalty_decay": MessageLookupByLibrary.simpleMessage(
+      "Penalty Decay",
+    ),
+    "web_demo_presence_penalty": MessageLookupByLibrary.simpleMessage(
+      "Presence Penalty",
+    ),
+    "web_demo_preset_animation": MessageLookupByLibrary.simpleMessage(
+      "3D animation of cars in forest with animals",
+    ),
+    "web_demo_preset_dashboard": MessageLookupByLibrary.simpleMessage(
+      "SaaS dashboard",
+    ),
+    "web_demo_preset_product": MessageLookupByLibrary.simpleMessage(
+      "Product page",
+    ),
+    "web_demo_preview_scale_percent": MessageLookupByLibrary.simpleMessage(
+      "Preview Scale %",
+    ),
+    "web_demo_preview_scroll_seconds": MessageLookupByLibrary.simpleMessage(
+      "Preview Scroll Seconds",
+    ),
+    "web_demo_prompt_hint": MessageLookupByLibrary.simpleMessage(
+      "Describe the web page to generate...",
+    ),
+    "web_demo_response_missing_content": MessageLookupByLibrary.simpleMessage(
+      "RWKV Lightning response did not include content",
+    ),
+    "web_demo_result_copied": MessageLookupByLibrary.simpleMessage(
+      "Result copied",
+    ),
+    "web_demo_result_label": m70,
+    "web_demo_save_html": MessageLookupByLibrary.simpleMessage("Save HTML"),
+    "web_demo_source_title": m71,
+    "web_demo_status_complete": MessageLookupByLibrary.simpleMessage(
+      "Complete",
+    ),
+    "web_demo_status_live": MessageLookupByLibrary.simpleMessage("Live"),
+    "web_demo_status_parsing": MessageLookupByLibrary.simpleMessage("Parsing"),
+    "web_demo_status_waiting": MessageLookupByLibrary.simpleMessage("Waiting"),
+    "web_demo_temperature": MessageLookupByLibrary.simpleMessage("Temperature"),
+    "web_demo_tokens_and_bytes": m72,
+    "web_demo_top_p": MessageLookupByLibrary.simpleMessage("Top P"),
+    "web_demo_view_source": MessageLookupByLibrary.simpleMessage("View source"),
+    "web_demo_waiting_for_first_tokens": MessageLookupByLibrary.simpleMessage(
+      "Waiting for first tokens...",
+    ),
+    "web_demo_waiting_for_html_document": MessageLookupByLibrary.simpleMessage(
+      "Waiting for HTML document",
+    ),
     "web_search": MessageLookupByLibrary.simpleMessage("Web Search"),
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Web Search Template",
     ),
-    "websocket_service_port": m67,
+    "websocket_service_port": m73,
     "weights_mangement": MessageLookupByLibrary.simpleMessage(
       "Weight File Management",
     ),
@@ -1954,16 +2072,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("White"),
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
-    "window_id": m68,
-    "windows_architecture_mismatch_dialog_message": m69,
+    "window_id": m74,
+    "windows_architecture_mismatch_dialog_message": m75,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("Architecture Mismatch"),
-    "windows_architecture_mismatch_warning": m70,
+    "windows_architecture_mismatch_warning": m76,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
-    "x_tabs": m71,
-    "you_are_now_using": m72,
+    "x_tabs": m77,
+    "you_are_now_using": m78,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),

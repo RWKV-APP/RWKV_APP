@@ -199,6 +199,65 @@ Alpha | Beta
     });
   });
 
+  group('filterSensitiveBatchContents', () {
+    test('replaces only the matching batch slot', () {
+      final checkedIndexes = <int>[];
+
+      final result = filterSensitiveBatchContents(
+        contents: <String>['safe first', 'blocked content', 'safe third'],
+        isSensitive: (int index, String content) {
+          checkedIndexes.add(index);
+          return content.contains('blocked');
+        },
+        replacement: 'refused',
+        sensitiveIndexes: const <int>{},
+      );
+
+      expect(result.contents, <String>['safe first', 'refused', 'safe third']);
+      expect(result.sensitiveIndexes, <int>{1});
+      expect(checkedIndexes, <int>[0, 1, 2]);
+    });
+
+    test('keeps a matched slot refused across later updates', () {
+      final checkedIndexes = <int>[];
+
+      final result = filterSensitiveBatchContents(
+        contents: <String>['safe first continues', 'blocked content continues'],
+        isSensitive: (int index, String content) {
+          checkedIndexes.add(index);
+          return false;
+        },
+        replacement: 'refused',
+        sensitiveIndexes: const <int>{1},
+      );
+
+      expect(result.contents, <String>['safe first continues', 'refused']);
+      expect(result.sensitiveIndexes, <int>{1});
+      expect(checkedIndexes, <int>[0]);
+    });
+
+    test('does not combine ordinary words from separate slots', () {
+      final rules = parseSensitiveFilterRules('Alpha|Beta');
+
+      final result = filterSensitiveBatchContents(
+        contents: <String>['Alpha appears alone', 'Beta appears alone'],
+        isSensitive: (int index, String content) {
+          final match = findSensitiveFilterMatchInWindows((
+            index: rules.index,
+            maxLength: rules.maxLength,
+            text: content,
+          ));
+          return match != null;
+        },
+        replacement: 'refused',
+        sensitiveIndexes: const <int>{},
+      );
+
+      expect(result.contents, <String>['Alpha appears alone', 'Beta appears alone']);
+      expect(result.sensitiveIndexes, isEmpty);
+    });
+  });
+
   group('compute compatibility', () {
     test('parses rules through compute', () async {
       final rules = await compute(parseSensitiveFilterRules, 'plain\nAlpha|Beta\nA|B');

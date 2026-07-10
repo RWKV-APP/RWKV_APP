@@ -144,7 +144,6 @@ const _homeCardTitleTextStyle = TextStyle(
 
 const _homeCardDescriptionTextStyle = TextStyle(
   fontSize: 12,
-  color: Colors.grey,
   height: 1.375,
 );
 
@@ -167,6 +166,7 @@ class _HomeCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final appTheme = ref.watch(P.app.theme);
     final maxHeightOfTitle = ref.watch(P.ui.maxHeightsOfHomeItemTitle);
     final maxHeightOfDescription = ref.watch(P.ui.maxHeightsOfHomeItemDescription);
@@ -209,7 +209,7 @@ class _HomeCard extends ConsumerWidget {
                   },
                   child: Text(
                     title,
-                    style: _homeCardTitleTextStyle,
+                    style: _homeCardTitleTextStyle.copyWith(color: theme.colorScheme.onSurface),
                     textAlign: .center,
                   ),
                 ),
@@ -230,7 +230,7 @@ class _HomeCard extends ConsumerWidget {
                   },
                   child: Text(
                     description,
-                    style: _homeCardDescriptionTextStyle,
+                    style: _homeCardDescriptionTextStyle.copyWith(color: appTheme.qb6),
                     textAlign: .center,
                   ),
                 ),
@@ -494,9 +494,13 @@ class _Welcome extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final version = ref.watch(P.app.version);
+    final appTheme = ref.watch(P.app.theme);
     final s = S.of(context);
     final pixels = ref.watch(P.ui.homePixels);
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final iconCacheSize = (80 * devicePixelRatio).ceil();
     double opacity = 1 - pixels / 150 + 0.5;
 
     if (opacity < 0) opacity = 0;
@@ -518,19 +522,25 @@ class _Welcome extends ConsumerWidget {
                   'assets/img/chat/icon.png',
                   height: 80,
                   width: 80,
+                  cacheHeight: iconCacheSize,
+                  cacheWidth: iconCacheSize,
                 ),
               ),
             ),
             SizedBox(height: 24 * opacity),
             Text(
               s.welcome_to_rwkv_chat,
-              style: TextStyle(fontSize: 24 * pow(opacity, 0.1).toDouble(), fontWeight: .bold),
+              style: TextStyle(
+                color: theme.colorScheme.onSurface,
+                fontSize: 24 * pow(opacity, 0.1).toDouble(),
+                fontWeight: .bold,
+              ),
               textAlign: .center,
             ),
             SizedBox(height: 12 * opacity),
             Text(
               version,
-              style: TextStyle(fontSize: 14 * pow(opacity, 0.1).toDouble(), color: Colors.grey),
+              style: TextStyle(fontSize: 14 * pow(opacity, 0.1).toDouble(), color: appTheme.qb6),
               textAlign: .center,
             ),
             SizedBox(height: 100 * opacity),

@@ -54,6 +54,7 @@ class FormItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
 
@@ -86,15 +87,12 @@ class FormItem extends ConsumerWidget {
                           Text(
                             title,
                             textAlign: titleTextAlign,
-                            style: TextStyle(fontWeight: .w500, fontSize: 16, color: titleColor),
+                            style: TextStyle(fontWeight: .w500, fontSize: 16, color: titleColor ?? theme.colorScheme.onSurface),
                           ),
                           if (subtitle != null)
-                            Opacity(
-                              opacity: 0.5,
-                              child: Text(
-                                subtitle!,
-                                style: const TextStyle(fontWeight: .w500, fontSize: 12),
-                              ),
+                            Text(
+                              subtitle!,
+                              style: TextStyle(fontWeight: .w500, fontSize: 12, color: appTheme.qb6),
                             ),
                         ],
                       ),
@@ -104,7 +102,7 @@ class FormItem extends ConsumerWidget {
                         flex: 2,
                         child: Text(
                           infoText ?? "null",
-                          style: TextStyle(fontWeight: .w500, fontSize: 12, color: qb.withValues(alpha: .5)),
+                          style: TextStyle(fontWeight: .w500, fontSize: 12, color: appTheme.qb6),
                           textAlign: TextAlign.right,
                         ),
                       ),
@@ -115,7 +113,7 @@ class FormItem extends ConsumerWidget {
                     if (showArrow)
                       Icon(
                         Icons.chevron_right,
-                        color: qb.withValues(alpha: .5),
+                        color: appTheme.qb6,
                       ),
                   ],
                 ),

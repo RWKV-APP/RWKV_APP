@@ -111,18 +111,24 @@ extension $See on _See {
 
     final path = "${cacheDir.path}/${(DateTime.now().millisecondsSinceEpoch ~/ 1000)}.${S.current.my_voice}.wav";
     final file = File(path);
+    final dataSize = _audioData.fold<int>(0, (total, chunk) => total + chunk.length);
 
-    List<int> wavHeader = _createWavHeader(
-      dataSize: _audioData.expand((x) => x).length,
+    final wavHeader = _createWavHeader(
+      dataSize: dataSize,
       sampleRate: 16000,
       numChannels: 1,
       bitsPerSample: 16,
     );
 
-    await file.writeAsBytes(wavHeader);
-
-    for (final chunk in _audioData) {
-      await file.writeAsBytes(chunk, mode: FileMode.append);
+    final sink = file.openWrite();
+    try {
+      sink.add(wavHeader);
+      for (final chunk in _audioData) {
+        sink.add(chunk);
+      }
+      await sink.flush();
+    } finally {
+      await sink.close();
     }
 
     audioFileStreamController.add((file, audioLengthInMilliseconds));

@@ -174,19 +174,31 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m66(count) => "Всего тестовых элементов: ${count}";
 
-  static String m67(port) => "WebSocket-сервис (Порт: ${port})";
+  static String m67(model) => "Официальное облако ${model}";
 
-  static String m68(id) => "Окно ${id}";
+  static String m68(error) => "Ошибка Web Demo: ${error}";
 
-  static String m69(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m69(count, backend) => "Страниц: ${count} · ${backend}";
+
+  static String m70(index) => "Веб ${index}";
+
+  static String m71(label) => "Исходный код: ${label}";
+
+  static String m72(tokens, bytes) => "${tokens} токенов, ${bytes} байт";
+
+  static String m73(port) => "WebSocket-сервис (Порт: ${port})";
+
+  static String m74(id) => "Окно ${id}";
+
+  static String m75(buildArchitecture, operatingSystemArchitecture, url) =>
       "Приложение собрано для ${buildArchitecture}, а архитектура Windows — ${operatingSystemArchitecture}.\n\nПерейдите на официальную страницу загрузки и скачайте подходящий исполняемый файл:\n${url}";
 
-  static String m70(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m76(buildArchitecture, operatingSystemArchitecture, url) =>
       "Обнаружено несоответствие архитектуры: приложение собрано для ${buildArchitecture}, а архитектура Windows — ${operatingSystemArchitecture}. Скачайте подходящую версию с официальной страницы: ${url}";
 
-  static String m71(count) => "${count} вкладок";
+  static String m77(count) => "${count} вкладок";
 
-  static String m72(modelName) => "Вы сейчас используете ${modelName}";
+  static String m78(modelName) => "Вы сейчас используете ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -749,6 +761,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm_forget_location_title": MessageLookupByLibrary.simpleMessage(
       "Забыть это расположение?",
     ),
+    "continue2": MessageLookupByLibrary.simpleMessage("Продолжить"),
     "continue_download": MessageLookupByLibrary.simpleMessage(
       "Продолжить загрузку",
     ),
@@ -958,6 +971,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
     "editing": MessageLookupByLibrary.simpleMessage("Редактирование"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("АН->КН"),
+    "enable_system_proxy": MessageLookupByLibrary.simpleMessage(
+      "Использовать системный прокси",
+    ),
     "enabled": MessageLookupByLibrary.simpleMessage("Включено"),
     "end": MessageLookupByLibrary.simpleMessage("Конец"),
     "english": MessageLookupByLibrary.simpleMessage("English"),
@@ -968,6 +984,9 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Убедитесь, что на вашем устройстве достаточно памяти, иначе приложение может вылететь",
         ),
+    "enter_text_to_expand": MessageLookupByLibrary.simpleMessage(
+      "Введите текст для продолжения",
+    ),
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "Введите текст для перевода...",
     ),
@@ -1405,6 +1424,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "other_files": MessageLookupByLibrary.simpleMessage(
       "Другие файлы (Эти файлы могут быть устаревшими или больше не поддерживаемыми весами, которые больше не используются RWKV Chat)",
     ),
+    "other_settings": MessageLookupByLibrary.simpleMessage("Другие настройки"),
     "output": MessageLookupByLibrary.simpleMessage("Вывод"),
     "overseas": MessageLookupByLibrary.simpleMessage("(за рубежом)"),
     "overwrite": MessageLookupByLibrary.simpleMessage("Перезаписать"),
@@ -1445,6 +1465,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, введите сложность",
+    ),
+    "please_entry_some_text_to_continue": MessageLookupByLibrary.simpleMessage(
+      "Сначала введите текст для продолжения",
     ),
     "please_grant_permission_to_use_microphone":
         MessageLookupByLibrary.simpleMessage(
@@ -1838,6 +1861,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "syncing": MessageLookupByLibrary.simpleMessage("Синхронизация"),
     "system_mode": MessageLookupByLibrary.simpleMessage("Как в системе"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("Системный промпт"),
+    "tag_date": MessageLookupByLibrary.simpleMessage("Дата"),
+    "tag_day_of_week": MessageLookupByLibrary.simpleMessage("День недели"),
+    "tag_time": MessageLookupByLibrary.simpleMessage("Время"),
     "take_photo": MessageLookupByLibrary.simpleMessage("Сделать фото"),
     "target_text": m56,
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
@@ -1997,11 +2023,129 @@ class MessageLookup extends MessageLookupByLibrary {
     "we_support_npu_socs": MessageLookupByLibrary.simpleMessage(
       "В настоящее время поддерживается NPU следующих чипов SoC:",
     ),
+    "web_demo_backend_local_albatross": MessageLookupByLibrary.simpleMessage(
+      "Локальный Albatross",
+    ),
+    "web_demo_backend_local_rwkv_mobile": MessageLookupByLibrary.simpleMessage(
+      "Локальный RWKV Mobile",
+    ),
+    "web_demo_backend_official_cloud": m67,
+    "web_demo_cloud": MessageLookupByLibrary.simpleMessage("Облако"),
+    "web_demo_concurrency": MessageLookupByLibrary.simpleMessage(
+      "Параллельность",
+    ),
+    "web_demo_continue_editing": MessageLookupByLibrary.simpleMessage(
+      "Продолжить редактирование",
+    ),
+    "web_demo_copy_result": MessageLookupByLibrary.simpleMessage(
+      "Копировать результат",
+    ),
+    "web_demo_count_penalty": MessageLookupByLibrary.simpleMessage(
+      "Count Penalty",
+    ),
+    "web_demo_custom_prompt": MessageLookupByLibrary.simpleMessage(
+      "Свой промпт",
+    ),
+    "web_demo_empty_description": MessageLookupByLibrary.simpleMessage(
+      "Созданных страниц пока нет.",
+    ),
+    "web_demo_empty_title": MessageLookupByLibrary.simpleMessage(
+      "Создайте сетку HTML для сравнения вариантов.",
+    ),
+    "web_demo_endpoint_key_missing": MessageLookupByLibrary.simpleMessage(
+      "Ключ официального эндпоинта Web Demo не настроен",
+    ),
+    "web_demo_failed": m68,
+    "web_demo_failed_to_open_html": MessageLookupByLibrary.simpleMessage(
+      "Не удалось открыть HTML",
+    ),
+    "web_demo_generate_html_grid": MessageLookupByLibrary.simpleMessage(
+      "Создать сетку HTML",
+    ),
+    "web_demo_html_attached": MessageLookupByLibrary.simpleMessage(
+      "Выбранный HTML добавлен к следующему запросу.",
+    ),
+    "web_demo_html_context_ready": MessageLookupByLibrary.simpleMessage(
+      "Контекст HTML готов",
+    ),
+    "web_demo_html_saved": MessageLookupByLibrary.simpleMessage(
+      "HTML сохранён",
+    ),
+    "web_demo_inline_preview_unavailable": MessageLookupByLibrary.simpleMessage(
+      "Встроенный предпросмотр недоступен на этой платформе.",
+    ),
+    "web_demo_max_tokens": MessageLookupByLibrary.simpleMessage(
+      "Максимум токенов",
+    ),
+    "web_demo_no_html_found": MessageLookupByLibrary.simpleMessage(
+      "HTML не найден",
+    ),
+    "web_demo_no_key": MessageLookupByLibrary.simpleMessage("Нет ключа"),
+    "web_demo_no_source_to_copy": MessageLookupByLibrary.simpleMessage(
+      "Нет исходного кода для копирования",
+    ),
+    "web_demo_open_in_browser": MessageLookupByLibrary.simpleMessage(
+      "Открыть в браузере",
+    ),
+    "web_demo_pages_status": m69,
+    "web_demo_penalty_decay": MessageLookupByLibrary.simpleMessage(
+      "Penalty Decay",
+    ),
+    "web_demo_presence_penalty": MessageLookupByLibrary.simpleMessage(
+      "Presence Penalty",
+    ),
+    "web_demo_preset_animation": MessageLookupByLibrary.simpleMessage(
+      "3D-анимация машин в лесу с животными",
+    ),
+    "web_demo_preset_dashboard": MessageLookupByLibrary.simpleMessage(
+      "Панель SaaS",
+    ),
+    "web_demo_preset_product": MessageLookupByLibrary.simpleMessage(
+      "Страница продукта",
+    ),
+    "web_demo_preview_scale_percent": MessageLookupByLibrary.simpleMessage(
+      "Масштаб предпросмотра %",
+    ),
+    "web_demo_preview_scroll_seconds": MessageLookupByLibrary.simpleMessage(
+      "Прокрутка предпросмотра, сек.",
+    ),
+    "web_demo_prompt_hint": MessageLookupByLibrary.simpleMessage(
+      "Опишите веб-страницу для создания...",
+    ),
+    "web_demo_response_missing_content": MessageLookupByLibrary.simpleMessage(
+      "В ответе RWKV Lightning отсутствует содержимое",
+    ),
+    "web_demo_result_copied": MessageLookupByLibrary.simpleMessage(
+      "Результат скопирован",
+    ),
+    "web_demo_result_label": m70,
+    "web_demo_save_html": MessageLookupByLibrary.simpleMessage(
+      "Сохранить HTML",
+    ),
+    "web_demo_source_title": m71,
+    "web_demo_status_complete": MessageLookupByLibrary.simpleMessage("Готово"),
+    "web_demo_status_live": MessageLookupByLibrary.simpleMessage(
+      "В реальном времени",
+    ),
+    "web_demo_status_parsing": MessageLookupByLibrary.simpleMessage("Разбор"),
+    "web_demo_status_waiting": MessageLookupByLibrary.simpleMessage("Ожидание"),
+    "web_demo_temperature": MessageLookupByLibrary.simpleMessage("Temperature"),
+    "web_demo_tokens_and_bytes": m72,
+    "web_demo_top_p": MessageLookupByLibrary.simpleMessage("Top P"),
+    "web_demo_view_source": MessageLookupByLibrary.simpleMessage(
+      "Показать исходный код",
+    ),
+    "web_demo_waiting_for_first_tokens": MessageLookupByLibrary.simpleMessage(
+      "Ожидание первых токенов...",
+    ),
+    "web_demo_waiting_for_html_document": MessageLookupByLibrary.simpleMessage(
+      "Ожидание HTML-документа",
+    ),
     "web_search": MessageLookupByLibrary.simpleMessage("Веб-поиск"),
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон веб-поиска",
     ),
-    "websocket_service_port": m67,
+    "websocket_service_port": m73,
     "weights_mangement": MessageLookupByLibrary.simpleMessage(
       "Управление файлами весов",
     ),
@@ -2023,18 +2167,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("Белые"),
     "white_score": MessageLookupByLibrary.simpleMessage("Счет белых"),
     "white_wins": MessageLookupByLibrary.simpleMessage("Белые победили!"),
-    "window_id": m68,
-    "windows_architecture_mismatch_dialog_message": m69,
+    "window_id": m74,
+    "windows_architecture_mismatch_dialog_message": m75,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("Несоответствие архитектуры"),
-    "windows_architecture_mismatch_warning": m70,
+    "windows_architecture_mismatch_warning": m76,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "Выбрано %d сообщений",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("Найдено %d страниц"),
-    "x_tabs": m71,
-    "you_are_now_using": m72,
+    "x_tabs": m77,
+    "you_are_now_using": m78,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "Теперь вы можете начать общаться с RWKV",
     ),

@@ -280,11 +280,11 @@ extension _$Talk on _Talk {
     final length = res.ttsStreamingBufferLength;
     final generating = res.generating;
     final allReceived = !generating && this.generating.q;
-    final addedLength = length - latestBufferLength.q;
-    final rawFloatList = res.rawFloatList.map((e) => e.toDouble() * 1).toList();
+    final previousLength = latestBufferLength.q;
+    final addedLength = length - previousLength;
 
-    if (addedLength != 0) {
-      final float32Data = Float32List.fromList(rawFloatList).sublist(latestBufferLength.q, length);
+    if (addedLength > 0) {
+      final float32Data = Float32List.fromList(res.rawFloatList.sublist(previousLength, length));
       audioStream?.push(float32Data);
     }
 

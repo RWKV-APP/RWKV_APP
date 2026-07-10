@@ -631,7 +631,11 @@ extension $ChatResponseStyle on _Chat {
     if (currentOutput != null && completedCount < totalCount) {
       slotOutputs[completedCount] = currentOutput;
     }
-    return buildBatchContent(slotOutputs);
+    final filtered = _filterSensitiveBatchContents(
+      contents: slotOutputs,
+      messageId: _responseStyleSequentialMessageId ?? receiveId.q,
+    );
+    return buildBatchContent(filtered);
   }
 
   Future<void> _sendCurrentResponseStyleSequentialRoute() async {
@@ -764,9 +768,6 @@ extension $ChatResponseStyle on _Chat {
           messageId: messageId,
           liveBotContent: liveContent,
         );
-        _sensitiveThrottler.call(() {
-          _checkSensitive(liveContent);
-        });
         return true;
 
       case from_rwkv.GenerateStop _:

@@ -171,6 +171,21 @@ extension $ChatBatch on _Chat {
     required from_rwkv.ResponseBatchBufferContent response,
     required int? messageId,
   }) {
+    final normalized = _normalizeBatchResponseBufferContentsForMessage(
+      response: response,
+      messageId: messageId,
+    );
+    final filtered = _filterSensitiveBatchContents(
+      contents: normalized,
+      messageId: messageId,
+    );
+    return buildBatchContent(filtered);
+  }
+
+  List<String> _normalizeBatchResponseBufferContentsForMessage({
+    required from_rwkv.ResponseBatchBufferContent response,
+    required int? messageId,
+  }) {
     final message = messageId == null ? null : P.msg.pool.q[messageId];
     final runtimeMaxBatchCount = _runtimeMaxSupportedBatchCount();
     final expectedBatchCount = _resolveExpectedBatchResponseCount(
@@ -183,7 +198,7 @@ extension $ChatBatch on _Chat {
       expectedBatchCount: expectedBatchCount,
       maxBatchSlotCount: runtimeMaxBatchCount,
     );
-    return buildBatchContent(normalized);
+    return normalized;
   }
 
   void _onBatchCountChanged(int value) async {

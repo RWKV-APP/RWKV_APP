@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:local_web_search/src/browser/search_browser_controller.dart';
 import 'package:local_web_search/src/browser/search_browser_view.dart';
+import 'package:local_web_search/src/debug/search_debug_log.dart';
 import 'package:local_web_search/src/models/search_deep_result.dart';
 import 'package:local_web_search/src/models/search_engine.dart';
 import 'package:local_web_search/src/models/search_engine_availability.dart';
@@ -369,7 +370,7 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
       result = (await _controller.runSerpExtraction()).validatedForEngine(
         expectedEngine,
       );
-      debugPrint(
+      logLocalWebSearchDebug(
         '[local_web_search] extraction attempt ${attempt + 1}: '
         '${result.items.length} items, page=${result.pageUrl}, error=${result.error}',
       );
