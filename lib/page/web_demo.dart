@@ -202,7 +202,7 @@ class _WebDemoControlPanel extends ConsumerWidget {
                     child: Text(
                       S.current.web_demo_generate_html_grid,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: .w700),
+                      style: const TextStyle(fontWeight: .w700),
                     ),
                   ),
                 ),
@@ -216,7 +216,7 @@ class _WebDemoControlPanel extends ConsumerWidget {
                     ),
                     child: Text(
                       S.current.stop,
-                      style: TextStyle(fontWeight: .w700),
+                      style: const TextStyle(fontWeight: .w700),
                     ),
                   ),
                 ),
@@ -794,7 +794,7 @@ class _WebDemoGridState extends ConsumerState<_WebDemoGrid> {
                         Text(
                           S.current.web_demo_empty_title,
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18, fontWeight: .w700),
+                          style: const TextStyle(fontSize: 18, fontWeight: .w700),
                         ),
                         const SizedBox(height: 8),
                         Text(
