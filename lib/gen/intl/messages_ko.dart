@@ -1330,7 +1330,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_to_default_directory": MessageLookupByLibrary.simpleMessage(
       "기본 디렉토리로 재설정되었습니다",
     ),
-    "response_style": MessageLookupByLibrary.simpleMessage("응답 스타일"),
+    "response_style": MessageLookupByLibrary.simpleMessage("답변 방식"),
     "response_style_auto_switched_to_jin": MessageLookupByLibrary.simpleMessage(
       "자동으로 今 스타일로 전환했습니다",
     ),
@@ -1342,8 +1342,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_many": MessageLookupByLibrary.simpleMessage("여러 스타일"),
     "response_style_random_questions": m52,
     "response_style_random_questions_not_enough": m53,
+    "response_style_route_en": MessageLookupByLibrary.simpleMessage("영어 답변"),
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
-      "English only",
+      "최종 답변은 영어로만 작성",
     ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(

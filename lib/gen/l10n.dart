@@ -874,9 +874,9 @@ class S {
     );
   }
 
-  /// `表达风格`
+  /// `回答方式`
   String get response_style {
-    return Intl.message('表达风格', name: 'response_style', desc: '', args: []);
+    return Intl.message('回答方式', name: 'response_style', desc: '', args: []);
   }
 
   /// `风格`
@@ -1009,10 +1009,20 @@ class S {
     );
   }
 
-  /// `使用英文回答`
+  /// `英文回答`
+  String get response_style_route_en {
+    return Intl.message(
+      '英文回答',
+      name: 'response_style_route_en',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `最终回答仅使用英文`
   String get response_style_route_en_detail {
     return Intl.message(
-      '使用英文回答',
+      '最终回答仅使用英文',
       name: 'response_style_route_en_detail',
       desc: '',
       args: [],

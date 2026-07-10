@@ -1229,7 +1229,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_to_default_directory": MessageLookupByLibrary.simpleMessage(
       "已恢复默认目录",
     ),
-    "response_style": MessageLookupByLibrary.simpleMessage("表达风格"),
+    "response_style": MessageLookupByLibrary.simpleMessage("回答方式"),
     "response_style_auto_switched_to_jin": MessageLookupByLibrary.simpleMessage(
       "已自动切换为「今」风格",
     ),
@@ -1241,8 +1241,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_many": MessageLookupByLibrary.simpleMessage("多种风格"),
     "response_style_random_questions": m52,
     "response_style_random_questions_not_enough": m53,
+    "response_style_route_en": MessageLookupByLibrary.simpleMessage("英文回答"),
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
-      "使用英文回答",
+      "最终回答仅使用英文",
     ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
