@@ -1572,7 +1572,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_to_default_directory": MessageLookupByLibrary.simpleMessage(
       "Reset to default directory",
     ),
-    "response_style": MessageLookupByLibrary.simpleMessage("Response Style"),
+    "response_style": MessageLookupByLibrary.simpleMessage("Answer Style"),
     "response_style_auto_switched_to_jin": MessageLookupByLibrary.simpleMessage(
       "Switched back to Jin style automatically",
     ),
@@ -1584,8 +1584,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_many": MessageLookupByLibrary.simpleMessage("Many Styles"),
     "response_style_random_questions": m52,
     "response_style_random_questions_not_enough": m53,
+    "response_style_route_en": MessageLookupByLibrary.simpleMessage("English"),
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
-      "English only",
+      "Final answer in English",
     ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(

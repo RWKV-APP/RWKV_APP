@@ -78,6 +78,13 @@ extension ResponseStyleRouteX on ResponseStyleRoute {
     return this == defaultRoute;
   }
 
+  String title(S s) {
+    return switch (this) {
+      .en => s.response_style_route_en,
+      _ => label,
+    };
+  }
+
   String detail(S s) {
     switch (this) {
       case .jin:

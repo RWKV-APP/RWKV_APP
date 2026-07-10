@@ -255,7 +255,7 @@ class _ResponseStyleRouteCard extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        route.label,
+                        route.title(s),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: titleColor, fontSize: 21, fontWeight: .w700, height: 1),

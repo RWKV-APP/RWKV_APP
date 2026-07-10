@@ -1630,7 +1630,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_to_default_directory": MessageLookupByLibrary.simpleMessage(
       "Сброс к каталогу по умолчанию",
     ),
-    "response_style": MessageLookupByLibrary.simpleMessage("Стиль ответа"),
+    "response_style": MessageLookupByLibrary.simpleMessage("Способ ответа"),
     "response_style_auto_switched_to_jin": MessageLookupByLibrary.simpleMessage(
       "Автоматически переключено на стиль 今",
     ),
@@ -1642,8 +1642,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_many": MessageLookupByLibrary.simpleMessage("Много стилей"),
     "response_style_random_questions": m52,
     "response_style_random_questions_not_enough": m53,
+    "response_style_route_en": MessageLookupByLibrary.simpleMessage("Ответ EN"),
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
-      "Только английский",
+      "Итоговый ответ только на английском",
     ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
