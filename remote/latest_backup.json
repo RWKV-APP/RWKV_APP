@@ -389,18 +389,6 @@
         "date": 1780902443
       },
       {
-        "name": "RWKV7-G1d 0.4B Translate",
-        "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/RWKV_v7_G1d_0.4B_Translate_ctx4096_20260607-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 714776576,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["npu", "translate", "batch"],
-        "socLimitations": ["Dimensity 9500"],
-        "date": 1783520194
-      },
-      {
         "name": "RWKV7-G1c 1.5B Translate (WebRWKV)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/RWKV_v7_G1c_1.5B_Translate_ctx4096_20260118-nf4.prefab",
@@ -520,18 +508,6 @@
         "date": 1768802715
       },
       {
-        "name": "RWKV7-G1c 1.5B Translate",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/RWKV_v7_G1c_1.5B_Translate_ctx4096_20260118-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 1950085120,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["npu", "translate", "batch"],
-        "socLimitations": ["Dimensity 9500"],
-        "date": 1783519972
-      },
-      {
         "name": "RWKV7-G1d 0.1B (Dimensity 9300)",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np7/251218/rwkv7-g1d-0.1b-20260129-ctx8192-MT6989.rmpack",
@@ -568,52 +544,16 @@
         "date": 1779899103
       },
       {
-        "name": "RWKV7-G1d 0.1B (Dimensity 9500)",
-        "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1d-0.1b-20260129-ctx8192-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 324059136,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["reason", "npu"],
-        "socLimitations": ["Dimensity 9500"],
-        "date": 1783531411
-      },
-      {
-        "name": "RWKV7-G1d 0.4B (Dimensity 9500)",
-        "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1d-0.4b-20260210-ctx8192-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 714780672,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["reason", "npu"],
-        "socLimitations": ["Dimensity 9500"],
-        "date": 1783531621
-      },
-      {
-        "name": "RWKV7-G1g 1.5B (Dimensity 9500)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1g-1.5b-20260526-ctx8192-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 1950031872,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["Dimensity 9500"],
-        "date": 1783526093
-      },
-      {
         "name": "RWKV7-G1g 2.9B (Dimensity 9500)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1g-2.9b-20260526-ctx8192-MT6993-static-asym-a16w4-mixed-vsq32t8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 2566356992,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1g-2.9b-20260526-ctx8192-MT6993-a16w4vec32scale8.rmpack",
+        "fileSize": 2207039488,
         "quantization": "w4a16",
         "platforms": ["android"],
         "backends": ["mtk_np9"],
-        "tags": ["reason", "npu", "batch"],
+        "tags": ["reason", "npu"],
         "socLimitations": ["Dimensity 9500"],
-        "date": 1783526163
+        "date": 1782040460
       },
       {
         "name": "RWKV7-G1d 0.1B (8 Elite)",
@@ -1431,19 +1371,6 @@
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 2"],
         "date": 1768750659
-      },
-      {
-        "name": "RWKV7-G1 1.5B Neko (Dimension 9500)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1-1.5b-Lonely-Neko-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "updatedAt": "250502",
-        "fileSize": 1950089216,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["Dimension 9500"],
-        "date": 1783523658
       }
     ]
   },
@@ -1544,18 +1471,6 @@
         "tags": ["reason", "npu"],
         "socLimitations": ["7+ Gen 3"],
         "date": 1768909607
-      },
-      {
-        "name": "RWKV7-G1c-Roleplay 1.5B (Dimension 9500)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1c-1.5B-MiSS-Roleplay-260116-ctx8192-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 1950052352,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["Dimension 9500"],
-        "date": 1783524636
       },
       {
         "name": "RWKV7-G1c-Roleplay 1.5B",
@@ -1687,18 +1602,6 @@
         "tags": ["reason", "npu"],
         "socLimitations": ["7+ Gen 3"],
         "date": 1768802671
-      },
-      {
-        "name": "RWKV7-G1c-Roleplay 2.9B (Dimension 9500)",
-        "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1c-2.9B-MiSS-Roleplay-260115-ctx8192-MT6993-static-asym-a16w4-mixed-vsq32t8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 2566324224,
-        "quantization": "w4a16",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["Dimension 9500"],
-        "date": 1783525446
       },
       {
         "name": "RWKV7-G1c-Roleplay 2.9B",
@@ -1864,19 +1767,8 @@
         "backends": ["mtk_np7"],
         "tags": ["npu", "core"],
         "socLimitations": ["Dimensity 9300"],
-        "date": 1782570197
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 0.4B (Dimensity 9500)",
-        "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv-vl-0.4B-260625-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 714764288,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["npu", "core"],
-        "socLimitations": ["Dimensity 9500"],
-        "date": 1783520411
+        "date": 1782570197,
+        "isDebug": true
       }
     ]
   },

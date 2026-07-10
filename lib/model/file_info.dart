@@ -332,6 +332,7 @@ class FileInfo extends Equatable {
     "modrwkv-v2-1B5-step4-q6_K.gguf" => .modrwkvV2,
     "modrwkv-v2-vision-adapter-1B5-step4-f16.gguf" => .modrwkvV2,
     "rwkv-vl-0.4B-260625-MT6989.rmpack" => .modrwkvV3,
+    "rwkv-vl-0.4B-260625-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack" => .modrwkvV3,
     "rwkv-vl-0.4B-260625-a16w8-8elite.rmpack" => .modrwkvV3,
     "rwkv-vl-0.4B-260625-a16w8-8elitegen5.rmpack" => .modrwkvV3,
     "rwkv-vl-0.4B-260625-a16w8-8gen2.rmpack" => .modrwkvV3,
