@@ -167,7 +167,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m63(footer) => "Reasoning${footer}-High";
 
-  static String m64(footer) => "Reasoning${footer}-Dumb";
+  static String m64(footer) => "Reasoning${footer}-Silly";
 
   static String m65(value) => "Top P: ${value}";
 
@@ -1828,6 +1828,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking": MessageLookupByLibrary.simpleMessage("Thinking..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage(" Mode"),
     "thinking_mode_auto": m62,
+    "thinking_mode_button_auto": MessageLookupByLibrary.simpleMessage("Auto"),
+    "thinking_mode_button_en": MessageLookupByLibrary.simpleMessage("EN"),
+    "thinking_mode_button_en_long": MessageLookupByLibrary.simpleMessage(
+      "EN Long",
+    ),
+    "thinking_mode_button_en_short": MessageLookupByLibrary.simpleMessage(
+      "EN Short",
+    ),
+    "thinking_mode_button_fast": MessageLookupByLibrary.simpleMessage("Fast"),
+    "thinking_mode_button_high": MessageLookupByLibrary.simpleMessage("High"),
+    "thinking_mode_button_off": MessageLookupByLibrary.simpleMessage("Silly"),
     "thinking_mode_high": m63,
     "thinking_mode_off": m64,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(

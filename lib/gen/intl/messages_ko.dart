@@ -156,7 +156,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m63(footer) => "추론${footer}-높음";
 
-  static String m64(footer) => "추론${footer}-멍청함";
+  static String m64(footer) => "추론${footer}-바보";
 
   static String m65(value) => "Top P: ${value}";
 
@@ -1561,6 +1561,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking": MessageLookupByLibrary.simpleMessage("생각 중..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("모드"),
     "thinking_mode_auto": m62,
+    "thinking_mode_button_auto": MessageLookupByLibrary.simpleMessage("자동"),
+    "thinking_mode_button_en": MessageLookupByLibrary.simpleMessage("영어"),
+    "thinking_mode_button_en_long": MessageLookupByLibrary.simpleMessage(
+      "영어 길게",
+    ),
+    "thinking_mode_button_en_short": MessageLookupByLibrary.simpleMessage(
+      "영어 짧게",
+    ),
+    "thinking_mode_button_fast": MessageLookupByLibrary.simpleMessage("빠름"),
+    "thinking_mode_button_high": MessageLookupByLibrary.simpleMessage("높음"),
+    "thinking_mode_button_off": MessageLookupByLibrary.simpleMessage("바보"),
     "thinking_mode_high": m63,
     "thinking_mode_off": m64,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("사고 모드 템플릿"),

@@ -14,15 +14,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
 
-String _extractInteractionSuffix({
-  required String source,
-  required String separator,
-}) {
-  final separatorIndex = source.lastIndexOf(separator);
-  if (separatorIndex < 0) return source;
-  return source.substring(separatorIndex + separator.length);
-}
-
 class ThinkingModeButton extends ConsumerWidget {
   const ThinkingModeButton({super.key});
 
@@ -61,18 +52,16 @@ class ThinkingModeButton extends ConsumerWidget {
     const padding = EdgeInsets.symmetric(horizontal: 8);
 
     final text = switch (thinkingMode) {
-      .lighting => s.thinking_mode_auto(""),
-      .none => s.thinking_mode_off(""),
-      .free => s.thinking_mode_high(""),
-      .preferChinese => s.thinking_mode_high(""),
-      .fast => s.think_button_mode_fast(""),
-      .fastWithSpacePrefix => s.think_button_mode_fast(""),
-      .en => s.think_button_mode_en(""),
-      .enShort => s.think_button_mode_en_short(""),
-      .enLong => s.think_button_mode_en_long(""),
+      .lighting => s.thinking_mode_button_auto,
+      .none => s.thinking_mode_button_off,
+      .free => s.thinking_mode_button_high,
+      .preferChinese => s.thinking_mode_button_high,
+      .fast => s.thinking_mode_button_fast,
+      .fastWithSpacePrefix => s.thinking_mode_button_fast,
+      .en => s.thinking_mode_button_en,
+      .enShort => s.thinking_mode_button_en_short,
+      .enLong => s.thinking_mode_button_en_long,
     };
-    final compactText = _extractInteractionSuffix(source: text, separator: s.hyphen);
-
     final useBackdropFilter = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
     final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
@@ -119,7 +108,7 @@ class ThinkingModeButton extends ConsumerWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          compactText,
+                          text,
                           style: TextStyle(color: textColor, fontSize: fontSize, height: 1, fontWeight: .w500),
                           strutStyle: StrutStyle(
                             fontSize: fontSize,

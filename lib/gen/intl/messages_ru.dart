@@ -1905,6 +1905,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking": MessageLookupByLibrary.simpleMessage("Думаю..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("Режим"),
     "thinking_mode_auto": m62,
+    "thinking_mode_button_auto": MessageLookupByLibrary.simpleMessage("Авто"),
+    "thinking_mode_button_en": MessageLookupByLibrary.simpleMessage("Англ"),
+    "thinking_mode_button_en_long": MessageLookupByLibrary.simpleMessage(
+      "Англ Длинно",
+    ),
+    "thinking_mode_button_en_short": MessageLookupByLibrary.simpleMessage(
+      "Англ Коротко",
+    ),
+    "thinking_mode_button_fast": MessageLookupByLibrary.simpleMessage("Быстро"),
+    "thinking_mode_button_high": MessageLookupByLibrary.simpleMessage("Вкл"),
+    "thinking_mode_button_off": MessageLookupByLibrary.simpleMessage("Глупо"),
     "thinking_mode_high": m63,
     "thinking_mode_off": m64,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(

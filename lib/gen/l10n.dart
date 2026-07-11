@@ -474,6 +474,76 @@ class S {
     );
   }
 
+  /// `傻`
+  String get thinking_mode_button_off {
+    return Intl.message(
+      '傻',
+      name: 'thinking_mode_button_off',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `中`
+  String get thinking_mode_button_auto {
+    return Intl.message(
+      '中',
+      name: 'thinking_mode_button_auto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `高`
+  String get thinking_mode_button_high {
+    return Intl.message(
+      '高',
+      name: 'thinking_mode_button_high',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `快`
+  String get thinking_mode_button_fast {
+    return Intl.message(
+      '快',
+      name: 'thinking_mode_button_fast',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `英`
+  String get thinking_mode_button_en {
+    return Intl.message(
+      '英',
+      name: 'thinking_mode_button_en',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `英短`
+  String get thinking_mode_button_en_short {
+    return Intl.message(
+      '英短',
+      name: 'thinking_mode_button_en_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `英长`
+  String get thinking_mode_button_en_long {
+    return Intl.message(
+      '英长',
+      name: 'thinking_mode_button_en_long',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `默认使用 '<think>好的', 在 2025-09-21 前发布的模型中, 会自动使用 '<think>嗯'`
   String get hint_chinese_thinking_mode_template {
     return Intl.message(
@@ -1049,10 +1119,10 @@ class S {
     );
   }
 
-  /// `推理{footer}-笨`
+  /// `推理{footer}-傻`
   String thinking_mode_off(Object footer) {
     return Intl.message(
-      '推理$footer-笨',
+      '推理$footer-傻',
       name: 'thinking_mode_off',
       desc: '',
       args: [footer],

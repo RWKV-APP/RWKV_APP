@@ -156,7 +156,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m63(footer) => "推論${footer}-高";
 
-  static String m64(footer) => "推論${footer}-愚か";
+  static String m64(footer) => "推論${footer}-おバカ";
 
   static String m65(value) => "Top P: ${value}";
 
@@ -1575,6 +1575,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("モード"),
     "thinking_mode_auto": m62,
+    "thinking_mode_button_auto": MessageLookupByLibrary.simpleMessage("自動"),
+    "thinking_mode_button_en": MessageLookupByLibrary.simpleMessage("英語"),
+    "thinking_mode_button_en_long": MessageLookupByLibrary.simpleMessage(
+      "英語 長",
+    ),
+    "thinking_mode_button_en_short": MessageLookupByLibrary.simpleMessage(
+      "英語 短",
+    ),
+    "thinking_mode_button_fast": MessageLookupByLibrary.simpleMessage("速い"),
+    "thinking_mode_button_high": MessageLookupByLibrary.simpleMessage("高"),
+    "thinking_mode_button_off": MessageLookupByLibrary.simpleMessage("おバカ"),
     "thinking_mode_high": m63,
     "thinking_mode_off": m64,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
