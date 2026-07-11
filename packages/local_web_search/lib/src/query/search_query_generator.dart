@@ -37,6 +37,9 @@ class SearchQueryGenerator {
   static final RegExp _hanOnlyPattern = RegExp(
     r'^[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]+$',
   );
+  static final RegExp _hanTextPattern = RegExp(
+    r'[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]',
+  );
   static final RegExp _contextReferencePattern = RegExp(
     r'\b(this|that|it|they|those|these|above|previous|same)\b|这个|它|他们|它们|上面|刚才|前面|继续|同样|这个问题',
     caseSensitive: false,
@@ -361,6 +364,7 @@ class SearchQueryGenerator {
   static SearchQueryGenerationResult build(
     List<String> messages, {
     SearchQueryGeneratorConfig config = const SearchQueryGeneratorConfig(),
+    DateTime? currentDate,
   }) {
     final parsedMessages = parseMessages(messages);
     if (parsedMessages.isEmpty) {
@@ -419,6 +423,7 @@ class SearchQueryGenerator {
       needsHistory: needsHistory,
       config: config,
       latestFallback: latestUserMessage.content,
+      currentDate: currentDate ?? DateTime.now(),
     );
     final shouldSearch = query.isNotEmpty;
 
@@ -746,6 +751,7 @@ class SearchQueryGenerator {
     required bool needsHistory,
     required SearchQueryGeneratorConfig config,
     required String latestFallback,
+    required DateTime currentDate,
   }) {
     final queryTerms = <String>[];
     final seen = <String>{};
@@ -780,7 +786,10 @@ class SearchQueryGenerator {
         config.maxQueryLength,
       );
     }
-    final specializedQuery = _specializedChineseQuery(latestFallback);
+    final specializedQuery = _specializedQuery(
+      latestFallback,
+      currentDate: currentDate,
+    );
     if (specializedQuery.isNotEmpty) {
       return _fitQueryLength(specializedQuery, config.maxQueryLength);
     }
@@ -790,9 +799,20 @@ class SearchQueryGenerator {
     );
   }
 
-  static String _specializedChineseQuery(String text) {
+  static String _specializedQuery(
+    String text, {
+    required DateTime currentDate,
+  }) {
     final normalized = _normalizeMessageContent(text);
     final upper = normalized.toUpperCase();
+    if (isTimeSensitiveNewsQuery(normalized)) {
+      final date = _isoDate(currentDate);
+      if (_hanTextPattern.hasMatch(normalized)) {
+        return '${currentDate.year}年${currentDate.month}月${currentDate.day}日 今日 最新 新闻';
+      }
+      return '$date latest news';
+    }
+
     final hasShenzhen = normalized.contains('深圳');
     final hasDog =
         normalized.contains('狗') ||
@@ -833,6 +853,37 @@ class SearchQueryGenerator {
       return 'RWKV vs Transformer';
     }
     return '';
+  }
+
+  static bool isTimeSensitiveNewsQuery(String text) {
+    final normalized = _normalizeMessageContent(text);
+    final lower = normalized.toLowerCase();
+    final hasChineseTime =
+        normalized.contains('今天') ||
+        normalized.contains('今日') ||
+        normalized.contains('最新') ||
+        normalized.contains('实时') ||
+        normalized.contains('刚刚');
+    final hasChineseNews =
+        normalized.contains('新闻') ||
+        normalized.contains('头条') ||
+        normalized.contains('热点') ||
+        normalized.contains('资讯');
+    if (hasChineseTime && hasChineseNews) return true;
+
+    final hasEnglishTime =
+        lower.contains('today') ||
+        lower.contains('latest') ||
+        lower.contains('current') ||
+        lower.contains('breaking');
+    final hasEnglishNews = lower.contains('news') || lower.contains('headline');
+    return hasEnglishTime && hasEnglishNews;
+  }
+
+  static String _isoDate(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
   }
 
   static List<String> _prioritizeLatestTerms(List<String> latestTerms) {

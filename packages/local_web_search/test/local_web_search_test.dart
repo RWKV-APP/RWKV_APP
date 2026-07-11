@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
@@ -59,6 +60,138 @@ void main() {
     expect(SearchEngines.all.map((engine) => engine.id), contains('google'));
     expect(SearchEngines.all.map((engine) => engine.id), contains('bing'));
     expect(SearchEngines.all.map((engine) => engine.id), contains('baidu'));
+  });
+
+  test('reachability probe accepts a same-engine search response', () async {
+    final probe = SearchEngineReachabilityProbe(
+      attempts: 1,
+      request: ({required uri, required timeout}) async {
+        final _ = (uri, timeout);
+        return SearchEngineProbeResponse(
+          statusCode: 200,
+          finalUri: Uri.parse('https://www.google.com/search?q=RWKV'),
+          body: '<html><title>RWKV - Google Search</title></html>',
+        );
+      },
+    );
+
+    final availability = await probe.probe(SearchEngines.google);
+
+    expect(availability.isAvailable, true);
+    expect(availability.statusCode, 200);
+  });
+
+  test('reachability probe rejects cross-engine redirects', () async {
+    final probe = SearchEngineReachabilityProbe(
+      attempts: 1,
+      request: ({required uri, required timeout}) async {
+        final _ = (uri, timeout);
+        return SearchEngineProbeResponse(
+          statusCode: 200,
+          finalUri: Uri.parse('https://www.bing.com/'),
+          body: '<html><title>Bing</title></html>',
+        );
+      },
+    );
+
+    final availability = await probe.probe(SearchEngines.ecosia);
+
+    expect(availability.isUnavailable, true);
+    expect(availability.error, contains('Redirected to www.bing.com'));
+  });
+
+  test('reachability probe rejects human verification pages', () async {
+    final probe = SearchEngineReachabilityProbe(
+      attempts: 1,
+      request: ({required uri, required timeout}) async {
+        final _ = (uri, timeout);
+        return SearchEngineProbeResponse(
+          statusCode: 200,
+          finalUri: Uri.parse('https://yandex.com/showcaptcha?cc=1'),
+          body: '<html><title>Verification required</title></html>',
+        );
+      },
+    );
+
+    final availability = await probe.probe(SearchEngines.yandex);
+
+    expect(availability.isUnavailable, true);
+    expect(availability.error, contains('Human verification page'));
+  });
+
+  test('reachability probe retries transient failures', () async {
+    int requestCount = 0;
+    final probe = SearchEngineReachabilityProbe(
+      attempts: 2,
+      request: ({required uri, required timeout}) async {
+        final _ = (uri, timeout);
+        requestCount += 1;
+        if (requestCount == 1) {
+          throw TimeoutException('temporary timeout');
+        }
+        return SearchEngineProbeResponse(
+          statusCode: 202,
+          finalUri: Uri.parse('https://duckduckgo.com/?q=RWKV'),
+          body: '<html><title>RWKV at DuckDuckGo</title></html>',
+        );
+      },
+    );
+
+    final availability = await probe.probe(SearchEngines.duckDuckGo);
+
+    expect(requestCount, 2);
+    expect(availability.isAvailable, true);
+    expect(availability.statusCode, 202);
+  });
+
+  test('visibleSearchEngines hides only confirmed unavailable engines', () {
+    final availability = <String, SearchEngineAvailability>{
+      SearchEngines.google.id: SearchEngineAvailability.unavailable(
+        engine: SearchEngines.google,
+        error: 'Timed out.',
+      ),
+      SearchEngines.bing.id: SearchEngineAvailability.available(
+        engine: SearchEngines.bing,
+        statusCode: 200,
+        elapsed: const Duration(milliseconds: 20),
+      ),
+      SearchEngines.baidu.id: SearchEngineAvailability.checking(
+        SearchEngines.baidu,
+      ),
+    };
+
+    final visible = visibleSearchEngines(
+      engines: <SearchEngine>[
+        SearchEngines.google,
+        SearchEngines.bing,
+        SearchEngines.baidu,
+      ],
+      availability: availability,
+    );
+
+    expect(visible, <SearchEngine>[SearchEngines.bing, SearchEngines.baidu]);
+  });
+
+  test('resolveVisibleSearchEngine replaces an unavailable selection', () {
+    final availability = <String, SearchEngineAvailability>{
+      SearchEngines.google.id: SearchEngineAvailability.unavailable(
+        engine: SearchEngines.google,
+        error: 'Connection failed.',
+      ),
+      SearchEngines.bing.id: SearchEngineAvailability.available(
+        engine: SearchEngines.bing,
+        statusCode: 200,
+        elapsed: const Duration(milliseconds: 20),
+      ),
+    };
+
+    final selected = resolveVisibleSearchEngine(
+      selectedEngine: SearchEngines.google,
+      engines: <SearchEngine>[SearchEngines.google, SearchEngines.bing],
+      availability: availability,
+    );
+
+    expect(selected, SearchEngines.bing);
   });
 
   test('loadSearch builds selected engine URL', () async {
@@ -319,6 +452,25 @@ void main() {
     expect(result.query, '中国');
   });
 
+  test('SearchQueryGenerator date-grounds Chinese current news queries', () {
+    final result = SearchQueryGenerator.build(<String>[
+      'User: 今天最新新闻有哪些',
+    ], currentDate: DateTime(2026, 7, 10));
+
+    expect(result.shouldSearch, true);
+    expect(result.query, '2026年7月10日 今日 最新 新闻');
+    expect(SearchQueryGenerator.isTimeSensitiveNewsQuery(result.query), true);
+  });
+
+  test('SearchQueryGenerator date-grounds English current news queries', () {
+    final result = SearchQueryGenerator.build(<String>[
+      'User: What are the latest news headlines today?',
+    ], currentDate: DateTime(2026, 7, 10));
+
+    expect(result.shouldSearch, true);
+    expect(result.query, '2026-07-10 latest news');
+  });
+
   test('SearchQueryGenerator keywordizes Chinese dog count prompts', () {
     final result = SearchQueryGenerator.build(<String>['User: 告诉我深圳有多少条狗？']);
 
@@ -577,6 +729,121 @@ void main() {
     expect(bundle.sources.first.summary, contains('RNN'));
     expect(bundle.promptContext, contains('Search query: RWKV language model'));
     expect(bundle.promptContext, contains('https://www.rwkv.com/'));
+  });
+
+  test('SearchReferenceBuilder retains ranked current-news results', () {
+    const extraction = SearchExtractionResult(
+      items: <SearchResultItem>[
+        SearchResultItem(
+          title: '国内要闻',
+          url: 'https://example.com/china',
+          snippet: '全国新闻摘要。',
+        ),
+        SearchResultItem(
+          title: '国际动态',
+          url: 'https://example.com/world',
+          snippet: '全球事件更新。',
+        ),
+        SearchResultItem(
+          title: '财经市场',
+          url: 'https://example.com/finance',
+          snippet: '市场信息汇总。',
+        ),
+      ],
+      rawJson: '{"items":[]}',
+    );
+
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 今天最新新闻有哪些'],
+      query: '2026年7月10日 今日 最新 新闻',
+      extraction: extraction,
+      currentDate: DateTime(2026, 7, 10),
+    );
+
+    expect(bundle.hasError, false);
+    expect(bundle.sources.length, 3);
+    expect(bundle.promptContext, contains('当前日期: 2026年7月10日'));
+    expect(bundle.promptContext, contains('不得编造日期或新闻'));
+    expect(bundle.promptContext, contains('每条具体新闻使用 [来源 N]'));
+    expect(bundle.promptContext, contains('没有来源能从标题、摘要、正文或 URL 确认'));
+    expect(bundle.promptContext, contains('禁止将这些来源列为“今日新闻”'));
+  });
+
+  test('current-news prompt identifies only same-day source evidence', () {
+    const extraction = SearchExtractionResult(
+      items: <SearchResultItem>[
+        SearchResultItem(
+          title: '2026年7月10日要闻',
+          url: 'https://example.com/news/20260710',
+          snippet: '刚刚发布的当日新闻摘要。',
+        ),
+        SearchResultItem(
+          title: '2026年回顾',
+          url: 'https://example.com/archive',
+          snippet: '2026年6月24日发布。',
+        ),
+      ],
+      rawJson: '{"items":[]}',
+    );
+
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 今天最新新闻有哪些'],
+      query: '2026年7月10日 今日 最新 新闻',
+      extraction: extraction,
+      currentDate: DateTime(2026, 7, 10),
+    );
+
+    expect(bundle.promptContext, contains('只有 [来源 1]'));
+    expect(bundle.promptContext, contains('其余来源只能标为背景资料或旧信息'));
+  });
+
+  test('deep prompt keeps current-news date and evidence requirements', () {
+    const deepResult = SearchDeepResult(
+      rank: 1,
+      title: '今日要闻',
+      url: 'https://example.com/news',
+      markdown: '# 今日要闻\n已核实的新闻内容。',
+      rawTextLength: 30,
+      markdownLength: 20,
+    );
+
+    final context = SearchReferenceBundle.buildDeepPromptContext(
+      query: '2026年7月10日 今日 最新 新闻',
+      results: const <SearchDeepResult>[deepResult],
+      currentDate: DateTime(2026, 7, 10),
+    );
+
+    expect(context, contains('当前日期: 2026年7月10日'));
+    expect(context, contains('不得编造日期或新闻'));
+    expect(context, contains('没有来源能从标题、摘要、正文或 URL 确认'));
+    expect(context, contains('Deep page results'));
+  });
+
+  test('reference diagnostics summarizes the active search bundle', () {
+    const result = SearchExtractionResult(
+      items: <SearchResultItem>[
+        SearchResultItem(
+          title: '今日要闻',
+          url: 'https://example.com/news',
+          snippet: '新闻摘要。',
+        ),
+      ],
+      rawJson: '{"items":[]}',
+    );
+    final bundle = SearchReferenceBuilder.buildBundle(
+      messages: <String>['User: 今天最新新闻有哪些'],
+      searchEngine: SearchEngines.brave,
+      query: '2026年7月10日 今日 最新 新闻',
+      extraction: result,
+      currentDate: DateTime(2026, 7, 10),
+    );
+
+    final summary = referenceDiagnosticsSummary(bundle: bundle, result: result);
+
+    expect(summary, contains('Brave: Usable'));
+    expect(summary, contains('1 kept, 1 parsed'));
+    expect(summary, contains('2026年7月10日'));
+    expect(summary, isNot(contains('No diagnostics yet')));
   });
 
   test('SearchReferenceBuilder filters unrelated extracted results', () {

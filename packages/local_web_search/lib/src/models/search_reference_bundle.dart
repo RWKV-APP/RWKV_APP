@@ -4,6 +4,7 @@ import 'package:local_web_search/src/models/search_engine.dart';
 import 'package:local_web_search/src/models/search_reference_request.dart';
 import 'package:local_web_search/src/models/search_reference_source.dart';
 import 'package:local_web_search/src/models/search_result_item.dart';
+import 'package:local_web_search/src/query/search_query_generator.dart';
 
 class SearchReferenceBundle {
   static final RegExp _hanTermPattern = RegExp(
@@ -16,6 +17,10 @@ class SearchReferenceBundle {
   static final RegExp _latinTokenPattern = RegExp(r'[a-z0-9][a-z0-9+#]{1,}');
   static final RegExp _punctuationPattern = RegExp(
     r'[^a-z0-9+#\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]+',
+  );
+  static final RegExp _sameDayRelativeTimePattern = RegExp(
+    r'刚刚|\d+\s*(?:分钟|小时)前|\btoday\b|\b\d+\s+(?:minute|hour)s?\s+ago\b',
+    caseSensitive: false,
   );
 
   static const Set<String> _lowSignalTerms = <String>{
@@ -184,14 +189,19 @@ class SearchReferenceBundle {
     required SearchEngine searchEngine,
     required String query,
     required SearchExtractionResult extraction,
+    DateTime? currentDate,
   }) {
+    final resolvedCurrentDate = currentDate ?? DateTime.now();
     final sourceLimit = request.maxSources < 0 ? 0 : request.maxSources;
     final sources = <SearchReferenceSource>[];
     final relevanceTerms = _SearchRelevanceTerms.fromQuery(query);
+    final trustSearchRanking = SearchQueryGenerator.isTimeSensitiveNewsQuery(
+      query,
+    );
     int rank = 1;
     for (final item in extraction.items) {
       if (sources.length >= sourceLimit) break;
-      if (!relevanceTerms.matches(item)) continue;
+      if (!trustSearchRanking && !relevanceTerms.matches(item)) continue;
       sources.add(
         SearchReferenceSource.fromSearchResultItem(rank: rank, item: item),
       );
@@ -211,7 +221,11 @@ class SearchReferenceBundle {
       query: query,
       sources: sources,
       deepResults: const <SearchDeepResult>[],
-      promptContext: _buildPromptContext(query: query, sources: sources),
+      promptContext: _buildPromptContext(
+        query: query,
+        sources: sources,
+        currentDate: resolvedCurrentDate,
+      ),
       deepPromptContext: '',
       rawJson: extraction.rawJson,
       error: extraction.error ?? relevanceError,
@@ -333,10 +347,22 @@ class SearchReferenceBundle {
   static String _buildPromptContext({
     required String query,
     required List<SearchReferenceSource> sources,
+    required DateTime currentDate,
   }) {
     if (sources.isEmpty) return '';
 
     final buffer = StringBuffer();
+    _writeTemporalInstructions(
+      buffer: buffer,
+      query: query,
+      currentDate: currentDate,
+    );
+    _writeFreshnessVerificationForSources(
+      buffer: buffer,
+      query: query,
+      currentDate: currentDate,
+      sources: sources,
+    );
     buffer.writeln('Search query: $query');
     buffer.writeln();
     buffer.writeln('Reference sources for the next answer:');
@@ -350,6 +376,7 @@ class SearchReferenceBundle {
   static String buildDeepPromptContext({
     required String query,
     required List<SearchDeepResult> results,
+    DateTime? currentDate,
   }) {
     final usableResults = <SearchDeepResult>[];
     for (final result in results) {
@@ -358,7 +385,19 @@ class SearchReferenceBundle {
     }
     if (usableResults.isEmpty) return '';
 
+    final resolvedCurrentDate = currentDate ?? DateTime.now();
     final buffer = StringBuffer();
+    _writeTemporalInstructions(
+      buffer: buffer,
+      query: query,
+      currentDate: resolvedCurrentDate,
+    );
+    _writeFreshnessVerificationForDeepResults(
+      buffer: buffer,
+      query: query,
+      currentDate: resolvedCurrentDate,
+      results: usableResults,
+    );
     buffer.writeln('Search query: $query');
     buffer.writeln();
     buffer.writeln('Deep page results for the next answer:');
@@ -367,6 +406,150 @@ class SearchReferenceBundle {
       buffer.writeln(result.toPromptBlock());
     }
     return buffer.toString().trimRight();
+  }
+
+  static void _writeTemporalInstructions({
+    required StringBuffer buffer,
+    required String query,
+    required DateTime currentDate,
+  }) {
+    final month = currentDate.month.toString().padLeft(2, '0');
+    final day = currentDate.day.toString().padLeft(2, '0');
+    final isoDate = '${currentDate.year}-$month-$day';
+    final hasHan = _hanTextPattern.hasMatch(query);
+    if (hasHan) {
+      buffer.writeln(
+        '当前日期: ${currentDate.year}年${currentDate.month}月${currentDate.day}日 ($isoDate)',
+      );
+    } else {
+      buffer.writeln('Current date: $isoDate');
+    }
+
+    if (!SearchQueryGenerator.isTimeSensitiveNewsQuery(query)) {
+      buffer.writeln();
+      return;
+    }
+
+    if (hasHan) {
+      buffer.writeln(
+        '时效要求: 用户所说的“今天”或“今日”均指上述当前日期。只陈述来源明确支持的日期和事实；不得把模型记忆中的旧年份当作今天，不得编造日期或新闻。来源不足时必须明确说明。',
+      );
+      buffer.writeln('引用要求: 每条具体新闻使用 [来源 N] 标注，并在回答末尾列出实际使用的来源标题和 URL。');
+    } else {
+      buffer.writeln(
+        'Freshness requirement: Today means the current date above. Only state dates and facts explicitly supported by the sources. Do not substitute old model knowledge or invent dates or news. Clearly say when the sources are insufficient.',
+      );
+      buffer.writeln(
+        'Citation requirement: Mark each specific news item with [Source N], then list the titles and URLs actually used.',
+      );
+    }
+    buffer.writeln();
+  }
+
+  static void _writeFreshnessVerificationForSources({
+    required StringBuffer buffer,
+    required String query,
+    required DateTime currentDate,
+    required List<SearchReferenceSource> sources,
+  }) {
+    if (!SearchQueryGenerator.isTimeSensitiveNewsQuery(query)) return;
+    final evidenceRanks = <int>[];
+    for (final source in sources) {
+      final text = '${source.title} ${source.summary} ${source.url}';
+      if (!_hasSameDayEvidence(text, currentDate)) continue;
+      evidenceRanks.add(source.rank);
+    }
+    _writeFreshnessVerification(
+      buffer: buffer,
+      currentDate: currentDate,
+      evidenceRanks: evidenceRanks,
+      sourceCount: sources.length,
+      hasHan: _hanTextPattern.hasMatch(query),
+      sourceLabel: '来源',
+    );
+  }
+
+  static void _writeFreshnessVerificationForDeepResults({
+    required StringBuffer buffer,
+    required String query,
+    required DateTime currentDate,
+    required List<SearchDeepResult> results,
+  }) {
+    if (!SearchQueryGenerator.isTimeSensitiveNewsQuery(query)) return;
+    final evidenceRanks = <int>[];
+    for (final result in results) {
+      final text = '${result.title} ${result.markdown} ${result.url}';
+      if (!_hasSameDayEvidence(text, currentDate)) continue;
+      evidenceRanks.add(result.rank);
+    }
+    _writeFreshnessVerification(
+      buffer: buffer,
+      currentDate: currentDate,
+      evidenceRanks: evidenceRanks,
+      sourceCount: results.length,
+      hasHan: _hanTextPattern.hasMatch(query),
+      sourceLabel: 'Deep',
+    );
+  }
+
+  static void _writeFreshnessVerification({
+    required StringBuffer buffer,
+    required DateTime currentDate,
+    required List<int> evidenceRanks,
+    required int sourceCount,
+    required bool hasHan,
+    required String sourceLabel,
+  }) {
+    final month = currentDate.month.toString().padLeft(2, '0');
+    final day = currentDate.day.toString().padLeft(2, '0');
+    final isoDate = '${currentDate.year}-$month-$day';
+    if (evidenceRanks.isEmpty) {
+      if (hasHan) {
+        buffer.writeln(
+          '当日证据核验: $sourceCount 个来源中，没有来源能从标题、摘要、正文或 URL 确认发布/更新于 $isoDate。禁止将这些来源列为“今日新闻”；回答必须明确说明当前检索没有找到可验证的当日新闻证据。',
+        );
+      } else {
+        buffer.writeln(
+          'Same-day evidence check: None of the $sourceCount sources can be verified from its title, summary, content, or URL as published or updated on $isoDate. Do not list them as today\'s news. State clearly that the search found no verifiable same-day news evidence.',
+        );
+      }
+      buffer.writeln();
+      return;
+    }
+
+    final labels = <String>[];
+    for (final rank in evidenceRanks) {
+      labels.add('[$sourceLabel $rank]');
+    }
+    if (hasHan) {
+      buffer.writeln(
+        '当日证据核验: 只有 ${labels.join('、')} 可从现有文本确认与 $isoDate 同日。今日新闻列表只能使用这些来源；其余来源只能标为背景资料或旧信息。',
+      );
+    } else {
+      buffer.writeln(
+        'Same-day evidence check: Only ${labels.join(', ')} can be verified from the available text as current on $isoDate. Use only these for today\'s news; label all others as background or older information.',
+      );
+    }
+    buffer.writeln();
+  }
+
+  static bool _hasSameDayEvidence(String text, DateTime currentDate) {
+    if (_sameDayRelativeTimePattern.hasMatch(text)) return true;
+    final month = currentDate.month.toString().padLeft(2, '0');
+    final day = currentDate.day.toString().padLeft(2, '0');
+    final datePatterns = <String>{
+      '${currentDate.year}年${currentDate.month}月${currentDate.day}日',
+      '${currentDate.year}年$month月$day日',
+      '${currentDate.year}-$month-$day',
+      '${currentDate.year}/$month/$day',
+      '${currentDate.year}.$month.$day',
+      '${currentDate.year}$month$day',
+    };
+    final lower = text.toLowerCase();
+    for (final pattern in datePatterns) {
+      if (lower.contains(pattern.toLowerCase())) return true;
+    }
+    return false;
   }
 
   Map<String, dynamic> toJson() {

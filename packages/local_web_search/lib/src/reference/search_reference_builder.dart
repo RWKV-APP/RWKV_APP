@@ -22,8 +22,8 @@ class SearchReferenceBuilder {
     return messages;
   }
 
-  static String buildQuery(List<String> messages) {
-    return SearchQueryGenerator.build(messages).query;
+  static String buildQuery(List<String> messages, {DateTime? currentDate}) {
+    return SearchQueryGenerator.build(messages, currentDate: currentDate).query;
   }
 
   static SearchReferenceBundle buildBundle({
@@ -35,6 +35,7 @@ class SearchReferenceBuilder {
     bool enableDeepResults = false,
     int maxDeepResults = 3,
     int maxDeepCharactersPerResult = 2200,
+    DateTime? currentDate,
   }) {
     return SearchReferenceBundle.fromExtraction(
       request: SearchReferenceRequest(
@@ -47,6 +48,7 @@ class SearchReferenceBuilder {
       searchEngine: searchEngine,
       query: query,
       extraction: extraction,
+      currentDate: currentDate,
     );
   }
 }

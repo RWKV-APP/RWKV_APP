@@ -26,8 +26,13 @@ class SearchReferenceService {
     int maxDeepCharactersPerResult = 2200,
     Duration detailPageLoadDelay = const Duration(seconds: 2),
     Duration detailPageLoadTimeout = const Duration(seconds: 12),
+    DateTime? currentDate,
   }) async {
-    final queryGeneration = SearchQueryGenerator.build(messages);
+    final resolvedCurrentDate = currentDate ?? DateTime.now();
+    final queryGeneration = SearchQueryGenerator.build(
+      messages,
+      currentDate: resolvedCurrentDate,
+    );
     final query = queryGeneration.query;
     if (query.isEmpty) {
       return _buildFailureBundle(
@@ -39,6 +44,7 @@ class SearchReferenceService {
         enableDeepResults: enableDeepResults,
         maxDeepResults: maxDeepResults,
         maxDeepCharactersPerResult: maxDeepCharactersPerResult,
+        currentDate: resolvedCurrentDate,
       );
     }
 
@@ -52,6 +58,7 @@ class SearchReferenceService {
         enableDeepResults: enableDeepResults,
         maxDeepResults: maxDeepResults,
         maxDeepCharactersPerResult: maxDeepCharactersPerResult,
+        currentDate: resolvedCurrentDate,
       );
     }
 
@@ -69,6 +76,7 @@ class SearchReferenceService {
       enableDeepResults: enableDeepResults,
       maxDeepResults: maxDeepResults,
       maxDeepCharactersPerResult: maxDeepCharactersPerResult,
+      currentDate: resolvedCurrentDate,
     );
     if (bundle.hasSources) {
       final hydratedBundle = await hydrateDeepResultsForBundle(
@@ -76,6 +84,7 @@ class SearchReferenceService {
         bundle: bundle,
         detailPageLoadDelay: detailPageLoadDelay,
         detailPageLoadTimeout: detailPageLoadTimeout,
+        currentDate: resolvedCurrentDate,
       );
       controller.markReferenceBundle(hydratedBundle);
       return hydratedBundle;
@@ -96,6 +105,7 @@ class SearchReferenceService {
           enableDeepResults: enableDeepResults,
           maxDeepResults: maxDeepResults,
           maxDeepCharactersPerResult: maxDeepCharactersPerResult,
+          currentDate: resolvedCurrentDate,
         );
         if (!fallbackBundle.hasSources) continue;
         final hydratedFallbackBundle = await hydrateDeepResultsForBundle(
@@ -103,6 +113,7 @@ class SearchReferenceService {
           bundle: fallbackBundle,
           detailPageLoadDelay: detailPageLoadDelay,
           detailPageLoadTimeout: detailPageLoadTimeout,
+          currentDate: resolvedCurrentDate,
         );
         controller.markReferenceBundle(hydratedFallbackBundle);
         return hydratedFallbackBundle;
@@ -126,6 +137,7 @@ class SearchReferenceService {
     required bool enableDeepResults,
     required int maxDeepResults,
     required int maxDeepCharactersPerResult,
+    required DateTime currentDate,
   }) async {
     try {
       await controller
@@ -143,6 +155,7 @@ class SearchReferenceService {
         enableDeepResults: enableDeepResults,
         maxDeepResults: maxDeepResults,
         maxDeepCharactersPerResult: maxDeepCharactersPerResult,
+        currentDate: currentDate,
       );
     } catch (error) {
       return _buildFailureBundle(
@@ -155,6 +168,7 @@ class SearchReferenceService {
         enableDeepResults: enableDeepResults,
         maxDeepResults: maxDeepResults,
         maxDeepCharactersPerResult: maxDeepCharactersPerResult,
+        currentDate: currentDate,
       );
     }
 
@@ -195,6 +209,7 @@ class SearchReferenceService {
       enableDeepResults: enableDeepResults,
       maxDeepResults: maxDeepResults,
       maxDeepCharactersPerResult: maxDeepCharactersPerResult,
+      currentDate: currentDate,
     );
     return bundle;
   }
@@ -209,6 +224,7 @@ class SearchReferenceService {
     bool enableDeepResults = false,
     int maxDeepResults = 3,
     int maxDeepCharactersPerResult = 2200,
+    DateTime? currentDate,
   }) {
     final extraction = SearchExtractionResult.failure(message);
     final bundle = SearchReferenceBuilder.buildBundle(
@@ -220,6 +236,7 @@ class SearchReferenceService {
       enableDeepResults: enableDeepResults,
       maxDeepResults: maxDeepResults,
       maxDeepCharactersPerResult: maxDeepCharactersPerResult,
+      currentDate: currentDate,
     );
     controller.markError(message);
     controller.markReferenceBundle(bundle);
@@ -231,6 +248,7 @@ class SearchReferenceService {
     required SearchReferenceBundle bundle,
     required Duration detailPageLoadDelay,
     required Duration detailPageLoadTimeout,
+    DateTime? currentDate,
   }) async {
     if (!bundle.request.enableDeepResults) return bundle;
     if (!bundle.hasSources) return bundle;
@@ -271,6 +289,7 @@ class SearchReferenceService {
           deepPromptContext: SearchReferenceBundle.buildDeepPromptContext(
             query: bundle.query,
             results: results,
+            currentDate: currentDate,
           ),
         ),
       );
@@ -281,6 +300,7 @@ class SearchReferenceService {
       deepPromptContext: SearchReferenceBundle.buildDeepPromptContext(
         query: bundle.query,
         results: results,
+        currentDate: currentDate,
       ),
     );
   }

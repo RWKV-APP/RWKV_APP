@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
@@ -65,6 +66,60 @@ class _SearchDebugSample {
   const _SearchDebugSample({required this.label, required this.messages});
 }
 
+List<SearchEngine> visibleSearchEngines({
+  required List<SearchEngine> engines,
+  required Map<String, SearchEngineAvailability> availability,
+}) {
+  final visible = <SearchEngine>[];
+  for (final engine in engines) {
+    final state = availability[engine.id];
+    if (state?.isUnavailable ?? false) continue;
+    visible.add(engine);
+  }
+  return visible;
+}
+
+SearchEngine resolveVisibleSearchEngine({
+  required SearchEngine selectedEngine,
+  required List<SearchEngine> engines,
+  required Map<String, SearchEngineAvailability> availability,
+}) {
+  final selectedAvailability = availability[selectedEngine.id];
+  if (!(selectedAvailability?.isUnavailable ?? false)) return selectedEngine;
+
+  for (final engine in engines) {
+    final engineAvailability = availability[engine.id];
+    if (engineAvailability?.isUnavailable ?? false) continue;
+    return engine;
+  }
+  return selectedEngine;
+}
+
+String referenceDiagnosticsSummary({
+  required SearchReferenceBundle bundle,
+  required SearchExtractionResult result,
+}) {
+  final engineLabel = bundle.searchEngine.label;
+  if (bundle.hasSources) {
+    final parsedCount = result.items.length;
+    final parsedText = parsedCount > 0 ? ', $parsedCount parsed' : '';
+    return '$engineLabel: Usable (${bundle.sources.length} kept$parsedText) - ${bundle.query}';
+  }
+  if (bundle.hasError) {
+    return '$engineLabel: Error - ${bundle.error}';
+  }
+  if (result.hasError) {
+    return '$engineLabel: Error - ${result.error}';
+  }
+  if (result.hasItems) {
+    return '$engineLabel: No usable sources (${result.items.length} parsed) - ${bundle.query}';
+  }
+  if (bundle.query.isNotEmpty) {
+    return '$engineLabel: No results - ${bundle.query}';
+  }
+  return 'No search run yet.';
+}
+
 class SearchBrowserPanel extends StatefulWidget {
   final SearchBrowserController? controller;
   final SearchEngineReachabilityProbe? reachabilityProbe;
@@ -112,7 +167,7 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
   late SearchEngine _selectedEngine;
   bool _extracting = false;
   late bool _deepResultsEnabled;
-  final bool _probingEngines = false;
+  bool _probingEngines = false;
   bool _runningEngineDiagnostics = false;
 
   @override
@@ -132,6 +187,10 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
     _controller.addListener(_onBrowserChanged);
     _messagesController.addListener(_onMessagesChanged);
     _deepResultsEnabled = widget.initialDeepResultsEnabled;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(_probeSearchEngines());
+    });
   }
 
   @override
@@ -221,6 +280,77 @@ User: Find reliable sources about RWKV Chat and the RWKV language model.''';
   SearchEngineAvailability _availabilityFor(SearchEngine engine) {
     return _engineAvailability[engine.id] ??
         SearchEngineAvailability.unknown(engine);
+  }
+
+  Future<void> _probeSearchEngines() async {
+    if (_probingEngines) return;
+
+    final engines = <SearchEngine>[];
+    for (final engine in SearchEngines.all) {
+      if (widget.simulatedUnavailableEngineIds.contains(engine.id)) continue;
+      engines.add(engine);
+    }
+    if (engines.isEmpty) {
+      _controller.markError('No search engine is available on this network.');
+      return;
+    }
+
+    setState(() {
+      _probingEngines = true;
+      _engineAvailability = <String, SearchEngineAvailability>{
+        ..._engineAvailability,
+        for (final engine in engines)
+          engine.id: SearchEngineAvailability.checking(engine),
+      };
+    });
+
+    final probe =
+        widget.reachabilityProbe ?? const SearchEngineReachabilityProbe();
+    final futures = <Future<SearchEngineAvailability>>[];
+    for (final engine in engines) {
+      futures.add(probe.probe(engine));
+    }
+    final results = await Future.wait<SearchEngineAvailability>(futures);
+    if (!mounted) return;
+
+    final nextAvailability = <String, SearchEngineAvailability>{
+      ..._engineAvailability,
+    };
+    for (final result in results) {
+      nextAvailability[result.engine.id] = result;
+    }
+
+    final nextEngine = resolveVisibleSearchEngine(
+      selectedEngine: _selectedEngine,
+      engines: SearchEngines.all,
+      availability: nextAvailability,
+    );
+    final selectionChanged = nextEngine != _selectedEngine;
+    final hasVisibleEngine = visibleSearchEngines(
+      engines: SearchEngines.all,
+      availability: nextAvailability,
+    ).isNotEmpty;
+
+    setState(() {
+      _engineAvailability = nextAvailability;
+      _selectedEngine = nextEngine;
+      _probingEngines = false;
+      if (selectionChanged) {
+        _result = const SearchExtractionResult.empty();
+        _referenceBundle = const SearchReferenceBundle.empty();
+      }
+    });
+
+    if (selectionChanged) {
+      _controller.clearReferenceBundle();
+      widget.onSearchEngineChanged?.call(nextEngine);
+      widget.onReferenceBundleChanged?.call(
+        const SearchReferenceBundle.empty(),
+      );
+    }
+    if (!hasVisibleEngine) {
+      _controller.markError('No search engine is available on this network.');
+    }
   }
 
   bool _canUseSelectedEngine() {
@@ -690,6 +820,10 @@ class _SearchBrowserToolbar extends StatelessWidget {
     final canSearch = canRun && selectedEngineAvailable && !loading;
     final canExtract = canRun && selectedEngineAvailable && !loading;
     final canRunDiagnostics = canRun && !loading && !probingEngines;
+    final visibleEngines = visibleSearchEngines(
+      engines: SearchEngines.all,
+      availability: engineAvailability,
+    );
     final searchTooltip = selectedEngineAvailable
         ? 'Search the query field with ${selectedEngine.label}, then extract result titles, links, and snippets.'
         : selectedAvailability.tooltipMessage;
@@ -721,13 +855,23 @@ class _SearchBrowserToolbar extends StatelessWidget {
             spacing: 6,
             runSpacing: 6,
             children: [
-              for (final engine in SearchEngines.all)
+              for (final engine in visibleEngines)
                 _SearchEngineTag(
                   engine: engine,
                   availability: _availabilityFor(engine),
                   selected: engine == selectedEngine,
                   enabled: canRun && !loading,
                   onSelected: onEngineChanged,
+                ),
+              if (visibleEngines.isEmpty)
+                Text(
+                  probingEngines
+                      ? 'Checking search engine availability...'
+                      : 'No search engine is available on this network.',
+                  key: const ValueKey<String>('search-engine-empty-state'),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
             ],
           ),
@@ -891,6 +1035,7 @@ class _SearchEngineTag extends StatelessWidget {
     return Tooltip(
       message: availability.tooltipMessage,
       child: ChoiceChip(
+        key: ValueKey<String>('search-engine-tag-${engine.id}'),
         selected: selected,
         onSelected: canSelect ? (_) => onSelected(engine) : null,
         avatar: icon == null ? null : Icon(icon, size: 14, color: iconColor),
@@ -1249,7 +1394,7 @@ class _ReferenceDebugPane extends StatelessWidget {
         ? 'No output yet.'
         : outputJson;
     final diagnosticsSummary = engineDiagnostics.isEmpty
-        ? 'No diagnostics yet.'
+        ? referenceDiagnosticsSummary(bundle: bundle, result: result)
         : engineDiagnostics
               .map((diagnostic) => diagnostic.summaryLine)
               .join('\n');
