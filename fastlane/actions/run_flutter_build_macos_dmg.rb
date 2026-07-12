@@ -32,7 +32,7 @@ module Fastlane
            "--dart-define=SENTRY_DIST=#{build_number}"
         upload_sentry_symbols(project_root, sentry_symbols_path, sentry_release, build_number)
 
-        app_folder_name = 'RWKV_Chat.app'
+        app_folder_name = 'RWKV Chat.app'
         app_path = File.join(project_root, "build/macos/Build/Products/Release/#{app_folder_name}")
 
         UI.user_error!("构建失败，找不到 App: #{app_path}") unless File.exist?(app_path)

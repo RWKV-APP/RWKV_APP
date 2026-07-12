@@ -4,8 +4,8 @@
 // future. If not, the values below would default to using the project name when this becomes a
 // 'flutter create' template.
 
-// The application's name. Used for bundle name (must not contain spaces).
-PRODUCT_NAME = RWKV_Chat
+// The application's name. Used for the installed app bundle name.
+PRODUCT_NAME = RWKV Chat
 
 // The display name for the application (used in window title and menus)
 APP_DISPLAY_NAME = RWKV Chat
