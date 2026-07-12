@@ -52,6 +52,7 @@ class CompletionController {
   }
 
   void init() {
+    CompletionState.startAutoScrolling();
     for (final arg in _decodeParam.keys) {
       _originDecodeParam[arg] = P.rwkvParams.arguments(arg).q;
       P.rwkvParams.arguments(arg).q = _decodeParam[arg]!;
@@ -130,6 +131,7 @@ class CompletionController {
       _node.tail.switched = false;
     }
 
+    CompletionState.startAutoScrolling();
     CompletionState.generating.q = true;
     CompletionState.generateButtonEnabled.q = false;
 

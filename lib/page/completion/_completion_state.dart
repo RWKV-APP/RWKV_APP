@@ -29,6 +29,24 @@ class CompletionState {
   static final generatingItem = qs<CompletionItemNode?>(null);
 
   static bool autoScrolling = true;
+
+  static void startAutoScrolling() {
+    autoScrolling = true;
+  }
+
+  static bool onContentScrollNotification(ScrollNotification notification) {
+    if (notification.metrics.axis != Axis.vertical) return false;
+
+    if (notification is ScrollStartNotification && notification.dragDetails != null) {
+      autoScrolling = false;
+      return false;
+    }
+
+    if (notification is! ScrollEndNotification) return false;
+    if (notification.metrics.extentAfter > 1) return false;
+    autoScrolling = true;
+    return false;
+  }
 }
 
 class CompletionItemNode {

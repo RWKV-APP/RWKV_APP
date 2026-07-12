@@ -225,45 +225,25 @@ class _Body extends StatelessWidget {
   }
 }
 
-class _ContentArea extends StatefulWidget {
+class _ContentArea extends StatelessWidget {
   const _ContentArea();
 
   @override
-  State<_ContentArea> createState() => _ContentAreaState();
+  Widget build(BuildContext context) {
+    return CompletionAutoScrollRegion(child: const _ContentList());
+  }
 }
 
-class _ContentAreaState extends State<_ContentArea> {
-  bool _resumeAutoScrolling = false;
+class CompletionAutoScrollRegion extends StatelessWidget {
+  final Widget child;
 
-  void _onPointerDown(PointerDownEvent event) {
-    if (!CompletionState.autoScrolling) {
-      _resumeAutoScrolling = false;
-      return;
-    }
-
-    CompletionState.autoScrolling = false;
-    _resumeAutoScrolling = true;
-  }
-
-  void _onPointerUp(PointerUpEvent event) {
-    if (!_resumeAutoScrolling) {
-      return;
-    }
-
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      if (!mounted) {
-        return;
-      }
-      CompletionState.autoScrolling = true;
-    });
-  }
+  const CompletionAutoScrollRegion({required this.child, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: _onPointerDown,
-      onPointerUp: _onPointerUp,
-      child: const _ContentList(),
+    return NotificationListener<ScrollNotification>(
+      onNotification: CompletionState.onContentScrollNotification,
+      child: child,
     );
   }
 }
