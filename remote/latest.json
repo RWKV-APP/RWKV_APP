@@ -575,7 +575,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["mtk_np9"],
-        "tags": ["reason", "npu"],
+        "tags": ["reason", "npu", "batch"],
         "socLimitations": ["Dimensity 9500"],
         "date": 1783531411
       },
@@ -587,33 +587,33 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["mtk_np9"],
-        "tags": ["reason", "npu"],
+        "tags": ["reason", "npu", "batch"],
         "socLimitations": ["Dimensity 9500"],
         "date": 1783531621
       },
       {
-        "name": "RWKV7-G1g 1.5B (Dimensity 9500)",
+        "name": "RWKV7-G1h 1.5B (Dimensity 9500)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1g-1.5b-20260526-ctx8192-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1h-1.5b-20260710-ctx10240-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
         "fileSize": 1950031872,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["mtk_np9"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["Dimensity 9500"],
-        "date": 1783526093
+        "date": 1783945618
       },
       {
-        "name": "RWKV7-G1g 2.9B (Dimensity 9500)",
+        "name": "RWKV7-G1h 2.9B (Dimensity 9500)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1g-2.9b-20260526-ctx8192-MT6993-static-asym-a16w4-mixed-vsq32t8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 2566356992,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1h-2.9b-20260710-ctx10240-MT6993-static-asym-a16w4-mixed-vsq32t8-sumconvtree-fusev1-splitffnv4.rmpack",
+        "fileSize": 2566438912,
         "quantization": "w4a16",
         "platforms": ["android"],
         "backends": ["mtk_np9"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["Dimensity 9500"],
-        "date": 1783526163
+        "date": 1783946432
       },
       {
         "name": "RWKV7-G1d 0.1B (8 Elite)",
