@@ -26,15 +26,15 @@
         "date": 1770699426
       },
       {
-        "name": "RWKV7-G1g 1.5B",
+        "name": "RWKV7-G1h 1.5B",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1g-1.5b-20260526-ctx8192-Q6_K.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1h-1.5b-20260710-ctx10240-Q6_K.gguf",
         "fileSize": 1336082784,
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1779805486
+        "date": 1783838599
       },
       {
         "name": "RWKV7-G1 1.5B Neko",
@@ -49,41 +49,41 @@
         "date": 1747374843
       },
       {
-        "name": "RWKV7-G1g 2.9B",
+        "name": "RWKV7-G1h 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1g-2.9b-20260526-ctx8192-Q4_K_M.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1h-2.9b-20260710-ctx10240-Q4_K_M.gguf",
         "fileSize": 1919047808,
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1779805976
+        "date": 1783842206
       },
       {
-        "name": "RWKV7-G1g 7.2B",
+        "name": "RWKV7-G1h 7.2B",
         "type": "gguf",
         "modelSize": 7.2,
-        "fileName": "rwkv7-g1g-7.2b-20260523-ctx8192-Q4_K_M.gguf",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1g-7.2b-20260523-ctx8192-Q4_K_M.gguf",
+        "fileName": "rwkv7-g1h-7.2b-20260710-ctx10240-Q4_K_M.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1h-7.2b-20260710-ctx10240-Q4_K_M.gguf",
         "fileSize": 4579571840,
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1779593997
+        "date": 1783854219
       },
       {
-        "name": "RWKV7-G1g 13.3B",
+        "name": "RWKV7-G1h 13.3B",
         "type": "gguf",
         "modelSize": 13.3,
-        "fileName": "rwkv7-g1g-13.3b-20260523-ctx8192-Q4_K_M.gguf",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1g-13.3b-20260523-ctx8192-Q4_K_M.gguf",
+        "fileName": "rwkv7-g1h-13.3b-20260710-ctx10240-Q4_K_M.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1h-13.3b-20260710-ctx10240-Q4_K_M.gguf",
         "fileSize": 8457371808,
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "windows"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1779593975
+        "date": 1783895317
       },
       {
         "name": "RWKV7-G1d 0.1B (WebRWKV)",
@@ -110,52 +110,52 @@
         "date": 1770703355
       },
       {
-        "name": "RWKV7-G1g 1.5B (WebRWKV)",
+        "name": "RWKV7-G1h 1.5B (WebRWKV)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1g-1.5b-20260526-ctx8192-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1h-1.5b-20260710-ctx10240-nf4.prefab",
         "fileSize": 1281449945,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "batch"],
-        "date": 1779805243
+        "date": 1783838153
       },
       {
-        "name": "RWKV7-G1g 2.9B (WebRWKV)",
+        "name": "RWKV7-G1h 2.9B (WebRWKV)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1g-2.9b-20260526-ctx8192-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1h-2.9b-20260710-ctx10240-nf4.prefab",
         "fileSize": 2200282289,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "batch"],
-        "date": 1779806019
+        "date": 1783841506
       },
       {
-        "name": "RWKV7-G1g 7.2B (WebRWKV)",
+        "name": "RWKV7-G1h 7.2B (WebRWKV)",
         "modelSize": 7.2,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1g-7.2b-20260523-ctx8192-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1h-7.2b-20260710-ctx10240-nf4.prefab",
         "fileSize": 4938093745,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "batch"],
-        "date": 1779552010
+        "date": 1783852524
       },
       {
-        "name": "RWKV7-G1g 13.3B (WebRWKV)",
+        "name": "RWKV7-G1h 13.3B (WebRWKV)",
         "modelSize": 13.3,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1g-13.3b-20260523-ctx8192-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1h-13.3b-20260710-ctx10240-nf4.prefab",
         "fileSize": 8504144960,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "batch"],
-        "date": 1779546500
+        "date": 1783867837
       },
       {
         "name": "RWKV7-G1d 0.1B (MLX)",
@@ -556,16 +556,16 @@
         "date": 1770707306
       },
       {
-        "name": "RWKV7-G1g 1.5B (Dimensity 9300)",
+        "name": "RWKV7-G1h 1.5B (Dimensity 9300)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np7/251218/rwkv7-g1g-1.5b-20260526-ctx8192-MT6989.rmpack",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np7/251218/rwkv7-g1h-1.5b-20260710-ctx10240-MT6989.rmpack",
         "fileSize": 1676341248,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["mtk_np7"],
         "tags": ["reason", "npu"],
         "socLimitations": ["Dimensity 9300"],
-        "date": 1779899103
+        "date": 1783900686
       },
       {
         "name": "RWKV7-G1d 0.1B (Dimensity 9500)",
@@ -991,280 +991,280 @@
         "isDebug": true
       },
       {
-        "name": "RWKV7-G1g 1.5B (8 Elite)",
+        "name": "RWKV7-G1h 1.5B (8 Elite)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-8elite-batch.rmpack",
-        "fileSize": 1783447552,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-8elite-batch.rmpack",
+        "fileSize": 1783529472,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite"],
-        "date": 1779927941
+        "date": 1783876423
       },
       {
-        "name": "RWKV7-G1g 1.5B (X Elite)",
+        "name": "RWKV7-G1h 1.5B (X Elite)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-xelite-nocustomop-batch.rmpack",
-        "fileSize": 1907363840,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-xelite-nocustomop-batch.rmpack",
+        "fileSize": 1907453952,
         "quantization": "w8a16",
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X Elite", "X Plus", "X1"],
-        "date": 1779928592
+        "date": 1783877051
       },
       {
-        "name": "RWKV7-G1g 1.5B (X2 Elite)",
+        "name": "RWKV7-G1h 1.5B (X2 Elite)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-x2elite-nocustomop-batch.rmpack",
-        "fileSize": 1940152320,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-x2elite-nocustomop-batch.rmpack",
+        "fileSize": 1940230144,
         "quantization": "w8a16",
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X2 Elite Extreme", "X2 Elite", "X2 Plus"],
-        "date": 1779928671
+        "date": 1783873867
       },
       {
-        "name": "RWKV7-G1g 1.5B (8 Elite Gen5)",
+        "name": "RWKV7-G1h 1.5B (8 Elite Gen5)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-8elitegen5-batch.rmpack",
-        "fileSize": 1801060352,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-8elitegen5-batch.rmpack",
+        "fileSize": 1801236480,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1779928618
+        "date": 1783874878
       },
       {
-        "name": "RWKV7-G1g 1.5B (8 Gen 5)",
+        "name": "RWKV7-G1h 1.5B (8 Gen 5)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-8gen5-batch.rmpack",
-        "fileSize": 1783218176,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-8gen5-batch.rmpack",
+        "fileSize": 1783304192,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1779927914
+        "date": 1783877093
       },
       {
-        "name": "RWKV7-G1g 1.5B (8 Gen 3)",
+        "name": "RWKV7-G1h 1.5B (8 Gen 3)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-8gen3-batch.rmpack",
-        "fileSize": 1789202432,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-8gen3-batch.rmpack",
+        "fileSize": 1789231104,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1779927965
+        "date": 1783876394
       },
       {
-        "name": "RWKV7-G1g 1.5B (8s Gen 3)",
+        "name": "RWKV7-G1h 1.5B (8s Gen 3)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-8sgen3-batch.rmpack",
-        "fileSize": 1788071936,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-8sgen3-batch.rmpack",
+        "fileSize": 1788153856,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1779927886
+        "date": 1783874661
       },
       {
-        "name": "RWKV7-G1g 1.5B (7+ Gen 3)",
+        "name": "RWKV7-G1h 1.5B (7+ Gen 3)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-8sgen3-batch.rmpack",
-        "fileSize": 1788071936,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-8sgen3-batch.rmpack",
+        "fileSize": 1788153856,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1779927886
+        "date": 1783874661
       },
       {
-        "name": "RWKV7-G1g 1.5B (8 Gen 2)",
+        "name": "RWKV7-G1h 1.5B (8 Gen 2)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-8gen2-batch.rmpack",
-        "fileSize": 1738883072,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-8gen2-batch.rmpack",
+        "fileSize": 1738956800,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1779929207
+        "date": 1783874004
       },
       {
-        "name": "RWKV7-G1g 1.5B (8+ Gen 1)",
+        "name": "RWKV7-G1h 1.5B (8+ Gen 1)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-8plusgen1.rmpack",
-        "fileSize": 1688416256,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-8plusgen1.rmpack",
+        "fileSize": 1688399872,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8+ Gen 1"],
-        "date": 1779929188
+        "date": 1783876950
       },
       {
-        "name": "RWKV7-G1g 1.5B (888)",
+        "name": "RWKV7-G1h 1.5B (888)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-888.rmpack",
-        "fileSize": 1688518656,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-888.rmpack",
+        "fileSize": 1688559616,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1779928485
+        "date": 1783877000
       },
       {
-        "name": "RWKV7-G1g 1.5B (778)",
+        "name": "RWKV7-G1h 1.5B (778)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-1.5b-20260526-ctx8192-a16w8-6490.rmpack",
-        "fileSize": 1688768512,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-1.5b-20260710-ctx10240-a16w8-6490.rmpack",
+        "fileSize": 1688809472,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["778"],
-        "date": 1779929227
+        "date": 1783874608
       },
       {
-        "name": "RWKV7-G1g 2.9B (8 Elite)",
+        "name": "RWKV7-G1h 2.9B (8 Elite)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-8elite-batch.rmpack",
-        "fileSize": 2178531328,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-8elite-batch.rmpack",
+        "fileSize": 2179264512,
         "quantization": "w4a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite"],
-        "date": 1780837593
+        "date": 1783873740
       },
       {
-        "name": "RWKV7-G1g 2.9B (X Elite)",
+        "name": "RWKV7-G1h 2.9B (X Elite)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-xelite-nocustomop-batch.rmpack",
-        "fileSize": 2292051968,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-xelite-nocustomop-batch.rmpack",
+        "fileSize": 2292940800,
         "quantization": "w4a16",
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X Elite", "X Plus", "X1"],
-        "date": 1780837427
+        "date": 1783874084
       },
       {
-        "name": "RWKV7-G1g 2.9B (X2 Elite)",
+        "name": "RWKV7-G1h 2.9B (X2 Elite)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-x2elite-nocustomop-batch.rmpack",
-        "fileSize": 2308595712,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-x2elite-nocustomop-batch.rmpack",
+        "fileSize": 2309730304,
         "quantization": "w4a16",
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X2 Elite Extreme", "X2 Elite", "X2 Plus"],
-        "date": 1780837139
+        "date": 1783873984
       },
       {
-        "name": "RWKV7-G1g 2.9B (8 Elite Gen5)",
+        "name": "RWKV7-G1h 2.9B (8 Elite Gen5)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-8elitegen5-batch.rmpack",
-        "fileSize": 2173190144,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-8elitegen5-batch.rmpack",
+        "fileSize": 2174128128,
         "quantization": "w4a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1780837452
+        "date": 1783874032
       },
       {
-        "name": "RWKV7-G1g 2.9B (8 Gen 5)",
+        "name": "RWKV7-G1h 2.9B (8 Gen 5)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-8gen5-batch.rmpack",
-        "fileSize": 2178883584,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-8gen5-batch.rmpack",
+        "fileSize": 2179575808,
         "quantization": "w4a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1780837349
+        "date": 1783876978
       },
       {
-        "name": "RWKV7-G1g 2.9B (8 Gen 3)",
+        "name": "RWKV7-G1h 2.9B (8 Gen 3)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-8gen3-batch.rmpack",
-        "fileSize": 2174689280,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-8gen3-batch.rmpack",
+        "fileSize": 2175496192,
         "quantization": "w4a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1780837374
+        "date": 1783874636
       },
       {
-        "name": "RWKV7-G1g 2.9B (8s Gen 3)",
+        "name": "RWKV7-G1h 2.9B (8s Gen 3)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-8sgen3-batch.rmpack",
-        "fileSize": 2174517248,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-8sgen3-batch.rmpack",
+        "fileSize": 2175488000,
         "quantization": "w4a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1780837533
+        "date": 1783876366
       },
       {
-        "name": "RWKV7-G1g 2.9B (7+ Gen 3)",
+        "name": "RWKV7-G1h 2.9B (7+ Gen 3)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-8sgen3-batch.rmpack",
-        "fileSize": 2174517248,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-8sgen3-batch.rmpack",
+        "fileSize": 2175488000,
         "quantization": "w4a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1780837533
+        "date": 1783876366
       },
       {
-        "name": "RWKV7-G1g 2.9B (8 Gen 2)",
+        "name": "RWKV7-G1h 2.9B (8 Gen 2)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-8gen2-batch.rmpack",
-        "fileSize": 2123427840,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-8gen2-batch.rmpack",
+        "fileSize": 2124406784,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1780834862
+        "date": 1783877067
       },
       {
-        "name": "RWKV7-G1g 2.9B (8+ Gen 1)",
+        "name": "RWKV7-G1h 2.9B (8+ Gen 1)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-8plusgen1.rmpack",
-        "fileSize": 2080030720,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-8plusgen1.rmpack",
+        "fileSize": 2080481280,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8+ Gen 1"],
-        "date": 1780838259
+        "date": 1783875514
       },
       {
-        "name": "RWKV7-G1g 2.9B (888)",
+        "name": "RWKV7-G1h 2.9B (888)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1g-2.9b-20260526-ctx8192-a16w4-lpbq-b32-888.rmpack",
-        "fileSize": 2083270656,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1h-2.9b-20260710-ctx10240-a16w4-lpbq-b32-888.rmpack",
+        "fileSize": 2083713024,
         "quantization": "w4a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1780834815,
+        "date": 1783876153,
         "isDebug": true
       },
       {
