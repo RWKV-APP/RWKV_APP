@@ -24,6 +24,9 @@ jobs:
           path: rwkv_mobile_flutter
           fetch-depth: 1
 
+      - name: Link rwkv_mobile_flutter sibling path
+        run: ln -sfn "$GITHUB_WORKSPACE/rwkv_mobile_flutter" "$GITHUB_WORKSPACE/../rwkv_mobile_flutter"
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -53,7 +56,12 @@ jobs:
         with:
           x_api_key: ""
 
-      - name: Install dependencies
+      - name: Create placeholder sensitive assets
+        uses: ./.github/actions/decrypt-assets
+        with:
+          filter_decrypt_pass: ${{ secrets.FILTER_DECRYPT_PASS }}
+
+      - name: Install app dependencies
         run: flutter pub get
 
       - name: Analyze app
@@ -73,3 +81,19 @@ jobs:
       - name: Test local web search
         working-directory: packages/local_web_search
         run: flutter test
+
+      - name: Install local web search example dependencies
+        working-directory: packages/local_web_search/example
+        run: flutter pub get
+
+      - name: Analyze local web search example
+        working-directory: packages/local_web_search/example
+        run: dart analyze
+
+      - name: Install tools dependencies
+        working-directory: tools
+        run: flutter pub get
+
+      - name: Analyze tools
+        working-directory: tools
+        run: dart analyze

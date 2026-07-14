@@ -14,7 +14,16 @@ linter:
     prefer_const_literals_to_create_immutables: false
 
 analyzer:
-  exclude: [build/**, lib/generated/**, lib/gen/**, lib/**/*.freezed.dart, lib/**/*.g.dart, lib/**/*.steps.dart]
+  exclude:
+    - build/**
+    - lib/generated/**
+    - lib/gen/**
+    - lib/**/*.freezed.dart
+    - lib/**/*.g.dart
+    - lib/**/*.steps.dart
+    - packages/local_web_search/**
+    - rwkv_mobile_flutter/**
+    - tools/**
   plugins:
     # - custom_lint
   errors:
