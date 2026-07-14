@@ -22,6 +22,7 @@ Use it to choose the right edit location before changing code
 | Model load or release behavior | `lib/store/rwkv_model.dart`, `lib/store/rwkv.dart`, `../rwkv_mobile_flutter` | Frontend owns selection and state, adapter owns bridge contract |
 | Local model file scan | `lib/store/pth.dart`, `lib/func/local_model_discovery.dart`, `lib/model/file_info.dart` | Keep isolate result types explicit |
 | Remote model list or download issue | `remote/latest.json`, `lib/store/remote.dart`, `rwkv_downloader` | Check config and local path resolution separately |
+| VL model exists in `latest.json` but is not displayed | `docs/architecture/vl-model-update-guide.md` | VL display also depends on `WorldType.socPairs` and `FileInfo.worldType` |
 | OpenAI-compatible local API | `lib/store/api_server.dart`, `assets/api_server/dashboard.html` | Keep HTTP behavior testable without the app UI where possible |
 | iOS or macOS build issue | `pubspec.yaml`, `ios/Podfile`, `macos/Podfile`, Xcode project files | This repo currently disables Flutter project-level SPM |
 | Release or upload issue | `fastlane/Fastfile`, `fastlane/actions`, `.github/workflows`, `scripts` | Resume from the smallest successful artifact boundary |

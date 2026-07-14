@@ -337,6 +337,7 @@ class FileInfo extends Equatable {
     "rwkv-vl-0.4B-260625-a16w8-8elitegen5.rmpack" => .modrwkvV3,
     "rwkv-vl-0.4B-260625-a16w8-8gen2.rmpack" => .modrwkvV3,
     "rwkv-vl-0.4B-260625-a16w8-8gen3.rmpack" => .modrwkvV3,
+    "rwkv-vl-0.4B-260625-a16w8-8gen5.rmpack" => .modrwkvV3,
     "rwkv-vl-0.4B-260625-a16w8-8sgen3.rmpack" => .modrwkvV3,
     "rwkv-vl-0.4B-260625-a16w8-8plusgen1.rmpack" => .modrwkvV3,
     "rwkv-vl-0.4B-260625-q8_0.gguf" => .modrwkvV3,
