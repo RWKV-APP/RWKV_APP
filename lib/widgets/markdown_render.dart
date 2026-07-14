@@ -809,7 +809,9 @@ bool _isStreamingMarkdownTableLine(String line) {
 
 bool shouldRenderStreamingMarkdownTailAsFullMarkdown(String raw) {
   if (raw.isEmpty) return false;
-  if (_hasUnclosedStreamingMarkdownFence(raw)) return false;
+  final unclosedFenceMarker = _unclosedStreamingMarkdownFenceMarker(raw);
+  if (unclosedFenceMarker == _markdownFenceBacktick) return true;
+  if (unclosedFenceMarker != null) return false;
   if (_hasUnclosedStreamingDisplayLatex(raw)) return false;
 
   final trimmed = raw.trimLeft();
@@ -825,7 +827,7 @@ bool shouldRenderStreamingMarkdownTailAsFullMarkdown(String raw) {
   return trimmed.contains("<BR");
 }
 
-bool _hasUnclosedStreamingMarkdownFence(String raw) {
+String? _unclosedStreamingMarkdownFenceMarker(String raw) {
   bool insideFence = false;
   String fenceMarker = "";
   final lines = raw.split("\n");
@@ -845,7 +847,8 @@ bool _hasUnclosedStreamingMarkdownFence(String raw) {
     fenceMarker = "";
   }
 
-  return insideFence;
+  if (!insideFence) return null;
+  return fenceMarker;
 }
 
 bool _hasUnclosedStreamingDisplayLatex(String raw) {

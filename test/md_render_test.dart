@@ -1,8 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/markdown_render.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('markdown latex normalizer', () {
     test('wraps standalone latex lines into a display block', () {
       final raw = [
@@ -189,9 +195,138 @@ void main() {
       expect(shouldRenderStreamingMarkdownTailAsFullMarkdown('plain streaming text'), isFalse);
     });
 
+    test('uses full markdown for an unclosed backtick code fence', () {
+      final raw = [
+        '```dart',
+        'print(1);',
+      ].join('\n');
+
+      expect(shouldRenderStreamingMarkdownTailAsFullMarkdown(raw), isTrue);
+    });
+
+    test('keeps unsupported unclosed tilde fences lightweight', () {
+      final raw = [
+        '~~~dart',
+        'print(1);',
+      ].join('\n');
+
+      expect(shouldRenderStreamingMarkdownTailAsFullMarkdown(raw), isFalse);
+    });
+
+    test('keeps unclosed display latex lightweight', () {
+      final raw = [
+        r"\[",
+        r"\frac{a}{b}",
+      ].join('\n');
+
+      expect(shouldRenderStreamingMarkdownTailAsFullMarkdown(raw), isFalse);
+    });
+
     test('uses full markdown for a complex streaming tail', () {
       expect(shouldRenderStreamingMarkdownTailAsFullMarkdown('- item'), isTrue);
       expect(shouldRenderStreamingMarkdownTailAsFullMarkdown('[RWKV](https://rwkv.com)'), isTrue);
     });
   });
+
+  testWidgets('renders and highlights an unclosed backtick code fence while streaming', (tester) async {
+    await P.mdRender.tryToLoadLanguageHighlighter('dart');
+
+    const partialCode = 'final value = 1;';
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: '```dart\n$partialCode',
+    );
+
+    expect(find.text('dart'), findsOneWidget);
+    expect(find.byIcon(Symbols.content_copy), findsOneWidget);
+    expect(find.textContaining('```'), findsNothing);
+    _expectHighlightedCode(tester, partialCode);
+
+    const appendedCode = 'final value = 10;\nprint(value);';
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: '```dart\n$appendedCode',
+    );
+
+    expect(find.byIcon(Symbols.content_copy), findsOneWidget);
+    _expectHighlightedCode(tester, appendedCode);
+
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: '```dart\n$appendedCode\n```',
+    );
+
+    expect(find.byIcon(Symbols.content_copy), findsOneWidget);
+    expect(find.textContaining('```'), findsNothing);
+    _expectHighlightedCode(tester, appendedCode);
+  });
+
+  testWidgets('keeps an unclosed backtick code fence plain when markdown is disabled', (tester) async {
+    const raw = '```dart\nprint(1);';
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: raw,
+      renderMarkdown: false,
+    );
+
+    expect(find.byIcon(Symbols.content_copy), findsNothing);
+    expect(find.text(raw), findsOneWidget);
+  });
+}
+
+Future<void> _pumpStreamingMarkdown({
+  required WidgetTester tester,
+  required String raw,
+  bool renderMarkdown = true,
+}) async {
+  P.app.preferredThemeMode.q = ThemeMode.light;
+  P.app.theme.q = .light;
+  P.app.qb.q = Colors.black;
+  P.app.qw.q = Colors.white;
+  P.preference.preferredMessageLineHeight.q = 1.2;
+  P.preference.renderMarkdownAndLatexEnabled.q = renderMarkdown;
+
+  await tester.pumpWidget(
+    StateWrapper(
+      child: MaterialApp(
+        locale: const Locale('en'),
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: Scaffold(
+          body: StreamingMarkdownRender(
+            raw: raw,
+            streaming: true,
+            useMessageLineHeight: true,
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+void _expectHighlightedCode(WidgetTester tester, String code) {
+  final richTexts = tester.widgetList<RichText>(find.byType(RichText));
+  for (final richText in richTexts) {
+    if (richText.text.toPlainText() != code) continue;
+    expect(_hasColoredTextSpan(richText.text), isTrue);
+    return;
+  }
+  fail('Could not find rendered code: $code');
+}
+
+bool _hasColoredTextSpan(InlineSpan span) {
+  if (span is! TextSpan) return false;
+  if (span.style?.color != null && (span.text?.isNotEmpty ?? false)) return true;
+
+  final children = span.children;
+  if (children == null) return false;
+  for (final child in children) {
+    if (_hasColoredTextSpan(child)) return true;
+  }
+  return false;
 }
