@@ -116,13 +116,17 @@ bool _writeSoftBreakRun(String value, StringBuffer buffer) {
     return false;
   }
 
-  for (int i = 0; i < value.length; i++) {
-    if (i > 0 && i % _softBreakStep == 0) {
+  bool insertedBreak = false;
+  int characterIndex = 0;
+  for (final String character in value.characters) {
+    if (characterIndex > 0 && characterIndex % _softBreakStep == 0) {
       buffer.write(_softBreak);
+      insertedBreak = true;
     }
-    buffer.write(value[i]);
+    buffer.write(character);
+    characterIndex++;
   }
-  return true;
+  return insertedBreak;
 }
 
 bool _isSoftBreakRunBoundary(int codeUnit) {

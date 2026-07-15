@@ -272,12 +272,31 @@ void main() {
     expect(find.byIcon(Symbols.content_copy), findsNothing);
     expect(find.text(raw), findsOneWidget);
   });
+
+  testWidgets('keeps emoji surrogate pairs intact when inserting soft breaks', (tester) async {
+    const raw = '''作为AI助手，我每天都在处理各种各样的问题——从哲学思辨到物理公式，从诗歌创作到编程代码，总有那么些挑战我逻辑极限、考验我算力的小伙伴们呢~ 😊
+不过您放心，我虽然无法像人类一样“蠢”（毕竟我的核心代码里只写着高效运行），但遇到模糊、歧义或者特别冷门的问题时，偶尔会卡顿一下，需要您再稍微描述清楚点才能帮您搞定。👀
+**您现在遇到了什么难题？我很乐意用尽全部计算资源为您服务哦！🚀**''';
+
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: raw,
+      streaming: false,
+    );
+
+    final renderedText = tester.widgetList<RichText>(find.byType(RichText)).map((RichText richText) => richText.text.toPlainText()).join();
+    expect(_containsUnpairedSurrogate(renderedText), isFalse);
+    expect(renderedText.replaceAll('\u200B', ''), contains('😊'));
+    expect(renderedText.replaceAll('\u200B', ''), contains('👀'));
+    expect(renderedText.replaceAll('\u200B', ''), contains('您现在遇到了什么难题？'));
+  });
 }
 
 Future<void> _pumpStreamingMarkdown({
   required WidgetTester tester,
   required String raw,
   bool renderMarkdown = true,
+  bool streaming = true,
 }) async {
   P.app.preferredThemeMode.q = ThemeMode.light;
   P.app.theme.q = .light;
@@ -299,7 +318,7 @@ Future<void> _pumpStreamingMarkdown({
         home: Scaffold(
           body: StreamingMarkdownRender(
             raw: raw,
-            streaming: true,
+            streaming: streaming,
             useMessageLineHeight: true,
           ),
         ),
@@ -327,6 +346,20 @@ bool _hasColoredTextSpan(InlineSpan span) {
   if (children == null) return false;
   for (final child in children) {
     if (_hasColoredTextSpan(child)) return true;
+  }
+  return false;
+}
+
+bool _containsUnpairedSurrogate(String value) {
+  for (int index = 0; index < value.length; index++) {
+    final codeUnit = value.codeUnitAt(index);
+    if (codeUnit >= 0xDC00 && codeUnit <= 0xDFFF) return true;
+    if (codeUnit < 0xD800 || codeUnit > 0xDBFF) continue;
+    if (index + 1 >= value.length) return true;
+
+    final nextCodeUnit = value.codeUnitAt(index + 1);
+    if (nextCodeUnit < 0xDC00 || nextCodeUnit > 0xDFFF) return true;
+    index++;
   }
   return false;
 }
