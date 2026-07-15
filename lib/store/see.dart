@@ -223,6 +223,17 @@ extension $See on _See {
 
 /// Private methods
 extension _$See on _See {
+  void _updateSystemPromptForUserInput(String input) {
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .see);
+    if (modelID == null) {
+      qqe("ModelID is null when updating the VL system prompt");
+      return;
+    }
+
+    final prompt = visionSystemPromptForUserInput(input);
+    P.rwkvBridge.send(to_rwkv.SetPrompt(prompt, modelID: modelID));
+  }
+
   Future<void> _init() async {
     switch (P.app.demoType.q) {
       case .fifthteenPuzzle:

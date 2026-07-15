@@ -437,6 +437,7 @@ extension $ChatInputSend on _Chat {
     List<String> history = withHistory ? _history(excludedMessageId: receiveId) : <String>[];
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
     final inSee = P.app.pageKey.q == .see;
+    if (inSee) P.see._updateSystemPromptForUserInput(raw);
     // final forceChinese = inSee && message.containsChinese;
     final forceChinese = false;
 
