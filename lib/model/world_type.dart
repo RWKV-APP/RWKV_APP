@@ -1,21 +1,23 @@
 enum WorldType {
   modrwkvV2,
   modrwkvV3,
+  fineVisionMax,
   reasoningQA,
-  ocr
-  ;
+  ocr;
 
   String get displayName => switch (this) {
     reasoningQA => "Visual QA Reasoning (🇨🇳 Chinese & 🇺🇸 English)",
     ocr => "Visual + OCR (🇨🇳 Chinese & 🇺🇸 English)",
     modrwkvV2 => "Visual QA (🇨🇳 Chinese & 🇺🇸 English)",
     modrwkvV3 => "Visual QA (🇨🇳 Chinese & 🇺🇸 English)",
+    fineVisionMax => "Visual QA (🇨🇳 Chinese & 🇺🇸 English)",
   };
 
   String get taskDescription => switch (this) {
     reasoningQA => "Visual Question Answering (Reasoning)",
     modrwkvV2 => "Visual Question Answering",
     modrwkvV3 => "Visual Question Answering",
+    fineVisionMax => "Visual Question Answering",
     ocr => "Visual + OCR",
   };
 
@@ -26,6 +28,7 @@ enum WorldType {
   bool get isReasoning => switch (this) {
     reasoningQA => true,
     modrwkvV3 => true,
+    fineVisionMax => true,
     _ => false,
   };
 
@@ -33,6 +36,7 @@ enum WorldType {
     reasoningQA => false,
     modrwkvV2 => false,
     modrwkvV3 => true,
+    fineVisionMax => true,
     ocr => false,
   };
 
@@ -63,6 +67,18 @@ enum WorldType {
       ("8 Gen 5", "rwkv-vl-0.4B-260625-a16w8-8gen5.rmpack"),
       ("Dimensity 9300", "rwkv-vl-0.4B-260625-MT6989.rmpack"),
       ("Dimensity 9500", "rwkv-vl-0.4B-260625-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack"),
+    ],
+    fineVisionMax => [
+      ("", "rwkv-vl-1.5v100m-finevisionmax-Q8_0.gguf"),
+      ("8 Elite", "rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8elite.rmpack"),
+      ("8 Gen 3", "rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen3.rmpack"),
+      ("8s Gen 3", "rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8sgen3.rmpack"),
+      ("8 Gen 2", "rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen2.rmpack"),
+      ("8+ Gen 1", "rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8plusgen1.rmpack"),
+      ("8 Elite Gen5", "rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8elitegen5.rmpack"),
+      ("8 Gen 5", "rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen5.rmpack"),
+      ("Dimensity 9300", "rwkv-vl-1.5v100m-finevisionmax-rwkv-MT6989.rmpack"),
+      ("Dimensity 9500", "rwkv-vl-1.5v100m-finevisionmax-rwkv-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack"),
     ],
   };
 }

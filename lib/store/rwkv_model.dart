@@ -229,8 +229,16 @@ extension $RWKVModel on _RWKVModel {
     );
     await P.rwkvParams.resetSamplerParams(enableReasoning: enableReasoning);
     await P.rwkvParams.resetMaxLength(enableReasoning: enableReasoning);
-    P.rwkvBridge.send(to_rwkv.SetEosToken("\x17", modelID: modelID));
-    P.rwkvBridge.send(to_rwkv.SetBosToken("\x16", modelID: modelID));
+    if (fileInfo.usesFlowerTemplate) {
+      P.rwkvBridge.send(to_rwkv.SetFlowerTemplate(true, modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetResponseRole(responseRole: "Bot", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetBosToken("", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetEosToken("✿", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetSpaceAfterRoles(false, modelID: modelID));
+    } else {
+      P.rwkvBridge.send(to_rwkv.SetEosToken("\x17", modelID: modelID));
+      P.rwkvBridge.send(to_rwkv.SetBosToken("\x16", modelID: modelID));
+    }
     P.rwkvBridge.send(to_rwkv.SetTokenBanned([0], modelID: modelID));
 
     return modelID;

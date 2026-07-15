@@ -343,12 +343,18 @@ class FileInfo extends Equatable {
     "rwkv-vl-0.4B-260625-q8_0.gguf" => .modrwkvV3,
     "rwkv-vl-0.4B-260625-vision-adapter.mnn" => .modrwkvV3,
     "rwkv-vl-0.4B-260625-vision-encoder.mnn" => .modrwkvV3,
+    _ when fileName.startsWith("rwkv-vl-1.5v100m-finevisionmax-") => .fineVisionMax,
     _ => null,
   };
 
   bool get isEncoder => tags.contains('encoder');
 
   bool get isAdapter => tags.contains('adapter');
+
+  bool get usesFlowerTemplate {
+    if (!fileName.startsWith("rwkv-vl-1.5v100m-finevisionmax-")) return false;
+    return !isEncoder && !isAdapter;
+  }
 
   bool get isNeko => name.contains('Neko');
 

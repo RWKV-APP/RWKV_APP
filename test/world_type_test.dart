@@ -10,22 +10,73 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/model/world_type.dart';
 
 void main() {
-  test('keeps the latest JSON RWKV-VL 8 Gen 5 model registered for display', () {
-    final config = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
-    final world = config['world'] as Map<String, dynamic>;
-    final modelConfigs = (world['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
-    final modelConfig = modelConfigs.singleWhere((entry) {
-      final name = entry['name'];
-      if (name is! String || !name.contains('RWKV-VL')) return false;
+  final config = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+  final world = config['world'] as Map<String, dynamic>;
+  final modelConfigs = (world['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
-      final socLimitations = entry['socLimitations'];
-      if (socLimitations is! List<dynamic>) return false;
-
-      return socLimitations.contains('8 Gen 5');
+  test('keeps both RWKV-VL generations in the latest JSON', () {
+    final legacyFiles = modelConfigs.where((entry) {
+      final url = entry['url'];
+      return url is String && url.contains('rwkv-vl-0.4B-260625');
     });
-    final fileInfo = FileInfo.fromJSON(modelConfig);
+    final fineVisionMaxFiles = modelConfigs.where((entry) {
+      final url = entry['url'];
+      return url is String && url.contains('rwkv-vl-1.5v100m-finevisionmax-');
+    });
 
-    expect(fileInfo.worldType, WorldType.modrwkvV3);
-    expect(WorldType.modrwkvV3.socPairs, contains(('8 Gen 5', fileInfo.fileName)));
+    expect(legacyFiles, hasLength(13));
+    expect(fineVisionMaxFiles, hasLength(13));
+    for (final modelConfig in fineVisionMaxFiles) {
+      expect(FileInfo.fromJSON(modelConfig).worldType, WorldType.fineVisionMax);
+    }
+  });
+
+  test('registers both 8 Gen 5 core weights for display', () {
+    final legacyConfig = modelConfigs.singleWhere((entry) {
+      final url = entry['url'];
+      return url is String && url.endsWith('rwkv-vl-0.4B-260625-a16w8-8gen5.rmpack');
+    });
+    final fineVisionMaxConfig = modelConfigs.singleWhere((entry) {
+      final url = entry['url'];
+      return url is String && url.endsWith('rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen5.rmpack');
+    });
+    final legacyFileInfo = FileInfo.fromJSON(legacyConfig);
+    final fineVisionMaxFileInfo = FileInfo.fromJSON(fineVisionMaxConfig);
+
+    expect(WorldType.modrwkvV3.socPairs, contains(('8 Gen 5', legacyFileInfo.fileName)));
+    expect(WorldType.fineVisionMax.socPairs, contains(('8 Gen 5', fineVisionMaxFileInfo.fileName)));
+  });
+
+  test('keeps RWKV-VL dependency groups separate', () {
+    final fileInfos = modelConfigs.map(FileInfo.fromJSON);
+
+    for (final worldType in [WorldType.modrwkvV3, WorldType.fineVisionMax]) {
+      final group = fileInfos.where((fileInfo) => fileInfo.worldType == worldType);
+      expect(group.where((fileInfo) => fileInfo.isEncoder), hasLength(1));
+      expect(group.where((fileInfo) => fileInfo.isAdapter), hasLength(1));
+    }
+  });
+
+  test('enables the flower template only for FineVisionMax core weights', () {
+    final coreConfig = modelConfigs.singleWhere((entry) {
+      final url = entry['url'];
+      return url is String && url.endsWith('rwkv-vl-1.5v100m-finevisionmax-Q8_0.gguf');
+    });
+    final encoderConfig = modelConfigs.singleWhere((entry) {
+      final url = entry['url'];
+      final tags = entry['tags'];
+      return url is String && url.contains('rwkv-vl-1.5v100m-finevisionmax-') && tags is List<dynamic> && tags.contains('encoder');
+    });
+    final legacyConfig = <String, dynamic>{
+      'name': 'Legacy RWKV-VL',
+      'url': 'mollysama/rwkv-mobile-models/resolve/main/rwkv-vl-0.4B-260625-q8_0.gguf',
+      'fileSize': 1,
+      'platforms': ['macos'],
+      'backends': ['llamacpp'],
+    };
+
+    expect(FileInfo.fromJSON(coreConfig).usesFlowerTemplate, isTrue);
+    expect(FileInfo.fromJSON(encoderConfig).usesFlowerTemplate, isFalse);
+    expect(FileInfo.fromJSON(legacyConfig).usesFlowerTemplate, isFalse);
   });
 }

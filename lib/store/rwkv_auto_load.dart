@@ -754,7 +754,7 @@ extension _$RWKVAutoLoad on _RWKVAutoLoad {
 
     final adapterPath = switch (worldType) {
       WorldType.reasoningQA || WorldType.ocr => null,
-      WorldType.modrwkvV2 || WorldType.modrwkvV3 => adapterLocalFile?.targetPath,
+      WorldType.modrwkvV2 || WorldType.modrwkvV3 || WorldType.fineVisionMax => adapterLocalFile?.targetPath,
     };
     final modelID = await P.rwkvModel.loadSee(
       modelPath: modelLocalFile.targetPath,
@@ -773,6 +773,7 @@ extension _$RWKVAutoLoad on _RWKVAutoLoad {
         break;
       case WorldType.modrwkvV2:
       case WorldType.modrwkvV3:
+      case WorldType.fineVisionMax:
         P.rwkvBridge.send(SetImageUniqueIdentifier("image"));
         P.rwkvBridge.send(SetSpaceAfterRoles(false, modelID: modelID));
     }
