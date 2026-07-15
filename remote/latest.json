@@ -1728,7 +1728,7 @@
   "world": {
     "model_config": [
       {
-        "name": "(Preview) RWKV-VL-260625 0.4B Vision Encoder",
+        "name": "RWKV-VL-260625 0.4B Vision Encoder",
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-0.4B-260625-vision-encoder.mnn",
         "fileSize": 402661632,
         "quantization": "w8a16",
@@ -1738,7 +1738,7 @@
         "date": 1782434995
       },
       {
-        "name": "(Preview) RWKV-VL-260625 0.4B Vision Adapter",
+        "name": "RWKV-VL-260625 0.4B Vision Adapter",
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-0.4B-260625-vision-adapter.mnn",
         "fileSize": 33597608,
         "quantization": "w8a16",
@@ -1879,7 +1879,7 @@
         "date": 1783520411
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B Vision Encoder",
+        "name": "RWKV-VL-260625 1.5B Vision Encoder",
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-1.5v100m-finevisionmax-vision-encoder.mnn",
         "fileSize": 402661632,
         "quantization": "w8a16",
@@ -1889,7 +1889,7 @@
         "date": 1784039823
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B Vision Adapter",
+        "name": "RWKV-VL-260625 1.5B Vision Adapter",
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-1.5v100m-finevisionmax-vision-adapter.mnn",
         "fileSize": 100743336,
         "quantization": "w8a16",
@@ -1899,7 +1899,7 @@
         "date": 1784039766
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B",
+        "name": "(Preview) RWKV-VL-260625 1.5B",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/rwkv-vl-1.5v100m-finevisionmax-Q8_0.gguf",
         "fileSize": 1693646912,
@@ -1910,7 +1910,7 @@
         "date": 1784040567
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B (8 Elite)",
+        "name": "(Preview) RWKV-VL-260625 1.5B (8 Elite)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8elite.rmpack",
         "fileSize": 1713897472,
@@ -1922,7 +1922,7 @@
         "date": 1784049209
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B (X Elite)",
+        "name": "(Preview) RWKV-VL-260625 1.5B (X Elite)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-xelite-nocustomop.rmpack",
         "fileSize": 1744392192,
@@ -1934,7 +1934,7 @@
         "date": 1784049265
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B (X2 Elite)",
+        "name": "(Preview) RWKV-VL-260625 1.5B (X2 Elite)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-x2elite-nocustomop.rmpack",
         "fileSize": 1755574272,
@@ -1946,7 +1946,7 @@
         "date": 1784069783
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B (8 Elite Gen5)",
+        "name": "(Preview) RWKV-VL-260625 1.5B (8 Elite Gen5)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8elitegen5.rmpack",
         "fileSize": 1722695680,
@@ -1958,7 +1958,7 @@
         "date": 1784069749
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B (8 Gen 5)",
+        "name": "(Preview) RWKV-VL-260625 1.5B (8 Gen 5)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen5.rmpack",
         "fileSize": 1713885184,
@@ -1970,7 +1970,7 @@
         "date": 1784049135
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B (8 Gen 2)",
+        "name": "(Preview) RWKV-VL-260625 1.5B (8 Gen 2)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen2.rmpack",
         "fileSize": 1717223424,
@@ -1982,7 +1982,7 @@
         "date": 1784049186
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B (8 Gen 3)",
+        "name": "(Preview) RWKV-VL-260625 1.5B (8 Gen 3)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen3.rmpack",
         "fileSize": 1717485568,
@@ -1994,7 +1994,7 @@
         "date": 1784069762
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B (8s Gen 3)",
+        "name": "(Preview) RWKV-VL-260625 1.5B (8s Gen 3)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8sgen3.rmpack",
         "fileSize": 1717747712,
@@ -2006,7 +2006,7 @@
         "date": 1784049172
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B (Dimensity 9300)",
+        "name": "(Preview) RWKV-VL-260625 1.5B (Dimensity 9300)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-1.5v100m-finevisionmax-rwkv-MT6989.rmpack",
         "fileSize": 1676341248,
@@ -2018,7 +2018,7 @@
         "date": 1784069249
       },
       {
-        "name": "(Preview) RWKV-VL FineVisionMax 1.5B (Dimensity 9500)",
+        "name": "(Preview) RWKV-VL-260625 1.5B (Dimensity 9500)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv-vl-1.5v100m-finevisionmax-rwkv-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
         "fileSize": 1949941760,
