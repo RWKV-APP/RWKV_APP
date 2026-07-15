@@ -19,6 +19,7 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat_history_width_limit.dart';
+import 'package:zone/widgets/experimental_features.dart';
 import 'package:zone/widgets/form_item.dart';
 
 class Settings extends ConsumerWidget {
@@ -208,6 +209,11 @@ class Settings extends ConsumerWidget {
                         title: S.current.advance_settings,
                         onTap: () => push(.advancedSettings),
                       ),
+                    FormItem(
+                      icon: Icon(Icons.science_outlined, color: qb.withValues(alpha: .667), size: 16),
+                      title: s.experimental_features,
+                      onTap: ExperimentalFeatures.show,
+                    ),
                     FormItem(
                       isSectionEnd: false,
                       icon: Icon(Icons.display_settings, color: qb.withValues(alpha: .667), size: 16),

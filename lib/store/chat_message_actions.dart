@@ -135,6 +135,37 @@ extension $ChatMessageActions on _Chat {
     P.msg.editingOrRegeneratingIndex.q = index;
   }
 
+  Future<void> onEditOriginalQuestionForPausedReplyPressed({required int pausedReplyId}) async {
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
+
+    final messages = P.msg.list.q;
+    final originalQuestionIndex = originalQuestionIndexForPausedReply(
+      messages: messages,
+      rootNode: P.msg.msgNode.q,
+      pausedReplyId: pausedReplyId,
+    );
+    if (originalQuestionIndex == null) return;
+
+    final currentDraft = textEditingController.text.trim();
+    if (currentDraft.isEmpty) {
+      final content = messages[originalQuestionIndex].contentAndTails.first;
+      textEditingController.value = TextEditingValue(
+        text: content,
+        selection: TextSelection.collapsed(offset: content.length),
+      );
+    }
+
+    P.app.hapticLight();
+    P.msg.editingOrRegeneratingIndex.q = originalQuestionIndex;
+    focusNode.requestFocus();
+  }
+
+  void dismissPausedReplyGuidance({required int pausedReplyId}) {
+    if (_dismissedPausedReplyGuidanceMessageId.q == pausedReplyId) return;
+    _dismissedPausedReplyGuidanceMessageId.q = pausedReplyId;
+    P.app.hapticLight();
+  }
+
   void onMessageTapped(Message msg) {
     if (P.rwkvContext.currentWorldType.q != null) {
       Focus.of(getContext()!).unfocus();

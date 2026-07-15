@@ -35,6 +35,7 @@ class _PageChatState extends State<PageChat> {
   void _onPopInvokedWithResult(bool didPop, _) {
     if (!didPop) return;
     P.chat.isSharing.q = false;
+    P.chat.cancelEditing(clearInput: true);
     P.chat.onStopButtonPressed(wantHaptic: false);
   }
 }

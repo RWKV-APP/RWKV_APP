@@ -747,6 +747,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_started": MessageLookupByLibrary.simpleMessage("自動 dump 已開啟"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("自動 dump 已關閉"),
     "edit": MessageLookupByLibrary.simpleMessage("編輯"),
+    "edit_original_question": MessageLookupByLibrary.simpleMessage("修改原問題"),
     "editing": MessageLookupByLibrary.simpleMessage("編輯中"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("英->中"),
     "enable_system_proxy": MessageLookupByLibrary.simpleMessage("啟用系統代理"),
@@ -764,6 +765,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
       "已渲染換行符",
+    ),
+    "exit_editing": MessageLookupByLibrary.simpleMessage("退出編輯"),
+    "experimental_features": MessageLookupByLibrary.simpleMessage("實驗性功能"),
+    "experimental_features_description": MessageLookupByLibrary.simpleMessage(
+      "這些功能仍在測試，體驗與行為可能會調整。",
     ),
     "expert": MessageLookupByLibrary.simpleMessage("專家模式"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("探索RWKV"),
@@ -1089,6 +1095,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "path_label": m44,
     "pause": MessageLookupByLibrary.simpleMessage("暫停"),
+    "paused_reply_edit_hint": MessageLookupByLibrary.simpleMessage(
+      "回答已暫停。如果剛才的問題需要調整，修改原問題後重新生成會更準確。",
+    ),
+    "paused_reply_guidance_feature": MessageLookupByLibrary.simpleMessage(
+      "暫停回答後的提問修正提示",
+    ),
+    "paused_reply_guidance_feature_description":
+        MessageLookupByLibrary.simpleMessage("回答暫停後，提示修改原問題並重新生成。"),
     "penalty_decay_with_value": m45,
     "performance_test": MessageLookupByLibrary.simpleMessage("效能測試"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(

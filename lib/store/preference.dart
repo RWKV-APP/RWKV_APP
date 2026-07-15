@@ -11,6 +11,7 @@ const String _webDemoBatchSizePreferenceKey = "halo_state.webDemoBatchSize";
 const String _renderThinkingTagAsPreviewPreferenceKey = "halo_state.renderThinkingTagAsPreview";
 const String _thinkingModePreferenceKey = "halo_state.thinkingMode";
 const String _respondToMobileOrientationChangesPreferenceKey = "halo_state.respondToMobileOrientationChanges";
+const String _pausedReplyGuidanceEnabledPreferenceKey = "halo_state.experimental.pausedReplyGuidanceEnabled";
 const Set<String> _preservedPreferenceCacheKeys = <String>{
   "halo_state.customModelsDir",
   "halo_state.customModelsDirBookmark",
@@ -89,6 +90,7 @@ class _Preference {
   late final renderMarkdownAndLatexEnabled = qs(true);
   late final renderThinkingTagAsPreviewEnabled = qs(true);
   late final respondToMobileOrientationChanges = qs<bool>(!Platform.isAndroid && !Platform.isIOS);
+  late final pausedReplyGuidanceEnabled = qs(false);
 
   late final preferredThinkingMode = qs<thinking_mode.ThinkingMode>(.fast);
 
@@ -231,6 +233,7 @@ extension _$Preference on _Preference {
     respondToMobileOrientationChanges.q = Platform.isAndroid || Platform.isIOS
         ? sp.getBool(_respondToMobileOrientationChangesPreferenceKey) ?? false
         : true;
+    pausedReplyGuidanceEnabled.q = sp.getBool(_pausedReplyGuidanceEnabledPreferenceKey) ?? false;
     await _syncPreferredOrientations();
 
     final thinkingMode = sp.getString(_thinkingModePreferenceKey);
@@ -591,6 +594,12 @@ extension $Preference on _Preference {
     final sp = await SharedPreferences.getInstance();
     await sp.setBool(_respondToMobileOrientationChangesPreferenceKey, value);
     await _syncPreferredOrientations();
+  }
+
+  Future<void> setPausedReplyGuidanceEnabled(bool value) async {
+    pausedReplyGuidanceEnabled.q = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setBool(_pausedReplyGuidanceEnabledPreferenceKey, value);
   }
 
   Future<void> saveThinkingMode(thinking_mode.ThinkingMode value) async {

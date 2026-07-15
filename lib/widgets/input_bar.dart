@@ -15,6 +15,7 @@ import 'package:zone/widgets/chat_layout_metrics.dart';
 import 'package:zone/widgets/input_interactions.dart';
 import 'package:zone/widgets/input_text_field.dart';
 import 'package:zone/widgets/measure_size.dart';
+import 'package:zone/widgets/paused_reply_guidance.dart';
 
 class InputBar extends ConsumerWidget {
   final DemoType preferredDemoType;
@@ -65,6 +66,7 @@ class InputBar extends ConsumerWidget {
                 children: [
                   if (preferredDemoType == .chat) const SizedBox(height: 12),
                   if (inRWKVSee) const _WaitingMsg(),
+                  if (preferredDemoType == .chat) const PausedReplyGuidance(),
                   if (preferredDemoType != .tts) InputInteractions(preferredDemoType: preferredDemoType),
                   InputTextField(preferredDemoType: preferredDemoType),
                 ],

@@ -106,6 +106,8 @@ class _Chat {
   /// 已经触发过 token 超限提示的会话集合（纯内存态）
   late final tokenReminderShownConversationIds = qs<Set<int>>({});
 
+  late final _dismissedPausedReplyGuidanceMessageId = qs<int?>(null);
+
   /// 正在后台自动加载上次使用的模型
   late final isAutoLoadingModel = qs(false);
 
@@ -116,6 +118,17 @@ class _Chat {
   late final inputHasContent = qp((ref) {
     final textInInput = ref.watch(this.textInInput);
     return textInInput.trim().isNotEmpty;
+  });
+
+  late final pausedReplyGuidanceMessageId = qp<int?>((ref) {
+    final enabled = ref.watch(P.preference.pausedReplyGuidanceEnabled);
+    if (!enabled) return null;
+    final messages = ref.watch(P.msg.list);
+    final dismissedMessageId = ref.watch(_dismissedPausedReplyGuidanceMessageId);
+    return resolvePausedReplyGuidanceMessageId(
+      messages: messages,
+      dismissedMessageId: dismissedMessageId,
+    );
   });
 
   late final batchInferenceAvailable = qp((ref) {

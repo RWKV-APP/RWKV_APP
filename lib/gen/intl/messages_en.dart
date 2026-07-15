@@ -928,6 +928,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_started": MessageLookupByLibrary.simpleMessage("Auto dump enabled"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("Auto dump disabled"),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
+    "edit_original_question": MessageLookupByLibrary.simpleMessage(
+      "Edit original question",
+    ),
     "editing": MessageLookupByLibrary.simpleMessage("Editing"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("EN->ZH"),
     "enable_system_proxy": MessageLookupByLibrary.simpleMessage(
@@ -951,6 +954,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
       "Escape characters rendered",
+    ),
+    "exit_editing": MessageLookupByLibrary.simpleMessage("Exit editing"),
+    "experimental_features": MessageLookupByLibrary.simpleMessage(
+      "Experimental Features",
+    ),
+    "experimental_features_description": MessageLookupByLibrary.simpleMessage(
+      "These features are still being tested and may change in future versions.",
     ),
     "expert": MessageLookupByLibrary.simpleMessage("Expert"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("Explore RWKV"),
@@ -1378,6 +1388,16 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "path_label": m44,
     "pause": MessageLookupByLibrary.simpleMessage("Pause"),
+    "paused_reply_edit_hint": MessageLookupByLibrary.simpleMessage(
+      "Response paused. If you need to revise your last question, editing it and generating a new response usually works better.",
+    ),
+    "paused_reply_guidance_feature": MessageLookupByLibrary.simpleMessage(
+      "Prompt revision after pausing",
+    ),
+    "paused_reply_guidance_feature_description":
+        MessageLookupByLibrary.simpleMessage(
+          "After a response is paused, suggest editing the original prompt and generating again.",
+        ),
     "penalty_decay_with_value": m45,
     "performance_test": MessageLookupByLibrary.simpleMessage(
       "Performance Test",

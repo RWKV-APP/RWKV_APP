@@ -174,7 +174,6 @@ class _App extends ConsumerWidget {
       themeMode: preferredThemeMode,
       theme: themeData,
       darkTheme: themeData,
-      debugShowCheckedModeBanner: false,
       routerConfig: kRouter,
       builder: _builder,
     );

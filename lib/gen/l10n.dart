@@ -1826,6 +1826,66 @@ class S {
     return Intl.message('继续', name: 'chat_resume', desc: '', args: []);
   }
 
+  /// `回答已暂停。如果刚才的问题需要调整，修改原问题后重新生成会更准确。`
+  String get paused_reply_edit_hint {
+    return Intl.message(
+      '回答已暂停。如果刚才的问题需要调整，修改原问题后重新生成会更准确。',
+      name: 'paused_reply_edit_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `修改原问题`
+  String get edit_original_question {
+    return Intl.message(
+      '修改原问题',
+      name: 'edit_original_question',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `实验性功能`
+  String get experimental_features {
+    return Intl.message(
+      '实验性功能',
+      name: 'experimental_features',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `这些功能仍在测试，体验和行为可能会调整。`
+  String get experimental_features_description {
+    return Intl.message(
+      '这些功能仍在测试，体验和行为可能会调整。',
+      name: 'experimental_features_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂停回答后的提问修正提示`
+  String get paused_reply_guidance_feature {
+    return Intl.message(
+      '暂停回答后的提问修正提示',
+      name: 'paused_reply_guidance_feature',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `回答暂停后，提示修改原问题并重新生成。`
+  String get paused_reply_guidance_feature_description {
+    return Intl.message(
+      '回答暂停后，提示修改原问题并重新生成。',
+      name: 'paused_reply_guidance_feature_description',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `网络错误`
   String get network_error {
     return Intl.message('网络错误', name: 'network_error', desc: '', args: []);
@@ -3736,6 +3796,11 @@ class S {
   /// `编辑中`
   String get editing {
     return Intl.message('编辑中', name: 'editing', desc: '', args: []);
+  }
+
+  /// `退出编辑`
+  String get exit_editing {
+    return Intl.message('退出编辑', name: 'exit_editing', desc: '', args: []);
   }
 
   /// `状态`

@@ -167,9 +167,13 @@ extension $ChatInputSend on _Chat {
     cancelEditing(clearInput: true);
   }
 
-  Future<void> onTapClearInput() async {
+  void onTapClearInput() {
     qq;
-    cancelEditing(clearInput: true);
+    if (textEditingController.text.isEmpty && textInInput.q.isEmpty) return;
+    textEditingController.clear();
+    textInInput.q = "";
+    focusNode.requestFocus();
+    P.app.hapticLight();
   }
 
   Future<void> onRegeneratePressed({required int index, required DemoType preferredDemoType}) async {

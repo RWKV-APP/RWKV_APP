@@ -329,18 +329,19 @@ class InputTextField extends ConsumerWidget {
   }
 }
 
-class _EditingMessageBanner extends StatelessWidget {
+class _EditingMessageBanner extends ConsumerWidget {
   const _EditingMessageBanner({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
     final primary = theme.colorScheme.primary;
     final onSurface = theme.colorScheme.onSurface;
     final bgColor = theme.colorScheme.surfaceContainer.withValues(alpha: .72);
+    final inputHasContent = ref.watch(P.chat.inputHasContent);
 
     return Padding(
       padding: const .fromLTRB(8, 8, 8, 2),
@@ -367,25 +368,31 @@ class _EditingMessageBanner extends StatelessWidget {
                 style: TextStyle(color: onSurface.withValues(alpha: .88), fontWeight: .w600, fontSize: 13),
               ),
             ),
-            Tooltip(
-              message: s.cancel,
-              child: GestureDetector(
-                onTap: _onCancelEditingPressed,
-                child: Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: .circular(1000),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.close_rounded,
-                      size: 18,
-                      color: onSurface.withValues(alpha: .78),
-                    ),
-                  ),
-                ),
+            IconButton(
+              key: const ValueKey("clear-editing-input"),
+              onPressed: inputHasContent ? P.chat.onTapClearInput : null,
+              tooltip: s.clear_text,
+              constraints: const BoxConstraints.tightFor(width: 44, height: 44),
+              padding: .zero,
+              visualDensity: .compact,
+              color: onSurface.withValues(alpha: .72),
+              disabledColor: onSurface.withValues(alpha: .28),
+              icon: const Icon(
+                Icons.backspace_outlined,
+                size: 18,
+              ),
+            ),
+            IconButton(
+              key: const ValueKey("exit-editing"),
+              onPressed: _onExitEditingPressed,
+              tooltip: s.exit_editing,
+              constraints: const BoxConstraints.tightFor(width: 44, height: 44),
+              padding: .zero,
+              visualDensity: .compact,
+              color: onSurface.withValues(alpha: .78),
+              icon: const Icon(
+                Icons.close_rounded,
+                size: 18,
               ),
             ),
           ],
@@ -394,7 +401,7 @@ class _EditingMessageBanner extends StatelessWidget {
     );
   }
 
-  void _onCancelEditingPressed() {
+  void _onExitEditingPressed() {
     P.app.hapticLight();
     P.chat.cancelEditing(clearInput: true);
   }

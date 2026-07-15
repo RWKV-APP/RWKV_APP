@@ -969,6 +969,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Автоматический дамп выключен",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
+    "edit_original_question": MessageLookupByLibrary.simpleMessage(
+      "Изменить вопрос",
+    ),
     "editing": MessageLookupByLibrary.simpleMessage("Редактирование"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("АН->КН"),
     "enable_system_proxy": MessageLookupByLibrary.simpleMessage(
@@ -992,6 +995,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
       "Символы новой строки отображены",
+    ),
+    "exit_editing": MessageLookupByLibrary.simpleMessage(
+      "Выйти из режима редактирования",
+    ),
+    "experimental_features": MessageLookupByLibrary.simpleMessage(
+      "Экспериментальные функции",
+    ),
+    "experimental_features_description": MessageLookupByLibrary.simpleMessage(
+      "Эти функции проходят тестирование и могут измениться в будущих версиях.",
     ),
     "expert": MessageLookupByLibrary.simpleMessage("Эксперт"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("Исследовать RWKV"),
@@ -1439,6 +1451,16 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "path_label": m44,
     "pause": MessageLookupByLibrary.simpleMessage("Пауза"),
+    "paused_reply_edit_hint": MessageLookupByLibrary.simpleMessage(
+      "Ответ приостановлен. Если нужно уточнить предыдущий вопрос, отредактируйте его и создайте ответ заново — так результат обычно будет точнее.",
+    ),
+    "paused_reply_guidance_feature": MessageLookupByLibrary.simpleMessage(
+      "Подсказка об изменении вопроса после паузы",
+    ),
+    "paused_reply_guidance_feature_description":
+        MessageLookupByLibrary.simpleMessage(
+          "После остановки ответа приложение предложит изменить исходный вопрос и создать ответ заново.",
+        ),
     "penalty_decay_with_value": m45,
     "performance_test": MessageLookupByLibrary.simpleMessage(
       "Тест производительности",

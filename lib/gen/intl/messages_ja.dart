@@ -805,6 +805,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_started": MessageLookupByLibrary.simpleMessage("自動ダンプが開始されました"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("自動ダンプが停止しました"),
     "edit": MessageLookupByLibrary.simpleMessage("編集"),
+    "edit_original_question": MessageLookupByLibrary.simpleMessage("元の質問を編集"),
     "editing": MessageLookupByLibrary.simpleMessage("編集中"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("英->中"),
     "enable_system_proxy": MessageLookupByLibrary.simpleMessage(
@@ -828,6 +829,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
       "改行文字が表示されました",
+    ),
+    "exit_editing": MessageLookupByLibrary.simpleMessage("編集を終了"),
+    "experimental_features": MessageLookupByLibrary.simpleMessage("試験的な機能"),
+    "experimental_features_description": MessageLookupByLibrary.simpleMessage(
+      "これらの機能はテスト中であり、今後のバージョンで動作が変更される場合があります。",
     ),
     "expert": MessageLookupByLibrary.simpleMessage("専門家"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("RWKVを探索"),
@@ -1195,6 +1201,16 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "path_label": m44,
     "pause": MessageLookupByLibrary.simpleMessage("一時停止"),
+    "paused_reply_edit_hint": MessageLookupByLibrary.simpleMessage(
+      "回答を一時停止しました。先ほどの質問を調整する場合は、元の質問を編集して再生成すると、より正確な回答を得やすくなります。",
+    ),
+    "paused_reply_guidance_feature": MessageLookupByLibrary.simpleMessage(
+      "回答の一時停止後に質問の修正を提案",
+    ),
+    "paused_reply_guidance_feature_description":
+        MessageLookupByLibrary.simpleMessage(
+          "回答を一時停止した後、元の質問を編集して再生成するよう案内します。",
+        ),
     "penalty_decay_with_value": m45,
     "performance_test": MessageLookupByLibrary.simpleMessage("パフォーマンステスト"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(

@@ -797,6 +797,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_started": MessageLookupByLibrary.simpleMessage("자동 덤프가 시작되었습니다"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("자동 덤프가 중지되었습니다"),
     "edit": MessageLookupByLibrary.simpleMessage("편집"),
+    "edit_original_question": MessageLookupByLibrary.simpleMessage("원래 질문 수정"),
     "editing": MessageLookupByLibrary.simpleMessage("편집 중"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("영->중"),
     "enable_system_proxy": MessageLookupByLibrary.simpleMessage("시스템 프록시 사용"),
@@ -818,6 +819,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
       "새로운 줄 문자가 표시되었습니다",
+    ),
+    "exit_editing": MessageLookupByLibrary.simpleMessage("편집 종료"),
+    "experimental_features": MessageLookupByLibrary.simpleMessage("실험적 기능"),
+    "experimental_features_description": MessageLookupByLibrary.simpleMessage(
+      "이 기능들은 테스트 중이며 향후 버전에서 동작이 변경될 수 있습니다.",
     ),
     "expert": MessageLookupByLibrary.simpleMessage("전문가"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("RWKV 탐험"),
@@ -1179,6 +1185,16 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "path_label": m44,
     "pause": MessageLookupByLibrary.simpleMessage("일시 정지"),
+    "paused_reply_edit_hint": MessageLookupByLibrary.simpleMessage(
+      "답변이 일시 중지되었습니다. 이전 질문을 수정해야 한다면 원래 질문을 편집한 뒤 다시 생성하면 더 정확한 답변을 얻을 수 있습니다.",
+    ),
+    "paused_reply_guidance_feature": MessageLookupByLibrary.simpleMessage(
+      "답변 일시 중지 후 질문 수정 안내",
+    ),
+    "paused_reply_guidance_feature_description":
+        MessageLookupByLibrary.simpleMessage(
+          "답변을 일시 중지하면 원래 질문을 수정하고 다시 생성하도록 안내합니다.",
+        ),
     "penalty_decay_with_value": m45,
     "performance_test": MessageLookupByLibrary.simpleMessage("성능 테스트"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
