@@ -191,6 +191,53 @@ void main() {
       expect(split.tail, 'tail');
     });
 
+    test('keeps a doubled-line-break streaming table together in the tail', () {
+      final raw = [
+        '| A | B |',
+        '',
+        '| - | - |',
+        '',
+        '| 1 | 2 |',
+      ].join('\n');
+
+      final split = splitStreamingMarkdown(raw);
+
+      expect(split.stableBlocks, isEmpty);
+      expect(split.tail, raw);
+    });
+
+    test('keeps a partial next table row with the streaming table tail', () {
+      final raw = [
+        '| A | B |',
+        '',
+        '| - | - |',
+        '',
+        '|',
+      ].join('\n');
+
+      final split = splitStreamingMarkdown(raw);
+
+      expect(split.stableBlocks, isEmpty);
+      expect(split.tail, raw);
+    });
+
+    test('stabilizes a doubled-line-break table when following text begins', () {
+      final table = [
+        '| A | B |',
+        '',
+        '| - | - |',
+        '',
+        '| 1 | 2 |',
+        '',
+      ].join('\n');
+      final raw = '${table}tail';
+
+      final split = splitStreamingMarkdown(raw);
+
+      expect(split.stableBlocks, [table]);
+      expect(split.tail, 'tail');
+    });
+
     test('uses lightweight text for a simple streaming tail', () {
       expect(shouldRenderStreamingMarkdownTailAsFullMarkdown('plain streaming text'), isFalse);
     });
@@ -270,6 +317,85 @@ void main() {
     );
 
     expect(find.byIcon(Symbols.content_copy), findsNothing);
+    expect(find.text(raw), findsOneWidget);
+  });
+
+  testWidgets('renders a doubled-line-break table incrementally while streaming', (tester) async {
+    const header = '| Name | Score |';
+    const separator = '| --- | --- |';
+    const firstRow = '| Alice | 9 |';
+
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: header,
+    );
+
+    expect(find.byType(Table), findsNothing);
+
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: '$header\n\n$separator',
+    );
+
+    expect(find.byType(Table), findsOneWidget);
+    expect(find.text('Name'), findsOneWidget);
+    expect(find.text('Score'), findsOneWidget);
+
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: '$header\n\n$separator\n\n| Alice | 9',
+    );
+
+    expect(find.byType(Table), findsOneWidget);
+    expect(find.text('Alice'), findsOneWidget);
+    expect(find.text('9'), findsOneWidget);
+
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: '$header\n\n$separator\n\n$firstRow\n\n|',
+    );
+
+    expect(find.byType(Table), findsOneWidget);
+    expect(find.text('Alice'), findsOneWidget);
+
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: '$header\n\n$separator\n\n$firstRow\n\n| Bob',
+    );
+
+    expect(find.byType(Table), findsOneWidget);
+    expect(find.text('Bob'), findsOneWidget);
+
+    const completedTable = '$header\n\n$separator\n\n$firstRow\n\n| Bob | 10 |';
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: '$completedTable\n\n下一段',
+    );
+
+    expect(find.byType(Table), findsOneWidget);
+    expect(find.text('Bob'), findsOneWidget);
+    expect(find.text('下一段'), findsOneWidget);
+
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: completedTable,
+      streaming: false,
+    );
+
+    expect(find.byType(Table), findsOneWidget);
+    expect(find.text('Bob'), findsOneWidget);
+  });
+
+  testWidgets('keeps a streaming table plain when markdown is disabled', (tester) async {
+    const raw = '| Name | Score |\n\n| --- | --- |\n\n| Alice | 9';
+
+    await _pumpStreamingMarkdown(
+      tester: tester,
+      raw: raw,
+      renderMarkdown: false,
+    );
+
+    expect(find.byType(Table), findsNothing);
     expect(find.text(raw), findsOneWidget);
   });
 

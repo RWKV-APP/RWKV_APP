@@ -504,7 +504,7 @@ class _StreamingMarkdownTail extends ConsumerWidget {
     final renderMarkdownAndLatexEnabled = ref.watch(P.preference.renderMarkdownAndLatexEnabled);
     if (renderMarkdownAndLatexEnabled && shouldRenderStreamingMarkdownTailAsFullMarkdown(raw)) {
       return MarkdownRender(
-        raw: raw,
+        raw: _streamingMarkdownTailRawForFullMarkdown(raw),
         color: color,
         useMessageLineHeight: useMessageLineHeight,
         inlineLatexVerticalPaddingFactor: inlineLatexVerticalPaddingFactor,
@@ -597,6 +597,16 @@ List<({int offset, bool hard})> _stableStreamingMarkdownBoundaries(String raw) {
     final trimmedLine = line.trim();
     final hasTrailingNewline = lineEnd < raw.length;
     final lineBoundary = lineEnd < raw.length ? lineEnd + 1 : lineEnd;
+    final isTableLine = _isStreamingMarkdownTableLine(trimmedLine);
+
+    if (previousLineWasTable && trimmedLine.isNotEmpty && !isTableLine) {
+      previousLineWasTable = false;
+      _addStableStreamingMarkdownBoundary(
+        boundaries: boundaries,
+        offset: lineStart,
+        hard: true,
+      );
+    }
 
     final fenceBoundary = _resolveStreamingFenceBoundary(
       trimmedLine: trimmedLine,
@@ -646,6 +656,10 @@ List<({int offset, bool hard})> _stableStreamingMarkdownBoundaries(String raw) {
     }
 
     if (trimmedLine.isEmpty) {
+      if (previousLineWasTable) {
+        lineStart = lineBoundary;
+        continue;
+      }
       previousLineWasTable = false;
       _addStableStreamingMarkdownBoundary(
         boundaries: boundaries,
@@ -656,20 +670,10 @@ List<({int offset, bool hard})> _stableStreamingMarkdownBoundaries(String raw) {
       continue;
     }
 
-    final isTableLine = _isStreamingMarkdownTableLine(trimmedLine);
     if (isTableLine) {
       previousLineWasTable = true;
       lineStart = lineBoundary;
       continue;
-    }
-
-    if (previousLineWasTable) {
-      previousLineWasTable = false;
-      _addStableStreamingMarkdownBoundary(
-        boundaries: boundaries,
-        offset: lineStart,
-        hard: true,
-      );
     }
 
     if (hasTrailingNewline) {
@@ -805,9 +809,40 @@ void _addStableStreamingMarkdownBoundary({
 }
 
 bool _isStreamingMarkdownTableLine(String line) {
-  if (!line.contains("|")) return false;
-  final cells = line.split("|");
-  if (cells.length < 3) return false;
+  return line.trimLeft().startsWith("|");
+}
+
+String _streamingMarkdownTailRawForFullMarkdown(String raw) {
+  final trimmedRaw = raw.trimLeft();
+  if (!trimmedRaw.startsWith("|")) return raw;
+
+  final lastLineBreak = raw.lastIndexOf("\n");
+  final lastLineStart = lastLineBreak < 0 ? 0 : lastLineBreak + 1;
+  final lastLine = raw.substring(lastLineStart).trim();
+  if (!lastLine.startsWith("|")) return raw;
+  if (lastLine.endsWith("|") && lastLine.length > 1) return raw;
+
+  if (lastLine == "|") {
+    final completedPrefix = raw.substring(0, lastLineStart);
+    if (!_hasRenderableStreamingMarkdownTablePrefix(completedPrefix)) return raw;
+    return completedPrefix;
+  }
+
+  return "$raw|";
+}
+
+bool _hasRenderableStreamingMarkdownTablePrefix(String raw) {
+  final compactRaw = raw.replaceAll("\n\n", "\n").trim();
+  if (compactRaw.isEmpty) return false;
+
+  final rows = compactRaw.split("\n");
+  if (rows.length < 2) return false;
+
+  for (int index = 0; index < 2; index++) {
+    final row = rows[index].trim();
+    if (!row.startsWith("|")) return false;
+    if (!row.endsWith("|") || row.length <= 1) return false;
+  }
   return true;
 }
 
