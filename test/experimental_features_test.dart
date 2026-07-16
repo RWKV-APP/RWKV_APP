@@ -25,7 +25,7 @@ void main() {
         child: MaterialApp(
           locale: const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
           supportedLocales: S.delegate.supportedLocales,
-          localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
             S.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
