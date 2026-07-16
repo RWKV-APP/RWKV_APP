@@ -24,6 +24,23 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/message.dart';
 
+const shareChatHeaderIconPath = "assets/img/chat/icon.png";
+
+ImageProvider<Object> shareChatHeaderIconProvider(BuildContext context) {
+  final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+  final iconCacheSize = (42 * devicePixelRatio).ceil();
+  return ResizeImage.resizeIfNeeded(
+    iconCacheSize,
+    iconCacheSize,
+    const AssetImage(shareChatHeaderIconPath),
+  );
+}
+
+Future<void> prepareShareChatHeaderIcon(BuildContext context) async {
+  await precacheImage(shareChatHeaderIconProvider(context), context);
+  await WidgetsBinding.instance.endOfFrame;
+}
+
 class ShareChatSheet extends ConsumerStatefulWidget {
   const ShareChatSheet({super.key});
 
@@ -171,7 +188,10 @@ class _PreviewState extends ConsumerState<_Preview> {
   void generatePreview() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
+        await prepareShareChatHeaderIcon(context);
+        if (!mounted) return;
         final file = await _generatePreview();
+        if (!mounted) return;
         setState(() {
           imagePreview = file;
         });
@@ -415,20 +435,15 @@ class _PreviewState extends ConsumerState<_Preview> {
   }
 
   Widget _buildHeader() {
-    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
-    final iconCacheSize = (42 * devicePixelRatio).ceil();
-
     return Row(
       children: [
         const SizedBox(width: 16),
         ClipRRect(
           borderRadius: .circular(6),
-          child: Image.asset(
-            "assets/img/chat/icon.png",
+          child: Image(
+            image: shareChatHeaderIconProvider(context),
             width: 42,
             height: 42,
-            cacheHeight: iconCacheSize,
-            cacheWidth: iconCacheSize,
             filterQuality: FilterQuality.low,
             fit: BoxFit.cover,
           ),
