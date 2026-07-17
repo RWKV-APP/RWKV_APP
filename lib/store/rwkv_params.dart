@@ -154,10 +154,16 @@ extension $RWKVParams on _RWKVParams {
     }
 
     final custom = P.preference.promptTemplate;
-    final thinkingToken = custom.apply(_thinkingMode.q);
-    qqq("setThinkingToken: $thinkingToken");
+    final configuredThinkingToken = custom.apply(_thinkingMode.q);
     for (final entry in P.rwkvModel.allLoaded.q.entries) {
+      final fileInfo = entry.key;
       final modelID = entry.value;
+      final thinkingToken = thinkingTokenForModel(
+        thinkingMode: _thinkingMode.q,
+        configuredThinkingToken: configuredThinkingToken,
+        fileInfo: fileInfo,
+      );
+      qqq("setThinkingToken: $thinkingToken, modelID: $modelID");
       P.rwkvBridge.send(to_rwkv.SetThinkingToken(thinkingToken, modelID: modelID));
     }
   }

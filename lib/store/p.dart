@@ -85,6 +85,7 @@ import 'package:zone/func/sensitive_filter.dart';
 import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/func/string_utils.dart';
 import 'package:zone/func/sudoku.dart' as func_sudoku;
+import 'package:zone/func/thinking_prefix.dart';
 import 'package:zone/func/transfer_all_files_in_dir.dart';
 import 'package:zone/func/unzip.dart';
 import 'package:zone/func/vision_system_prompt.dart';
