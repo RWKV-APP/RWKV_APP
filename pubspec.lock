@@ -1127,6 +1127,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0+1"
+  lua_dardo_co:
+    dependency: "direct main"
+    description:
+      name: lua_dardo_co
+      sha256: eaeeedc70b47cbb6fb2469a6d7d3a02db6b0e57e9486810c0a3383d5acb241f3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.10"
   macos_secure_bookmarks:
     dependency: "direct main"
     description:
@@ -1176,7 +1184,7 @@ packages:
     source: hosted
     version: "4.2951.0"
   meta:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: meta
       sha256: "1741988757a65eb6b36abe716829688cf01910bbf91c34354ff7ec1c3de2b349"

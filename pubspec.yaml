@@ -107,6 +107,7 @@ dependencies:
   json_annotation:
   macos_secure_bookmarks: ^0.2.1
   material_symbols_icons:
+  meta:
   mp_audio_stream:
   package_info_plus:
   path:
@@ -131,8 +132,10 @@ dependencies:
   flutter_inappwebview: ^6.1.5
   local_web_search:
     path: packages/local_web_search
+  lua_dardo_co: ^0.0.10
 
 dependency_overrides:
+  sprintf: 7.0.0
   proxy_setting_android:
     git:
       url: https://github.com/dengzii/proxy_setting.git
@@ -176,6 +179,7 @@ flutter:
     - .env
     - assets/filter.txt
     - assets/lambada_test.jsonl
+    - assets/agent_cases/
     - assets/config/code_highlights/
     - assets/api_server/
 

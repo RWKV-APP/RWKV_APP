@@ -10,8 +10,12 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
+  crypto:
   flutter:
     sdk: flutter
+  http:
+  lua_dardo_co: ^0.0.10
+  meta:
   path: ^1.8.0
   image: ^4.0.0
   local_web_search:

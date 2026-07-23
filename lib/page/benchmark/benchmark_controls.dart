@@ -13,6 +13,7 @@ class _BenchmarkScaffoldActionBar extends ConsumerWidget {
     final s = S.of(context);
     final benchmarkSnapshot = ref.watch(P.benchmark.controlSnapshot);
     final isLambadaTab = activeTabIndex == 1;
+    final isAgentTab = activeTabIndex == 2;
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
     final loadingModel = ref.watch(P.rwkvModel.loading);
@@ -21,10 +22,17 @@ class _BenchmarkScaffoldActionBar extends ConsumerWidget {
     final backendGenerating = ref.watch(P.rwkvGeneration.generating);
     final model = ref.watch(P.rwkvModel.latest);
     final lambadaRunning = ref.watch(P.lambada.autoStartNextTest);
-    final running = isLambadaTab ? lambadaRunning : benchmarkSnapshot.generating;
-    final finishing = benchmarkSnapshot.finishing;
+    final agentRunning = ref.watch(P.agent.running);
+    final agentRunningAll = ref.watch(P.agent.runningAll);
+    final agentStopping = ref.watch(P.agent.stopping);
+    final running = isAgentTab
+        ? agentRunning || agentRunningAll
+        : isLambadaTab
+        ? lambadaRunning
+        : benchmarkSnapshot.generating;
+    final finishing = isAgentTab ? agentStopping : benchmarkSnapshot.finishing;
     final canSelectModel = !running && !finishing && !backendGenerating && !loadingModel;
-    final canStartOrStop = model != null && !finishing && !loadingModel && (running || !backendGenerating);
+    final canStartOrStop = !finishing && !loadingModel && (running || (model != null && !backendGenerating));
     final selectLabel = s.select_model;
     final primaryLabel = running ? s.stop : s.start;
     final VoidCallback onSelectModel = () {
@@ -33,7 +41,15 @@ class _BenchmarkScaffoldActionBar extends ConsumerWidget {
       }
       ModelSelector.show();
     };
-    final VoidCallback onPrimaryTap = isLambadaTab
+    final VoidCallback onPrimaryTap = isAgentTab
+        ? () {
+            if (agentRunning || agentRunningAll) {
+              unawaited(P.agent.stop());
+              return;
+            }
+            unawaited(P.agent.runSelectedCase());
+          }
+        : isLambadaTab
         ? () {
             if (lambadaRunning) {
               P.lambada.stopTest();

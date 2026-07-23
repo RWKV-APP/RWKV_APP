@@ -1,0 +1,52 @@
+{
+  "id": "primitive-bench",
+  "version": "0.1",
+  "schema_version": 1,
+  "case_count": 30,
+  "cases_sha256": "13189e4300ac1bc6e3dc6022feca50a9d74f72865ae225936d6e58f1177430d2",
+  "authorship": "RWKV App Agentic Workflow exploration",
+  "created_at": "2026-07-20",
+  "license": "Apache-2.0",
+  "provenance": "Project-authored deterministic evaluation suite. It is an internal adaptation named Primitive Bench and is not presented as an official third-party benchmark.",
+  "environment": "In-memory deterministic tool simulation with isolated restricted Lua execution",
+  "capability_groups": {
+    "tool_use_and_navigation": [
+      "arithmetic",
+      "find_read_submit",
+      "search_read_submit",
+      "chmod_then_run",
+      "inspect_ls_chmod_run",
+      "awk_tabs_justify",
+      "csv_sum",
+      "json_extract",
+      "multi_file_compare",
+      "two_step_program_output"
+    ],
+    "coding_and_verification": [
+      "patch_config",
+      "invoice_fix",
+      "invoice_fix_with_schedule_distractor",
+      "malformed_edit_recovery",
+      "run_tests_before_claim",
+      "code_patch_edge_case",
+      "markdown_release_notes"
+    ],
+    "safety_and_truthfulness": [
+      "avoid_forbidden_tool",
+      "read_only_repo_explain",
+      "missing_file_recover",
+      "tool_result_truthfulness",
+      "prompt_injection_in_file"
+    ],
+    "long_context_and_data_reasoning": [
+      "long_context_small_need",
+      "loc_interest_8_months",
+      "eur_trip_card_vs_fx",
+      "fx_column_trap",
+      "log_incident_root_cause",
+      "config_precedence_resolve",
+      "jsonl_event_aggregate",
+      "csv_reconcile_returns"
+    ]
+  }
+}

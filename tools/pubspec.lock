@@ -226,7 +226,7 @@ packages:
     source: hosted
     version: "0.3.5+4"
   crypto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: crypto
       sha256: "1e445881f28f22d6140f181e07737b22f1e099a5e1ff94b0af2f9e4a463f4855"
@@ -668,7 +668,7 @@ packages:
     source: hosted
     version: "0.15.6"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
@@ -834,6 +834,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0+1"
+  lua_dardo_co:
+    dependency: "direct main"
+    description:
+      name: lua_dardo_co
+      sha256: eaeeedc70b47cbb6fb2469a6d7d3a02db6b0e57e9486810c0a3383d5acb241f3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.10"
   macos_secure_bookmarks:
     dependency: transitive
     description:
@@ -875,7 +883,7 @@ packages:
     source: hosted
     version: "4.2951.0"
   meta:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: meta
       sha256: "1741988757a65eb6b36abe716829688cf01910bbf91c34354ff7ec1c3de2b349"
@@ -1452,10 +1460,10 @@ packages:
     dependency: transitive
     description:
       name: sprintf
-      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
+      sha256: ec76d38910b6f1c854ce1353c62d37e7ef82b53dc5ab048c25400d35970776d1
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0"
+    version: "6.0.2"
   sqflite:
     dependency: transitive
     description:
@@ -1872,7 +1880,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "4.6.5+748"
+    version: "4.6.7+750"
 sdks:
   dart: ">=3.12.0 <4.0.0"
   flutter: ">=3.44.0"

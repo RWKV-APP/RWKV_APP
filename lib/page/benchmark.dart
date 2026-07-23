@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:math';
 import 'dart:ui' as ui;
 
@@ -12,6 +13,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/func/string_utils.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/agent.dart';
+import 'package:zone/model/agent_case.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/lambada_test_item.dart';
 import 'package:zone/store/p.dart';
@@ -19,6 +22,7 @@ import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 part 'benchmark/benchmark_controls.dart';
+part 'benchmark/benchmark_agent.dart';
 part 'benchmark/benchmark_results.dart';
 part 'benchmark/benchmark_lambada.dart';
 
@@ -36,9 +40,12 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_onTabChanged);
-    P.benchmark.onPageOpened();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      P.benchmark.onPageOpened();
+    });
   }
 
   void _onTabChanged() {
@@ -55,6 +62,7 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
     if (P.lambada.autoStartNextTest.q) {
       P.lambada.stopTest();
     }
+    unawaited(P.agent.stop());
   }
 
   @override
@@ -104,6 +112,7 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
               tabs: [
                 Tab(text: s.performance_test),
                 Tab(text: s.lambada_test),
+                Tab(text: s.agent_test),
               ],
             ),
           ),
@@ -112,6 +121,7 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
             children: const [
               _Test(),
               _LambadaTest(),
+              _AgentTest(),
             ],
           ),
           extendBody: true,

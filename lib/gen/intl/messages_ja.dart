@@ -20,173 +20,182 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ja';
 
-  static String m0(dlls) =>
+  static String m0(completed, total, passed, failed, invalid) =>
+      "完了 ${completed}/${total} · 合格 ${passed} · 失敗 ${failed} · 無効 ${invalid}";
+
+  static String m1(current, total, name) => "実行中 ${current}/${total} · ${name}";
+
+  static String m2(tools) => "ツール: ${tools}";
+
+  static String m3(turn, title) => "ターン ${turn} · ${title}";
+
+  static String m4(dlls) =>
       "不足しているランタイム DLL: ${dlls}\n完全な Albatross bundle を使用し、lib フォルダを実行ファイルと同じディレクトリに置いてください";
 
-  static String m1(error) => "エラー: ${error}";
+  static String m5(error) => "エラー: ${error}";
 
-  static String m2(error) => "API サーバーの起動に失敗しました: ${error}";
+  static String m6(error) => "API サーバーの起動に失敗しました: ${error}";
 
-  static String m3(port) => "ポート ${port} で API サーバーを起動しました";
+  static String m7(port) => "ポート ${port} で API サーバーを起動しました";
 
-  static String m4(count) => "並列 × ${count}";
+  static String m8(count) => "並列 × ${count}";
 
-  static String m5(count) => "各推論で${count}件のメッセージが生成されます";
+  static String m9(count) => "各推論で${count}件のメッセージが生成されます";
 
-  static String m6(count) => "各推論で ${count} 件の結果を生成";
+  static String m10(count) => "各推論で ${count} 件の結果を生成";
 
-  static String m7(count) => "並列推論：${count} 件の出力";
+  static String m11(count) => "並列推論：${count} 件の出力";
 
-  static String m8(index) => "${index}番目の出力を選択しました";
+  static String m12(index) => "${index}番目の出力を選択しました";
 
-  static String m9(batch) => "Batch ${batch}";
+  static String m13(batch) => "Batch ${batch}";
 
-  static String m10(first, last, count) => "Batch ${first}-${last}（${count} 回）";
+  static String m14(first, last, count) => "Batch ${first}-${last}（${count} 回）";
 
-  static String m11(batch) => "Batch ${batch}";
+  static String m15(batch) => "Batch ${batch}";
 
-  static String m12(count) => "Batch ${count} まで対応";
+  static String m16(count) => "Batch ${count} まで対応";
 
-  static String m13(batch, current, total) =>
+  static String m17(batch, current, total) =>
       "Batch ${batch} · ${current}/${total}";
 
-  static String m14(current, total, speed) =>
+  static String m18(current, total, speed) =>
       "${current}/${total} · ${speed} t/s";
 
-  static String m15(speed) => "Decode ピーク: ${speed} t/s";
+  static String m19(speed) => "Decode ピーク: ${speed} t/s";
 
-  static String m16(progress, speed) => "${progress}% · ${speed} t/s";
+  static String m20(progress, speed) => "${progress}% · ${speed} t/s";
 
-  static String m17(prefillSpeed, decodeSpeed) =>
+  static String m21(prefillSpeed, decodeSpeed) =>
       "Prefill ${prefillSpeed} t/s · Decode ${decodeSpeed} t/s";
 
-  static String m18(current, total, phase) => "${current}/${total} · ${phase}";
+  static String m22(current, total, phase) => "${current}/${total} · ${phase}";
 
-  static String m19(demoName) => "${demoName}へようこそ";
+  static String m23(demoName) => "${demoName}へようこそ";
 
-  static String m20(maxLength) => "会話名は${maxLength}文字を超えることはできません";
+  static String m24(maxLength) => "会話名は${maxLength}文字を超えることはできません";
 
-  static String m21(length) => "ctx ${length}";
+  static String m25(length) => "ctx ${length}";
 
-  static String m22(modelName) => "現在のモデル: ${modelName}";
+  static String m26(modelName) => "現在のモデル: ${modelName}";
 
-  static String m23(current, total) => "現在の進捗: ${current}/${total}";
+  static String m27(current, total) => "現在の進捗: ${current}/${total}";
 
-  static String m24(current, total) => "現在のテスト項目 (${current}/${total})";
+  static String m28(current, total) => "現在のテスト項目 (${current}/${total})";
 
-  static String m25(count) => "${count} 件の会話を削除してもよろしいですか？";
+  static String m29(count) => "${count} 件の会話を削除してもよろしいですか？";
 
-  static String m26(path) => "メッセージ履歴は以下のフォルダに保存されます:\n ${path}";
+  static String m30(path) => "メッセージ履歴は以下のフォルダに保存されます:\n ${path}";
 
-  static String m27(error) => "ファイルの削除に失敗しました: ${error}";
+  static String m31(error) => "ファイルの削除に失敗しました: ${error}";
 
-  static String m28(successCount, failCount) =>
+  static String m32(successCount, failCount) =>
       "${successCount}個のファイルを移動、${failCount}個が失敗";
 
-  static String m29(value) => "Frequency Penalty: ${value}";
+  static String m33(value) => "Frequency Penalty: ${value}";
 
-  static String m30(port) => "HTTPサービス（ポート：${port}）";
+  static String m34(port) => "HTTPサービス（ポート：${port}）";
 
-  static String m31(flag, nameCN, nameEN) =>
+  static String m35(flag, nameCN, nameEN) =>
       "${flag} ${nameCN}(${nameEN})の音声を模倣";
 
-  static String m32(fileName) => "${fileName}を模倣";
+  static String m36(fileName) => "${fileName}を模倣";
 
-  static String m33(count) => "インポート成功：${count} 個のファイルをインポートしました";
+  static String m37(count) => "インポート成功：${count} 個のファイルをインポートしました";
 
-  static String m34(commitId) => "推論エンジンバージョン: ${commitId}";
+  static String m38(commitId) => "推論エンジンバージョン: ${commitId}";
 
-  static String m35(percent) => "読み込み${percent}%";
+  static String m39(percent) => "読み込み${percent}%";
 
-  static String m36(folderName) => "ローカルフォルダ：${folderName}";
+  static String m40(folderName) => "ローカルフォルダ：${folderName}";
 
-  static String m37(memUsed, memFree) => "使用メモリ：${memUsed}、残りメモリ：${memFree}";
+  static String m41(memUsed, memFree) => "使用メモリ：${memUsed}、残りメモリ：${memFree}";
 
-  static String m38(count) => "キューに ${count} 件のメッセージがあります";
+  static String m42(count) => "キューに ${count} 件のメッセージがあります";
 
-  static String m39(text) => "モデル出力: ${text}";
+  static String m43(text) => "モデル出力: ${text}";
 
-  static String m40(socName) => "お使いのチップ ${socName} の NPU サポートはまだ利用できません";
+  static String m44(socName) => "お使いのチップ ${socName} の NPU サポートはまだ利用できません";
 
-  static String m41(takePhoto) =>
+  static String m45(takePhoto) =>
       "${takePhoto} をクリックしてください。RWKV が画像内のテキストを翻訳します。";
 
-  static String m42(error) => "空のフォルダの作成に失敗しました：${error}";
+  static String m46(error) => "空のフォルダの作成に失敗しました：${error}";
 
-  static String m43(os) => "現在のOS（${os}）ではフォルダを開く操作はサポートされていません。";
+  static String m47(os) => "現在のOS（${os}）ではフォルダを開く操作はサポートされていません。";
 
-  static String m44(path) => "パス：${path}";
+  static String m48(path) => "パス：${path}";
 
-  static String m45(value) => "Penalty Decay: ${value}";
+  static String m49(value) => "Penalty Decay: ${value}";
 
-  static String m46(index) => "メッセージ ${index} に設定するサンプラーとペナルティパラメータを選択してください";
+  static String m50(index) => "メッセージ ${index} に設定するサンプラーとペナルティパラメータを選択してください";
 
-  static String m47(percent) => "プレフィル進捗 ${percent}";
+  static String m51(percent) => "プレフィル進捗 ${percent}";
 
-  static String m48(value) => "Presence Penalty: ${value}";
+  static String m52(value) => "Presence Penalty: ${value}";
 
-  static String m49(count) =>
+  static String m53(count) =>
       "「生成」を押すと、RWKV が選んだ書き出しから最大 ${count} 件の質問案を考えてくれます。";
 
-  static String m50(count) => "キュー内：${count}";
+  static String m54(count) => "キュー内：${count}";
 
-  static String m51(count) => "このモデルは ${count} 種の応答スタイルに対応していません";
+  static String m55(count) => "このモデルは ${count} 種の応答スタイルに対応していません";
 
-  static String m52(count) => "同時に ${count} 件のランダム質問に回答";
+  static String m56(count) => "同時に ${count} 件のランダム質問に回答";
 
-  static String m53(count) => "${count} 件のランダム質問に使えるプリセットが足りません";
+  static String m57(count) => "${count} 件のランダム質問に使えるプリセットが足りません";
 
-  static String m54(count) => "選択された ${count}";
+  static String m58(count) => "選択された ${count}";
 
-  static String m55(text) => "ソーステキスト: ${text}";
+  static String m59(text) => "ソーステキスト: ${text}";
 
-  static String m56(text) => "ターゲットテキスト: ${text}";
+  static String m60(text) => "ターゲットテキスト: ${text}";
 
-  static String m57(value) => "Temperature: ${value}";
+  static String m61(value) => "Temperature: ${value}";
 
-  static String m58(footer) => "推論${footer}-英語";
+  static String m62(footer) => "推論${footer}-英語";
 
-  static String m59(footer) => "推論${footer}-英語 長";
+  static String m63(footer) => "推論${footer}-英語 長";
 
-  static String m60(footer) => "推論${footer}-英語 短";
+  static String m64(footer) => "推論${footer}-英語 短";
 
-  static String m61(footer) => "推論${footer}-速い";
+  static String m65(footer) => "推論${footer}-速い";
 
-  static String m62(footer) => "推論${footer}-自動";
+  static String m66(footer) => "推論${footer}-自動";
 
-  static String m63(footer) => "推論${footer}-高";
+  static String m67(footer) => "推論${footer}-高";
 
-  static String m64(footer) => "推論${footer}-おバカ";
+  static String m68(footer) => "推論${footer}-おバカ";
 
-  static String m65(value) => "Top P: ${value}";
+  static String m69(value) => "Top P: ${value}";
 
-  static String m66(count) => "総テスト項目: ${count}";
+  static String m70(count) => "総テスト項目: ${count}";
 
-  static String m67(model) => "公式クラウド ${model}";
+  static String m71(model) => "公式クラウド ${model}";
 
-  static String m68(error) => "Web Demo に失敗しました：${error}";
+  static String m72(error) => "Web Demo に失敗しました：${error}";
 
-  static String m69(count, backend) => "${count} ページ · ${backend}";
+  static String m73(count, backend) => "${count} ページ · ${backend}";
 
-  static String m70(index) => "Web ${index}";
+  static String m74(index) => "Web ${index}";
 
-  static String m71(label) => "${label} のソース";
+  static String m75(label) => "${label} のソース";
 
-  static String m72(tokens, bytes) => "${tokens} tokens、${bytes} bytes";
+  static String m76(tokens, bytes) => "${tokens} tokens、${bytes} bytes";
 
-  static String m73(port) => "WebSocketサービス（ポート：${port}）";
+  static String m77(port) => "WebSocketサービス（ポート：${port}）";
 
-  static String m74(id) => "ウィンドウ ${id}";
+  static String m78(id) => "ウィンドウ ${id}";
 
-  static String m75(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m79(buildArchitecture, operatingSystemArchitecture, url) =>
       "このアプリの Build Architecture は ${buildArchitecture} ですが、Windows Operating System の Architecture は ${operatingSystemArchitecture} です。\n\n公式ダウンロードページから一致する実行ファイルをダウンロードしてください：\n${url}";
 
-  static String m76(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m80(buildArchitecture, operatingSystemArchitecture, url) =>
       "アーキテクチャの不一致を検出しました：このアプリの Build Architecture は ${buildArchitecture} ですが、Windows Operating System の Architecture は ${operatingSystemArchitecture} です。公式ダウンロードページから一致する版をダウンロードしてください：${url}";
 
-  static String m77(count) => "${count}個のタブ";
+  static String m81(count) => "${count}個のタブ";
 
-  static String m78(modelName) => "現在、${modelName}を使用しています";
+  static String m82(modelName) => "現在、${modelName}を使用しています";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -199,6 +208,44 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "add_local_folder": MessageLookupByLibrary.simpleMessage("ローカルフォルダを追加"),
     "advance_settings": MessageLookupByLibrary.simpleMessage("詳細設定"),
+    "agent_eval_active_model_unknown": MessageLookupByLibrary.simpleMessage(
+      "Agent 能力評価で現在のチャットモデルを特定できませんでした",
+    ),
+    "agent_eval_assisted_pass": MessageLookupByLibrary.simpleMessage("補助後に合格"),
+    "agent_eval_case": MessageLookupByLibrary.simpleMessage("ケース"),
+    "agent_eval_completed": m0,
+    "agent_eval_export": MessageLookupByLibrary.simpleMessage("レポートを書き出す"),
+    "agent_eval_export_title": MessageLookupByLibrary.simpleMessage(
+      "Agent 能力評価レポートを書き出す",
+    ),
+    "agent_eval_fail": MessageLookupByLibrary.simpleMessage("失敗"),
+    "agent_eval_invalid": MessageLookupByLibrary.simpleMessage("無効"),
+    "agent_eval_mode": MessageLookupByLibrary.simpleMessage("採点モード"),
+    "agent_eval_mode_assisted": MessageLookupByLibrary.simpleMessage("補助"),
+    "agent_eval_mode_assisted_description":
+        MessageLookupByLibrary.simpleMessage(
+          "診断用に監査記録付きのホスト修復を許可し、厳格スコアと補助スコアの両方を報告します。",
+        ),
+    "agent_eval_mode_strict": MessageLookupByLibrary.simpleMessage("厳格"),
+    "agent_eval_mode_strict_description": MessageLookupByLibrary.simpleMessage(
+      "モデルの生の挙動を採点します。ホストによる修復、型変換、切り詰め、強制ツール呼び出しは厳格採点で失敗になります。",
+    ),
+    "agent_eval_no_report": MessageLookupByLibrary.simpleMessage(
+      "利用できる Agent 能力評価レポートがまだありません",
+    ),
+    "agent_eval_repeats": MessageLookupByLibrary.simpleMessage("反復回数"),
+    "agent_eval_run_all": MessageLookupByLibrary.simpleMessage("すべて実行"),
+    "agent_eval_running": m1,
+    "agent_eval_sandbox_description": MessageLookupByLibrary.simpleMessage(
+      "評価ファイルはメモリ内に保持されます。ファイル実行、テスト、AWK、権限、スケジュールは決定論的なシミュレーションです。Lua は停止可能な独立 Isolate で 2 秒の制限付きで動作し、ネットワーク、ホストファイル、システムコマンド、モジュール、デバッグ API にはアクセスできません。これはプロセス分離であり、厳密なメモリ上限ではありません。",
+    ),
+    "agent_eval_sandbox_title": MessageLookupByLibrary.simpleMessage(
+      "制限付き評価サンドボックス",
+    ),
+    "agent_eval_strict_pass": MessageLookupByLibrary.simpleMessage("合格"),
+    "agent_eval_tools": m2,
+    "agent_eval_turn": m3,
+    "agent_test": MessageLookupByLibrary.simpleMessage("Agent 能力評価"),
     "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
       "現在の Albatross バックエンドではこの機能はサポートされていません",
     ),
@@ -267,7 +314,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "albatross_launched_by_app": MessageLookupByLibrary.simpleMessage(
       "RWKV Chat から起動",
     ),
-    "albatross_missing_runtime_dlls": m0,
+    "albatross_missing_runtime_dlls": m4,
     "albatross_model": MessageLookupByLibrary.simpleMessage("モデル"),
     "albatross_model_management": MessageLookupByLibrary.simpleMessage(
       "PTH モデル",
@@ -375,7 +422,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_chat_empty_hint": MessageLookupByLibrary.simpleMessage(
       "API をテストするためにメッセージを送信",
     ),
-    "api_server_chat_error": m1,
+    "api_server_chat_error": m5,
     "api_server_chat_input_hint": MessageLookupByLibrary.simpleMessage(
       "メッセージを入力...",
     ),
@@ -385,7 +432,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "OpenAI互換のローカルサーバーを起動",
     ),
     "api_server_docs": MessageLookupByLibrary.simpleMessage("API ドキュメント"),
-    "api_server_failed_to_start": m2,
+    "api_server_failed_to_start": m6,
     "api_server_logs": MessageLookupByLibrary.simpleMessage("リクエストログ"),
     "api_server_no_active_request": MessageLookupByLibrary.simpleMessage(
       "進行中のリクエストはありません",
@@ -405,7 +452,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "api_server_send": MessageLookupByLibrary.simpleMessage("送信"),
     "api_server_start": MessageLookupByLibrary.simpleMessage("サーバー起動"),
-    "api_server_started_on_port": m3,
+    "api_server_started_on_port": m7,
     "api_server_starting": MessageLookupByLibrary.simpleMessage("サーバー起動中"),
     "api_server_stop": MessageLookupByLibrary.simpleMessage("サーバー停止"),
     "api_server_stopped": MessageLookupByLibrary.simpleMessage("サーバー停止中"),
@@ -440,18 +487,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "バッチ補完設定",
     ),
     "batch_inference": MessageLookupByLibrary.simpleMessage("並列推論"),
-    "batch_inference_button": m4,
+    "batch_inference_button": m8,
     "batch_inference_count": MessageLookupByLibrary.simpleMessage("並列推論数"),
-    "batch_inference_count_detail": m5,
-    "batch_inference_count_detail_2": m6,
+    "batch_inference_count_detail": m9,
+    "batch_inference_count_detail_2": m10,
     "batch_inference_detail": MessageLookupByLibrary.simpleMessage(
       "並列推論を有効にすると、RWKVは同時に複数の回答を生成できます",
     ),
     "batch_inference_enable_or_not": MessageLookupByLibrary.simpleMessage(
       "並列推論を有効または無効にする",
     ),
-    "batch_inference_running": m7,
-    "batch_inference_selected": m8,
+    "batch_inference_running": m11,
+    "batch_inference_selected": m12,
     "batch_inference_settings": MessageLookupByLibrary.simpleMessage("並列推論設定"),
     "batch_inference_short": MessageLookupByLibrary.simpleMessage("並列"),
     "batch_inference_width": MessageLookupByLibrary.simpleMessage("メッセージ表示幅"),
@@ -467,15 +514,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "以下はローカルフォルダです",
     ),
     "benchmark": MessageLookupByLibrary.simpleMessage("ベンチマーク"),
-    "benchmark_batch": m9,
+    "benchmark_batch": m13,
     "benchmark_batch_not_supported_by_model":
         MessageLookupByLibrary.simpleMessage("モデルが非対応"),
-    "benchmark_batch_plan_range": m10,
+    "benchmark_batch_plan_range": m14,
     "benchmark_batch_plan_single": MessageLookupByLibrary.simpleMessage(
       "Batch 1",
     ),
-    "benchmark_batch_result": m11,
-    "benchmark_batch_supported_up_to": m12,
+    "benchmark_batch_result": m15,
+    "benchmark_batch_supported_up_to": m16,
     "benchmark_batch_waiting_for_backend": MessageLookupByLibrary.simpleMessage(
       "バックエンド情報待ち",
     ),
@@ -486,11 +533,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "benchmark_best_flops": MessageLookupByLibrary.simpleMessage("最高 FLOPS"),
     "benchmark_current": MessageLookupByLibrary.simpleMessage("現在"),
-    "benchmark_current_batch": m13,
+    "benchmark_current_batch": m17,
     "benchmark_decode_per_batch": MessageLookupByLibrary.simpleMessage(
       "Decode / Batch",
     ),
-    "benchmark_decode_progress_speed": m14,
+    "benchmark_decode_progress_speed": m18,
     "benchmark_info_app_version": MessageLookupByLibrary.simpleMessage(
       "アプリバージョン",
     ),
@@ -512,14 +559,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "benchmark_info_soc_name": MessageLookupByLibrary.simpleMessage("SoC 名"),
     "benchmark_info_total_memory": MessageLookupByLibrary.simpleMessage("総メモリ"),
     "benchmark_info_total_vram": MessageLookupByLibrary.simpleMessage("総 VRAM"),
-    "benchmark_peak_decode": m15,
+    "benchmark_peak_decode": m19,
     "benchmark_plan": MessageLookupByLibrary.simpleMessage("テスト計画"),
     "benchmark_progress": MessageLookupByLibrary.simpleMessage("ベンチマーク進捗"),
-    "benchmark_progress_speed": m16,
+    "benchmark_progress_speed": m20,
     "benchmark_result": MessageLookupByLibrary.simpleMessage("ベンチマーク結果"),
-    "benchmark_result_speed_line": m17,
+    "benchmark_result_speed_line": m21,
     "benchmark_run": MessageLookupByLibrary.simpleMessage("実行"),
-    "benchmark_run_status": m18,
+    "benchmark_run_status": m22,
     "benchmark_support": MessageLookupByLibrary.simpleMessage("対応状況"),
     "benchmark_total_decode": MessageLookupByLibrary.simpleMessage("合計 Decode"),
     "black": MessageLookupByLibrary.simpleMessage("黒"),
@@ -570,7 +617,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "chat_resume": MessageLookupByLibrary.simpleMessage("再開"),
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKVチャット"),
-    "chat_welcome_to_use": m19,
+    "chat_welcome_to_use": m23,
     "chat_with_rwkv_model": MessageLookupByLibrary.simpleMessage(
       "RWKVモデルとチャット",
     ),
@@ -648,7 +695,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "会話名は空にできません",
     ),
-    "conversation_name_cannot_be_longer_than_30_characters": m20,
+    "conversation_name_cannot_be_longer_than_30_characters": m24,
     "conversation_token_count": MessageLookupByLibrary.simpleMessage(
       "現在の会話のトークン数",
     ),
@@ -670,22 +717,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "creative_recommended_short": MessageLookupByLibrary.simpleMessage(
       "クリエイティブ",
     ),
-    "ctx_length_label": m21,
+    "ctx_length_label": m25,
     "current_folder_has_no_local_models": MessageLookupByLibrary.simpleMessage(
       "このフォルダに Chat で使用できるローカルモデルはありません",
     ),
-    "current_model": m22,
+    "current_model": m26,
     "current_model_from_latest_json_not_pth":
         MessageLookupByLibrary.simpleMessage(
           "現在のモデルは latest.json の設定から読み込まれており、ローカルモデルファイルは読み込まれていません",
         ),
-    "current_progress": m23,
+    "current_progress": m27,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("現在のタスクのタブID"),
     "current_task_text_length": MessageLookupByLibrary.simpleMessage(
       "現在のタスクのテキスト長",
     ),
     "current_task_url": MessageLookupByLibrary.simpleMessage("現在のタスクのURL"),
-    "current_test_item": m24,
+    "current_test_item": m28,
     "current_turn": MessageLookupByLibrary.simpleMessage("現在のターン"),
     "current_version": MessageLookupByLibrary.simpleMessage("現在のバージョン"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("カスタム難易度"),
@@ -755,7 +802,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete_conversations_failed": MessageLookupByLibrary.simpleMessage(
       "会話の削除に失敗しました",
     ),
-    "delete_conversations_message": m25,
+    "delete_conversations_message": m29,
     "delete_current_branch": MessageLookupByLibrary.simpleMessage(
       "現在のメッセージを削除",
     ),
@@ -798,7 +845,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "draw": MessageLookupByLibrary.simpleMessage("引き分け！"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("自動ダンプメッセージ履歴"),
-    "dump_see_files_alert_message": m26,
+    "dump_see_files_alert_message": m30,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage(
       "アルゴリズム改善にご協力ください",
     ),
@@ -871,7 +918,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "failed_to_create_directory": MessageLookupByLibrary.simpleMessage(
       "ディレクトリの作成に失敗しました",
     ),
-    "failed_to_delete_file": m27,
+    "failed_to_delete_file": m31,
     "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
       "並列推論 UI Benchmark",
     ),
@@ -885,7 +932,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ファイルパスが見つかりません",
     ),
     "files": MessageLookupByLibrary.simpleMessage("ファイル"),
-    "files_moved_with_failures": m28,
+    "files_moved_with_failures": m32,
     "filter": MessageLookupByLibrary.simpleMessage(
       "こんにちは、この質問にはまだお答えできません。別の話題について話しましょう。",
     ),
@@ -923,7 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "found_new_version_available": MessageLookupByLibrary.simpleMessage(
       "新しいバージョンが見つかりました",
     ),
-    "frequency_penalty_with_value": m29,
+    "frequency_penalty_with_value": m33,
     "from_model": MessageLookupByLibrary.simpleMessage("モデルから: %s"),
     "gallery": MessageLookupByLibrary.simpleMessage("ギャラリー"),
     "game_over": MessageLookupByLibrary.simpleMessage("ゲームオーバー！"),
@@ -954,15 +1001,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "長押しで録音、離して送信",
     ),
     "home": MessageLookupByLibrary.simpleMessage("ホーム"),
-    "http_service_port": m30,
+    "http_service_port": m34,
     "human": MessageLookupByLibrary.simpleMessage("人間"),
     "hyphen": MessageLookupByLibrary.simpleMessage("-"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "RWKVに言わせたいのは...",
     ),
     "idle": MessageLookupByLibrary.simpleMessage("待機中"),
-    "imitate": m31,
-    "imitate_fle": m32,
+    "imitate": m35,
+    "imitate_fle": m36,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
     "import_all_weight_files": MessageLookupByLibrary.simpleMessage(
       "すべての重みファイルをインポート",
@@ -970,7 +1017,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "import_all_weight_files_description": MessageLookupByLibrary.simpleMessage(
       "このアプリからエクスポートされたZIPファイルを選択してください。ZIPファイル内のすべての重みファイルがインポートされます。同じ名前のファイルが存在する場合、既存のファイルが上書きされます。",
     ),
-    "import_all_weight_files_success": m33,
+    "import_all_weight_files_success": m37,
     "import_failed": MessageLookupByLibrary.simpleMessage("インポート失敗"),
     "import_success": MessageLookupByLibrary.simpleMessage("インポート成功"),
     "import_weight_file": MessageLookupByLibrary.simpleMessage("重みファイルをインポート"),
@@ -979,7 +1026,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "検索深度と検索幅の両方が2より大きい場合、インコンテキスト検索がアクティブになります",
         ),
     "inference_engine": MessageLookupByLibrary.simpleMessage("推論エンジン"),
-    "inference_engine_version": m34,
+    "inference_engine_version": m38,
     "inference_is_done": MessageLookupByLibrary.simpleMessage("🎉 推論完了"),
     "inference_is_running": MessageLookupByLibrary.simpleMessage("推論中"),
     "input_chinese_text_here": MessageLookupByLibrary.simpleMessage(
@@ -1027,8 +1074,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "load_data": MessageLookupByLibrary.simpleMessage("データをロード"),
     "loaded": MessageLookupByLibrary.simpleMessage("ロード済み"),
     "loading": MessageLookupByLibrary.simpleMessage("ロード中..."),
-    "loading_progress_percent": m35,
-    "local_folder_name": m36,
+    "loading_progress_percent": m39,
+    "local_folder_name": m40,
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
       "ローカルモデルファイル",
     ),
@@ -1042,9 +1089,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "ローカルの .pth ファイルまたは RWKV .gguf ファイルを選択して読み込めます",
     ),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m37,
+    "memory_used": m41,
     "message_content": MessageLookupByLibrary.simpleMessage("メッセージ内容"),
-    "message_in_queue": m38,
+    "message_in_queue": m42,
     "message_line_height": MessageLookupByLibrary.simpleMessage("メッセージ行間"),
     "message_line_height_default_hint": MessageLookupByLibrary.simpleMessage(
       "デフォルトはフォントとレンダラー本来の行間を使うため、固定の 1.0x ではありません。ここでのカスタム範囲は 1.0x から 2.0x です。",
@@ -1061,7 +1108,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "iOS 18以降にアップグレードすると、このウェイトが使え、より速く省電力になります",
     ),
     "model_loading": MessageLookupByLibrary.simpleMessage("モデルを読み込み中..."),
-    "model_output": m39,
+    "model_output": m43,
     "model_settings": MessageLookupByLibrary.simpleMessage("モデル設定"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage(
@@ -1135,13 +1182,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "not_all_the_same": MessageLookupByLibrary.simpleMessage("すべて同じではない"),
     "not_syncing": MessageLookupByLibrary.simpleMessage("非同期"),
-    "npu_not_supported_title": m40,
+    "npu_not_supported_title": m44,
     "npu_recommendation_divider": MessageLookupByLibrary.simpleMessage(
       "上の NPU モデルの選択をおすすめします",
     ),
     "number": MessageLookupByLibrary.simpleMessage("数字"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("にゃん~~、にゃん~~"),
-    "ocr_guide_text": m41,
+    "ocr_guide_text": m45,
     "ocr_title": MessageLookupByLibrary.simpleMessage("OCR"),
     "off": MessageLookupByLibrary.simpleMessage("オフ"),
     "offline_translator": MessageLookupByLibrary.simpleMessage("オフライン翻訳"),
@@ -1162,7 +1209,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "デバッグログパネルを開く",
     ),
     "open_folder": MessageLookupByLibrary.simpleMessage("フォルダを開く"),
-    "open_folder_create_failed": m42,
+    "open_folder_create_failed": m46,
     "open_folder_created_success": MessageLookupByLibrary.simpleMessage(
       "空のフォルダの作成に成功しました。",
     ),
@@ -1172,7 +1219,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_folder_path_is_null": MessageLookupByLibrary.simpleMessage(
       "フォルダパスが空です。",
     ),
-    "open_folder_unsupported_on_platform": m43,
+    "open_folder_unsupported_on_platform": m47,
     "open_official_download_page": MessageLookupByLibrary.simpleMessage(
       "公式ダウンロードページを開く",
     ),
@@ -1199,7 +1246,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "parameter_description_detail": MessageLookupByLibrary.simpleMessage(
       "Temperature: 出力のランダム性を制御します。高い値（例: 0.8）はより創造的でランダムに、低い値（例: 0.2）はより集中的で決定的になります。\n\nTop P: 出力の多様性を制御します。モデルは累積確率がTop Pに達するトークンのみを考慮します。低い値（例: 0.5）は低確率の単語を無視し、関連性を高めます。\n\nPresence Penalty: トークンがテキスト内に既に出現しているかどうかに基づいてペナルティを与えます。正の値は新しいトピックについて話す可能性を高めます。\n\nFrequency Penalty: テキスト内での出現頻度に基づいてペナルティを与えます。正の値は同じ行を逐語的に繰り返す可能性を減らします。\n\nPenalty Decay: 距離に応じたペナルティの減衰を制御します。",
     ),
-    "path_label": m44,
+    "path_label": m48,
     "pause": MessageLookupByLibrary.simpleMessage("一時停止"),
     "paused_reply_edit_hint": MessageLookupByLibrary.simpleMessage(
       "回答を一時停止しました。先ほどの質問を調整する場合は、元の質問を編集して再生成すると、より正確な回答を得やすくなります。",
@@ -1211,7 +1258,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "回答を一時停止した後、元の質問を編集して再生成するよう案内します。",
         ),
-    "penalty_decay_with_value": m45,
+    "penalty_decay_with_value": m49,
     "performance_test": MessageLookupByLibrary.simpleMessage("パフォーマンステスト"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
       "速度と精度をテスト",
@@ -1271,7 +1318,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "難易度を選択してください",
     ),
     "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m46,
+        m50,
     "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
         MessageLookupByLibrary.simpleMessage(
           "すべてのメッセージに設定するサンプラーとペナルティパラメータを選択してください",
@@ -1295,13 +1342,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("中国語での推論を使用"),
     "prefill": MessageLookupByLibrary.simpleMessage("事前入力"),
-    "prefill_progress_percent": m47,
+    "prefill_progress_percent": m51,
     "prefill_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "プレフィル速度（1秒あたりのトークン数）",
     ),
     "prefix_bank": MessageLookupByLibrary.simpleMessage("前置きグループ"),
     "prefix_examples": MessageLookupByLibrary.simpleMessage("前置きの例"),
-    "presence_penalty_with_value": m48,
+    "presence_penalty_with_value": m52,
     "preview": MessageLookupByLibrary.simpleMessage("プレビュー"),
     "processing_image": MessageLookupByLibrary.simpleMessage("画像を処理中..."),
     "prompt": MessageLookupByLibrary.simpleMessage("プロンプト"),
@@ -1349,11 +1396,11 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "生成された質問をタップすると、チャット入力欄にそのまま入れられます。",
         ),
-    "question_generator_tap_generate_hint": m49,
+    "question_generator_tap_generate_hint": m53,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "RWKV にこの言語で質問してほしい...",
     ),
-    "queued_x": m50,
+    "queued_x": m54,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("高速思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "高速思考が有効になりました",
@@ -1387,14 +1434,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_auto_switched_to_jin": MessageLookupByLibrary.simpleMessage(
       "自動的に今スタイルへ切り替えました",
     ),
-    "response_style_batch_not_supported": m51,
+    "response_style_batch_not_supported": m55,
     "response_style_button": MessageLookupByLibrary.simpleMessage("スタイル"),
     "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
       "少なくとも 1 つの応答スタイルを有効にしてください",
     ),
     "response_style_many": MessageLookupByLibrary.simpleMessage("複数スタイル"),
-    "response_style_random_questions": m52,
-    "response_style_random_questions_not_enough": m53,
+    "response_style_random_questions": m56,
+    "response_style_random_questions_not_enough": m57,
     "response_style_route_en": MessageLookupByLibrary.simpleMessage("英語回答"),
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
       "最終回答は英語のみ",
@@ -1462,7 +1509,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
       "設定ファイルの重みまたはローカルモデルファイルを選択",
     ),
-    "selected_count": m54,
+    "selected_count": m58,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
       "RWKVにメッセージを送信",
     ),
@@ -1493,7 +1540,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "skip_this_version": MessageLookupByLibrary.simpleMessage("このバージョンをスキップ"),
     "small": MessageLookupByLibrary.simpleMessage("小さい (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("ソースコード"),
-    "source_text": m55,
+    "source_text": m59,
     "space_rendered": MessageLookupByLibrary.simpleMessage("スペースが表示されました"),
     "space_symbol_settings": MessageLookupByLibrary.simpleMessage("スペース記号設定"),
     "space_symbol_style": MessageLookupByLibrary.simpleMessage("スペース記号スタイル"),
@@ -1557,11 +1604,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tag_day_of_week": MessageLookupByLibrary.simpleMessage("曜日"),
     "tag_time": MessageLookupByLibrary.simpleMessage("時刻"),
     "take_photo": MessageLookupByLibrary.simpleMessage("写真を撮る"),
-    "target_text": m56,
+    "target_text": m60,
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
       "技術研究グループ",
     ),
-    "temperature_with_value": m57,
+    "temperature_with_value": m61,
     "test_data": MessageLookupByLibrary.simpleMessage("テストデータ"),
     "test_result": MessageLookupByLibrary.simpleMessage("テスト結果"),
     "test_results": MessageLookupByLibrary.simpleMessage("テスト結果"),
@@ -1575,10 +1622,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黒"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("これでRWKVとのチャットを開始できます"),
-    "think_button_mode_en": m58,
-    "think_button_mode_en_long": m59,
-    "think_button_mode_en_short": m60,
-    "think_button_mode_fast": m61,
+    "think_button_mode_en": m62,
+    "think_button_mode_en_long": m63,
+    "think_button_mode_en_short": m64,
+    "think_button_mode_fast": m65,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推論モードは、モデルの推論時のパフォーマンスに影響します",
     ),
@@ -1590,7 +1637,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("モード"),
-    "thinking_mode_auto": m62,
+    "thinking_mode_auto": m66,
     "thinking_mode_button_auto": MessageLookupByLibrary.simpleMessage("自動"),
     "thinking_mode_button_en": MessageLookupByLibrary.simpleMessage("英語"),
     "thinking_mode_button_en_long": MessageLookupByLibrary.simpleMessage(
@@ -1602,8 +1649,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking_mode_button_fast": MessageLookupByLibrary.simpleMessage("速い"),
     "thinking_mode_button_high": MessageLookupByLibrary.simpleMessage("高"),
     "thinking_mode_button_off": MessageLookupByLibrary.simpleMessage("おバカ"),
-    "thinking_mode_high": m63,
-    "thinking_mode_off": m64,
+    "thinking_mode_high": m67,
+    "thinking_mode_off": m68,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "思考モードテンプレート",
     ),
@@ -1621,10 +1668,10 @@ class MessageLookup extends MessageLookupByLibrary {
           "このモデルは並列推論をサポートしていません。「batch」タグのあるモデルを選択してください",
         ),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考結果"),
-    "top_p_with_value": m65,
+    "top_p_with_value": m69,
     "total_count": MessageLookupByLibrary.simpleMessage("総数"),
     "total_disk_usage": MessageLookupByLibrary.simpleMessage("ストレージ使用量"),
-    "total_test_items": m66,
+    "total_test_items": m70,
     "translate": MessageLookupByLibrary.simpleMessage("翻訳"),
     "translating": MessageLookupByLibrary.simpleMessage("翻訳中..."),
     "translation": MessageLookupByLibrary.simpleMessage("翻訳"),
@@ -1710,7 +1757,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_demo_backend_local_rwkv_mobile": MessageLookupByLibrary.simpleMessage(
       "ローカル RWKV Mobile",
     ),
-    "web_demo_backend_official_cloud": m67,
+    "web_demo_backend_official_cloud": m71,
     "web_demo_cloud": MessageLookupByLibrary.simpleMessage("クラウド"),
     "web_demo_concurrency": MessageLookupByLibrary.simpleMessage("同時実行数"),
     "web_demo_continue_editing": MessageLookupByLibrary.simpleMessage("編集を続ける"),
@@ -1728,7 +1775,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_demo_endpoint_key_missing": MessageLookupByLibrary.simpleMessage(
       "公式 Web Demo エンドポイントのキーが設定されていません",
     ),
-    "web_demo_failed": m68,
+    "web_demo_failed": m72,
     "web_demo_failed_to_open_html": MessageLookupByLibrary.simpleMessage(
       "HTML を開けませんでした",
     ),
@@ -1754,7 +1801,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "コピーできるソースがありません",
     ),
     "web_demo_open_in_browser": MessageLookupByLibrary.simpleMessage("ブラウザで開く"),
-    "web_demo_pages_status": m69,
+    "web_demo_pages_status": m73,
     "web_demo_penalty_decay": MessageLookupByLibrary.simpleMessage(
       "Penalty Decay",
     ),
@@ -1783,15 +1830,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_demo_result_copied": MessageLookupByLibrary.simpleMessage(
       "結果をコピーしました",
     ),
-    "web_demo_result_label": m70,
+    "web_demo_result_label": m74,
     "web_demo_save_html": MessageLookupByLibrary.simpleMessage("HTML を保存"),
-    "web_demo_source_title": m71,
+    "web_demo_source_title": m75,
     "web_demo_status_complete": MessageLookupByLibrary.simpleMessage("完了"),
     "web_demo_status_live": MessageLookupByLibrary.simpleMessage("ライブ"),
     "web_demo_status_parsing": MessageLookupByLibrary.simpleMessage("解析中"),
     "web_demo_status_waiting": MessageLookupByLibrary.simpleMessage("待機中"),
     "web_demo_temperature": MessageLookupByLibrary.simpleMessage("Temperature"),
-    "web_demo_tokens_and_bytes": m72,
+    "web_demo_tokens_and_bytes": m76,
     "web_demo_top_p": MessageLookupByLibrary.simpleMessage("Top P"),
     "web_demo_view_source": MessageLookupByLibrary.simpleMessage("ソースを表示"),
     "web_demo_waiting_for_first_tokens": MessageLookupByLibrary.simpleMessage(
@@ -1802,7 +1849,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search": MessageLookupByLibrary.simpleMessage("ウェブ検索"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("ウェブ検索テンプレート"),
-    "websocket_service_port": m73,
+    "websocket_service_port": m77,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("重みファイル管理"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "重みファイル保存ディレクトリ",
@@ -1820,18 +1867,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白"),
     "white_score": MessageLookupByLibrary.simpleMessage("白のスコア"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白の勝ち！"),
-    "window_id": m74,
-    "windows_architecture_mismatch_dialog_message": m75,
+    "window_id": m78,
+    "windows_architecture_mismatch_dialog_message": m79,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("アーキテクチャ不一致"),
-    "windows_architecture_mismatch_warning": m76,
+    "windows_architecture_mismatch_warning": m80,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%dページ見つかりました"),
-    "x_tabs": m77,
-    "you_are_now_using": m78,
+    "x_tabs": m81,
+    "you_are_now_using": m82,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "これでRWKVとのチャットを開始できます",
     ),

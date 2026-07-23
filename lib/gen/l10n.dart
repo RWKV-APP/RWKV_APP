@@ -7590,6 +7590,202 @@ class S {
       args: [],
     );
   }
+
+  /// `Agent 能力评测`
+  String get agent_test {
+    return Intl.message('Agent 能力评测', name: 'agent_test', desc: '', args: []);
+  }
+
+  /// `受限评测沙箱`
+  String get agent_eval_sandbox_title {
+    return Intl.message(
+      '受限评测沙箱',
+      name: 'agent_eval_sandbox_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `评测文件仅保存在内存中。文件执行、测试、AWK、权限和定时任务均为确定性模拟。Lua 在可终止的独立 Isolate 中运行，限时 2 秒，无法访问网络、宿主文件、系统命令、模块或调试 API。这里提供进程隔离，不提供严格的内存配额。`
+  String get agent_eval_sandbox_description {
+    return Intl.message(
+      '评测文件仅保存在内存中。文件执行、测试、AWK、权限和定时任务均为确定性模拟。Lua 在可终止的独立 Isolate 中运行，限时 2 秒，无法访问网络、宿主文件、系统命令、模块或调试 API。这里提供进程隔离，不提供严格的内存配额。',
+      name: 'agent_eval_sandbox_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用例`
+  String get agent_eval_case {
+    return Intl.message('用例', name: 'agent_eval_case', desc: '', args: []);
+  }
+
+  /// `评分模式`
+  String get agent_eval_mode {
+    return Intl.message('评分模式', name: 'agent_eval_mode', desc: '', args: []);
+  }
+
+  /// `严格`
+  String get agent_eval_mode_strict {
+    return Intl.message(
+      '严格',
+      name: 'agent_eval_mode_strict',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `辅助`
+  String get agent_eval_mode_assisted {
+    return Intl.message(
+      '辅助',
+      name: 'agent_eval_mode_assisted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `按模型原始行为评分。宿主修复、类型转换、截断或强制工具调用都会导致严格评分失败。`
+  String get agent_eval_mode_strict_description {
+    return Intl.message(
+      '按模型原始行为评分。宿主修复、类型转换、截断或强制工具调用都会导致严格评分失败。',
+      name: 'agent_eval_mode_strict_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `允许带审计记录的宿主修复，用于诊断，同时报告严格分和辅助分。`
+  String get agent_eval_mode_assisted_description {
+    return Intl.message(
+      '允许带审计记录的宿主修复，用于诊断，同时报告严格分和辅助分。',
+      name: 'agent_eval_mode_assisted_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `重复次数`
+  String get agent_eval_repeats {
+    return Intl.message('重复次数', name: 'agent_eval_repeats', desc: '', args: []);
+  }
+
+  /// `运行全部`
+  String get agent_eval_run_all {
+    return Intl.message('运行全部', name: 'agent_eval_run_all', desc: '', args: []);
+  }
+
+  /// `导出报告`
+  String get agent_eval_export {
+    return Intl.message('导出报告', name: 'agent_eval_export', desc: '', args: []);
+  }
+
+  /// `正在运行 {current}/{total} · {name}`
+  String agent_eval_running(Object current, Object total, Object name) {
+    return Intl.message(
+      '正在运行 $current/$total · $name',
+      name: 'agent_eval_running',
+      desc: '',
+      args: [current, total, name],
+    );
+  }
+
+  /// `已完成 {completed}/{total} · 通过 {passed} · 失败 {failed} · 无效 {invalid}`
+  String agent_eval_completed(
+    Object completed,
+    Object total,
+    Object passed,
+    Object failed,
+    Object invalid,
+  ) {
+    return Intl.message(
+      '已完成 $completed/$total · 通过 $passed · 失败 $failed · 无效 $invalid',
+      name: 'agent_eval_completed',
+      desc: '',
+      args: [completed, total, passed, failed, invalid],
+    );
+  }
+
+  /// `工具：{tools}`
+  String agent_eval_tools(Object tools) {
+    return Intl.message(
+      '工具：$tools',
+      name: 'agent_eval_tools',
+      desc: '',
+      args: [tools],
+    );
+  }
+
+  /// `第 {turn} 轮 · {title}`
+  String agent_eval_turn(Object turn, Object title) {
+    return Intl.message(
+      '第 $turn 轮 · $title',
+      name: 'agent_eval_turn',
+      desc: '',
+      args: [turn, title],
+    );
+  }
+
+  /// `通过`
+  String get agent_eval_strict_pass {
+    return Intl.message(
+      '通过',
+      name: 'agent_eval_strict_pass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `辅助后通过`
+  String get agent_eval_assisted_pass {
+    return Intl.message(
+      '辅助后通过',
+      name: 'agent_eval_assisted_pass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `失败`
+  String get agent_eval_fail {
+    return Intl.message('失败', name: 'agent_eval_fail', desc: '', args: []);
+  }
+
+  /// `无效`
+  String get agent_eval_invalid {
+    return Intl.message('无效', name: 'agent_eval_invalid', desc: '', args: []);
+  }
+
+  /// `尚无可用的 Agent 能力评测报告`
+  String get agent_eval_no_report {
+    return Intl.message(
+      '尚无可用的 Agent 能力评测报告',
+      name: 'agent_eval_no_report',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导出 Agent 能力评测报告`
+  String get agent_eval_export_title {
+    return Intl.message(
+      '导出 Agent 能力评测报告',
+      name: 'agent_eval_export_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Agent 能力评测无法识别当前聊天模型`
+  String get agent_eval_active_model_unknown {
+    return Intl.message(
+      'Agent 能力评测无法识别当前聊天模型',
+      name: 'agent_eval_active_model_unknown',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

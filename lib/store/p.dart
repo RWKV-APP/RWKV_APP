@@ -1,6 +1,7 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:ffi' as ffi;
 import 'dart:io';
 import 'dart:isolate';
@@ -63,6 +64,9 @@ import 'package:zone/config.dart';
 import 'package:zone/db/db.dart' as db;
 import 'package:zone/db/db.dart';
 import 'package:zone/func/albatross_protocol.dart';
+import 'package:zone/func/agent_runtime.dart';
+import 'package:zone/func/agent_sandbox.dart';
+import 'package:zone/func/agent_sandboxed_lua.dart';
 import 'package:zone/func/build_chat_history.dart';
 import 'package:zone/func/calculate_total_size_of_dir.dart';
 import 'package:zone/func/check_model_selection.dart';
@@ -72,6 +76,7 @@ import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
 import 'package:zone/func/get_batch_info.dart';
+import 'package:zone/func/g1h_agent_protocol.dart';
 import 'package:zone/func/is_chinese.dart';
 import 'package:zone/func/json_cast.dart';
 import 'package:zone/func/local_chat_model_filter.dart';
@@ -94,6 +99,9 @@ import 'package:zone/func/web_search_prompt.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/io.dart';
 import 'package:zone/model/app_theme.dart' as app_theme;
+import 'package:zone/model/agent.dart';
+import 'package:zone/model/agent_case.dart';
+import 'package:zone/model/agent_evaluation.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/backend_state.dart';
 import 'package:zone/model/backend_status.dart';
@@ -145,6 +153,7 @@ import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/version_info_panel.dart';
 
 part "adapter.dart";
+part "agent.dart";
 part "albatross_runtime.dart";
 part "ask_question.dart";
 part "app.dart";
@@ -202,6 +211,7 @@ part "web_demo.dart";
 
 abstract class P {
   static final adapter = _Adapter();
+  static final agent = _Agent();
   static final albatrossRuntime = _AlbatrossRuntime();
   static final askQuestion = _AskQuestion();
   static final app = _App();
@@ -300,6 +310,7 @@ abstract class P {
       _safeInit(() => remote.sync(), mark: "remoteSync"),
       _safeInit(() => telemetry._init(), mark: "telemetry"),
       _safeInit(() => benchmark._init(), mark: "benchmark"),
+      _safeInit(() => agent._init(), mark: "agent"),
       _safeInit(() => webDemo._init(), mark: "webDemo"),
     ]);
   }
