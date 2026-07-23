@@ -102,7 +102,7 @@ RWKV App 是一款面向 Android、iOS、Windows、macOS 和 Linux 的隐私优�
 
 ```bash
 # 必须切换到 'dev' 分支
-git clone -b dev https://github.com/MollySophia/rwkv_mobile_flutter.git
+git clone -b dev https://github.com/RWKV-APP/rwkv_mobile_flutter.git
 # 确保 rwkv_mobile_flutter 和 RWKV_APP 在同一目录下
 git clone -b dev https://github.com/RWKV-APP/RWKV_APP.git
 cd RWKV_APP
@@ -174,7 +174,7 @@ flutter run
 
 ## 🔗 相关链接
 
-- [**Flutter 封装层**](https://github.com/MollySophia/rwkv_mobile_flutter)
+- [**Flutter 封装层**](https://github.com/RWKV-APP/rwkv_mobile_flutter)
 - [**C++ 推理引擎**](https://github.com/MollySophia/rwkv-mobile)
 - [**可用模型下载**](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
 - [**训练您自己的模型？**](https://github.com/RWKV-Vibe/RWKV-LM-V7)

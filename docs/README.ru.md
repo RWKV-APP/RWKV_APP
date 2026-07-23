@@ -108,7 +108,7 @@ RWKV App — это privacy-first AI-приложение для Android, iOS, W
 
 ```bash
 # ОБЯЗАТЕЛЬНО переключитесь на ветку 'dev'
-git clone -b dev https://github.com/MollySophia/rwkv_mobile_flutter.git
+git clone -b dev https://github.com/RWKV-APP/rwkv_mobile_flutter.git
 # Убедитесь, что rwkv_mobile_flutter и RWKV_APP находятся в одной директории
 git clone -b dev https://github.com/RWKV-APP/RWKV_APP.git
 cd RWKV_APP
@@ -180,7 +180,7 @@ flutter run
 
 ## 🔗 Полезные ссылки
 
-- [**Обертка Flutter**](https://github.com/MollySophia/rwkv_mobile_flutter)
+- [**Обертка Flutter**](https://github.com/RWKV-APP/rwkv_mobile_flutter)
 - [**Движок вывода C++**](https://github.com/MollySophia/rwkv-mobile)
 - [**Доступные модели**](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
 - [**Хотите обучить свою собственную модель?**](https://github.com/RWKV-Vibe/RWKV-LM-V7)

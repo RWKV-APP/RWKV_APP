@@ -108,7 +108,7 @@ RWKV App は、Android、iOS、Windows、macOS、Linux 向けのプライバシ�
 
 ```bash
 # 必ず 'dev' ブランチに切り替えてください
-git clone -b dev https://github.com/MollySophia/rwkv_mobile_flutter.git
+git clone -b dev https://github.com/RWKV-APP/rwkv_mobile_flutter.git
 # rwkv_mobile_flutter と RWKV_APP が同じディレクトリにあることを確認してください
 git clone -b dev https://github.com/RWKV-APP/RWKV_APP.git
 cd RWKV_APP
@@ -180,7 +180,7 @@ Windows ARM64 でデバッグする場合は、Flutter の `stable` ブランチ
 
 ## 🔗 関連リンク
 
-- [**Flutter Wrapper**](https://github.com/MollySophia/rwkv_mobile_flutter)
+- [**Flutter Wrapper**](https://github.com/RWKV-APP/rwkv_mobile_flutter)
 - [**C++ 推論エンジン**](https://github.com/MollySophia/rwkv-mobile)
 - [**利用可能なモデル**](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
 - [**独自のモデルをトレーニングしたいですか？**](https://github.com/RWKV-Vibe/RWKV-LM-V7)

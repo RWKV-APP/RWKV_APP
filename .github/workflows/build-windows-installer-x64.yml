@@ -68,7 +68,7 @@ jobs:
       - name: Checkout rwkv_mobile_flutter dependency
         uses: actions/checkout@v4
         with:
-          repository: MollySophia/rwkv_mobile_flutter
+          repository: RWKV-APP/rwkv_mobile_flutter
           ref: dev
           path: rwkv_mobile_flutter
           fetch-depth: 1

@@ -108,7 +108,7 @@ RWKV App은 Android, iOS, Windows, macOS, Linux를 위한 프라이버시 우선
 
 ```bash
 # 반드시 'dev' 브랜치로 전환해야 합니다
-git clone -b dev https://github.com/MollySophia/rwkv_mobile_flutter.git
+git clone -b dev https://github.com/RWKV-APP/rwkv_mobile_flutter.git
 # rwkv_mobile_flutter와 RWKV_APP가 같은 디렉토리에 있는지 확인하세요
 git clone -b dev https://github.com/RWKV-APP/RWKV_APP.git
 cd RWKV_APP
@@ -180,7 +180,7 @@ Windows ARM64 디버그 시에는 Flutter `stable` 브랜치가 아니라 `maste
 
 ## 🔗 관련 링크
 
-- [**Flutter Wrapper**](https://github.com/MollySophia/rwkv_mobile_flutter)
+- [**Flutter Wrapper**](https://github.com/RWKV-APP/rwkv_mobile_flutter)
 - [**C++ 추론 엔진**](https://github.com/MollySophia/rwkv-mobile)
 - [**사용 가능한 모델**](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
 - [**나만의 모델을 훈련하고 싶으신가요?**](https://github.com/RWKV-Vibe/RWKV-LM-V7)

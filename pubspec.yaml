@@ -17,7 +17,7 @@ dependencies:
   rwkv_mobile_flutter:
     path: ../rwkv_mobile_flutter
   #    git:
-  #      url: https://github.com/MollySophia/rwkv_mobile_flutter
+  #      url: https://github.com/RWKV-APP/rwkv_mobile_flutter
   #      ref: dev
 
   vclibs:

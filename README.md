@@ -108,7 +108,7 @@ When you first open the app, a model selection panel will appear. Please choose 
 
 ```bash
 # MUST switch to the 'dev' branch
-git clone -b dev https://github.com/MollySophia/rwkv_mobile_flutter.git
+git clone -b dev https://github.com/RWKV-APP/rwkv_mobile_flutter.git
 # Make sure the rwkv_mobile_flutter and RWKV_APP are in the same directory
 git clone -b dev https://github.com/RWKV-APP/RWKV_APP.git
 cd RWKV_APP
@@ -180,7 +180,7 @@ This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE
 
 ## 🔗 Related Links
 
-- [**Flutter Wrapper**](https://github.com/MollySophia/rwkv_mobile_flutter)
+- [**Flutter Wrapper**](https://github.com/RWKV-APP/rwkv_mobile_flutter)
 - [**C++ Inference Engine**](https://github.com/MollySophia/rwkv-mobile)
 - [**Available Models**](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
 - [**Want to Train Your Own Model?**](https://github.com/RWKV-Vibe/RWKV-LM-V7)
