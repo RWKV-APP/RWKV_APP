@@ -97,3 +97,11 @@ jobs:
       - name: Analyze tools
         working-directory: tools
         run: dart analyze
+
+      - name: Test tools
+        working-directory: tools
+        run: dart test
+
+      - name: Check Specification
+        working-directory: tools
+        run: dart run bin/check_specification.dart --root ..

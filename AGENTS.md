@@ -6,6 +6,10 @@
 
 禁止为 `CLAUDE.md`、`GEMINI.md` 和 `AGENTS.md` 在每一行的末尾添加中文或英文句号
 
+- `AGENTS.md` 与 `.github/copilot-instructions.md` 必须保持内容一致
+- `.github/copilot-instructions.md` 是指向 `../AGENTS.md` 的 Git symlink；Windows 禁用 symlink 的检出可保留精确链接占位文本
+- `CLAUDE.md` 和 `GEMINI.md` 已从当前仓库删除，除非用户明确要求，否则不要恢复
+
 ## 2. 规则使用方式
 
 ### 2.1 适用顺序
@@ -24,6 +28,20 @@
 - 只修改完成当前任务所必需的内容。
 - 对生成文件、第三方代码、无关模块保持克制，避免无意义改动。
 - 如果任务跨多个仓库，先判断改动应属于 frontend 还是 adapter，再开始编辑。
+
+### 2.3 Specification flow
+
+- 用户提到 `Specification flow` 或 `Specification` 时，默认指本仓库的规格同步与自进化流程
+- 开始处理前必须读取 `SPEC-LOOP.md`、`docs/specification.md`、`docs/specs/01-authority-map.md` 和 `.agents/skills/spec-sync/SKILL.md`
+- 用户消息包含产品行为、API 或模型约定、Prompt 规则、UI 规则、验收口径、隐私或数据流承诺、复制的产品沟通内容、语音转述需求、跨仓集成合同或 Specification 流程变更时，必须先执行 `spec-sync`
+- 产品或流程输入必须按捕获日期记录到 `docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md`
+- 记录前必须脱敏凭据、Token、签名 URL、无关个人信息和机器本地附件路径
+- 每个主题以 `docs/specs/01-authority-map.md` 中登记的唯一 canonical owner 和稳定 `SPEC-*` ID 为准
+- 新输入与当前 canonical assertion 冲突时，记录到 `docs/spec-process/conflicts/current/`，只停止依赖该冲突的业务改动并等待用户裁决
+- 派生文档或实现与无歧义 canonical assertion 不一致时属于 drift，应直接同步，不要制造语义冲突
+- `merged` 只表示输入已同步到 canonical truth，不能当作已实现或已验收
+- Specification 相关改动必须运行 `dart run tools/bin/check_specification.dart`
+- 不要把大量产品上下文追加到 `AGENTS.md`
 
 ## 3. 本地仓库与路径
 
@@ -265,7 +283,9 @@ final theme = Theme.of(context);
 
 开始提交结果前，按下面清单自查：
 
-- 如果修改了 `AGENTS.md`，是否同步修改了 `CLAUDE.md` 和 `GEMINI.md`。
+- 如果修改了 `AGENTS.md`，是否同步修改了 `.github/copilot-instructions.md`
+- 是否没有无意恢复已删除的 `CLAUDE.md` 和 `GEMINI.md`
+- 如果消息包含产品或流程输入，是否完成 Specification flow 并运行 checker
 - 如果修改了任意 `.arb`，是否同步更新了全部 6 个语言文件。
 - 如果修改了任意 `.arb`，是否运行了 `dart pub global run intl_utils:generate`。
 - 如果修改了 README 或 CONTRIBUTING，是否同步更新了所有语言版本。

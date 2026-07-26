@@ -1,3 +1,5 @@
+<a id="SPEC-RWKV-ALBATROSS-API"></a>
+
 # Albatross HTTP API Requirements for RWKV Chat
 
 本文档描述 RWKV Chat 前端与 Albatross 后端进程之间的 HTTP 通讯协议需求

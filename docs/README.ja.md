@@ -102,7 +102,7 @@ RWKV App は、Android、iOS、Windows、macOS、Linux 向けのプライバシ�
 
 **[Flutter](https://flutter.dev/)開発環境がセットアップされていることを確認してください。**
 
-> 開発環境では **Flutter 3.41.1+** が必要です（stable channel 推奨）。
+> 開発環境では **Flutter 3.44.0+** が必要です（stable channel 推奨）。
 
 1. **リポジトリをクローン:**
 
@@ -161,7 +161,7 @@ Windows ARM64 でデバッグする場合は、Flutter の `stable` ブランチ
 
 ## 🏗️ スタック
 
-- **Flutter:** Android、iOS、Windows、macOS をサポートする、クロスプラットフォームのユーザーインターフェースを構築するためのオープンソースフレームワーク。
+- **Flutter:** Android、iOS、Windows、macOS、Linux をサポートする、クロスプラットフォームのユーザーインターフェースを構築するためのオープンソースフレームワーク。
 - **Dart FFI (Foreign Function Interface):** Dart と C++ 推論エンジン間の効率的な通信に使用されます。
 - **C++ 推論エンジン:** デバイス上の推論エンジンのコアで、C++ で構築されており、複数のモデル形式とハードウェアアクセラレーション（CPU/GPU/NPU）をサポートしています。
 - **Hugging Face:** モデル、データセット、ツールを提供するオープンソースコミュニティ。ここではモデルの重みのソースとして使用されています。

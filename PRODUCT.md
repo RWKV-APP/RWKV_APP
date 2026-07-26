@@ -4,9 +4,13 @@
 
 product
 
+<a id="SPEC-RWKV-PRODUCT-USERS"></a>
+
 ## Users
 
 RWKV App serves users who evaluate, run, and compare RWKV models on phones and desktop machines. They are often experimenting with model behavior, hardware fit, local inference performance, or prototype AI workflows.
+
+<a id="SPEC-RWKV-PRODUCT-PURPOSE"></a>
 
 ## Product Purpose
 
@@ -19,6 +23,8 @@ Practical, technical, direct.
 ## Anti-references
 
 Avoid marketing-page ornament, decorative cards, hidden critical controls, and UI that makes expert workflows feel like a demo toy. Avoid presenting raw generated artifacts as the primary experience when the user needs to inspect the rendered result.
+
+<a id="SPEC-RWKV-DESIGN-PRINCIPLES"></a>
 
 ## Design Principles
 

@@ -1,3 +1,5 @@
+<a id="SPEC-RWKV-MULTI-QUESTION-PARALLEL"></a>
+
 # 高并发回答不同问题（Multi-Question Parallel Inference）
 
 > 记录本功能所有迭代需求，按轮次归档。

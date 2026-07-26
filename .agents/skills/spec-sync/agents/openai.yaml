@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Sync"
+  short_description: "Synchronize product truth, conflicts, and acceptance"
+  default_prompt: "Use $spec-sync to capture this product or process input before implementation."

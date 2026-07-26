@@ -102,7 +102,7 @@ When you first open the app, a model selection panel will appear. Please choose 
 
 **Ensure you have the [Flutter](https://flutter.dev/) development environment set up.**
 
-> Development requires **Flutter 3.41.1+** (stable channel recommended).
+> Development requires **Flutter 3.44.0+** (stable channel recommended).
 
 1. **Clone the repository:**
 
@@ -161,7 +161,7 @@ For Windows ARM64 debugging, check out Flutter's `master` branch instead of the 
 
 ## 🏗️ Stack
 
-- **Flutter:** An open-source framework for building cross-platform user interfaces, supporting Android, iOS, Windows, and macOS.
+- **Flutter:** An open-source framework for building cross-platform user interfaces, supporting Android, iOS, Windows, macOS, and Linux.
 - **Dart FFI (Foreign Function Interface):** Used for efficient communication between Dart and the C++ inference engine.
 - **C++ Inference Engine:** The core on-device inference engine, built with C++, supporting multiple model formats and hardware acceleration (CPU/GPU/NPU).
 - **Hugging Face:** An open-source community providing models, datasets, and tools; used here as the source for model weights.

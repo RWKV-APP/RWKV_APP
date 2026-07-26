@@ -96,7 +96,7 @@ RWKV App 是一款面向 Android、iOS、Windows、macOS 和 Linux 的隐私优�
 
 **请确保您已搭建好 [Flutter](https://flutter.dev/) 开发环境。**
 
-> 开发环境要求 **Flutter 3.41.1+**（推荐使用 stable channel）。
+> 开发环境要求 **Flutter 3.44.0+**（推荐使用 stable channel）。
 
 1. **克隆仓库：**
 
@@ -155,7 +155,7 @@ flutter run
 
 ## 🏗️ 技术栈
 
-- **Flutter：** 一款用于构建跨平台用户界面的开源框架，支持安卓、苹果、Windows 和 macOS。
+- **Flutter：** 一款用于构建跨平台用户界面的开源框架，支持 Android、iOS、Windows、macOS 和 Linux。
 - **Dart FFI (外部函数接口)：** 用于 Dart 语言与 C++ 推理引擎进行高效通信。
 - **C++ 推理引擎：** 项目核心的设备端推理引擎，使用 C++ 构建，支持多种模型格式和硬件加速（CPU/GPU/NPU）。
 - **Hugging Face：** 一个提供模型、数据集和工具的开源社区，本项目用其作为模型权重的来源。

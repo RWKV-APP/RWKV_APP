@@ -12,14 +12,21 @@ dart run tools/bin/agent_check.dart
 
 The command runs these steps in order:
 
-1. `dart analyze`
-2. `flutter test`
-3. A lightweight repository rule scan
+1. The blocking Specification graph check
+2. `dart analyze`
+3. `flutter test`
+4. A lightweight repository rule scan
 
 For a faster structural scan:
 
 ```bash
 dart run tools/bin/agent_check.dart --rules-only
+```
+
+For only the blocking Specification graph:
+
+```bash
+dart run tools/bin/agent_check.dart --spec-only
 ```
 
 For CI-style enforcement of rule warnings:
@@ -31,6 +38,20 @@ dart run tools/bin/agent_check.dart --strict-rules
 The rule scan currently reports warnings for patterns such as `Divider`, `ListTile`, `.then()`, `withOpacity`, old `MediaQuery.of(context)` access, relative imports, `show` imports, ARB key drift, and missing synchronized README / CONTRIBUTING files
 
 Rule warnings are non-blocking by default so historical code can be cleaned incrementally
+
+## Specification Check
+
+Run the strict Specification graph check from the repository root:
+
+```bash
+dart run tools/bin/check_specification.dart
+```
+
+Change to the repository root before invoking the Dart script. The CLI has repository-root discovery and `--root` support for package and CI integration, but launching `dart run` directly from an arbitrary documentation directory can create a local `.dart_tool/` cache there
+
+The checker validates strict record front matter, stable IDs and dates, state combinations, authority ownership, local and sibling-repository references, conflicts, supersession, acceptance chronology, required backlinks, process versions, and synchronized Agent instructions
+
+Specification failures are blocking even though historical lightweight rule warnings remain non-blocking by default
 
 ## Other Scripts
 

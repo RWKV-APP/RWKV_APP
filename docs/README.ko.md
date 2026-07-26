@@ -102,7 +102,7 @@ RWKV App은 Android, iOS, Windows, macOS, Linux를 위한 프라이버시 우선
 
 **[Flutter](https://flutter.dev/) 개발 환경이 설정되어 있는지 확인하십시오.**
 
-> 개발 환경에서는 **Flutter 3.41.1+** 가 필요합니다(stable channel 권장).
+> 개발 환경에서는 **Flutter 3.44.0+** 가 필요합니다(stable channel 권장).
 
 1. **리포지토리 복제:**
 
@@ -161,7 +161,7 @@ Windows ARM64 디버그 시에는 Flutter `stable` 브랜치가 아니라 `maste
 
 ## 🏗️ 스택
 
-- **Flutter:** Android, iOS, Windows 및 macOS를 지원하는 크로스 플랫폼 사용자 인터페이스 구축을 위한 오픈 소스 프레임워크입니다.
+- **Flutter:** Android, iOS, Windows, macOS 및 Linux를 지원하는 크로스 플랫폼 사용자 인터페이스 구축을 위한 오픈 소스 프레임워크입니다.
 - **Dart FFI (Foreign Function Interface):** Dart와 C++ 추론 엔진 간의 효율적인 통신에 사용됩니다.
 - **C++ 추론 엔진:** C++로 구축된 온디바이스 추론 엔진의 핵심으로, 여러 모델 형식과 하드웨어 가속(CPU/GPU/NPU)을 지원합니다.
 - **Hugging Face:** 모델, 데이터 세트 및 도구를 제공하는 오픈 소스 커뮤니티이며, 여기서는 모델 가중치의 소스로 사용됩니다.

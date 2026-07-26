@@ -1,3 +1,5 @@
+<a id="SPEC-RWKV-LIGHTNING-CUDA-PLAN"></a>
+
 # RWKV Lightning CUDA integration plan
 
 ## Purpose

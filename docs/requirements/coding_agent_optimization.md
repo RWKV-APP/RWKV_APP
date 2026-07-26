@@ -1,3 +1,5 @@
+<a id="SPEC-RWKV-CODING-AGENT-OPTIMIZATION"></a>
+
 # Coding Agent 适配优化 Proposal
 
 > 记录针对 Coding Agent 协作体验的工程提案，当前仅归档，不代表开始实施

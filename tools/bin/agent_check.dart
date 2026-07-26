@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:tools/specification/specification_checker.dart';
+
 const List<String> _arbFiles = [
   'lib/l10n/intl_en.arb',
   'lib/l10n/intl_ja.arb',
@@ -128,11 +130,34 @@ Future<void> main(List<String> arguments) async {
     return;
   }
 
-  final root = _findRepoRoot();
   final rulesOnly = arguments.contains('--rules-only');
   final strictRules = arguments.contains('--strict-rules');
+  final specOnly = arguments.contains('--spec-only');
+  final allowedArguments = {'--rules-only', '--strict-rules', '--spec-only'};
+  final unknownArguments = arguments.where((String argument) => !allowedArguments.contains(argument)).toList();
+  if (unknownArguments.isNotEmpty) {
+    stderr.writeln('Unknown argument(s): ${unknownArguments.join(', ')}');
+    _printHelp();
+    exit(2);
+  }
+  if (specOnly && (rulesOnly || strictRules)) {
+    stderr.writeln('--spec-only cannot be combined with --rules-only or --strict-rules');
+    _printHelp();
+    exit(2);
+  }
+  final root = _findRepoRoot();
 
   int exitCode = 0;
+  if (!rulesOnly) {
+    exitCode = _runSpecificationCheck(root);
+    if (exitCode != 0) {
+      exit(exitCode);
+    }
+  }
+  if (specOnly) {
+    return;
+  }
+
   if (!rulesOnly) {
     exitCode = await _runCommand(root, 'dart', ['analyze']);
     if (exitCode != 0) {
@@ -152,9 +177,10 @@ Future<void> main(List<String> arguments) async {
 }
 
 void _printHelp() {
-  stdout.writeln('Usage: dart run tools/bin/agent_check.dart [--rules-only] [--strict-rules]');
+  stdout.writeln('Usage: dart run tools/bin/agent_check.dart [--rules-only] [--strict-rules] [--spec-only]');
   stdout.writeln('');
   stdout.writeln('Default checks:');
+  stdout.writeln('  Specification graph');
   stdout.writeln('  dart analyze');
   stdout.writeln('  flutter test');
   stdout.writeln('  lightweight repository rule scan');
@@ -162,24 +188,33 @@ void _printHelp() {
   stdout.writeln('Options:');
   stdout.writeln('  --rules-only    Run only the repository rule scan');
   stdout.writeln('  --strict-rules  Return a non-zero exit code when rule warnings exist');
+  stdout.writeln('  --spec-only     Run only the blocking Specification graph check');
+}
+
+int _runSpecificationCheck(Directory root) {
+  stdout.writeln('');
+  stdout.writeln('== Specification graph ==');
+  final result = SpecificationChecker(root).check();
+  if (result.isValid) {
+    stdout.writeln('Specification $specificationProcessVersion check passed');
+    return 0;
+  }
+  stderr.writeln(
+    'Specification $specificationProcessVersion check failed with ${result.issues.length} issue(s):',
+  );
+  for (final issue in result.issues) {
+    stderr.writeln('- ${issue.formatted}');
+  }
+  return 1;
 }
 
 Directory _findRepoRoot() {
-  Directory cursor = Directory.current;
-  while (true) {
-    final hasPubspec = File('${cursor.path}${Platform.pathSeparator}pubspec.yaml').existsSync();
-    final hasLib = Directory('${cursor.path}${Platform.pathSeparator}lib').existsSync();
-    if (hasPubspec && hasLib) {
-      return cursor;
-    }
-
-    final parent = cursor.parent;
-    if (parent.path == cursor.path) {
-      stderr.writeln('Could not find repository root from ${Directory.current.path}');
-      exit(2);
-    }
-    cursor = parent;
+  final root = findSpecificationRepositoryRoot();
+  if (root != null) {
+    return root;
   }
+  stderr.writeln('Could not find repository root from ${Directory.current.path}');
+  exit(2);
 }
 
 Future<int> _runCommand(Directory root, String executable, List<String> args) async {
