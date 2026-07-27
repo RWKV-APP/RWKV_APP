@@ -16,6 +16,10 @@ RWKV App serves users who evaluate, run, and compare RWKV models on phones and d
 
 RWKV App is a privacy-first, local-first AI application for Android, iOS, Windows, macOS, and Linux. It helps users download models, load them on real devices, run chat, speech, vision, and Web Demo workflows, and inspect outputs without relying on cloud-only demos.
 
+Public product and organization introductions must lead with RWKV's architectural distinction: parallelizable training with recurrent inference. For autoregressive generation, describe sequence scaling precisely: processing a sequence of length `T` takes `O(T)` total work, while the recurrent state carried between decoding steps remains `O(1)` with respect to sequence length and does not require a KV cache that grows with context.
+
+Connect those architecture properties to relevant deployment scenarios such as streaming generation, long-running sessions, on-device inference, and high-concurrency serving. Treat concrete speed, capacity, backend, platform, device, and accelerator support as implementation- and hardware-dependent claims that require current verification.
+
 ## Brand Personality
 
 Practical, technical, direct.
@@ -33,6 +37,8 @@ Avoid marketing-page ornament, decorative cards, hidden critical controls, and U
 - Prefer dense but calm controls for repeated experimentation
 - Show generated artifacts in their useful form first
 - Keep advanced text and source output available on demand
+- On public introduction surfaces, put the RWKV architecture distinction and its verified user-facing consequences in the first screen before generic capability copy
+- State what each complexity bound is relative to, and separate architecture properties from implementation- or hardware-dependent performance and support claims
 
 ## Accessibility & Inclusion
 

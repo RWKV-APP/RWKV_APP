@@ -2,7 +2,7 @@
 
 Process version: v1.7
 Effective date: 2026-07-23
-Last reviewed: 2026-07-23
+Last reviewed: 2026-07-27
 
 This inventory lists the checked-in surfaces used to resolve product truth, implementation ownership, drift, and delivery evidence. Inclusion does not make a file canonical; use `docs/specs/01-authority-map.md` for the single owner of each topic.
 
@@ -54,6 +54,9 @@ This inventory lists the checked-in surfaces used to resolve product truth, impl
 - `docs/README.ru.md`
 - `CONTRIBUTING.md` and its synchronized locale files
 - `docs/privacy_policy.html`
+- `rwkv_org_profile:profile/README.md`: public RWKV-APP organization profile copy
+- `rwkv_org_profile:profile/assets/hero.svg`: desktop organization-profile hero artwork
+- `rwkv_org_profile:profile/assets/hero-mobile.svg`: mobile organization-profile hero artwork
 
 ## Implementation And Runtime Truth
 

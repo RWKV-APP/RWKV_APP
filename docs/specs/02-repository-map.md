@@ -1,7 +1,7 @@
 # Specification Repository Map
 
 Process version: v1.7
-Last reviewed: 2026-07-25
+Last reviewed: 2026-07-27
 
 Repository-qualified references use `alias:path`. The path is relative to the registered repository root. Optional sibling repositories are validated when present and remain syntactically checkable in CI when absent.
 
@@ -12,6 +12,7 @@ Repository-qualified references use `alias:path`. The path is relative to the re
 | rwkv_mobile | `../rwkv_mobile` | no | Native inference engine |
 | rwkv_harmony | `../rwkv_harmony` | no | HarmonyOS ArkUI host and Kirin NNRT integration workspace |
 | app_website | `../app_website` | no | Public download website and HTTP service |
+| rwkv_org_profile | `../.github` | no | Public RWKV-APP organization profile repository |
 
 Do not use absolute developer-machine paths as durable Specification references. A cross-repository requirement should name the integration assertion in this repository and list the external implementation through an alias.
 
