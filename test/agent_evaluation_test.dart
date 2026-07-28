@@ -131,5 +131,69 @@ void main() {
     expect(summary["assistedPassed"], 1);
     expect(summary["invalid"], 1);
     expect(interventions["jsonRepair"], 1);
+    expect(
+      records.last.verdict.failureCodes,
+      <String>["infrastructure_failure", "invalid_run"],
+    );
+  });
+
+  test('cancelled runs are invalid without task-specific failures', () {
+    final agentCase = AgentCase.fromJson(<String, dynamic>{
+      "name": "arithmetic",
+      "title": "Arithmetic",
+      "prompt": "Multiply.",
+      "tools": <String>["multiply"],
+      "evaluation": "arithmetic",
+    });
+    final sandbox = agentCase.createSandbox();
+    const result = AgentRunResult(
+      status: .cancelled,
+      finalAnswer: "",
+      prompt: "prompt",
+      events: <AgentEvent>[],
+      turns: 0,
+      validForModelScore: false,
+    );
+
+    final verdict = agentCase.score(result: result, sandbox: sandbox);
+    final now = DateTime.utc(2026, 7, 26);
+    final report = AgentEvaluationReport(
+      manifest: const AgentEvaluationManifest(
+        schemaVersion: agentEvaluationSchemaVersion,
+        benchmarkId: agentEvaluationBenchmarkId,
+        benchmarkVersion: agentEvaluationBenchmarkVersion,
+        benchmarkSha256: "cases",
+        caseCount: 1,
+        runId: "cancelled",
+        mode: .strict,
+        repeatCount: 1,
+        selectedCases: <String>["arithmetic"],
+        plannedRuns: 1,
+        app: <String, Object?>{},
+        device: <String, Object?>{},
+        model: <String, Object?>{},
+        sampler: <String, Object?>{},
+      ),
+      startedAt: now,
+      completedAt: now,
+      records: <AgentCaseRunRecord>[
+        AgentCaseRunRecord(
+          agentCase: agentCase,
+          result: result,
+          verdict: verdict,
+          runId: "cancelled",
+          startedAt: now,
+          completedAt: now,
+        ),
+      ],
+    );
+    final summary = report.toJson()["summary"]! as Map<String, Object?>;
+
+    expect(verdict.validForModelScore, isFalse);
+    expect(verdict.failureCodes, <String>["cancelled", "invalid_run"]);
+    expect(verdict.failures, isNot(contains("did not call multiply")));
+    expect(verdict.failures, isNot(contains("final answer did not contain 1887357")));
+    expect(summary["failed"], 0);
+    expect(summary["invalid"], 1);
   });
 }

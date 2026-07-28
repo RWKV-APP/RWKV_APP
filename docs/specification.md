@@ -28,6 +28,8 @@ RWKV App lets people download, run, evaluate, and compare RWKV models on phones 
 
 The supported application platforms are Android, iOS, Windows, macOS, and Linux. Platform availability of a specific model, backend, or feature remains governed by its narrower canonical owner and current implementation.
 
+HarmonyOS on verified Huawei Kirin phones is an active delivery target governed by `SPEC-RWKV-HARMONY-USER-PARITY`, `SPEC-RWKV-KIRIN-MODEL-IDENTITY`, `SPEC-RWKV-KIRIN-NPU-RUNTIME`, and `SPEC-RWKV-HARMONY-DISTRIBUTION`. It must not be described as a delivered public platform until the complete acceptance contract in `docs/requirements/harmony_kirin_delivery.md` has passed.
+
 ## SPEC-RWKV-REPOSITORY-BOUNDARIES — Repository Ownership
 
 This repository owns the Flutter application, routes, Riverpod state, local persistence, model selection, local API UI, user-facing workflows, app packaging, and repository-level release automation.

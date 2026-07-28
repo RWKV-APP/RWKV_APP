@@ -7,7 +7,9 @@ const int agentFinalAnswerCharacterBudget = 4000;
 const Duration agentModelIdleTimeout = Duration(seconds: 30);
 const Duration agentModelGenerationTimeout = Duration(minutes: 15);
 const Duration agentModelPollInterval = Duration(milliseconds: 40);
+const Duration agentModelResponsePollInterval = Duration(milliseconds: 100);
 const Duration agentModelStopSignalTimeout = Duration(seconds: 3);
+const Duration agentModelFirstTokenTimeout = Duration(seconds: 20);
 
 class _Agent {
   late final running = qs(false);
@@ -365,14 +367,15 @@ extension $Agent on _Agent {
     _AgentSamplerSnapshot? samplerSnapshot;
 
     try {
+      agentEvaluationSamplerConfig.validate();
       samplerSnapshot = await _AgentSamplerSnapshot.capture(modelID: modelID);
       await P.rwkvParams.syncSamplerParams(
-        temperature: 0,
-        topK: 0,
-        topP: 1,
-        presencePenalty: 0,
-        frequencyPenalty: 0,
-        penaltyDecay: .99,
+        temperature: agentEvaluationSamplerConfig.temperature,
+        topK: agentEvaluationSamplerConfig.topK.toDouble(),
+        topP: agentEvaluationSamplerConfig.topP,
+        presencePenalty: agentEvaluationSamplerConfig.presencePenalty,
+        frequencyPenalty: agentEvaluationSamplerConfig.frequencyPenalty,
+        penaltyDecay: agentEvaluationSamplerConfig.penaltyDecay,
       );
       await samplerSnapshot.setSeed(agentEvaluationSeed);
       await P.rwkvGeneration.clearStates();
@@ -583,7 +586,6 @@ extension $Agent on _Agent {
     final now = DateTime.now();
     final runId =
         "${now.toUtc().toIso8601String().replaceAll(RegExp(r"[^0-9]"), "")}-${math.Random.secure().nextInt(0xFFFFFF).toRadixString(16).padLeft(6, "0")}";
-    final localFile = P.remote.locals(model).q;
     final manifest = AgentEvaluationManifest(
       schemaVersion: agentEvaluationSchemaVersion,
       benchmarkId: agentEvaluationBenchmarkId,
@@ -614,20 +616,10 @@ extension $Agent on _Agent {
         "modelSize": model.modelSize,
         "quantization": model.quantization ?? "unknown",
         "backend": model.backend?.name ?? "unknown",
-        "sha256": await _resolveModelSha256(
-          catalogSha256: model.sha256,
-          localPath: localFile.targetPath,
-        ),
+        "sha256": _declaredModelSha256(model.sha256),
+        "sha256Verified": false,
       },
-      sampler: const <String, Object?>{
-        "seed": agentEvaluationSeed,
-        "temperature": 0,
-        "topK": 0,
-        "topP": 1,
-        "presencePenalty": 0,
-        "frequencyPenalty": 0,
-        "penaltyDecay": .99,
-      },
+      sampler: agentEvaluationSamplerConfig.toManifest(seed: agentEvaluationSeed),
     );
     records.q = <String, AgentCaseRunRecord>{};
     reportRecords.q = <AgentCaseRunRecord>[];
@@ -680,16 +672,10 @@ extension $Agent on _Agent {
     lastReportPath.q = target.path;
   }
 
-  Future<String> _resolveModelSha256({
-    required String? catalogSha256,
-    required String localPath,
-  }) async {
-    final normalized = catalogSha256?.trim() ?? "";
-    if (normalized.isNotEmpty) return normalized;
-    if (localPath.isEmpty) return "unavailable";
-    final file = File(localPath);
-    if (!await file.exists()) return "unavailable";
-    return (await crypto.sha256.bind(file.openRead()).first).toString();
+  String _declaredModelSha256(String? value) {
+    final normalized = value?.trim() ?? "";
+    if (normalized.isEmpty) return "not_provided";
+    return normalized;
   }
 
   void _recordSessionError(Object caught, StackTrace stackTrace) {
@@ -721,13 +707,38 @@ final class _RWKVAgentModel implements AgentModel {
     await _waitForBackendIdle();
     if (owner._cancelRequested) throw const _AgentCancelledException();
 
+    P.rwkvGeneration._cancelTokensTimer();
+    P.rwkvGeneration.prefillSpeed.q = 0;
+    P.rwkvGeneration.decodeSpeed.q = 0;
+    P.rwkvGeneration.prefillProgress.q = 0;
+    P.telemetry.resetPeakDecodeSpeed();
+
+    final staleContent = await _readLatestResponseBuffer();
+    if (owner._cancelRequested) throw const _AgentCancelledException();
+
     final protocol = const G1hAgentProtocol();
     final isToolCallContinuation = prompt.trimRight().endsWith(G1hAgentProtocol.toolCallOpen);
+    final generationRequest = to_rwkv.GenerateAsync(
+      prompt,
+      batch: 1,
+      modelID: modelID,
+      maxLength: agentDefaultMaxLength,
+      disableCache: false,
+    );
+    final bufferGate = AgentResponseBufferGate(
+      staleContent: staleContent,
+      replacementPrefix: prompt,
+    );
+    final responsePollTracker = AgentResponsePollTracker(modelID: modelID);
     final completer = Completer<AgentGeneration>();
     final stopwatch = Stopwatch()..start();
     bool finishStarted = false;
+    bool firstTokenTimeoutTriggered = false;
+    int pollCount = 0;
     String latest = "";
-    StreamSubscription<from_rwkv.ResponseBatchBufferContent>? subscription;
+    Timer? firstTokenTimer;
+    Timer? responseTimer;
+    StreamSubscription<from_rwkv.FromRWKV>? subscription;
 
     Future<void> finish({
       required String output,
@@ -737,6 +748,7 @@ final class _RWKVAgentModel implements AgentModel {
     }) async {
       if (completer.isCompleted || finishStarted) return;
       finishStarted = true;
+      firstTokenTimer?.cancel();
       try {
         if (stopBackend) {
           await _stopBackendAndSync();
@@ -757,20 +769,102 @@ final class _RWKVAgentModel implements AgentModel {
       }
     }
 
-    final stream = P.rwkvGeneration.completion(
-      prompt,
-      maxLength: agentDefaultMaxLength,
-      disableCache: false,
-    );
-    subscription = stream.listen(
-      (response) {
-        if (response.responseBufferContent.isEmpty) return;
-        final raw = response.responseBufferContent.first;
-        latest = raw.startsWith(prompt) ? raw.substring(prompt.length) : raw;
+    Future<void> fail({
+      required AgentInfrastructureException error,
+      required bool stopBackend,
+    }) async {
+      if (completer.isCompleted || finishStarted) return;
+      finishStarted = true;
+      firstTokenTimer?.cancel();
+      if (stopBackend) {
+        try {
+          await _stopBackendAndSync();
+        } catch (caught) {
+          qqe("Agent backend stop after ${error.code} failed: $caught");
+        }
+      }
+      if (completer.isCompleted) return;
+      completer.completeError(error, StackTrace.current);
+    }
+
+    void requestLatestBuffer() {
+      if (completer.isCompleted || finishStarted) return;
+      final request = to_rwkv.GetResponseBufferContent(
+        messages: const <String>[],
+        modelID: modelID,
+      );
+      responsePollTracker.register(request.requestId);
+      P.rwkvBridge.send(request);
+      pollCount += 1;
+      if (pollCount % 5 != 0) return;
+      P.rwkvBridge.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
+    }
+
+    subscription = P.rwkvBridge.broadcastStream.listen(
+      (event) {
+        if (event is from_rwkv.GenerateStart) {
+          if (event.req?.requestId != generationRequest.requestId) return;
+          P.rwkvGeneration.generating.q = true;
+          return;
+        }
+        if (event is from_rwkv.GenerateStop) {
+          if (event.req?.requestId != generationRequest.requestId) return;
+          final message = event.error;
+          if (message == null || message.isEmpty) return;
+          unawaited(
+            fail(
+              error: AgentInfrastructureException(
+                code: "backend_generation_error",
+                message: message,
+              ),
+              stopBackend: false,
+            ),
+          );
+          return;
+        }
+        if (event is from_rwkv.Error) {
+          final requestId = event.req?.requestId;
+          final belongsToGeneration = requestId == generationRequest.requestId;
+          final errorRequest = event.req;
+          final belongsToResponsePoll =
+              requestId != null &&
+              errorRequest is to_rwkv.GetResponseBufferContent &&
+              responsePollTracker.consume(
+                modelID: errorRequest.modelID,
+                requestId: requestId,
+              );
+          if (!belongsToGeneration && !belongsToResponsePoll) return;
+          unawaited(
+            fail(
+              error: AgentInfrastructureException(
+                code: "backend_generation_error",
+                message: event.message,
+              ),
+              stopBackend: belongsToGeneration,
+            ),
+          );
+          return;
+        }
+        if (event is! from_rwkv.ResponseBufferContent) return;
+        final request = event.req;
+        if (request is! to_rwkv.GetResponseBufferContent || request.modelID != modelID) {
+          return;
+        }
+        if (!responsePollTracker.consume(
+          modelID: request.modelID,
+          requestId: request.requestId,
+        )) {
+          return;
+        }
+
+        final fresh = bufferGate.freshContent(event.responseBufferContent);
+        if (fresh.isEmpty) return;
+        latest = fresh.startsWith(prompt) ? fresh.substring(prompt.length) : fresh;
+        if (latest.isEmpty) return;
+        firstTokenTimer?.cancel();
         owner.liveModelOutput.q = latest;
 
-        final eos = response.eosFound.isNotEmpty && response.eosFound.first;
-        if (eos) {
+        if (event.eosFound) {
           unawaited(
             finish(
               output: latest,
@@ -901,11 +995,38 @@ final class _RWKVAgentModel implements AgentModel {
         }
       },
       onError: (Object caught, StackTrace stackTrace) {
-        if (completer.isCompleted) return;
-        completer.completeError(caught, stackTrace);
+        unawaited(
+          fail(
+            error: AgentInfrastructureException(
+              code: "backend_stream_error",
+              message: caught.toString(),
+            ),
+            stopBackend: true,
+          ),
+        );
       },
     );
+
     P.rwkvGeneration.generating.q = true;
+    P.rwkvBridge.send(generationRequest);
+    requestLatestBuffer();
+    responseTimer = Timer.periodic(
+      agentModelResponsePollInterval,
+      (_) => requestLatestBuffer(),
+    );
+    firstTokenTimer = Timer(agentModelFirstTokenTimeout, () {
+      if (completer.isCompleted || finishStarted) return;
+      firstTokenTimeoutTriggered = true;
+      unawaited(
+        fail(
+          error: const AgentInfrastructureException(
+            code: "first_token_timeout",
+            message: "Inference engine produced no model output within 20 seconds",
+          ),
+          stopBackend: true,
+        ),
+      );
+    });
     final cancellationTimer = Timer.periodic(agentModelPollInterval, (_) {
       if (!owner._cancelRequested || completer.isCompleted || finishStarted) {
         return;
@@ -917,16 +1038,23 @@ final class _RWKVAgentModel implements AgentModel {
     try {
       return await completer.future.timeout(agentModelGenerationTimeout);
     } on TimeoutException {
-      await _stopBackendAndSync();
-      throw TimeoutException(
-        "Agent model generation exceeded ${agentModelGenerationTimeout.inMinutes} minutes",
-        agentModelGenerationTimeout,
+      try {
+        await _stopBackendAndSync();
+      } catch (caught) {
+        qqe("Agent backend stop after generation timeout failed: $caught");
+      }
+      throw AgentInfrastructureException(
+        code: "generation_timeout",
+        message: "Agent model generation exceeded ${agentModelGenerationTimeout.inMinutes} minutes",
       );
     } finally {
       cancellationTimer.cancel();
+      firstTokenTimer.cancel();
+      responseTimer.cancel();
       await subscription.cancel();
-      P.rwkvGeneration._cancelTokensTimer();
-      await _waitForBackendIdle();
+      if (!firstTokenTimeoutTriggered) {
+        await _waitForBackendIdle();
+      }
     }
   }
 
@@ -989,6 +1117,31 @@ final class _RWKVAgentModel implements AgentModel {
     await _waitForBackendIdle();
     P.rwkvGeneration._cancelTokensTimer();
     P.rwkvGeneration.generating.q = false;
+  }
+
+  Future<String> _readLatestResponseBuffer() async {
+    final request = to_rwkv.GetResponseBufferContent(
+      messages: const <String>[],
+      modelID: modelID,
+    );
+    final response = P.rwkvBridge.broadcastStream
+        .whereType<from_rwkv.ResponseBufferContent>()
+        .where((event) {
+          final responseRequest = event.req;
+          if (responseRequest is! to_rwkv.GetResponseBufferContent) return false;
+          return responseRequest.modelID == modelID && responseRequest.requestId == request.requestId;
+        })
+        .first
+        .timeout(agentModelStopSignalTimeout);
+    P.rwkvBridge.send(request);
+    try {
+      return (await response).responseBufferContent;
+    } on TimeoutException {
+      throw const AgentInfrastructureException(
+        code: "backend_buffer_timeout",
+        message: "Inference engine did not report its current response buffer",
+      );
+    }
   }
 
   Future<bool> _queryIsGenerating() async {

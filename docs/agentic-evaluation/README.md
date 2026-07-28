@@ -37,13 +37,15 @@ Infrastructure failures are invalid runs. They are excluded from valid model sco
 5. Run all cases
 6. Export the JSON report
 
-The App fixes the sampler to seed 42, temperature 0, top-k 0, top-p 1, zero presence/frequency penalties, and penalty decay 0.99. It restores the previous sampler and seed after each case
+The App fixes the sampler to seed 42, temperature 0.2, top-k 500, top-p 0, zero presence/frequency penalties, and penalty decay 0.99. It validates this configuration before native generation and restores the previous sampler and seed after each case
 
-The App verifies idle and stop state against the active chat model ID. A missing or mismatched backend response becomes an infrastructure failure
+The App verifies idle and stop state against the active chat model ID. It subscribes before generation, accepts response-buffer content only from Agent-owned polls for that model, ignores stale content retained from an earlier generation, and stops with a `first_token_timeout` infrastructure failure when no fresh output arrives within 20 seconds. Missing or mismatched backend responses are also infrastructure failures
 
 Reports are updated after every completed case under the platform application-support directory and can be exported from the UI
 
 The manifest records the exact selected case names and planned run count, so a completed single-case report is distinct from an interrupted full-suite report
+
+The App never reads a model file to calculate or validate SHA-256. It starts report setup without full-file hashing. If model metadata already contains a hash, the report copies it as unverified metadata and records `sha256Verified: false`
 
 ## Human quick test
 
@@ -67,7 +69,7 @@ The first manual check should run one case with Strict mode and one repetition. 
 
 The selected model does not need to be G1h or a specific quantization. An older or weaker model is still a valid evaluation target; its limitations should appear as failed cases in the report
 
-Manually stopping a run produces a cancelled result. Do not treat that record as model acceptance evidence
+Manually stopping a run produces an invalid cancelled result. It is counted under `INVALID`, excluded from `PASS` and `FAIL`, and does not produce task-specific capability failures from incomplete work
 
 ## Reference BF16 or FP16 workflow
 
@@ -77,14 +79,13 @@ Use an OpenAI-compatible reference endpoint that serves the unquantized model:
 dart run tools/agent_eval_reference.dart \
   --endpoint http://HOST:PORT/v1/completions \
   --model RWKV7-G1h \
-  --model-sha256 MODEL_SHA256 \
   --precision bf16 \
   --source-revision GIT_REVISION \
   --repeats 3 \
   --output reports/g1h-bf16.json
 ```
 
-Use `--protocol chat` only when the server exposes chat completions and preserves the supplied G1h prompt. Use `--api-key-env NAME` to read credentials from the environment. Formal runs require a model hash; `--allow-unverified-model` is reserved for exploration
+Use `--protocol chat` only when the server exposes chat completions and preserves the supplied G1h prompt. Use `--api-key-env NAME` to read credentials from the environment. `--model-sha256` may copy an operator supplied value into report metadata, but the runner never validates it and never requires it
 
 The reference runner imports the same protocol, runtime, sandbox, 30 cases, and scoring code as the App. It writes a partial report after each case and stops on infrastructure failure
 
@@ -104,11 +105,11 @@ The comparison includes strict and assisted pass counts, invalid runs, per-case 
 
 A model revision is ready for a decision-quality handoff when the package contains:
 
-- One hashed BF16 or FP16 reference report with three complete repetitions
-- One hashed target-device report per supported quantization/backend combination
+- One BF16 or FP16 reference report with three complete repetitions and exact declared model identity
+- One target-device report per supported quantization/backend combination
 - The generated comparison report
 - Zero invalid runs in the compared set
 - A short failure review identifying model failures, host interventions, and regressions by capability group
-- Exact app version, source revision, benchmark hash, model hash, device, backend, sampler, and run IDs
+- Exact app version, source revision, benchmark hash, declared model identity, model-hash verification status, device, backend, sampler, and run IDs
 
-If the model is still changing, deliver the same package as an exploration snapshot. Label it with the exact model hash and source revision and avoid presenting it as a final capability claim
+If the model is still changing, deliver the same package as an exploration snapshot. Label it with the exact declared model identity and source revision and avoid presenting it as a final capability claim

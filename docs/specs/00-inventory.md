@@ -40,6 +40,7 @@ This inventory lists the checked-in surfaces used to resolve product truth, impl
 - `docs/architecture/vl-model-update-guide.md`: VL model configuration/display update contract
 - `docs/agentic-evaluation/eval-spec-v0.1.md`: Agentic Evaluation protocol
 - `docs/requirements/multi_question_parallel.md`: multi-question parallel behavior
+- `docs/requirements/harmony_kirin_delivery.md`: HarmonyOS experience parity, Kirin model identity, NPU execution, and end-user distribution contract
 - `docs/requirements/rwkv_lightning_cuda_integration_plan.md`: proposal-stage Lightning CUDA integration
 - `docs/albatross-http-api-requirements.md`: deferred Albatross HTTP API contract
 - `docs/requirements/coding_agent_optimization.md`: historical coding-agent optimization proposal

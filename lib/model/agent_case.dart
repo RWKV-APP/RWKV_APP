@@ -80,6 +80,9 @@ final class AgentCase {
     required AgentRunResult result,
     required AgentSandbox sandbox,
   }) {
+    if (!result.validForModelScore) {
+      return _invalidVerdict(result);
+    }
     final failures = _genericFailures(
       result: result,
       sandbox: sandbox,
@@ -142,17 +145,31 @@ final class AgentCase {
     if (result.usedStrictInvalidatingIntervention) {
       strictFailures.add("host assistance changed model output or tool arguments");
     }
-    final validForModelScore = result.validForModelScore;
-    if (!validForModelScore) {
-      strictFailures.add("run is invalid for model scoring");
-    }
     final failureCodes = strictFailures.map(_failureCode).toSet().toList()..sort();
     return AgentCaseVerdict(
-      passed: validForModelScore && strictFailures.isEmpty,
-      assistedPassed: validForModelScore && assistedFailures.isEmpty,
-      validForModelScore: validForModelScore,
+      passed: strictFailures.isEmpty,
+      assistedPassed: assistedFailures.isEmpty,
+      validForModelScore: true,
       failures: List<String>.unmodifiable(strictFailures),
       assistedFailures: assistedFailures,
+      failureCodes: List<String>.unmodifiable(failureCodes),
+      interventionCounts: result.interventionCounts,
+    );
+  }
+
+  AgentCaseVerdict _invalidVerdict(AgentRunResult result) {
+    final failures = <String>[];
+    if (result.status != .completed && result.status != .submitted) {
+      failures.add("agent ended with status ${result.status.name}");
+    }
+    failures.add("run is invalid for model scoring");
+    final failureCodes = failures.map(_failureCode).toSet().toList()..sort();
+    return AgentCaseVerdict(
+      passed: false,
+      assistedPassed: false,
+      validForModelScore: false,
+      failures: List<String>.unmodifiable(failures),
+      assistedFailures: List<String>.unmodifiable(failures),
       failureCodes: List<String>.unmodifiable(failureCodes),
       interventionCounts: result.interventionCounts,
     );

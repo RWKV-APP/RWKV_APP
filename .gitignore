@@ -1,6 +1,8 @@
 # Miscellaneous
 *.class
 *.log
+*.o
+*.obj
 *.pyc
 *.swp
 .DS_Store
@@ -50,11 +52,19 @@ assets/model/othello
 sentry.properties
 
 .env
+.env.*
+!.env.example
 /ignore
 *.log
 assets/filter.txt
 # pubspec.lock #see: https://dart.dev/tools/pub/private-files#pubspec-lock
 *.ipa
+*.apk
+*.aab
+*.hap
+*.hsp
+*.msix
+*.appx
 *.zip
 android/app/.cxx/
 fastlane/README.md
@@ -77,3 +87,16 @@ android/.kotlin/sessions/
 
 samples/
 .claude/settings.local.json
+
+# Test coverage
+/coverage/
+
+# CANN / Ascend runtime kernel compilation cache
+/kernel_meta/
+/kernel_meta_*/
+
+# Local model weights
+/assets/model/**/*.pth
+/assets/model/**/*.gguf
+/assets/model/**/*.safetensors
+/assets/model/**/*.onnx

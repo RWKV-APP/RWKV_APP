@@ -272,6 +272,134 @@ abstract interface class AgentToolHost {
   Future<AgentToolResult> call(AgentToolCall call);
 }
 
+@immutable
+final class AgentSamplerConfig {
+  final double temperature;
+  final int topK;
+  final double topP;
+  final double presencePenalty;
+  final double frequencyPenalty;
+  final double penaltyDecay;
+
+  const AgentSamplerConfig({
+    required this.temperature,
+    required this.topK,
+    required this.topP,
+    required this.presencePenalty,
+    required this.frequencyPenalty,
+    required this.penaltyDecay,
+  });
+
+  void validate() {
+    if (temperature < .2 || temperature > 2) {
+      throw AgentInfrastructureException(
+        code: "invalid_sampler_config",
+        message: "Agent temperature must be between 0.2 and 2.0, got $temperature",
+      );
+    }
+    if (topK <= 0) {
+      throw AgentInfrastructureException(
+        code: "invalid_sampler_config",
+        message: "Agent topK must be greater than zero, got $topK",
+      );
+    }
+    if (topP < 0 || topP > 1) {
+      throw AgentInfrastructureException(
+        code: "invalid_sampler_config",
+        message: "Agent topP must be between 0 and 1, got $topP",
+      );
+    }
+    if (presencePenalty < 0 || presencePenalty > 2) {
+      throw AgentInfrastructureException(
+        code: "invalid_sampler_config",
+        message: "Agent presence penalty must be between 0 and 2, got $presencePenalty",
+      );
+    }
+    if (frequencyPenalty < 0 || frequencyPenalty > 1) {
+      throw AgentInfrastructureException(
+        code: "invalid_sampler_config",
+        message: "Agent frequency penalty must be between 0 and 1, got $frequencyPenalty",
+      );
+    }
+    if (penaltyDecay < .99 || penaltyDecay > .999) {
+      throw AgentInfrastructureException(
+        code: "invalid_sampler_config",
+        message: "Agent penalty decay must be between 0.99 and 0.999, got $penaltyDecay",
+      );
+    }
+  }
+
+  AgentJson toManifest({required int seed}) {
+    return <String, Object?>{
+      "seed": seed,
+      "temperature": temperature,
+      "topK": topK,
+      "topP": topP,
+      "presencePenalty": presencePenalty,
+      "frequencyPenalty": frequencyPenalty,
+      "penaltyDecay": penaltyDecay,
+    };
+  }
+}
+
+const AgentSamplerConfig agentEvaluationSamplerConfig = AgentSamplerConfig(
+  temperature: .2,
+  topK: 500,
+  topP: 0,
+  presencePenalty: 0,
+  frequencyPenalty: 0,
+  penaltyDecay: .99,
+);
+
+final class AgentResponseBufferGate {
+  final String _staleContent;
+  final String replacementPrefix;
+  bool _staleBufferReset;
+
+  AgentResponseBufferGate({
+    required String staleContent,
+    this.replacementPrefix = "",
+  }) : _staleContent = staleContent,
+       _staleBufferReset = staleContent.isEmpty;
+
+  String freshContent(String full) {
+    if (_staleBufferReset) return full;
+    if (full.isEmpty) {
+      _staleBufferReset = true;
+      return "";
+    }
+    if (full == _staleContent) return "";
+    if (full.startsWith(_staleContent)) {
+      final fresh = full.substring(_staleContent.length);
+      if (replacementPrefix.isEmpty || fresh.startsWith(replacementPrefix)) {
+        return fresh;
+      }
+      return "$replacementPrefix$fresh";
+    }
+    _staleBufferReset = true;
+    return full;
+  }
+}
+
+final class AgentResponsePollTracker {
+  final int modelID;
+  final Set<int> _requestIds = <int>{};
+
+  AgentResponsePollTracker({required this.modelID});
+
+  void register(int requestId) {
+    _requestIds.add(requestId);
+  }
+
+  bool consume({
+    required int modelID,
+    required int requestId,
+  }) {
+    if (modelID != this.modelID) return false;
+    return _requestIds.remove(requestId);
+  }
+}
+
 final class AgentInfrastructureException implements Exception {
   final String code;
   final String message;

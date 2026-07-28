@@ -57,6 +57,7 @@ Future<void> main(List<String> arguments) async {
     model: <String, Object?>{
       "name": options.model,
       "sha256": options.modelSha256,
+      "sha256Verified": false,
       "precision": options.precision,
       "backend": "remote-reference",
       "endpointOrigin": options.endpoint.origin,
@@ -265,7 +266,6 @@ final class _ReferenceOptions {
   final AgentEvaluationMode mode;
   final int repeats;
   final Duration timeout;
-  final bool allowUnverifiedModel;
   final bool help;
 
   const _ReferenceOptions({
@@ -281,13 +281,11 @@ final class _ReferenceOptions {
     required this.mode,
     required this.repeats,
     required this.timeout,
-    required this.allowUnverifiedModel,
     required this.help,
   });
 
   factory _ReferenceOptions.parse(List<String> arguments) {
     final values = <String, String>{};
-    bool allowUnverifiedModel = false;
     bool help = false;
     for (int index = 0; index < arguments.length; index++) {
       final argument = arguments[index];
@@ -296,7 +294,6 @@ final class _ReferenceOptions {
         continue;
       }
       if (argument == "--allow-unverified-model") {
-        allowUnverifiedModel = true;
         continue;
       }
       if (!argument.startsWith("--") || index + 1 >= arguments.length) {
@@ -313,7 +310,7 @@ final class _ReferenceOptions {
     return _ReferenceOptions(
       endpoint: Uri.parse(values["endpoint"] ?? "http://127.0.0.1:8000/v1/completions"),
       model: values["model"] ?? "",
-      modelSha256: values["model-sha256"] ?? "unverified",
+      modelSha256: values["model-sha256"] ?? "not_provided",
       precision: values["precision"] ?? "bf16",
       protocol: values["protocol"] ?? "completions",
       outputPath: values["output"] ?? "agent-reference-report.json",
@@ -323,7 +320,6 @@ final class _ReferenceOptions {
       mode: values["mode"] == "assisted" ? .assisted : .strict,
       repeats: int.tryParse(values["repeats"] ?? "") ?? 3,
       timeout: Duration(seconds: int.tryParse(values["timeout-seconds"] ?? "") ?? 900),
-      allowUnverifiedModel: allowUnverifiedModel,
       help: help,
     );
   }
@@ -331,11 +327,6 @@ final class _ReferenceOptions {
   void validate() {
     if (model.isEmpty) {
       throw const FormatException("--model is required");
-    }
-    if (modelSha256 == "unverified" && !allowUnverifiedModel) {
-      throw const FormatException(
-        "--model-sha256 is required; use --allow-unverified-model only for exploratory runs",
-      );
     }
     if (!const <String>{"completions", "chat"}.contains(protocol)) {
       throw FormatException("Unsupported protocol: $protocol");
@@ -361,7 +352,6 @@ Usage:
   dart run tools/agent_eval_reference.dart \\
     --endpoint http://HOST:PORT/v1/completions \\
     --model MODEL_ID \\
-    --model-sha256 SHA256 \\
     --precision bf16 \\
     --output REPORT.json
 
@@ -373,6 +363,7 @@ Options:
   --timeout-seconds N          Per-generation timeout (default: 900)
   --cases PATH                 Benchmark JSON path
   --source-revision REV        Evaluated source revision
-  --allow-unverified-model     Permit a run without a model hash
+  --model-sha256 SHA256        Copy an operator supplied hash as unverified metadata
+  --allow-unverified-model     Legacy no-op retained for command compatibility
   --help                       Show this help
 """;

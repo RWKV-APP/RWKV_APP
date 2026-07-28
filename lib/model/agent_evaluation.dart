@@ -2,7 +2,7 @@
 import 'package:zone/model/agent.dart';
 import 'package:zone/model/agent_case.dart';
 
-const int agentEvaluationSchemaVersion = 1;
+const int agentEvaluationSchemaVersion = 2;
 const String agentEvaluationBenchmarkId = "primitive-bench";
 const String agentEvaluationBenchmarkVersion = "0.1";
 const int agentEvaluationSeed = 42;

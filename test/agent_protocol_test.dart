@@ -483,6 +483,27 @@ NR>1{printf "%-10s", \$1; print ""}"}}
 
       expect(result.status, AgentRunStatus.cancelled);
       expect(result.events, isEmpty);
+      expect(result.validForModelScore, isFalse);
+    });
+
+    test('marks cancellation before generation invalid for model scoring', () async {
+      final model = _ScriptedAgentModel(<String>["unused"]);
+      final sandbox = AgentSandbox(
+        files: const <String, String>{},
+        toolNames: const <String>["list_files"],
+      );
+      final runtime = AgentRuntime(model: model, toolHost: sandbox);
+
+      final result = await runtime.run(
+        system: 'Use tools.',
+        user: 'Inspect.',
+        isCancelled: () => true,
+      );
+
+      expect(result.status, AgentRunStatus.cancelled);
+      expect(result.validForModelScore, isFalse);
+      expect(result.events, isEmpty);
+      expect(model.prompts, isEmpty);
     });
 
     test('marks infrastructure failures invalid for model scoring', () async {

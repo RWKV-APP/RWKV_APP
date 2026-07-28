@@ -47,6 +47,7 @@ final class AgentRuntime {
           prompt: prompt,
           events: List<AgentEvent>.unmodifiable(events),
           turns: turn - 1,
+          validForModelScore: false,
         );
       }
 
@@ -77,6 +78,7 @@ final class AgentRuntime {
             prompt: prompt,
             events: List<AgentEvent>.unmodifiable(events),
             turns: turn - 1,
+            validForModelScore: false,
           );
         }
         final event = AgentEvent(
@@ -148,6 +150,7 @@ final class AgentRuntime {
               prompt: continuationPrompt,
               events: List<AgentEvent>.unmodifiable(events),
               turns: turn - 1,
+              validForModelScore: false,
             );
           }
           final event = AgentEvent(
