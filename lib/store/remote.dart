@@ -476,7 +476,7 @@ extension $Remote on _Remote {
   }
 
   Future<void> getFile({required FileInfo fileInfo}) async {
-    final url = downloadSource.q.prefix + downloadSource.q.transformRaw(fileInfo.raw) + downloadSource.q.suffix;
+    final url = downloadSource.q.resolveUrl(fileInfo.raw);
     final path = _paths(fileInfo).q;
     if (path.isEmpty) {
       Alert.error(_modelsDirNotReadyMessage);
@@ -2213,8 +2213,6 @@ extension _$Remote on _Remote {
   Future<void> _initModelDownloadTaskState() async {
     await 17.msLater;
     final availableFiles = [...chatWeights.q, ...roleplayWeights.q];
-    final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
-
     final stateFiles = availableFiles.map((e) => e.state).flattened.toSet();
     availableFiles.addAll(stateFiles);
 
@@ -2230,9 +2228,7 @@ extension _$Remote on _Remote {
         fileState.q = fileState.q.copyWith(state: TaskState.idle, hasFile: false);
         continue;
       }
-      final url = fileInfo.raw.startsWith("http://") || fileInfo.raw.startsWith("https://")
-          ? fileInfo.raw
-          : sprintf(urlFmt, [fileInfo.raw]);
+      final url = downloadSource.q.resolveUrl(fileInfo.raw);
       try {
         final task = await DownloadTask.create(
           url: url,

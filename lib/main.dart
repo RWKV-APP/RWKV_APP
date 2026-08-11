@@ -89,8 +89,15 @@ Future<void> _debugAppRunner() async {
 void _runZoneApp() {
   runApp(const _StateWrapper());
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    unawaited(P.postFirstFrameInit());
+    unawaited(_postFirstFrameInit());
   });
+}
+
+Future<void> _postFirstFrameInit() async {
+  await P.postFirstFrameInit();
+  if (!kDebugMode) return;
+  if (Args.modelScopeDebugAcceptanceModel.isEmpty) return;
+  await P.runModelScopeDebugAcceptance();
 }
 
 FutureOr<void> _configureSentry(SentryFlutterOptions options) {

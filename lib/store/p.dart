@@ -64,6 +64,8 @@ import 'package:zone/config.dart';
 import 'package:zone/db/db.dart' as db;
 import 'package:zone/db/db.dart';
 import 'package:zone/func/albatross_protocol.dart';
+import 'package:zone/func/agent_local_file_host.dart';
+import 'package:zone/func/agent_local_file_intent.dart';
 import 'package:zone/func/agent_runtime.dart';
 import 'package:zone/func/agent_sandbox.dart';
 import 'package:zone/func/agent_sandboxed_lua.dart';
@@ -165,6 +167,7 @@ part "chat_generation_completion.dart";
 part "chat_history.dart";
 part "chat_input_send.dart";
 part "chat_lifecycle.dart";
+part "chat_local_agent.dart";
 part "chat_message_actions.dart";
 part "chat_pause.dart";
 part "chat_received_tokens.dart";
@@ -200,6 +203,7 @@ part "talk.dart";
 part "translator.dart";
 part "ocr.dart";
 part "md_render.dart";
+part "modelscope_debug_acceptance.dart";
 part "font.dart";
 part "ui.dart";
 part "pth.dart";
@@ -251,6 +255,10 @@ abstract class P {
   static final telemetry = _Telemetry();
   static final webDemo = _WebDemo();
   static bool _postFirstFrameInitStarted = false;
+
+  static Future<void> runModelScopeDebugAcceptance() async {
+    await _runModelScopeDebugAcceptance();
+  }
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();

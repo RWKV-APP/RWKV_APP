@@ -241,6 +241,55 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_eval_strict_pass": MessageLookupByLibrary.simpleMessage("通過"),
     "agent_eval_tools": m2,
     "agent_eval_turn": m3,
+    "agent_local_approval_title": MessageLookupByLibrary.simpleMessage(
+      "Agent 要求修改真實檔案",
+    ),
+    "agent_local_approve": MessageLookupByLibrary.simpleMessage("批准一次"),
+    "agent_local_chat_cancelled": MessageLookupByLibrary.simpleMessage(
+      "本機檔案操作已取消。",
+    ),
+    "agent_local_chat_failed": MessageLookupByLibrary.simpleMessage(
+      "本機檔案操作失敗。",
+    ),
+    "agent_local_chat_running": MessageLookupByLibrary.simpleMessage(
+      "正在處理你要求的本機檔案操作…",
+    ),
+    "agent_local_content": MessageLookupByLibrary.simpleMessage("預計寫入內容"),
+    "agent_local_description": MessageLookupByLibrary.simpleMessage(
+      "Agent 可以讀取所選資料夾中的真實 UTF-8 文字檔。每次建立、修改或刪除都會暫停並等待你的批准。",
+    ),
+    "agent_local_final_answer": MessageLookupByLibrary.simpleMessage(
+      "Agent 結果",
+    ),
+    "agent_local_no_workspace": MessageLookupByLibrary.simpleMessage("尚未選擇工作區"),
+    "agent_local_operation_create": MessageLookupByLibrary.simpleMessage("建立"),
+    "agent_local_operation_delete": MessageLookupByLibrary.simpleMessage("刪除"),
+    "agent_local_operation_update": MessageLookupByLibrary.simpleMessage("修改"),
+    "agent_local_path": MessageLookupByLibrary.simpleMessage("相對路徑"),
+    "agent_local_prompt_hint": MessageLookupByLibrary.simpleMessage(
+      "範例：建立 RWKV-Agent-Test.txt，讀取它，修改內容，然後回報已驗證的結果。",
+    ),
+    "agent_local_prompt_required": MessageLookupByLibrary.simpleMessage(
+      "請先輸入本機檔案任務",
+    ),
+    "agent_local_reject": MessageLookupByLibrary.simpleMessage("拒絕"),
+    "agent_local_run": MessageLookupByLibrary.simpleMessage("執行本機 Agent"),
+    "agent_local_select_workspace": MessageLookupByLibrary.simpleMessage(
+      "選擇 Agent 工作區",
+    ),
+    "agent_local_select_workspace_first": MessageLookupByLibrary.simpleMessage(
+      "請先選擇並授權工作區",
+    ),
+    "agent_local_title": MessageLookupByLibrary.simpleMessage("真實本機檔案（Debug）"),
+    "agent_local_windows_debug_only": MessageLookupByLibrary.simpleMessage(
+      "真實本機 Agent 檔案操作僅可在 Windows Debug App 使用",
+    ),
+    "agent_local_workspace_authorized": MessageLookupByLibrary.simpleMessage(
+      "已為目前 App 工作階段授權工作區",
+    ),
+    "agent_local_workspace_failed": MessageLookupByLibrary.simpleMessage(
+      "無法授權所選工作區",
+    ),
     "agent_test": MessageLookupByLibrary.simpleMessage("Agent 能力評測"),
     "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
       "目前 Albatross 後端暫不支援此功能",

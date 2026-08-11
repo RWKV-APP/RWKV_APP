@@ -246,6 +246,59 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_eval_strict_pass": MessageLookupByLibrary.simpleMessage("통과"),
     "agent_eval_tools": m2,
     "agent_eval_turn": m3,
+    "agent_local_approval_title": MessageLookupByLibrary.simpleMessage(
+      "Agent가 실제 파일 변경을 요청합니다",
+    ),
+    "agent_local_approve": MessageLookupByLibrary.simpleMessage("한 번 승인"),
+    "agent_local_chat_cancelled": MessageLookupByLibrary.simpleMessage(
+      "로컬 파일 작업이 취소되었습니다.",
+    ),
+    "agent_local_chat_failed": MessageLookupByLibrary.simpleMessage(
+      "로컬 파일 작업에 실패했습니다.",
+    ),
+    "agent_local_chat_running": MessageLookupByLibrary.simpleMessage(
+      "요청한 로컬 파일 작업을 처리하고 있습니다…",
+    ),
+    "agent_local_content": MessageLookupByLibrary.simpleMessage("제안된 내용"),
+    "agent_local_description": MessageLookupByLibrary.simpleMessage(
+      "Agent는 선택한 폴더의 실제 UTF-8 텍스트 파일을 읽을 수 있습니다. 생성, 수정, 삭제할 때마다 승인을 기다립니다.",
+    ),
+    "agent_local_final_answer": MessageLookupByLibrary.simpleMessage(
+      "Agent 결과",
+    ),
+    "agent_local_no_workspace": MessageLookupByLibrary.simpleMessage(
+      "선택된 작업 공간이 없습니다",
+    ),
+    "agent_local_operation_create": MessageLookupByLibrary.simpleMessage("생성"),
+    "agent_local_operation_delete": MessageLookupByLibrary.simpleMessage("삭제"),
+    "agent_local_operation_update": MessageLookupByLibrary.simpleMessage("수정"),
+    "agent_local_path": MessageLookupByLibrary.simpleMessage("상대 경로"),
+    "agent_local_prompt_hint": MessageLookupByLibrary.simpleMessage(
+      "예: RWKV-Agent-Test.txt를 만들고 읽은 뒤 내용을 수정하고 검증된 결과를 보고하세요.",
+    ),
+    "agent_local_prompt_required": MessageLookupByLibrary.simpleMessage(
+      "먼저 로컬 파일 작업을 입력하세요",
+    ),
+    "agent_local_reject": MessageLookupByLibrary.simpleMessage("거부"),
+    "agent_local_run": MessageLookupByLibrary.simpleMessage("로컬 Agent 실행"),
+    "agent_local_select_workspace": MessageLookupByLibrary.simpleMessage(
+      "Agent 작업 공간 선택",
+    ),
+    "agent_local_select_workspace_first": MessageLookupByLibrary.simpleMessage(
+      "먼저 작업 공간을 선택하고 승인하세요",
+    ),
+    "agent_local_title": MessageLookupByLibrary.simpleMessage(
+      "실제 로컬 파일(Debug)",
+    ),
+    "agent_local_windows_debug_only": MessageLookupByLibrary.simpleMessage(
+      "실제 로컬 Agent 파일 작업은 Windows Debug App에서만 사용할 수 있습니다",
+    ),
+    "agent_local_workspace_authorized": MessageLookupByLibrary.simpleMessage(
+      "현재 App 세션에 작업 공간이 승인되었습니다",
+    ),
+    "agent_local_workspace_failed": MessageLookupByLibrary.simpleMessage(
+      "선택한 작업 공간을 승인할 수 없습니다",
+    ),
     "agent_test": MessageLookupByLibrary.simpleMessage("Agent 능력 평가"),
     "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
       "현재 Albatross 백엔드는 이 기능을 지원하지 않습니다",
@@ -639,9 +692,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "clear": MessageLookupByLibrary.simpleMessage("지우기"),
     "clear_application_cache": MessageLookupByLibrary.simpleMessage("캐시 지우기"),
-    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
-      "앱 설정과 로컬 구성 캐시를 지우시겠습니까? 채팅 기록, 내보낸 파일, 가중치 파일은 삭제되지 않습니다. 사용자 지정 모델 폴더 연결은 유지됩니다.",
-    ),
+    "clear_application_cache_confirmation":
+        MessageLookupByLibrary.simpleMessage(
+          "앱 설정과 로컬 구성 캐시를 지우시겠습니까? 채팅 기록, 내보낸 파일, 가중치 파일은 삭제되지 않습니다. 사용자 지정 모델 폴더 연결은 유지됩니다.",
+        ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage("메모리 캐시 지우기"),
     "clear_text": MessageLookupByLibrary.simpleMessage("텍스트 지우기"),
     "click_here_to_select_a_new_model": MessageLookupByLibrary.simpleMessage(

@@ -245,9 +245,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_eval_mode_assisted": MessageLookupByLibrary.simpleMessage(
       "С поддержкой",
     ),
-    "agent_eval_mode_assisted_description": MessageLookupByLibrary.simpleMessage(
-      "Разрешает регистрируемые исправления среды для диагностики и показывает строгий и вспомогательный результаты.",
-    ),
+    "agent_eval_mode_assisted_description":
+        MessageLookupByLibrary.simpleMessage(
+          "Разрешает регистрируемые исправления среды для диагностики и показывает строгий и вспомогательный результаты.",
+        ),
     "agent_eval_mode_strict": MessageLookupByLibrary.simpleMessage("Строгий"),
     "agent_eval_mode_strict_description": MessageLookupByLibrary.simpleMessage(
       "Оценивает исходное поведение модели. Исправления, преобразования типов, усечение или принудительный вызов инструмента приводят к провалу строгой оценки.",
@@ -267,6 +268,73 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_eval_strict_pass": MessageLookupByLibrary.simpleMessage("УСПЕХ"),
     "agent_eval_tools": m2,
     "agent_eval_turn": m3,
+    "agent_local_approval_title": MessageLookupByLibrary.simpleMessage(
+      "Agent запрашивает изменение реального файла",
+    ),
+    "agent_local_approve": MessageLookupByLibrary.simpleMessage(
+      "Разрешить один раз",
+    ),
+    "agent_local_chat_cancelled": MessageLookupByLibrary.simpleMessage(
+      "Операция с локальным файлом отменена.",
+    ),
+    "agent_local_chat_failed": MessageLookupByLibrary.simpleMessage(
+      "Не удалось выполнить операцию с локальным файлом.",
+    ),
+    "agent_local_chat_running": MessageLookupByLibrary.simpleMessage(
+      "Выполняется запрошенная операция с локальным файлом…",
+    ),
+    "agent_local_content": MessageLookupByLibrary.simpleMessage(
+      "Предлагаемое содержимое",
+    ),
+    "agent_local_description": MessageLookupByLibrary.simpleMessage(
+      "Agent может читать реальные текстовые файлы UTF-8 в выбранной папке. Каждое создание, изменение или удаление ожидает вашего подтверждения.",
+    ),
+    "agent_local_final_answer": MessageLookupByLibrary.simpleMessage(
+      "Результат Agent",
+    ),
+    "agent_local_no_workspace": MessageLookupByLibrary.simpleMessage(
+      "Рабочая папка не выбрана",
+    ),
+    "agent_local_operation_create": MessageLookupByLibrary.simpleMessage(
+      "Создать",
+    ),
+    "agent_local_operation_delete": MessageLookupByLibrary.simpleMessage(
+      "Удалить",
+    ),
+    "agent_local_operation_update": MessageLookupByLibrary.simpleMessage(
+      "Изменить",
+    ),
+    "agent_local_path": MessageLookupByLibrary.simpleMessage(
+      "Относительный путь",
+    ),
+    "agent_local_prompt_hint": MessageLookupByLibrary.simpleMessage(
+      "Пример: создайте RWKV-Agent-Test.txt, прочитайте его, измените содержимое и сообщите проверенный результат.",
+    ),
+    "agent_local_prompt_required": MessageLookupByLibrary.simpleMessage(
+      "Сначала введите задачу для локальных файлов",
+    ),
+    "agent_local_reject": MessageLookupByLibrary.simpleMessage("Отклонить"),
+    "agent_local_run": MessageLookupByLibrary.simpleMessage(
+      "Запустить локальный Agent",
+    ),
+    "agent_local_select_workspace": MessageLookupByLibrary.simpleMessage(
+      "Выбрать рабочую папку Agent",
+    ),
+    "agent_local_select_workspace_first": MessageLookupByLibrary.simpleMessage(
+      "Сначала выберите и разрешите рабочую папку",
+    ),
+    "agent_local_title": MessageLookupByLibrary.simpleMessage(
+      "Реальные локальные файлы (Debug)",
+    ),
+    "agent_local_windows_debug_only": MessageLookupByLibrary.simpleMessage(
+      "Операции Agent с реальными локальными файлами доступны только в Windows Debug App",
+    ),
+    "agent_local_workspace_authorized": MessageLookupByLibrary.simpleMessage(
+      "Рабочая папка разрешена для текущего сеанса App",
+    ),
+    "agent_local_workspace_failed": MessageLookupByLibrary.simpleMessage(
+      "Не удалось разрешить выбранную рабочую папку",
+    ),
     "agent_test": MessageLookupByLibrary.simpleMessage(
       "Оценка возможностей Agent",
     ),
@@ -768,9 +836,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear_application_cache": MessageLookupByLibrary.simpleMessage(
       "Очистить кэш",
     ),
-    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
-      "Очистить кэш настроек приложения и локальной конфигурации? История чатов, экспортированные файлы и файлы весов не будут удалены. Пользовательские папки моделей останутся подключенными.",
-    ),
+    "clear_application_cache_confirmation":
+        MessageLookupByLibrary.simpleMessage(
+          "Очистить кэш настроек приложения и локальной конфигурации? История чатов, экспортированные файлы и файлы весов не будут удалены. Пользовательские папки моделей останутся подключенными.",
+        ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage(
       "Очистить кэш в памяти",
     ),
@@ -862,9 +931,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "В этой папке нет локальных моделей для Chat",
     ),
     "current_model": m26,
-    "current_model_from_latest_json_not_pth": MessageLookupByLibrary.simpleMessage(
-      "Текущая модель загружена из конфигурации latest.json, локальный файл модели не загружен",
-    ),
+    "current_model_from_latest_json_not_pth":
+        MessageLookupByLibrary.simpleMessage(
+          "Текущая модель загружена из конфигурации latest.json, локальный файл модели не загружен",
+        ),
     "current_progress": m27,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
       "ID вкладки текущей задачи",
@@ -938,9 +1008,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "Параметры декодирования для каждого сообщения",
     ),
-    "decode_params_for_each_message_detail": MessageLookupByLibrary.simpleMessage(
-      "Параметры декодирования для каждого сообщения в пакете. Нажмите, чтобы изменить параметры для каждого сообщения при пакетном выводе.",
-    ),
+    "decode_params_for_each_message_detail":
+        MessageLookupByLibrary.simpleMessage(
+          "Параметры декодирования для каждого сообщения в пакете. Нажмите, чтобы изменить параметры для каждого сообщения при пакетном выводе.",
+        ),
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "Скорость декодирования (токенов в секунду)",
     ),

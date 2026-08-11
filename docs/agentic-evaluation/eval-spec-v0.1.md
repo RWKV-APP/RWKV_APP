@@ -10,6 +10,20 @@ This specification evaluates whether a model can select tools, produce valid arg
 
 It does not evaluate unrestricted computer use, Terminal operation, external network research, long-running workflow recovery, or production API integrations
 
+## Real local action separation
+
+The user-authorized Windows ordinary-chat local Agent workflow is governed by `SPEC-RWKV-LOCAL-AGENT-FILE-ACTIONS`
+
+It uses a separate real-file tool host, requires explicit workspace selection and mutation approval, and does not contribute to Primitive Bench scores. The deterministic evaluation host remains in-memory and continues to reject host paths
+
+## Platform and repository scope
+
+The current Agentic evaluation campaign runs on Windows and reviews cases individually before broader batches
+
+A Windows report does not require a phone-side Agentic run. Mobile Agentic evaluation is outside the current campaign and requires a separately approved scope
+
+The RWKV App repository owns the Agentic evaluation UI, protocol, in-memory tool host, scoring, report lifecycle, and orchestration. Adapter or native-engine work is routed to its owning repository only when evidence identifies a bridge or inference-runtime defect
+
 ## Unit of evaluation
 
 One case run consists of:

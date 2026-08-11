@@ -16,7 +16,7 @@ When the user says `Specification flow` or `Specification`, treat that wording a
 - Strict record templates: `docs/spec-process/templates.md`
 - Derived workflow explanation: `SPEC-LOOP.md`
 - Executable agent guidance: `.agents/skills/spec-sync/SKILL.md`
-- Raw product and process input: `docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md`
+- Private source intake: retained outside this repository by the Root Harness; project records may use opaque source IDs without source wording or private paths
 - Current semantic conflicts: `docs/spec-process/conflicts/current/`
 - Product identity and design principles: `PRODUCT.md`
 
@@ -28,7 +28,11 @@ RWKV App lets people download, run, evaluate, and compare RWKV models on phones 
 
 The supported application platforms are Android, iOS, Windows, macOS, and Linux. Platform availability of a specific model, backend, or feature remains governed by its narrower canonical owner and current implementation.
 
-HarmonyOS on verified Huawei Kirin phones is an active delivery target governed by `SPEC-RWKV-HARMONY-USER-PARITY`, `SPEC-RWKV-KIRIN-MODEL-IDENTITY`, `SPEC-RWKV-KIRIN-NPU-RUNTIME`, and `SPEC-RWKV-HARMONY-DISTRIBUTION`. It must not be described as a delivered public platform until the complete acceptance contract in `docs/requirements/harmony_kirin_delivery.md` has passed.
+RWKV App quantization is governed by `SPEC-RWKV-QUANTIZATION-CATALOG-CONTROL` and `SPEC-RWKV-QUANTIZATION-DELIVERY`. Work begins with the live `remote/latest.json` artifact matrix and its application consumers; converter libraries and host accelerators are selected from the required catalog cohort and are not inferred as product targets from the word quantization.
+
+The Windows Debug App includes ordinary-chat real local Agent file actions governed by `SPEC-RWKV-LOCAL-AGENT-FILE-ACTIONS`. A clear natural-language file request can trigger workspace authorization, in-chat review of every mutation, and a verified assistant result. This workflow remains separate from deterministic Agentic Evaluation scoring.
+
+Desktop UI redesign is authorized by `SPEC-RWKV-DESKTOP-UI-REDESIGN-AUTHORIZATION` in `docs/contracts/desktop_ui_redesign.md`. Detailed Chat-first layout, Projects, Agent UI expansion, reference-product comparisons, and visual acceptance proposals remain private intake until explicit rulings promote a normalized project contract.
 
 ## SPEC-RWKV-REPOSITORY-BOUNDARIES — Repository Ownership
 
@@ -73,11 +77,13 @@ Static analysis, unit tests, widget tests, builds, and deterministic scripts pro
 
 The root Codex agent delivering a task must inspect the combined diff and personally review representative outcomes at the level a user consumes them. For work that crosses the Flutter app, adapter, native engine, or website, verify every relevant repository and representation within the authorized scope.
 
-## Product Input Policy
+## SPEC-SYNC-PRIVATE-INTAKE-BOUNDARY — Private Source Intake Boundary
 
-Product and process input is recorded under `docs/product-inputs/YYYY-MM-DD/` before or alongside the canonical update it authorizes. Split assertions that may evolve independently. Preserve the meaningful raw wording while redacting credentials, signed links, personal data, and machine-local attachment paths.
+Raw user wording, copied stakeholder communication, attachments, and other near-source material are retained only by the private Root Harness. Do not create `docs/product-inputs/` or copy private source bodies, private paths, or unnecessary personal context into this repository.
 
-Use `docs/spec-process/templates.md` and run:
+RWKV App keeps the normalized product and technical truth it owns. A project decision, observation, conflict, or acceptance record may retain an opaque source ID for traceability, but it must be independently understandable from its project-safe assertions, surfaces, and evidence.
+
+Use `docs/spec-process/templates.md` for project-safe records and run:
 
 ```bash
 dart run tools/bin/check_specification.dart

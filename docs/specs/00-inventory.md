@@ -21,8 +21,7 @@ This inventory lists the checked-in surfaces used to resolve product truth, impl
 
 ## Record And Evidence Surfaces
 
-- `docs/product-inputs/YYYY-MM-DD/PI-*.md`: one raw product or process input per file
-- `docs/product-inputs/evidence/2026-07-23-geo-ai-spec-v16-core-manifest.md`: reproducible source-core provenance for this migration
+- Private Root source IDs referenced by project records: provenance only; raw bodies and private paths are not stored in this repository
 - `docs/spec-process/decisions/DEC-*.md`: explicit product or process ruling history, including approved, superseded, and rejected decisions
 - `docs/spec-process/observations/OBS-*.md`: workflow or product drift observations
 - `docs/spec-process/conflicts/current/CF-*.md`: unresolved semantic conflicts
@@ -38,12 +37,11 @@ This inventory lists the checked-in surfaces used to resolve product truth, impl
 - `docs/architecture/workspace-map.md`: repository and symptom-to-entry ownership
 - `docs/architecture/store-map.md`: Riverpod store ownership and verification pointers
 - `docs/architecture/vl-model-update-guide.md`: VL model configuration/display update contract
+- `docs/contracts/model_quantization_catalog.md`: catalog-driven model quantization and application acceptance contract
 - `docs/agentic-evaluation/eval-spec-v0.1.md`: Agentic Evaluation protocol
-- `docs/requirements/multi_question_parallel.md`: multi-question parallel behavior
-- `docs/requirements/harmony_kirin_delivery.md`: HarmonyOS experience parity, Kirin model identity, NPU execution, and end-user distribution contract
-- `docs/requirements/rwkv_lightning_cuda_integration_plan.md`: proposal-stage Lightning CUDA integration
-- `docs/albatross-http-api-requirements.md`: deferred Albatross HTTP API contract
-- `docs/requirements/coding_agent_optimization.md`: historical coding-agent optimization proposal
+- `docs/contracts/local_agent_file_actions.md`: user-authorized Windows local Agent file CRUD contract
+- `docs/contracts/desktop_ui_redesign.md`: scoped desktop UI redesign authorization
+- `docs/contracts/multi_question_parallel.md`: normalized multi-question parallel behavior contract
 
 ## Derived Public Documentation
 
@@ -73,8 +71,9 @@ This inventory lists the checked-in surfaces used to resolve product truth, impl
 ## Lifecycle Notes
 
 - The Agentic Evaluation specification is active for its named evaluation workflow
+- RWKV App quantization starts from the live `remote/latest.json` artifact matrix; converter and host tooling follow the selected catalog cohort
+- Local Agent file actions are active in Windows Debug ordinary chat and remain separate from deterministic Agentic Evaluation scoring
+- Desktop UI redesign is authorized; detailed reference sets, feature scope, Projects, Agent expansion, and visual acceptance proposals remain outside this repository until explicitly promoted
 - The multi-question document records an implemented feature family but must still be compared with current code before delivery claims
-- The Lightning CUDA document is a proposal and does not describe delivered app behavior
-- The Albatross API document is deferred under the repository's current ignore rule
-- The coding-agent optimization proposal is historical and not an active implementation contract
+- Raw intake, historical requirement narratives, and unresolved proposals are owned by the private Root Harness rather than this repository
 - Runtime model names, versions, download URLs, service endpoints, and platform support can drift; consult their canonical or runtime owner instead of copying them into broad Specification prose

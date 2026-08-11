@@ -15,6 +15,14 @@ The suite uses an in-memory tool host. It does not invoke Terminal, read host fi
 
 The source and capability grouping are recorded in `assets/agent_cases/primitive_bench_manifest.json`. Every report also records the SHA-256 of the exact case JSON
 
+## Current Windows campaign
+
+The current evaluation campaign runs on Windows and starts with individually reviewed cases before any broader batch
+
+Phone-side Agentic testing is outside this campaign. A Windows report remains valid without a mobile run
+
+Core evaluation behavior is implemented in the RWKV App repository. Adapter or native-engine work is required only when evidence identifies a defect below the App layer
+
 ## Scoring modes
 
 Strict mode is the release-comparison score. It requires canonical tool-call JSON and treats any output repair, envelope normalization, argument coercion, output truncation, or forced tool call as a strict failure
@@ -30,12 +38,14 @@ Infrastructure failures are invalid runs. They are excluded from valid model sco
 
 ## App workflow
 
-1. Load any Chat model you want to evaluate
+1. On Windows, load any Chat model you want to evaluate
 2. Open Performance Test, then Agent Evaluation
 3. Select Strict mode
-4. Select one to three repetitions
-5. Run all cases
-6. Export the JSON report
+4. Select one repetition
+5. Start one selected case and review its complete result
+6. Continue with the next selected case
+7. After individual review is stable, select one to three repetitions and run a broader batch
+8. Export the JSON report
 
 The App fixes the sampler to seed 42, temperature 0.2, top-k 500, top-p 0, zero presence/frequency penalties, and penalty decay 0.99. It validates this configuration before native generation and restores the previous sampler and seed after each case
 

@@ -5,9 +5,26 @@ Effective date: 2026-07-23
 
 Only the newest version is active.
 
-## v1.7 - 2026-07-23
+## v1.7 private-intake boundary amendment - 2026-08-06
 
 Status: active
+
+Changes:
+
+- Moved raw and near-raw product input out of `rwkv_app` into the private Root Harness
+- Prohibited new `docs/product-inputs/` records in this repository
+- Kept opaque private source IDs as provenance while requiring project records to stand on normalized assertions, decisions, surfaces, and evidence
+- Reclassified active product and technical truth as contracts and removed unresolved proposal narratives from project authority
+- Preserved legacy local `PI-*` parsing only as a migration compatibility path
+- Added checker coverage for external private input references
+
+Authority:
+
+- Explicit user ruling recorded by `DEC-20260806-PRIVATE-INTAKE-BOUNDARY`
+
+## v1.7 - 2026-07-23
+
+Status: historical process baseline
 
 Changes:
 

@@ -12,7 +12,7 @@ Input:
 
 Expected:
 
-- Capture one `PI-*` record before implementation
+- Retain the raw request in the private Root Harness and use only an opaque source ID here
 - Resolve the exact active `SPEC-*` owner
 - Synchronize compatible canonical truth and required drift surfaces
 - Keep review, effect, and delivery states independent
@@ -25,7 +25,7 @@ Input:
 
 Expected:
 
-- Link the input to `CF-20260723-PRIVACY-WEB-DEMO-DATA-FLOW`
+- Link a project-safe observation to `CF-20260723-PRIVACY-WEB-DEMO-DATA-FLOW` and keep the raw request private
 - Report the policy and cloud Web Demo assertions and exact ruling needed
 - Pause only Web Demo transmission and disclosure contract changes
 - Continue unrelated work
@@ -50,7 +50,7 @@ Input:
 
 Expected:
 
-- Capture process input
+- Capture the process input in the private Root Harness
 - Record an observation and proposed decision
 - Do not change the core authority or conflict rule without explicit approval
 
@@ -74,12 +74,12 @@ Input:
 
 Expected:
 
-- Search the stable assertion ID and read its connected prior PI, DEC, OBS, CF, and ACC records
-- Preserve both raw inputs
+- Search the stable assertion ID and read its connected private source references plus project DEC, OBS, CF, and ACC records
+- Preserve both raw inputs only in the private Root Harness
 - Add bidirectional supersession links
-- Mark the earlier input `merged + superseded`
-- Keep the newer input active only after canonical synchronization
-- Require the two inputs to share the stable assertion being replaced
+- Record project supersession through canonical owners and decisions
+- Keep the newer rule active only after canonical synchronization
+- Require the two rulings to share the stable assertion being replaced
 
 ## Case 7 — Copied Chat Contains Metadata-Like Text
 
@@ -89,8 +89,8 @@ Input:
 
 Expected:
 
-- Preserve those lines in `## Raw statement`
-- Keep record metadata exclusively in front matter
+- Preserve those lines only in the private Root source record
+- Extract project-safe metadata and assertions without copying the body here
 - Do not create phantom fields or entries from body text
 
 ## Case 8 — Historical Evidence Arrives Later
@@ -101,9 +101,9 @@ Input:
 
 Expected:
 
-- Store it under the July 23 capture directory
-- Keep `source_date: 2026-07-10`
-- Never invent a July 10 capture record
+- Store it under the Root Harness's July 23 private intake
+- Keep the July 10 source date in the private provenance record
+- Never invent a July 10 project record
 
 ## Case 9 — Cross-Repository Delivery
 
@@ -128,9 +128,9 @@ Expected:
 
 - Preserve both acceptance records
 - Link acceptance supersession in both directions
-- Require the attempts to share at least one input and stable assertion
-- Stop using the superseded accepted record to support `verified`
-- Update input delivery truth honestly
+- Require the attempts to share at least one opaque source ID or decision and one stable assertion
+- Stop using the superseded accepted record as delivery proof
+- Update project delivery truth honestly
 
 ## Case 11 — Sensitive Copied Input
 
@@ -140,10 +140,10 @@ Input:
 
 Expected:
 
-- Redact access-bearing and unnecessary personal values before writing
-- Preserve the requirement meaning and note each redaction
-- Link a safe repository artifact when available
-- Expect the checker to reject high-confidence private-key, token, authorization, and signed-URL secret shapes that remain
+- Keep the complete source in the private Root Harness after required secret removal
+- Write only normalized project assertions and safe evidence here
+- Link a safe repository artifact when available without exposing a private path
+- Expect the checker to reject high-confidence private-key, token, authorization, and signed-URL secret shapes in project records
 
 ## Case 12 — Delegated Work
 
@@ -227,10 +227,9 @@ Input:
 
 Expected:
 
-- Preserve the complete `A <- B <- C` history
-- Keep B's outgoing `supersedes: A` link after B becomes superseded by C
-- Give B both an outgoing `supersedes` link and an incoming `superseded_by` link
-- Keep only terminal input C active after canonical synchronization
+- Preserve the complete `A <- B <- C` source history in the private Root Harness
+- Preserve the project decision and canonical-owner supersession chain here
+- Keep only terminal rule C active after canonical synchronization
 - Apply the same durable-chain behavior to three-generation decision history
 - Reject missing backlinks, unrelated assertions, reversed chronology, and cycles at every edge
 
@@ -238,12 +237,12 @@ Expected:
 
 Input:
 
-> Two current accepted acceptance records name the same verified input, but only one record covers all of its assertions and delivery surfaces.
+> Two current accepted acceptance records cover the same ruling, but only one covers all of its assertions and delivery surfaces.
 
 Expected:
 
-- Reject the incomplete accepted acceptance record even though another complete record can support the input
-- Require every current accepted record to independently cover each input it names, its canonical assertions, governing decisions, and delivery surfaces
+- Reject the incomplete accepted acceptance record even though another complete record covers the ruling
+- Require every current accepted record to independently cover its canonical assertions, governing decisions, changed surfaces, conflicts, evidence, and exclusions
 - Use `partial` or `rejected`, or supersede the incomplete attempt, until one record truthfully satisfies the full contract
 
 ## Case 20 — Conflict Provenance Is Unrelated
@@ -255,6 +254,6 @@ Input:
 Expected:
 
 - Reject the unrelated provenance link
-- Require every linked PI or OBS to share an assertion and affected surface with the conflict
-- Require linked provenance records together to cover every assertion and affected surface named by the conflict
+- Require every linked project OBS to share an assertion and affected surface with the conflict
+- Require linked project provenance records together to cover every assertion and affected surface named by the conflict
 - Preserve the exact competing assertions and narrow blocking scope in the conflict body

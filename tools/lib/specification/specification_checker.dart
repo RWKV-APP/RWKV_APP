@@ -475,7 +475,6 @@ final class SpecificationChecker {
     'docs/spec-process/eval-cases.md',
     'docs/spec-process/templates.md',
     'docs/plans/PLANS.md',
-    'docs/product-inputs/README.md',
     'docs/spec-process/decisions/README.md',
     'docs/spec-process/observations/README.md',
     'docs/spec-process/conflicts/README.md',
@@ -491,13 +490,11 @@ final class SpecificationChecker {
       'docs/specs/01-authority-map.md',
       'docs/specs/02-repository-map.md',
       'docs/spec-process/rules.md',
-      'docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md',
       '.agents/skills/spec-sync/SKILL.md',
     ],
     'AGENTS.md': [
       'docs/specification.md',
       '.agents/skills/spec-sync/SKILL.md',
-      'docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md',
       'docs/spec-process/conflicts/current/',
     ],
     '.agents/skills/spec-sync/SKILL.md': [
@@ -505,7 +502,6 @@ final class SpecificationChecker {
       'docs/specs/00-inventory.md',
       'docs/specs/01-authority-map.md',
       'docs/specs/02-repository-map.md',
-      'docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md',
       'docs/spec-process/conflicts/current/',
       'tools/bin/check_specification.dart',
       'SPEC-SYNC-ACCEPTANCE-GUARDRAILS',
@@ -832,16 +828,12 @@ final class SpecificationChecker {
       return;
     }
     const sectionNames = {
-      _RecordKind.productInput: 'Product Or Process Input',
       _RecordKind.decision: 'Decision',
       _RecordKind.observation: 'Observation',
       _RecordKind.conflict: 'Conflict',
       _RecordKind.acceptance: 'Acceptance',
     };
     const expectedPaths = {
-      _RecordKind.productInput: [
-        'docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md',
-      ],
       _RecordKind.decision: [
         'docs/spec-process/decisions/DEC-YYYYMMDD-SLUG.md',
       ],
@@ -1874,7 +1866,6 @@ final class SpecificationChecker {
       return;
     }
     if (!directory.existsSync()) {
-      _addIssue(basePath, 'record-directory', 'Product input directory is missing');
       return;
     }
     final entities = directory.listSync(recursive: true, followLinks: false);
@@ -2759,6 +2750,15 @@ final class SpecificationChecker {
       if (checkExistence) {
         final targetStatus = _referenceTargetStatus(repositoryRoot, repositoryPath);
         if (targetStatus == _ReferenceTargetStatus.missing) {
+          if (_isHistoricalProjectRecord(sourcePath)) {
+            return _ResolvedReference(
+              original: reference,
+              repositoryPath: repositoryPath,
+              repositoryRoot: repositoryRoot,
+              anchor: anchor,
+              checkExistence: false,
+            );
+          }
           _addIssue(
             sourcePath,
             'repository-reference-missing',
@@ -2808,6 +2808,15 @@ final class SpecificationChecker {
     }
     final targetStatus = _referenceTargetStatus(root, repositoryPath);
     if (targetStatus == _ReferenceTargetStatus.missing) {
+      if (_isMigratedLegacyPrivateSurface(sourcePath, repositoryPath)) {
+        return _ResolvedReference(
+          original: reference,
+          repositoryPath: repositoryPath,
+          repositoryRoot: root,
+          anchor: anchor,
+          checkExistence: false,
+        );
+      }
       _addIssue(
         sourcePath,
         'repository-reference-missing',
@@ -2832,6 +2841,23 @@ final class SpecificationChecker {
       anchor: anchor,
       checkExistence: true,
     );
+  }
+
+  bool _isMigratedLegacyPrivateSurface(String sourcePath, String repositoryPath) {
+    if (!_isHistoricalProjectRecord(sourcePath)) {
+      return false;
+    }
+    return repositoryPath.startsWith('docs/product-inputs/') ||
+        repositoryPath.startsWith('docs/requirements/') ||
+        repositoryPath == 'docs/albatross-http-api-requirements.md';
+  }
+
+  bool _isHistoricalProjectRecord(String sourcePath) {
+    final recordMatch = RegExp(
+      r'^docs/spec-process/(?:decisions|observations|acceptance-records)/(?:DEC|OBS|ACC)-(\d{8})-',
+    ).firstMatch(sourcePath);
+    final recordDate = recordMatch?.group(1);
+    return recordDate != null && recordDate.compareTo('20260806') < 0;
   }
 
   bool _looksLikeAbsoluteMachinePath(String value) {
@@ -3209,6 +3235,10 @@ final class SpecificationChecker {
       }
       final target = _recordsById[reference];
       if (target == null) {
+        if (expectedKind == _RecordKind.productInput &&
+            !_records.any((_SpecificationRecord candidate) => candidate.kind == _RecordKind.productInput)) {
+          continue;
+        }
         _addIssue(
           record.relativePath,
           'unknown-reference',

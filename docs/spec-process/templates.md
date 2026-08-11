@@ -4,46 +4,11 @@ Process version: v1.7
 
 Each record is one Markdown file with strict front matter. Metadata supports scalar values, `null`, empty lists written as `[]`, and indented scalar lists. Unknown or missing fields fail validation. The body remains free-form except for the required headings.
 
-## Product Or Process Input
+## Private Source Reference
 
-Path: `docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md`
-
-```markdown
----
-id: PI-YYYYMMDD-SLUG
-type: product_input
-captured_date: YYYY-MM-DD
-source_date: YYYY-MM-DD
-source: user or evidence description
-category: product
-status: inbox
-effective_status: pending
-delivery_status: not_started
-canonical_assertions:
-  - SPEC-EXAMPLE
-delivery_surfaces:
-  - lib/example.dart
-conflicts: []
-supersedes: []
-superseded_by: []
-decisions: []
-acceptance_records: []
----
-
-# Short input title
-
-## Raw statement
-
-Preserve the meaningful wording and mark redactions.
-
-## Extracted assertions
-
-- One independently evolving assertion
-```
-
-`category` is `product`, `process`, or `mixed`.
-
-`source_date` is a valid `YYYY-MM-DD` date or the literal `unknown`; it is never null. Preserve the raw statement body after capture. State, decision, conflict, acceptance, and supersession references may evolve without rewriting that provenance.
+Raw product and process input has no template in this repository. It is retained
+by the private Root Harness and may be referenced through an opaque `PI-*` ID in
+project records. Never copy the source body or private path into this repository.
 
 ## Decision
 

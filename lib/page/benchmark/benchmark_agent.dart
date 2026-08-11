@@ -23,13 +23,24 @@ class _AgentTest extends ConsumerWidget {
     final error = ref.watch(P.agent.error);
     final evaluationMode = ref.watch(P.agent.evaluationMode);
     final repeatCount = ref.watch(P.agent.repeatCount);
+    final localSessionVisible = ref.watch(P.agent.localSessionVisible);
     final selectedCase = selectedCaseIndex >= 0 && selectedCaseIndex < cases.length ? cases[selectedCaseIndex] : null;
     final selectedRecord = selectedCase == null ? null : records[selectedCase.name];
     final selectedCaseIsRunning = (running || runningAll) && currentCaseName == selectedCase?.name;
     final selectedCaseOwnsUnrecordedState = selectedRecord == null && currentCaseName == selectedCase?.name;
-    final displayedVerdict = selectedCaseIsRunning || selectedCaseOwnsUnrecordedState ? verdict : selectedRecord?.verdict;
-    final displayedError = selectedCaseOwnsUnrecordedState ? error : null;
-    final displayedEvents = selectedCaseIsRunning || selectedCaseOwnsUnrecordedState
+    final displayedVerdict = localSessionVisible
+        ? null
+        : selectedCaseIsRunning || selectedCaseOwnsUnrecordedState
+        ? verdict
+        : selectedRecord?.verdict;
+    final displayedError = localSessionVisible
+        ? error
+        : selectedCaseOwnsUnrecordedState
+        ? error
+        : null;
+    final displayedEvents = localSessionVisible
+        ? events
+        : selectedCaseIsRunning || selectedCaseOwnsUnrecordedState
         ? events
         : selectedRecord?.result.events ?? <AgentEvent>[];
 
@@ -40,6 +51,10 @@ class _AgentTest extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
+            if (P.agent.localFileActionsSupported) ...[
+              const _AgentLocalWorkspaceCard(),
+              const SizedBox(height: 12),
+            ],
             const _AgentSafetyCard(),
             const SizedBox(height: 12),
             _AgentCaseSelector(
@@ -79,14 +94,14 @@ class _AgentTest extends ConsumerWidget {
               const SizedBox(height: 12),
               _AgentCaseDetails(agentCase: selectedCase),
             ],
-            if (displayedVerdict != null || displayedError != null) ...[
+            if (!localSessionVisible && (displayedVerdict != null || displayedError != null)) ...[
               const SizedBox(height: 12),
               _AgentVerdictCard(
                 verdict: displayedVerdict,
                 error: displayedError,
               ),
             ],
-            if (selectedCaseIsRunning && liveModelOutput.isNotEmpty) ...[
+            if ((selectedCaseIsRunning || localSessionVisible) && liveModelOutput.isNotEmpty) ...[
               const SizedBox(height: 12),
               _AgentLiveOutput(content: liveModelOutput),
             ],
@@ -102,6 +117,216 @@ class _AgentTest extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _AgentLocalWorkspaceCard extends ConsumerStatefulWidget {
+  const _AgentLocalWorkspaceCard();
+
+  @override
+  ConsumerState<_AgentLocalWorkspaceCard> createState() {
+    return _AgentLocalWorkspaceCardState();
+  }
+}
+
+class _AgentLocalWorkspaceCardState extends ConsumerState<_AgentLocalWorkspaceCard> {
+  final TextEditingController _promptController = TextEditingController();
+
+  @override
+  void dispose() {
+    _promptController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final qb = ref.watch(P.app.qb);
+    final appTheme = ref.watch(P.app.theme);
+    final workspacePath = ref.watch(P.agent.localWorkspacePath);
+    final running = ref.watch(P.agent.localRunning);
+    final approval = ref.watch(P.agent.localApproval);
+    final finalAnswer = ref.watch(P.agent.localFinalAnswer);
+
+    return Material(
+      color: appTheme.settingItem,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: qb.withValues(alpha: .18), width: .5),
+      ),
+      child: Padding(
+        padding: const .all(12),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.folder_copy_outlined, size: 19, color: qb.withValues(alpha: .82)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    s.agent_local_title,
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: .w600),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              s.agent_local_description,
+              style: theme.textTheme.bodyMedium?.copyWith(color: qb.withValues(alpha: .72)),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const .symmetric(horizontal: 10, vertical: 9),
+              decoration: BoxDecoration(
+                color: qb.withValues(alpha: .05),
+                borderRadius: BorderRadius.circular(7),
+                border: Border.all(color: qb.withValues(alpha: .12), width: .5),
+              ),
+              child: SelectableText(
+                workspacePath ?? s.agent_local_no_workspace,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: qb.withValues(alpha: workspacePath == null ? .56 : .82),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              icon: const Icon(Icons.folder_open),
+              onPressed: running
+                  ? null
+                  : () {
+                      unawaited(P.agent.chooseLocalWorkspace());
+                    },
+              label: Text(s.agent_local_select_workspace),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _promptController,
+              enabled: !running,
+              minLines: 3,
+              maxLines: 6,
+              decoration: InputDecoration(
+                hintText: s.agent_local_prompt_hint,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              icon: Icon(running ? Icons.stop : Icons.play_arrow),
+              onPressed: running
+                  ? () {
+                      unawaited(P.agent.stop());
+                    }
+                  : () {
+                      unawaited(P.agent.runLocalFileTask(_promptController.text));
+                    },
+              label: Text(running ? s.stop : s.agent_local_run),
+            ),
+            if (approval != null) ...[
+              const SizedBox(height: 10),
+              Container(
+                padding: const .all(10),
+                decoration: BoxDecoration(
+                  color: qb.withValues(alpha: .07),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: qb.withValues(alpha: .2), width: .5),
+                ),
+                child: Column(
+                  crossAxisAlignment: .stretch,
+                  children: [
+                    Text(
+                      s.agent_local_approval_title,
+                      style: theme.textTheme.titleSmall?.copyWith(fontWeight: .w600),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _agentLocalOperationLabel(s, approval.operation),
+                      style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .w600),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "${s.agent_local_path}: ${approval.relativePath}",
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    if (approval.content != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        s.agent_local_content,
+                        style: theme.textTheme.bodySmall?.copyWith(color: qb.withValues(alpha: .65)),
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        constraints: const BoxConstraints(maxHeight: 160),
+                        padding: const .all(8),
+                        decoration: BoxDecoration(
+                          color: qb.withValues(alpha: .04),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: SingleChildScrollView(
+                          child: SelectableText(
+                            approval.content!,
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              P.agent.resolveLocalFileApproval(false);
+                            },
+                            child: Text(s.agent_local_reject),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: FilledButton(
+                            onPressed: () {
+                              P.agent.resolveLocalFileApproval(true);
+                            },
+                            child: Text(s.agent_local_approve),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            if (finalAnswer.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text(
+                s.agent_local_final_answer,
+                style: theme.textTheme.titleSmall?.copyWith(fontWeight: .w600),
+              ),
+              const SizedBox(height: 4),
+              SelectableText(
+                finalAnswer,
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+String _agentLocalOperationLabel(
+  S s,
+  AgentLocalFileOperation operation,
+) {
+  return switch (operation) {
+    .create => s.agent_local_operation_create,
+    .update => s.agent_local_operation_update,
+    .delete => s.agent_local_operation_delete,
+  };
 }
 
 class _AgentSafetyCard extends ConsumerWidget {

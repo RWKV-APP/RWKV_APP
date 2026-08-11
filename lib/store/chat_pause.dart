@@ -36,6 +36,10 @@ extension $ChatPause on _Chat {
     qqq("receiveId: ${receiveId.q}");
     if (wantHaptic) P.app.hapticLight();
     await 1.msLater;
+    if (P.agent.localRunning.q) {
+      await P.agent.stop();
+      return;
+    }
     final id = receiveId.q;
     if (id == null) {
       qqw("message id is null");

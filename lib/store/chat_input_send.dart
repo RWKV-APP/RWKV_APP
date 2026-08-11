@@ -222,7 +222,9 @@ extension $ChatInputSend on _Chat {
   }
 
   bool _showGeneratingSendBlockedAlert() {
-    if (!P.rwkvGeneration.generating.q) return false;
+    if (!P.rwkvGeneration.generating.q && !P.agent.localRunning.q) {
+      return false;
+    }
     Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
     return true;
   }
@@ -355,6 +357,17 @@ extension $ChatInputSend on _Chat {
           return;
         }
       }
+
+      final handledByLocalFileAgent =
+          editingOrRegeneratingIndex == null &&
+          await _trySendLocalFileAgent(
+            raw: raw,
+            type: type,
+            isRegenerate: isRegenerate,
+            parentNode: parentNode,
+            modelName: modelName,
+          );
+      if (handledByLocalFileAgent) return;
 
       final storedContent = raw + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
       userMsg = Message(

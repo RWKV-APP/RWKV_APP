@@ -26,6 +26,12 @@ void main() {
       expect(result.issues, isEmpty, reason: _messages(result));
     });
 
+    test('accepts opaque private PI references without a local input tree', () {
+      Directory(path.join(root.path, 'docs/product-inputs')).deleteSync(recursive: true);
+      final result = SpecificationChecker(root).check();
+      expect(result.issues, isEmpty, reason: _messages(result));
+    });
+
     test('discovers the root from root, tools, and docs', () {
       expect(findSpecificationRepositoryRoot(root)?.path, root.absolute.path);
       expect(findSpecificationRepositoryRoot(Directory(path.join(root.path, 'tools')))?.path, root.absolute.path);
@@ -520,6 +526,22 @@ void main() {
         'changed_surfaces:\n  - docs/specification.md',
         'changed_surfaces:\n  - adapter:lib/bridge.dart',
       );
+      final result = SpecificationChecker(root).check();
+      expect(result.issues, isEmpty, reason: _messages(result));
+    });
+
+    test('preserves missing external surfaces in historical project records', () {
+      final adapter = Directory(path.join(root.path, 'adapter'))..createSync();
+      final repositoryMap = path.join(root.path, 'docs/specs/02-repository-map.md');
+      File(repositoryMap).writeAsStringSync(
+        '${File(repositoryMap).readAsStringSync()}| adapter | adapter | no | Historical adapter checkout |\n',
+      );
+      _replace(
+        _acceptancePath(root),
+        'changed_surfaces:\n  - docs/specification.md',
+        'changed_surfaces:\n  - docs/specification.md\n  - adapter:removed.md',
+      );
+      expect(adapter.existsSync(), isTrue);
       final result = SpecificationChecker(root).check();
       expect(result.issues, isEmpty, reason: _messages(result));
     });

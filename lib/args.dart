@@ -13,6 +13,9 @@ abstract class Args {
   static const enableBatchInference = bool.fromEnvironment("enableBatchInference", defaultValue: false);
   static const enableChatDebugger = bool.fromEnvironment("enableChatDebugger");
   static const maxTokens = int.fromEnvironment("maxTokens", defaultValue: -1);
+  static const modelScopeDebugAcceptanceModel = String.fromEnvironment("modelScopeDebugAcceptanceModel");
+  static const modelScopeDebugAcceptanceOutputName = String.fromEnvironment("modelScopeDebugAcceptanceOutputName");
+  static const modelScopeDebugAcceptanceSource = String.fromEnvironment("modelScopeDebugAcceptanceSource");
   static const nativeSplashPreserveDurationInMS = int.fromEnvironment("nativeSplashPreserveDurationInMS", defaultValue: 50);
   static const othelloTestCase = int.fromEnvironment("othello_test_case", defaultValue: -1);
   static const showHaloDebugger = bool.fromEnvironment("showHaloDebugger", defaultValue: false);

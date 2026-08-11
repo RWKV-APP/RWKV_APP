@@ -4,7 +4,7 @@ Process version: v1.7
 
 Store each delivery snapshot as `ACC-YYYYMMDD-SLUG.md` using `docs/spec-process/templates.md`.
 
-An acceptance record must include exact input, decision, assertion, changed-surface, and unresolved-conflict references. Its date, ID date, and filename date must match. Referenced inputs and decisions cannot occur after acceptance.
+An acceptance record must include exact project decision, assertion, changed-surface, and unresolved-conflict references. It may include opaque private source IDs for provenance. Its date, ID date, and filename date must match; project decisions cannot occur after acceptance.
 
 Mechanical evidence proves only the engineering properties exercised by those commands. The root Codex agent must separately record requirement review and any applicable semantic, visual, real-model, real-device, network, or cross-repository review.
 
@@ -14,4 +14,4 @@ Dates have day precision. List every applicable conflict that was definitely ope
 
 An acceptance record's date, result, evidence body, and delivery-time conflict snapshot are immutable. A later related attempt may supersede an earlier one through bidirectional acceptance links; appending relationship metadata such as `superseded_by` does not rewrite the earlier outcome.
 
-One current, non-superseded record with `result: accepted` must independently cover a PI's input ID, canonical assertions, decisions, and delivery surfaces before it can support `delivery_status: verified`. Partial records may preserve staged evidence, but they do not combine implicitly. Every current accepted record must provide that complete coverage for every PI it names, and every named PI must be updated to `verified`.
+One current, non-superseded record with `result: accepted` must independently cover its canonical assertions, decisions, changed surfaces, conflicts, evidence, and exclusions. Partial records may preserve staged evidence, but they do not combine implicitly. Private source lifecycle and delivery state remain owned by the Root Harness.

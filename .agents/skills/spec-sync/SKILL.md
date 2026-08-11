@@ -13,7 +13,7 @@ Turn product conversation into checked-in, traceable project truth before changi
 2. Read `docs/specs/00-inventory.md`
 3. Read `docs/specs/01-authority-map.md`
 4. Read the relevant canonical owner and its required drift surfaces
-5. Search the exact relevant `SPEC-*` IDs under `docs/product-inputs/` and `docs/spec-process/`, then read the connected PI, DEC, OBS, CF, and ACC records needed to understand provenance, supersession, and current delivery state
+5. Search the exact relevant `SPEC-*` IDs under canonical owners and `docs/spec-process/`, then read the connected DEC, OBS, CF, and ACC records needed to understand project provenance, supersession, and current delivery state; request only the smallest necessary opaque private source references from the Root Harness
 6. Read all records under `docs/spec-process/conflicts/current/`
 7. Read `docs/spec-process/rules.md` when the input affects this workflow
 
@@ -31,16 +31,16 @@ Memory can help locate context, but it cannot override checked-in Specification.
 
 Handle product, process, or mixed input before implementation. Do not create a product-input record for implementation-only work or general chat.
 
-## Capture Product Or Process Input
+## Capture Product Or Process Input Privately
 
-1. Split assertions that can evolve independently into separate records
-2. Create one record for each independently evolving assertion at `docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md`
-3. Copy the meaningful raw wording under `## Raw statement`
-4. Remove credentials, tokens, signed URLs, personal data, and machine-local attachment paths; mark each redaction explicitly
-5. Extract concise assertions and identify stable `SPEC-*` IDs plus delivery surfaces
-6. Compare the assertions with the current canonical owner and applicable conflicts
+1. Route raw wording, copied stakeholder communication, and attachments to the private Root Harness; never write them into this repository
+2. When the Root Harness is available, retain the source there and use only an opaque source ID in project records
+3. If the Root Harness is unavailable, do not create a substitute raw-input file in this repository
+4. Remove credentials, tokens, signed URLs, personal data, machine-local attachment paths, private motivation, and unnecessary source wording from project-safe material
+5. Split independently evolving assertions and identify stable `SPEC-*` IDs plus delivery surfaces
+6. Compare the normalized assertions with the current canonical owner and applicable conflicts
 
-Use `docs/spec-process/templates.md` for record structure. Records are strict from the first day; do not create legacy-format entries.
+Use `docs/spec-process/templates.md` for project DEC, OBS, CF, and ACC structure. Do not create `docs/product-inputs/` or a legacy-format substitute.
 
 ## Merge Or Record A Conflict
 
@@ -48,15 +48,15 @@ For a compatible assertion:
 
 1. Update the canonical owner first
 2. Synchronize required derived, implementation, runtime, and evidence surfaces
-3. Set the input to `merged`
-4. Track current effect and delivery independently
+3. Keep only the opaque private source reference needed for provenance
+4. Track current effect and delivery through project truth and acceptance independently
 
 For a semantic conflict:
 
 1. Create `docs/spec-process/conflicts/current/CF-YYYYMMDD-SLUG.md`
-2. Link the exact `PI-*` and/or `OBS-*` records in both directions
+2. Link a project `OBS-*` record and, when useful, an opaque private `PI-*` source ID
 3. Name the competing assertions, stable `SPEC-*` IDs, affected surfaces, and narrow blocking scope
-4. Set a directly conflicting input to `conflict + pending + blocked`
+4. Leave private input lifecycle changes to the Root Harness and mark only the project delivery scope as blocked
 5. Stop only behavior changes that depend on the unresolved assertion
 6. Ask the user for the exact ruling needed
 
@@ -68,12 +68,12 @@ After an explicit human ruling:
 
 1. Create or update the `DEC-*` record, set `approved_by` to the explicit human decision authority, and use `approved` or `rejected` according to that ruling
 2. Synchronize the canonical owner and required drift surfaces
-3. Update affected input states
+3. Keep project decision, observation, conflict, and acceptance relationships current; private input state remains Root-owned
 4. Link all supersession relationships in both directions
 5. Move a resolved conflict from `conflicts/current/` to `conflicts/resolved/`
-6. Preserve raw statements and historical acceptance snapshots
+6. Preserve raw statements only in the private Root Harness and preserve historical project acceptance snapshots here
 
-Use `dismissed + historical + not_applicable` for a rejected proposal that never became canonical. Use `merged + superseded` for a formerly canonical assertion that a later ruling replaced.
+Use project decisions and canonical-owner lifecycle changes to distinguish rejected proposals from superseded product truth. Do not copy private source-state metadata into this repository.
 
 Only an approved decision can resolve an observation or conflict. A source label, copied message, implementation state, Git order, or Agent preference is not human approval.
 
@@ -89,7 +89,7 @@ Then run focused engineering checks required by the changed module and `AGENTS.m
 
 The root Codex agent delivering the task owns final combined acceptance, including delegated work. Automated checks, status codes, counts, screenshots, model judges, and sub-agent reports are evidence only. For generated, parsed, visual, device, model, network, or cross-repository behavior, personally inspect representative real outcomes and all relevant representations.
 
-Create an `ACC-*` record only after the recorded review is true. Set an input to `verified` only when it links to a current, accepted acceptance record.
+Create an `ACC-*` record only after the recorded review is true. Private input delivery state remains Root-owned; project acceptance covers its declared assertions, decisions, surfaces, conflicts, evidence, and exclusions.
 
 ## SPEC-SYNC-ACCEPTANCE-GUARDRAILS
 

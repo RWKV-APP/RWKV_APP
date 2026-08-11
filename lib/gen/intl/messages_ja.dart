@@ -245,6 +245,59 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_eval_strict_pass": MessageLookupByLibrary.simpleMessage("合格"),
     "agent_eval_tools": m2,
     "agent_eval_turn": m3,
+    "agent_local_approval_title": MessageLookupByLibrary.simpleMessage(
+      "Agent が実ファイルの変更を要求しています",
+    ),
+    "agent_local_approve": MessageLookupByLibrary.simpleMessage("今回だけ承認"),
+    "agent_local_chat_cancelled": MessageLookupByLibrary.simpleMessage(
+      "ローカルファイル操作はキャンセルされました。",
+    ),
+    "agent_local_chat_failed": MessageLookupByLibrary.simpleMessage(
+      "ローカルファイル操作に失敗しました。",
+    ),
+    "agent_local_chat_running": MessageLookupByLibrary.simpleMessage(
+      "要求されたローカルファイル操作を処理しています…",
+    ),
+    "agent_local_content": MessageLookupByLibrary.simpleMessage("書き込み予定の内容"),
+    "agent_local_description": MessageLookupByLibrary.simpleMessage(
+      "Agent は選択したフォルダー内の実際の UTF-8 テキストファイルを読み取れます。作成、更新、削除のたびに承認を待ちます。",
+    ),
+    "agent_local_final_answer": MessageLookupByLibrary.simpleMessage(
+      "Agent の結果",
+    ),
+    "agent_local_no_workspace": MessageLookupByLibrary.simpleMessage(
+      "ワークスペースが選択されていません",
+    ),
+    "agent_local_operation_create": MessageLookupByLibrary.simpleMessage("作成"),
+    "agent_local_operation_delete": MessageLookupByLibrary.simpleMessage("削除"),
+    "agent_local_operation_update": MessageLookupByLibrary.simpleMessage("更新"),
+    "agent_local_path": MessageLookupByLibrary.simpleMessage("相対パス"),
+    "agent_local_prompt_hint": MessageLookupByLibrary.simpleMessage(
+      "例：RWKV-Agent-Test.txt を作成して読み取り、内容を更新してから検証結果を報告してください。",
+    ),
+    "agent_local_prompt_required": MessageLookupByLibrary.simpleMessage(
+      "先にローカルファイルのタスクを入力してください",
+    ),
+    "agent_local_reject": MessageLookupByLibrary.simpleMessage("拒否"),
+    "agent_local_run": MessageLookupByLibrary.simpleMessage("ローカル Agent を実行"),
+    "agent_local_select_workspace": MessageLookupByLibrary.simpleMessage(
+      "Agent ワークスペースを選択",
+    ),
+    "agent_local_select_workspace_first": MessageLookupByLibrary.simpleMessage(
+      "先にワークスペースを選択して許可してください",
+    ),
+    "agent_local_title": MessageLookupByLibrary.simpleMessage(
+      "実ローカルファイル（Debug）",
+    ),
+    "agent_local_windows_debug_only": MessageLookupByLibrary.simpleMessage(
+      "実ファイルの Agent 操作は Windows Debug App でのみ利用できます",
+    ),
+    "agent_local_workspace_authorized": MessageLookupByLibrary.simpleMessage(
+      "この App セッションでワークスペースを許可しました",
+    ),
+    "agent_local_workspace_failed": MessageLookupByLibrary.simpleMessage(
+      "選択したワークスペースを許可できませんでした",
+    ),
     "agent_test": MessageLookupByLibrary.simpleMessage("Agent 能力評価"),
     "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
       "現在の Albatross バックエンドではこの機能はサポートされていません",
@@ -642,9 +695,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear_application_cache": MessageLookupByLibrary.simpleMessage(
       "キャッシュをクリア",
     ),
-    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
-      "アプリ設定とローカル設定キャッシュをクリアしますか？チャット履歴、エクスポートファイル、重みファイルは削除されません。カスタムモデルフォルダのリンクは保持されます。",
-    ),
+    "clear_application_cache_confirmation":
+        MessageLookupByLibrary.simpleMessage(
+          "アプリ設定とローカル設定キャッシュをクリアしますか？チャット履歴、エクスポートファイル、重みファイルは削除されません。カスタムモデルフォルダのリンクは保持されます。",
+        ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage("メモリキャッシュをクリア"),
     "clear_text": MessageLookupByLibrary.simpleMessage("テキストを消去"),
     "click_here_to_select_a_new_model": MessageLookupByLibrary.simpleMessage(

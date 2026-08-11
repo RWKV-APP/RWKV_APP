@@ -10,6 +10,7 @@ import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/agent_local_file_approval_card.dart';
 import 'package:zone/widgets/chat/empty.dart';
 import 'package:zone/widgets/chat/share_chat_sheet.dart';
 import 'package:zone/widgets/chat_app_bar.dart';
@@ -112,6 +113,7 @@ class _ChatPane extends ConsumerWidget {
           child: ChatAppBar(),
         ),
         if (!selectMessageMode) const InputBar(),
+        if (!selectMessageMode) const Positioned.fill(child: AgentLocalFileApprovalCard()),
         if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
       ],
     );

@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -2271,8 +2272,7 @@ class S {
   get in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2 {
     return Intl.message(
       '当搜索深度和宽度都大于 2 时，将激活上下文搜索',
-      name:
-          'in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2',
+      name: 'in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2',
       desc: '',
       args: [],
     );
@@ -4889,8 +4889,7 @@ class S {
   ) {
     return Intl.message(
       '请选择要为第 $index 条消息设置的采样和惩罚参数',
-      name:
-          'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
+      name: 'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
       desc: '',
       args: [index],
     );
@@ -4901,8 +4900,7 @@ class S {
   get please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages {
     return Intl.message(
       '请选择要为所有消息设置的采样和惩罚参数',
-      name:
-          'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
+      name: 'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
       desc: '',
       args: [],
     );
@@ -7782,6 +7780,226 @@ class S {
     return Intl.message(
       'Agent 能力评测无法识别当前聊天模型',
       name: 'agent_eval_active_model_unknown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `真实本地 Agent 文件操作仅在 Windows Debug App 中可用`
+  String get agent_local_windows_debug_only {
+    return Intl.message(
+      '真实本地 Agent 文件操作仅在 Windows Debug App 中可用',
+      name: 'agent_local_windows_debug_only',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择 Agent 工作区`
+  String get agent_local_select_workspace {
+    return Intl.message(
+      '选择 Agent 工作区',
+      name: 'agent_local_select_workspace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已为当前 App 会话授权工作区`
+  String get agent_local_workspace_authorized {
+    return Intl.message(
+      '已为当前 App 会话授权工作区',
+      name: 'agent_local_workspace_authorized',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无法授权所选工作区`
+  String get agent_local_workspace_failed {
+    return Intl.message(
+      '无法授权所选工作区',
+      name: 'agent_local_workspace_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请先选择并授权工作区`
+  String get agent_local_select_workspace_first {
+    return Intl.message(
+      '请先选择并授权工作区',
+      name: 'agent_local_select_workspace_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请先输入本地文件任务`
+  String get agent_local_prompt_required {
+    return Intl.message(
+      '请先输入本地文件任务',
+      name: 'agent_local_prompt_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `真实本地文件（Debug）`
+  String get agent_local_title {
+    return Intl.message(
+      '真实本地文件（Debug）',
+      name: 'agent_local_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Agent 可以读取所选文件夹中的真实 UTF-8 文本文件。每次创建、修改或删除都会暂停并等待你的批准。`
+  String get agent_local_description {
+    return Intl.message(
+      'Agent 可以读取所选文件夹中的真实 UTF-8 文本文件。每次创建、修改或删除都会暂停并等待你的批准。',
+      name: 'agent_local_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `尚未选择工作区`
+  String get agent_local_no_workspace {
+    return Intl.message(
+      '尚未选择工作区',
+      name: 'agent_local_no_workspace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `示例：创建 RWKV-Agent-Test.txt，读取它，修改内容，然后报告已验证的结果。`
+  String get agent_local_prompt_hint {
+    return Intl.message(
+      '示例：创建 RWKV-Agent-Test.txt，读取它，修改内容，然后报告已验证的结果。',
+      name: 'agent_local_prompt_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `运行本地 Agent`
+  String get agent_local_run {
+    return Intl.message(
+      '运行本地 Agent',
+      name: 'agent_local_run',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Agent 请求修改真实文件`
+  String get agent_local_approval_title {
+    return Intl.message(
+      'Agent 请求修改真实文件',
+      name: 'agent_local_approval_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `创建`
+  String get agent_local_operation_create {
+    return Intl.message(
+      '创建',
+      name: 'agent_local_operation_create',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `修改`
+  String get agent_local_operation_update {
+    return Intl.message(
+      '修改',
+      name: 'agent_local_operation_update',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `删除`
+  String get agent_local_operation_delete {
+    return Intl.message(
+      '删除',
+      name: 'agent_local_operation_delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `相对路径`
+  String get agent_local_path {
+    return Intl.message('相对路径', name: 'agent_local_path', desc: '', args: []);
+  }
+
+  /// `拟写入内容`
+  String get agent_local_content {
+    return Intl.message(
+      '拟写入内容',
+      name: 'agent_local_content',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `批准一次`
+  String get agent_local_approve {
+    return Intl.message(
+      '批准一次',
+      name: 'agent_local_approve',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `拒绝`
+  String get agent_local_reject {
+    return Intl.message('拒绝', name: 'agent_local_reject', desc: '', args: []);
+  }
+
+  /// `Agent 结果`
+  String get agent_local_final_answer {
+    return Intl.message(
+      'Agent 结果',
+      name: 'agent_local_final_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在处理你请求的本地文件操作…`
+  String get agent_local_chat_running {
+    return Intl.message(
+      '正在处理你请求的本地文件操作…',
+      name: 'agent_local_chat_running',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `本地文件操作已取消。`
+  String get agent_local_chat_cancelled {
+    return Intl.message(
+      '本地文件操作已取消。',
+      name: 'agent_local_chat_cancelled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `本地文件操作失败。`
+  String get agent_local_chat_failed {
+    return Intl.message(
+      '本地文件操作失败。',
+      name: 'agent_local_chat_failed',
       desc: '',
       args: [],
     );

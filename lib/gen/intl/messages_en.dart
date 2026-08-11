@@ -242,9 +242,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_eval_mode_assisted": MessageLookupByLibrary.simpleMessage(
       "Assisted",
     ),
-    "agent_eval_mode_assisted_description": MessageLookupByLibrary.simpleMessage(
-      "Allows audited host repairs for diagnosis. Reports both strict and assisted scores.",
-    ),
+    "agent_eval_mode_assisted_description":
+        MessageLookupByLibrary.simpleMessage(
+          "Allows audited host repairs for diagnosis. Reports both strict and assisted scores.",
+        ),
     "agent_eval_mode_strict": MessageLookupByLibrary.simpleMessage("Strict"),
     "agent_eval_mode_strict_description": MessageLookupByLibrary.simpleMessage(
       "Scores raw model behavior. Any host repair, coercion, truncation, or forced tool call fails strict scoring.",
@@ -264,6 +265,67 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_eval_strict_pass": MessageLookupByLibrary.simpleMessage("PASS"),
     "agent_eval_tools": m2,
     "agent_eval_turn": m3,
+    "agent_local_approval_title": MessageLookupByLibrary.simpleMessage(
+      "Agent requests a real file change",
+    ),
+    "agent_local_approve": MessageLookupByLibrary.simpleMessage("Approve once"),
+    "agent_local_chat_cancelled": MessageLookupByLibrary.simpleMessage(
+      "The local file action was cancelled.",
+    ),
+    "agent_local_chat_failed": MessageLookupByLibrary.simpleMessage(
+      "The local file action failed.",
+    ),
+    "agent_local_chat_running": MessageLookupByLibrary.simpleMessage(
+      "Working on the requested local file action…",
+    ),
+    "agent_local_content": MessageLookupByLibrary.simpleMessage(
+      "Proposed content",
+    ),
+    "agent_local_description": MessageLookupByLibrary.simpleMessage(
+      "The Agent can read real UTF-8 text files in the selected folder. Every create, update, or delete pauses for your approval.",
+    ),
+    "agent_local_final_answer": MessageLookupByLibrary.simpleMessage(
+      "Agent result",
+    ),
+    "agent_local_no_workspace": MessageLookupByLibrary.simpleMessage(
+      "No workspace selected",
+    ),
+    "agent_local_operation_create": MessageLookupByLibrary.simpleMessage(
+      "Create",
+    ),
+    "agent_local_operation_delete": MessageLookupByLibrary.simpleMessage(
+      "Delete",
+    ),
+    "agent_local_operation_update": MessageLookupByLibrary.simpleMessage(
+      "Update",
+    ),
+    "agent_local_path": MessageLookupByLibrary.simpleMessage("Relative path"),
+    "agent_local_prompt_hint": MessageLookupByLibrary.simpleMessage(
+      "Example: Create RWKV-Agent-Test.txt, read it, update its content, then report the verified result.",
+    ),
+    "agent_local_prompt_required": MessageLookupByLibrary.simpleMessage(
+      "Enter a local file task first",
+    ),
+    "agent_local_reject": MessageLookupByLibrary.simpleMessage("Reject"),
+    "agent_local_run": MessageLookupByLibrary.simpleMessage("Run local Agent"),
+    "agent_local_select_workspace": MessageLookupByLibrary.simpleMessage(
+      "Select an Agent workspace",
+    ),
+    "agent_local_select_workspace_first": MessageLookupByLibrary.simpleMessage(
+      "Select and authorize a workspace first",
+    ),
+    "agent_local_title": MessageLookupByLibrary.simpleMessage(
+      "Real local files (Debug)",
+    ),
+    "agent_local_windows_debug_only": MessageLookupByLibrary.simpleMessage(
+      "Real local Agent file actions are available only in the Windows Debug App",
+    ),
+    "agent_local_workspace_authorized": MessageLookupByLibrary.simpleMessage(
+      "Workspace authorized for this App session",
+    ),
+    "agent_local_workspace_failed": MessageLookupByLibrary.simpleMessage(
+      "The selected workspace could not be authorized",
+    ),
     "agent_test": MessageLookupByLibrary.simpleMessage("Agent Evaluation"),
     "albatross_backend_unsupported": MessageLookupByLibrary.simpleMessage(
       "This feature is not supported by the current Albatross backend",
@@ -741,9 +803,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear_application_cache": MessageLookupByLibrary.simpleMessage(
       "Clear Cache",
     ),
-    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
-      "Clear cached app preferences and local config? Chat history, exported files, and weight files will not be deleted. Custom model folders will remain linked.",
-    ),
+    "clear_application_cache_confirmation":
+        MessageLookupByLibrary.simpleMessage(
+          "Clear cached app preferences and local config? Chat history, exported files, and weight files will not be deleted. Custom model folders will remain linked.",
+        ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage(
       "Clear Memory Cache",
     ),
@@ -833,9 +896,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "This folder has no local models for Chat",
     ),
     "current_model": m26,
-    "current_model_from_latest_json_not_pth": MessageLookupByLibrary.simpleMessage(
-      "The current model is from latest.json config, with no local model file loaded",
-    ),
+    "current_model_from_latest_json_not_pth":
+        MessageLookupByLibrary.simpleMessage(
+          "The current model is from latest.json config, with no local model file loaded",
+        ),
     "current_progress": m27,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
       "Current task Tab ID",
@@ -903,9 +967,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "Decode Params for Each Message",
     ),
-    "decode_params_for_each_message_detail": MessageLookupByLibrary.simpleMessage(
-      "The decode parameters for each message in the batch. Click to edit the decode parameters for each message in batch inference.",
-    ),
+    "decode_params_for_each_message_detail":
+        MessageLookupByLibrary.simpleMessage(
+          "The decode parameters for each message in the batch. Click to edit the decode parameters for each message in batch inference.",
+        ),
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "Decode Speed (tokens per second)",
     ),

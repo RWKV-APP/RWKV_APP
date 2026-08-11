@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
 import 'package:zone/func/format_bytes.dart';
+import 'package:zone/func/agent_local_file_host.dart';
 import 'package:zone/func/string_utils.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/agent.dart';

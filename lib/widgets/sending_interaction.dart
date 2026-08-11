@@ -17,11 +17,14 @@ class SendingInteraction extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final generating = ref.watch(P.rwkvGeneration.generating);
+    final localAgentRunning = ref.watch(P.agent.localRunning);
     final hiddenPrefilling = ref.watch(P.rwkvGeneration.hiddenPrefilling);
     // final waitingImagePath = ref.watch(P.see.waitingImagePath);
     final waitingText = ref.watch(P.see.waitingText);
 
-    if (!generating || (hiddenPrefilling && waitingText == null)) return _Send(preferredDemoType: preferredDemoType);
+    if (!localAgentRunning && (!generating || (hiddenPrefilling && waitingText == null))) {
+      return _Send(preferredDemoType: preferredDemoType);
+    }
 
     return const _Stop();
   }

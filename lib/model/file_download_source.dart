@@ -4,8 +4,7 @@ enum FileDownloadSource {
   modelscope,
   huggingface,
   github,
-  googleapis
-  ;
+  googleapis;
 
   String get prefix => switch (this) {
     aifasthub => 'https://aifasthub.com/',
@@ -50,7 +49,15 @@ enum FileDownloadSource {
   };
 
   String transformRaw(String raw) => switch (this) {
-    modelscope => raw.replaceFirst('mollysama/rwkv-mobile-models/resolve/main/', 'models/RWKV/rwkv-mobile-models/resolve/master/'),
+    modelscope =>
+      raw
+          .replaceFirst('mollysama/rwkv-mobile-models/resolve/main/', 'models/RWKV/rwkv-mobile-models/resolve/master/')
+          .replaceFirst('HaloWang/rwkv-weights/resolve/main/', 'models/HaloWang1991/rwkv-weights/resolve/master/'),
     _ => raw,
   };
+
+  String resolveUrl(String raw) {
+    if (raw.startsWith('http://') || raw.startsWith('https://')) return raw;
+    return '$prefix${transformRaw(raw)}$suffix';
+  }
 }

@@ -9,11 +9,10 @@ Repository-qualified references use `alias:path`. The path is relative to the re
 | --- | --- | --- | --- |
 | rwkv_app | `.` | yes | Flutter application and this Specification system |
 | rwkv_mobile_flutter | `../rwkv_mobile_flutter` | no | Flutter adapter and FFI bridge |
-| rwkv_mobile | `../rwkv-mobile` | no | Native inference engine and Kirin NNRT backend workspace |
-| rwkv_harmony | `../rwkv_harmony` | no | HarmonyOS ArkUI host and Kirin NNRT integration workspace |
+| rwkv_mobile | `../rwkv-mobile` | no | Native inference engine workspace |
 | app_website | `../app_website` | no | Public download website and HTTP service |
 | rwkv_org_profile | `../.github` | no | Public RWKV-APP organization profile repository |
 
 Do not use absolute developer-machine paths as durable Specification references. A cross-repository requirement should name the integration assertion in this repository and list the external implementation through an alias.
 
-Reference paths cannot contain traversal segments and must remain inside the registered root after symlink resolution. Strict PI, DEC, OBS, CF, and ACC records are regular repository files, not symlinks.
+Reference paths cannot contain traversal segments and must remain inside the registered root after symlink resolution. DEC, OBS, CF, and ACC records are regular repository files, not symlinks. Opaque PI source IDs are owned by the private Root Harness and do not resolve to files in this repository.

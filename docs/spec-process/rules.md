@@ -21,7 +21,7 @@ Classify every request before changing business behavior:
 - `implementation-only`: mechanics that preserve current canonical behavior
 - `general chat`: explanation or brainstorming with no request to change project truth
 
-Product, process, and mixed input enters the Specification flow before implementation. Implementation-only input and general chat do not create a `PI-*` record.
+Product, process, and mixed input enters the Specification flow before implementation. Raw source retention belongs to the private Root Harness; this repository receives only normalized project-safe assertions. Implementation-only input and general chat do not create a project record.
 
 ## SPEC-SYNC-AUTHORITY — Truth And Ownership
 
@@ -30,7 +30,7 @@ Truth is organized into four layers:
 1. The canonical owner registered for a stable `SPEC-*` assertion in `docs/specs/01-authority-map.md`
 2. Derived user or developer documentation that must reflect the owner
 3. Implementation and runtime truth that proves current behavior and exposes drift
-4. Raw inputs, observations, decisions, conflicts, Git history, tests, and acceptance records that preserve provenance
+4. Opaque private source IDs plus project observations, decisions, conflicts, Git history, tests, and acceptance records that preserve appropriate provenance
 
 Resolve truth in this order:
 
@@ -49,36 +49,40 @@ Use repository aliases from `docs/specs/02-repository-map.md` for external deliv
 
 Every repository reference must remain inside its registered alias root after path and symlink resolution. Strict PI, DEC, OBS, CF, and ACC records cannot be symlinks.
 
-## Product And Process Input
+## SPEC-SYNC-PRIVATE-INTAKE-BOUNDARY — Private Source Intake
 
-Store each input at:
+The private Root Harness owns raw or near-raw product and process intake. This
+repository must not contain user chat, copied stakeholder messages, attachment
+paths, full source transcripts, or `docs/product-inputs/` records.
 
-```text
-docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md
-```
+The Root Harness may assign an opaque `PI-*` source ID. Project `DEC-*`,
+`OBS-*`, `CF-*`, and `ACC-*` records may retain that ID in an `inputs` field,
+but they must not include the private source path or rely on unavailable source
+wording to explain the project rule.
 
-The directory date is the capture date. `source_date` preserves the original communication date or uses the literal `unknown`; null is not allowed. Split assertions into separate records when they can evolve independently.
+Before project-safe material enters this repository:
 
-The meaningful raw statement and its redaction notes are immutable provenance. Review, effect, delivery, references, and supersession metadata can evolve without rewriting that source body.
+- remove credentials, private keys, tokens, cookies, signed URLs, and access-bearing query strings
+- remove unnecessary personal or stakeholder context
+- replace machine-local evidence paths with repository-owned evidence or a descriptive unavailable-evidence note
+- extract independently understandable assertions, decisions, surfaces, and acceptance criteria
 
-All v1.7 records are strict from the first effective day. There is no automatic legacy mode based on filename date, record date, Git age, or missing fields.
+The checker accepts unresolved `PI-*` references when no local product-input
+tree exists. That behavior preserves traceability without requiring private
+source material in a public or team repository. Legacy checkouts containing a
+local product-input tree remain readable for migration only; agents must not
+create new local `PI-*` files.
 
-Before writing raw input:
+The templates and exact project-record metadata fields live in
+`docs/spec-process/templates.md`. Every `DEC-*` record names the human decision
+authority in `approved_by`, plus the stable assertions and affected surfaces
+governed by that ruling.
 
-- replace credentials, private keys, tokens, cookies, signed URLs, and access-bearing query strings with `[REDACTED]`
-- remove unnecessary personal data
-- replace machine-local evidence paths with repository evidence or a descriptive unavailable-evidence note
-- preserve the meaningful wording and explicitly state each redaction
+## SPEC-SYNC-STATE-MODEL — Private Input State References
 
-The checker rejects high-confidence secret shapes in strict records and supporting evidence, including private-key blocks, known access-token prefixes, authorization credentials, and access-bearing signed URL parameters. This automated scan supplements human redaction review and does not detect every form of personal or sensitive data.
-
-Safe supporting audit artifacts may be stored under `docs/product-inputs/evidence/`. They are provenance only, are not parsed as `PI-*` records, and cannot establish product authority without a linked strict input or observation.
-
-The templates and exact metadata fields live in `docs/spec-process/templates.md`.
-
-An input's `source` preserves provenance and does not automatically establish priority. Every `DEC-*` record names the human decision authority in `approved_by`, plus the stable assertions and affected surfaces governed by that ruling.
-
-## SPEC-SYNC-STATE-MODEL — Input State
+The following state vocabulary describes opaque private `PI-*` source records
+and legacy local records. The Root Harness owns the current source state; this
+repository does not duplicate or update it.
 
 `status` describes review and synchronization:
 
@@ -118,14 +122,14 @@ Allowed combinations are strict:
 
 `merged` never means implemented or verified. `verified` requires a linked, current, accepted `ACC-*` record. A rejected proposal requires its rejecting `DEC-*`. New records must not combine independently active, superseded, and conflicted assertions; split them at capture time.
 
-A `merged` or `conflict` input must name at least one stable canonical assertion. A `merged` input with applicable delivery work must name at least one delivery surface. Inbox and deferred records may leave those lists empty until topic routing is reviewed.
+A legacy local `merged` or `conflict` input must name at least one stable canonical assertion. This rule exists only so older checkouts remain auditable during migration.
 
 ## Supersession
 
 When a later ruling replaces a formerly canonical assertion:
 
-1. search the stable assertion ID and read its connected PI, DEC, OBS, CF, and ACC history
-2. preserve both raw records
+1. search the stable assertion ID and read its connected project DEC, OBS, CF, and ACC history plus the smallest necessary private Root source references
+2. preserve raw source records only in the private Root Harness
 3. link `supersedes` and `superseded_by` in both directions
 4. keep the earlier record `merged + superseded`
 5. keep the later record `merged + active` only after canonical synchronization
@@ -152,7 +156,7 @@ docs/spec-process/conflicts/resolved/CF-YYYYMMDD-SLUG.md
 
 A conflict must:
 
-- link at least one exact `PI-*` or `OBS-*` record, with backlinks
+- link at least one project `OBS-*` record with backlinks; an opaque private `PI-*` source ID may supplement but cannot replace project-safe conflict coverage
 - keep every linked input or observation topically related through a shared assertion and affected surface
 - cover all conflict assertions and affected surfaces through the union of its linked provenance records
 - name at least one stable `SPEC-*` assertion and at least one affected delivery surface
@@ -181,7 +185,7 @@ The root Codex agent delivering the task owns final combined requirement and res
 
 An `ACC-*` record captures:
 
-- exact input and decision IDs
+  - opaque private source IDs when needed, plus exact project decision IDs
 - stable canonical assertion IDs
 - changed surfaces
 - mechanical evidence
@@ -192,9 +196,9 @@ An `ACC-*` record captures:
 
 Store records under `docs/spec-process/acceptance-records/` using the strict template.
 
-Every acceptance record names at least one stable canonical assertion and one changed surface. Acceptance supersession must be bidirectional, acyclic, chronological, and topic-related.
+Every acceptance record names at least one stable canonical assertion and one changed surface. Acceptance supersession must be bidirectional, acyclic, chronological, and topic-related. An opaque private source ID supplies provenance only; acceptance is judged from the project assertions, decisions, surfaces, and evidence present here.
 
-A `verified` input requires at least one single current, non-superseded, accepted `ACC-*` record that independently covers the input, all of its canonical assertions, all governing decisions, and all declared delivery surfaces. Several partial records cannot be combined implicitly; create a final aggregate acceptance record after staged review. Every current accepted acceptance record must independently provide that complete coverage for every input it names, and each named input must have `delivery_status: verified`.
+Several partial records cannot be combined implicitly; create a final aggregate acceptance record after staged review. A current accepted acceptance record must independently cover its declared canonical assertions, governing project decisions, changed surfaces, conflicts, evidence, and exclusions. Private input delivery state is not copied into this repository.
 
 ### SPEC-SYNC-ACCEPTANCE-GUARDRAILS — Prevent Review Preference From Becoming Product Law
 
@@ -208,7 +212,7 @@ If no exact active assertion exists:
 
 When a confirmed defect reveals a reusable rule, implement the narrow general rule and review both the original case and at least one independent holdout case. Record what the evidence proves and what remains unverified.
 
-Chronology validation covers ID/date/filename consistency, known source dates not later than capture, conflict open/resolution order and resolution decisions, supersession order, and acceptance snapshots. It does not infer the undocumented origin time of evidence archived later.
+Chronology validation covers project-record ID/date/filename consistency, conflict open/resolution order and resolution decisions, supersession order, and acceptance snapshots. Opaque private source chronology remains owned by the Root Harness.
 
 Conflict and acceptance records use day precision, so same-day event order is unknown. An applicable conflict is definitely open and must appear when `opened_date < acceptance date` and its resolution is absent or later than the acceptance date. A conflict opened or resolved on the acceptance date may be included or omitted with supporting evidence. A conflict opened later or resolved earlier must not appear. A later resolution never rewrites an older snapshot.
 

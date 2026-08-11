@@ -10,6 +10,13 @@ const Duration agentModelPollInterval = Duration(milliseconds: 40);
 const Duration agentModelResponsePollInterval = Duration(milliseconds: 100);
 const Duration agentModelStopSignalTimeout = Duration(seconds: 3);
 const Duration agentModelFirstTokenTimeout = Duration(seconds: 20);
+const String agentLocalFileSystemPrompt = """
+You operate only inside a user-authorized real local workspace.
+Use the provided file tools for the requested work and use only relative paths.
+Every write or delete requires user approval. If an action is rejected or a tool reports an error, do not claim success.
+After each mutation, trust only the tool's verification result. Read files when the user asks you to inspect or verify content.
+When all requested work is complete, call submit with a concise truthful summary.
+""";
 
 class _Agent {
   late final running = qs(false);
@@ -32,13 +39,23 @@ class _Agent {
   late final report = qs<AgentEvaluationReport?>(null);
   late final reportRecords = qs<List<AgentCaseRunRecord>>(<AgentCaseRunRecord>[]);
   late final lastReportPath = qs<String?>(null);
+  late final localWorkspacePath = qs<String?>(null);
+  late final localRunning = qs(false);
+  late final localSessionVisible = qs(false);
+  late final localApproval = qs<AgentLocalFileApproval?>(null);
+  late final localFinalAnswer = qs("");
 
   bool _cancelRequested = false;
   bool _reportOpen = false;
   String _benchmarkSha256 = "";
+  Completer<bool>? _localApprovalCompleter;
 }
 
 extension $Agent on _Agent {
+  bool get localFileActionsSupported {
+    return kDebugMode && Platform.isWindows;
+  }
+
   Future<void> _init() async {
     final raw = await rootBundle.loadString("assets/agent_cases/primitive_bench.json");
     _benchmarkSha256 = crypto.sha256.convert(utf8.encode(raw)).toString();
@@ -226,6 +243,18 @@ extension $Agent on _Agent {
       "passed": records.q.values.where((record) => record.verdict.passed).length,
       "failed": records.q.values.where((record) => !record.verdict.passed).length,
       "error": error.q,
+      "localFileActionsSupported": localFileActionsSupported,
+      "localWorkspacePath": localWorkspacePath.q,
+      "localRunning": localRunning.q,
+      "localSessionVisible": localSessionVisible.q,
+      "localApproval": localApproval.q == null
+          ? null
+          : <String, Object?>{
+              "operation": localApproval.q!.operation.name,
+              "relativePath": localApproval.q!.relativePath,
+              "content": localApproval.q!.content,
+            },
+      "localFinalAnswer": localFinalAnswer.q,
       "reportPath": lastReportPath.q,
       "report": report.q?.toJson(),
       "liveModelOutput": liveModelOutput.q,
@@ -254,6 +283,194 @@ extension $Agent on _Agent {
   void setRepeatCount(int value) {
     if (running.q || runningAll.q) return;
     repeatCount.q = value.clamp(1, 3);
+  }
+
+  Future<bool> chooseLocalWorkspace() async {
+    if (!localFileActionsSupported) {
+      Alert.warning(S.current.agent_local_windows_debug_only);
+      return false;
+    }
+    if (running.q || runningAll.q || P.rwkvGeneration.generating.q) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return false;
+    }
+    final selectedPath = await file_picker.FilePicker.getDirectoryPath(
+      dialogTitle: S.current.agent_local_select_workspace,
+      lockParentWindow: true,
+    );
+    if (selectedPath == null) return false;
+    try {
+      final host = await AgentLocalFileHost.create(
+        workspacePath: selectedPath,
+        requestApproval: (approval) async {
+          return false;
+        },
+      );
+      localWorkspacePath.q = host.workspacePath;
+      Alert.success(
+        "${S.current.agent_local_workspace_authorized}\n\n${host.workspacePath}",
+      );
+      return true;
+    } catch (caught) {
+      Alert.error(
+        "${S.current.agent_local_workspace_failed}\n\n$caught",
+      );
+      return false;
+    }
+  }
+
+  Future<bool> ensureLocalWorkspace() async {
+    if (localWorkspacePath.q != null) return true;
+    return chooseLocalWorkspace();
+  }
+
+  Future<AgentRunResult?> runLocalFileTask(
+    String prompt, {
+    bool diagnosticSessionVisible = true,
+    FutureOr<void> Function(AgentEvent event)? onEvent,
+  }) async {
+    if (!localFileActionsSupported) {
+      Alert.warning(S.current.agent_local_windows_debug_only);
+      return null;
+    }
+    if (running.q || runningAll.q || P.rwkvGeneration.generating.q) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return null;
+    }
+    final workspacePath = localWorkspacePath.q;
+    if (workspacePath == null) {
+      Alert.info(S.current.agent_local_select_workspace_first);
+      return null;
+    }
+    final normalizedPrompt = prompt.trim();
+    if (normalizedPrompt.isEmpty) {
+      Alert.info(S.current.agent_local_prompt_required);
+      return null;
+    }
+    final model = P.rwkvModel.latest.q;
+    if (model == null) {
+      Alert.info(S.current.please_load_model_first);
+      return null;
+    }
+    final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      Alert.error(S.current.agent_eval_active_model_unknown);
+      return null;
+    }
+
+    running.q = true;
+    localRunning.q = true;
+    localSessionVisible.q = diagnosticSessionVisible;
+    stopping.q = false;
+    currentCaseName.q = "local-file-workspace";
+    runModelName.q = model.name;
+    events.q = <AgentEvent>[];
+    result.q = null;
+    verdict.q = null;
+    error.q = null;
+    liveModelOutput.q = "";
+    localFinalAnswer.q = "";
+    localApproval.q = null;
+    _cancelRequested = false;
+    _localApprovalCompleter = null;
+
+    _AgentSamplerSnapshot? samplerSnapshot;
+    try {
+      final host = await AgentLocalFileHost.create(
+        workspacePath: workspacePath,
+        requestApproval: _requestLocalFileApproval,
+      );
+      final runtime = AgentRuntime(
+        model: _RWKVAgentModel(
+          this,
+          modelID: modelID,
+        ),
+        toolHost: host,
+        mode: .strict,
+        maxTurns: 20,
+        maxRepeatedCalls: 2,
+      );
+
+      agentEvaluationSamplerConfig.validate();
+      samplerSnapshot = await _AgentSamplerSnapshot.capture(modelID: modelID);
+      await P.rwkvParams.syncSamplerParams(
+        temperature: agentEvaluationSamplerConfig.temperature,
+        topK: agentEvaluationSamplerConfig.topK.toDouble(),
+        topP: agentEvaluationSamplerConfig.topP,
+        presencePenalty: agentEvaluationSamplerConfig.presencePenalty,
+        frequencyPenalty: agentEvaluationSamplerConfig.frequencyPenalty,
+        penaltyDecay: agentEvaluationSamplerConfig.penaltyDecay,
+      );
+      await samplerSnapshot.setSeed(agentEvaluationSeed);
+      await P.rwkvGeneration.clearStates();
+      final runResult = await runtime.run(
+        system: agentLocalFileSystemPrompt,
+        user: normalizedPrompt,
+        isCancelled: () => _cancelRequested,
+        onEvent: (event) async {
+          events.q = List<AgentEvent>.unmodifiable(<AgentEvent>[
+            ...events.q,
+            event,
+          ]);
+          await onEvent?.call(event);
+          if (event.kind != .modelOutput) return;
+          liveModelOutput.q = event.content;
+        },
+      );
+      result.q = runResult;
+      localFinalAnswer.q = runResult.finalAnswer;
+      return runResult;
+    } catch (caught, stackTrace) {
+      qqe("Local Agent file task failed: $caught");
+      error.q = caught.toString();
+      if (!kDebugMode) {
+        unawaited(Sentry.captureException(caught, stackTrace: stackTrace));
+      }
+      return null;
+    } finally {
+      final approvalCompleter = _localApprovalCompleter;
+      if (approvalCompleter != null && !approvalCompleter.isCompleted) {
+        approvalCompleter.complete(false);
+      }
+      _localApprovalCompleter = null;
+      localApproval.q = null;
+      try {
+        await samplerSnapshot?.restore();
+      } catch (caught, stackTrace) {
+        qqe("Local Agent sampler restore failed: $caught");
+        error.q = caught.toString();
+        if (!kDebugMode) {
+          unawaited(Sentry.captureException(caught, stackTrace: stackTrace));
+        }
+      }
+      running.q = false;
+      localRunning.q = false;
+      stopping.q = false;
+      currentCaseName.q = null;
+      liveModelOutput.q = "";
+    }
+  }
+
+  Future<bool> _requestLocalFileApproval(
+    AgentLocalFileApproval approval,
+  ) async {
+    if (_cancelRequested) return false;
+    final previousCompleter = _localApprovalCompleter;
+    if (previousCompleter != null && !previousCompleter.isCompleted) {
+      previousCompleter.complete(false);
+    }
+    final completer = Completer<bool>();
+    _localApprovalCompleter = completer;
+    localApproval.q = approval;
+    return completer.future;
+  }
+
+  void resolveLocalFileApproval(bool approved) {
+    final completer = _localApprovalCompleter;
+    if (completer == null || completer.isCompleted) return;
+    _localApprovalCompleter = null;
+    localApproval.q = null;
+    completer.complete(approved);
   }
 
   Future<AgentCaseVerdict?> runSelectedCase() async {
@@ -343,6 +560,7 @@ extension $Agent on _Agent {
     runModelName.q = model.name;
 
     running.q = true;
+    localSessionVisible.q = false;
     stopping.q = false;
     currentCaseName.q = agentCase.name;
     events.q = <AgentEvent>[];
@@ -537,6 +755,7 @@ extension $Agent on _Agent {
     if ((!running.q && !runningAll.q) || stopping.q) return;
     stopping.q = true;
     _cancelRequested = true;
+    resolveLocalFileApproval(false);
     final modelID = P.rwkvModel.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) return;
     P.rwkvBridge.send(to_rwkv.Stop(modelID: modelID));

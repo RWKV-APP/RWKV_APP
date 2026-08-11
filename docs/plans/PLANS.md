@@ -4,7 +4,7 @@
 
 Use a checked-in execution plan for complex product changes, cross-repository work, large refactors, release flows, real-model or real-device investigations, and tasks whose implementation or verification spans several stages.
 
-An execution plan is a living implementation handoff. It does not replace raw product input, canonical assertions, decisions, conflicts, or final acceptance.
+An execution plan is a living implementation handoff. It does not replace private Root intake, canonical assertions, decisions, conflicts, or final acceptance.
 
 ## When To Use A Plan
 
@@ -25,7 +25,7 @@ Every plan includes:
 - `Status: in progress`, `Status: blocked`, or `Status: completed`
 - `Started: YYYY-MM-DD` using the actual start date
 - title and scope
-- linked `PI-*`, `SPEC-*`, `DEC-*`, and applicable current `CF-*` IDs
+- opaque private source IDs when needed, plus linked `SPEC-*`, `DEC-*`, and applicable current `CF-*` IDs
 - intended behavior and exclusions
 - implementation milestones with observable outcomes
 - mechanical checks and result-level review
