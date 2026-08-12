@@ -38,7 +38,7 @@ class AgentLocalFileApprovalCard extends ConsumerWidget {
               border: Border.all(color: qb.withValues(alpha: .24)),
               borderRadius: .circular(12),
             ),
-            padding: .all(16),
+            padding: const .all(16),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: .start,
@@ -75,7 +75,7 @@ class AgentLocalFileApprovalCard extends ConsumerWidget {
                     const SizedBox(height: 6),
                     Container(
                       width: double.infinity,
-                      padding: .all(10),
+                      padding: const .all(10),
                       decoration: BoxDecoration(
                         color: qb.withValues(alpha: .06),
                         borderRadius: .circular(8),

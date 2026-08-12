@@ -571,7 +571,7 @@ extension $Agent on _Agent {
     _cancelRequested = false;
     final caseStartedAt = DateTime.now();
 
-    final sandboxedLua = AgentSandboxedLua();
+    final sandboxedLua = const AgentSandboxedLua();
     final sandbox = agentCase.createSandbox(luaRunner: sandboxedLua.run);
     final runtime = AgentRuntime(
       model: _RWKVAgentModel(

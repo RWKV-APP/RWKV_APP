@@ -47,11 +47,11 @@ void main() {
         raw: '{"name":"submit","arguments":{"answer":"BLUEBIRD"}}',
       ),
     );
-    final assistedResult = AgentRunResult(
+    final assistedResult = const AgentRunResult(
       status: .submitted,
       finalAnswer: "BLUEBIRD",
       prompt: "prompt",
-      events: const <AgentEvent>[
+      events: <AgentEvent>[
         AgentEvent(
           kind: .modelOutput,
           turn: 1,
@@ -65,11 +65,11 @@ void main() {
       ],
       turns: 1,
     );
-    final invalidResult = AgentRunResult(
+    final invalidResult = const AgentRunResult(
       status: .infrastructureFailed,
       finalAnswer: "",
       prompt: "prompt",
-      events: const <AgentEvent>[
+      events: <AgentEvent>[
         AgentEvent(
           kind: .error,
           turn: 1,
