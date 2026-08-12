@@ -129,16 +129,18 @@ specifically approved G1g slot below. A replacement must not change the
 application consumer contract: model size, quantization, backend, artifact
 shape, platform and, when applicable, SoC limitation must match.
 
-Promoting a G1i row uses only real product platform names. When an exact G1i
-artifact is approved for an Apple-capable backend already present in RWKV Chat,
-declare both `macos` and `ios`; do not hide either platform behind a Debug-only
-pseudo-platform. Record load, generation, performance, cache, and device
-limitations as separate runtime evidence. Remove the corresponding G1h row
-when its complete compatibility scope is replaced. When one G1h row also covers
-platforms not declared for G1i, narrow the G1h platform list to the unmatched
-scope instead of removing the row. Retain G1h rows for unique backends,
-platforms or SoCs until an equivalent G1i artifact and consumer contract are
-available.
+Promoting a G1i row uses only real product platform names and declares only the
+consumer operating systems that the App intentionally supports for that model
+size and backend. Reusing exact weight bytes across Apple consumers does not
+require every Mac-compatible model to appear on iPhone or iPad. Do not hide an
+approved platform behind a Debug-only pseudo-platform, and do not add `ios`
+solely because the same artifact lineage is used on macOS. Record load,
+generation, performance, cache, memory, and device limitations as separate
+runtime evidence. Remove the corresponding G1h row when its complete
+compatibility scope is replaced. When one G1h row also covers platforms not
+declared for G1i, narrow the G1h platform list to the unmatched scope instead
+of removing the row. Retain G1h rows for unique backends, platforms or SoCs
+until an equivalent G1i artifact and consumer contract are available.
 
 The identified earlier-generation replacement is limited to the G1g 7.2B
 Android QNN w4a16 RMPack for Snapdragon 8 Gen 3. The formal G1i 7.2B row
@@ -146,13 +148,15 @@ occupies that complete slot, so the duplicate G1g row is removed. Other G1g
 rows remain available when they target a SoC or consumer slot not declared by
 an equivalent formal G1i row.
 
-The current G1i Apple catalog applies that rule to the non-QNN llama.cpp,
-WebRWKV, and MLX rows: their exact artifacts are visible to both macOS and iOS,
-while Snapdragon QNN rows remain Android-only. Catalog visibility is the
-user-facing selection contract and is not a claim that every size or backend
-has passed runtime or performance acceptance on every Apple device. Those
-outcomes remain separately recorded and never justify inventing `macos_debug`
-or silently removing an approved non-CoreML Apple entry.
+The current G1i Apple catalog exposes the non-QNN llama.cpp, WebRWKV, and MLX
+rows for 1.5B, 2.9B, and 7.2B on both macOS and iOS. G1i 13.3B is intentionally
+unsupported on iPhone and iPad, so its non-QNN Apple catalog scope includes
+`macos` and excludes `ios`. Snapdragon QNN rows remain Android-only. Catalog
+visibility is the user-facing selection contract and is not a claim that every
+declared size or backend has passed runtime or performance acceptance on every
+Apple device. Those outcomes remain separately recorded and never justify
+inventing `macos_debug`, adding an unsupported iOS entry, or silently removing
+an approved platform.
 
 G1i CoreML is explicitly deferred for the current release. `remote/latest.json`
 must contain no G1i CoreML row, and no new G1i CoreML artifact is converted,

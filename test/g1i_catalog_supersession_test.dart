@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('current G1i Apple release excludes CoreML and keeps other rows on macOS and iOS', () {
+  test('current G1i Apple release excludes CoreML and keeps 13.3B off iOS', () {
     final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
@@ -13,15 +13,25 @@ void main() {
 
     final g1iRows = rows.where((entry) => (entry['name'] as String).contains('RWKV7-G1i')).toList();
     final appleRows = g1iRows.where((entry) => (entry['backends'] as List<dynamic>).single != 'qnn').toList();
+    final mobileAppleRows = appleRows.where((entry) => entry['modelSize'] != 13.3).toList();
+    final macOnly13bRows = appleRows.where((entry) => entry['modelSize'] == 13.3).toList();
 
     expect(g1iRows, hasLength(15));
     expect(appleRows, hasLength(12));
+    expect(mobileAppleRows, hasLength(9));
+    expect(macOnly13bRows, hasLength(3));
     expect(
       g1iRows.where((entry) => (entry['backends'] as List<dynamic>).contains('coreml')),
       isEmpty,
     );
-    for (final g1i in appleRows) {
+    for (final g1i in mobileAppleRows) {
       expect(g1i['platforms'], containsAll(<String>['macos', 'ios']));
+    }
+    for (final g1i in macOnly13bRows) {
+      expect(g1i['platforms'], contains('macos'));
+      expect(g1i['platforms'], isNot(contains('ios')));
+    }
+    for (final g1i in appleRows) {
       expect(g1i['platforms'], isNot(contains('macos_debug')));
       expect(g1i['isDebug'], isNull);
       expect(g1i['url'], startsWith('HaloWang/rwkv-weights/resolve/main/'));
