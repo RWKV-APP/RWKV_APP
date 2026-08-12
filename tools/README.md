@@ -49,7 +49,11 @@ dart run tools/bin/check_specification.dart
 
 Change to the repository root before invoking the Dart script. The CLI has repository-root discovery and `--root` support for package and CI integration, but launching `dart run` directly from an arbitrary documentation directory can create a local `.dart_tool/` cache there
 
-The checker validates strict record front matter, stable IDs and dates, state combinations, authority ownership, local and sibling-repository references, conflicts, supersession, acceptance chronology, required backlinks, process versions, and synchronized Agent instructions
+The checker validates `SPEC-SYNC-ROOT-INTAKE-BOUNDARY`, current process
+surfaces, and the historical target-side record archive: strict front matter,
+stable IDs and dates, state combinations, authority ownership, local and
+sibling-repository references, conflicts, supersession, acceptance chronology,
+required backlinks, process versions, and synchronized Agent instructions
 
 Specification failures are blocking even though historical lightweight rule warnings remain non-blocking by default
 

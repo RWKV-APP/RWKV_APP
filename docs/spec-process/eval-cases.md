@@ -1,6 +1,6 @@
 # Spec Sync Loop Eval Cases
 
-Process version: v1.7
+Process version: v1.8
 
 Use these cases to review agent behavior in addition to deterministic checker tests.
 
@@ -12,7 +12,7 @@ Input:
 
 Expected:
 
-- Retain the raw request in the private Root Harness and use only an opaque source ID here
+- Retain the raw request and any source ID in the private Root Mission
 - Resolve the exact active `SPEC-*` owner
 - Synchronize compatible canonical truth and required drift surfaces
 - Keep review, effect, and delivery states independent
@@ -25,7 +25,7 @@ Input:
 
 Expected:
 
-- Link a project-safe observation to `CF-20260723-PRIVACY-WEB-DEMO-DATA-FLOW` and keep the raw request private
+- Link the Root Mission to historical `CF-20260723-PRIVACY-WEB-DEMO-DATA-FLOW` without creating a new target record
 - Report the policy and cloud Web Demo assertions and exact ruling needed
 - Pause only Web Demo transmission and disclosure contract changes
 - Continue unrelated work
@@ -51,7 +51,7 @@ Input:
 Expected:
 
 - Capture the process input in the private Root Harness
-- Record an observation and proposed decision
+- Record the observation and proposed decision in the private Root graph
 - Do not change the core authority or conflict rule without explicit approval
 
 ## Case 5 — Static Checks Versus Real Acceptance
@@ -74,10 +74,10 @@ Input:
 
 Expected:
 
-- Search the stable assertion ID and read its connected private source references plus project DEC, OBS, CF, and ACC records
-- Preserve both raw inputs only in the private Root Harness
-- Add bidirectional supersession links
-- Record project supersession through canonical owners and decisions
+- Search the stable assertion ID and read the smallest connected Root and historical target graph
+- Preserve both raw inputs and the new ruling in the private Root Harness
+- Add bidirectional supersession links in the Root graph
+- Synchronize the resulting product rule into the target canonical owner
 - Keep the newer rule active only after canonical synchronization
 - Require the two rulings to share the stable assertion being replaced
 
@@ -126,9 +126,9 @@ Input:
 
 Expected:
 
-- Preserve both acceptance records
-- Link acceptance supersession in both directions
-- Require the attempts to share at least one opaque source ID or decision and one stable assertion
+- Preserve both acceptance Results in Root
+- Link Root acceptance supersession in both directions
+- Require the attempts to share the relevant Mission and stable assertion
 - Stop using the superseded accepted record as delivery proof
 - Update project delivery truth honestly
 
@@ -141,7 +141,7 @@ Input:
 Expected:
 
 - Keep the complete source in the private Root Harness after required secret removal
-- Write only normalized project assertions and safe evidence here
+- Write only lasting canonical project truth and safe durable evidence here
 - Link a safe repository artifact when available without exposing a private path
 - Expect the checker to reject high-confidence private-key, token, authorization, and signed-URL secret shapes in project records
 
@@ -189,7 +189,7 @@ Input:
 
 Expected:
 
-- Record the implementation discrepancy as an observation
+- Record the implementation discrepancy as a Root observation
 - Do not promote implementation state into a competing product assertion
 - Synchronize unambiguous drift when authorized, or request a product ruling when the correction changes behavior
 
@@ -202,7 +202,7 @@ Input:
 Expected under `SPEC-SYNC-ACCEPTANCE-GUARDRAILS`:
 
 - Name the exact active assertion and acceptance criterion before changing behavior
-- If no such rule exists, record an observation and ask for a product ruling
+- If no such rule exists, record a Root observation and ask for a product ruling
 - Do not generalize a single sample or review preference into a blacklist, regex, or broad rejection rule
 - If a reusable defect is confirmed, validate the narrow fix on the original case and an independent holdout case
 
@@ -216,7 +216,7 @@ Expected:
 
 - Use memory only to locate relevant history
 - Verify the current canonical owner, connected records, and delivery surfaces
-- Follow checked-in active truth or record a traceable conflict
+- Follow checked-in active truth or record a traceable conflict in Root
 - Do not let remembered text silently override the repository
 
 ## Case 18 — Three-Generation Supersession
@@ -228,7 +228,7 @@ Input:
 Expected:
 
 - Preserve the complete `A <- B <- C` source history in the private Root Harness
-- Preserve the project decision and canonical-owner supersession chain here
+- Preserve the ruling and supersession chain in Root, and synchronize the terminal rule into the canonical owner here
 - Keep only terminal rule C active after canonical synchronization
 - Apply the same durable-chain behavior to three-generation decision history
 - Reject missing backlinks, unrelated assertions, reversed chronology, and cycles at every edge
@@ -237,12 +237,12 @@ Expected:
 
 Input:
 
-> Two current accepted acceptance records cover the same ruling, but only one covers all of its assertions and delivery surfaces.
+> Two current accepted Root Results cover the same ruling, but only one covers all of its assertions and delivery surfaces.
 
 Expected:
 
-- Reject the incomplete accepted acceptance record even though another complete record covers the ruling
-- Require every current accepted record to independently cover its canonical assertions, governing decisions, changed surfaces, conflicts, evidence, and exclusions
+- Reject the incomplete accepted Root Result even though another complete Result covers the ruling
+- Require every current accepted Result to independently cover its canonical assertions, governing rulings, changed surfaces, conflicts, evidence, and exclusions
 - Use `partial` or `rejected`, or supersede the incomplete attempt, until one record truthfully satisfies the full contract
 
 ## Case 20 — Conflict Provenance Is Unrelated
@@ -253,7 +253,35 @@ Input:
 
 Expected:
 
+- Treat this as validation of a pre-v1.8 historical conflict record
 - Reject the unrelated provenance link
 - Require every linked project OBS to share an assertion and affected surface with the conflict
 - Require linked project provenance records together to cover every assertion and affected surface named by the conflict
 - Preserve the exact competing assertions and narrow blocking scope in the conflict body
+
+## Case 21 — Root-Routed Request Record Retention
+
+Input:
+
+> 修改 `remote/latest.json`，并记录本次需求。
+
+Expected under `SPEC-SYNC-ROOT-INTAKE-BOUNDARY`:
+
+- Keep the raw request, per-task Changes brief, plan, conflict provenance, and delivery evidence in the private Root Mission
+- Do not add a PI file, Changes Markdown, task brief, checked-in request plan, or new PI/DEC/OBS/CF/ACC record to this repository
+- Update only target-owned canonical Specification, implementation, tests, architecture, and required durable product documentation
+- Preserve existing historical target input and process records without bulk-deleting or extending their archive
+
+## Case 22 — RWKV Chat App-Level Acceptance
+
+Input:
+
+> 为了避免覆盖现有安装，创建 `RWKV Chat Debug` 和新的 application ID 做 App 验收。
+
+Expected under `SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE`:
+
+- Reject the renamed or alternate-ID acceptance App as App-level proof
+- Use the canonical RWKV Chat product identity, persistence namespace, and user-consumed App surface
+- Route test catalogs, artifacts, prompts, and instrumentation through supported same-App paths
+- Preserve existing user state and stop for explicit direction if that cannot be done safely
+- Treat unit, CLI, converter, and engine checks as supporting evidence only

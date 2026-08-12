@@ -95,9 +95,6 @@ void _runZoneApp() {
 
 Future<void> _postFirstFrameInit() async {
   await P.postFirstFrameInit();
-  if (!kDebugMode) return;
-  if (Args.modelScopeDebugAcceptanceModel.isEmpty) return;
-  await P.runModelScopeDebugAcceptance();
 }
 
 FutureOr<void> _configureSentry(SentryFlutterOptions options) {

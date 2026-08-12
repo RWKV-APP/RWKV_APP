@@ -3,8 +3,9 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 
-const String specificationProcessVersion = 'v1.7';
-const String specificationProcessEffectiveDate = '2026-07-23';
+const String specificationProcessVersion = 'v1.8';
+const String specificationProcessEffectiveDate = '2026-08-10';
+const String targetRecordArchiveCutoffDate = '20260810';
 
 final class SpecificationIssue implements Comparable<SpecificationIssue> {
   final String path;
@@ -485,6 +486,8 @@ final class SpecificationChecker {
 
   static const Map<String, List<String>> _requiredReferences = {
     'docs/specification.md': [
+      'SPEC-SYNC-ROOT-INTAKE-BOUNDARY',
+      'SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE',
       'SPEC-LOOP.md',
       'docs/specs/00-inventory.md',
       'docs/specs/01-authority-map.md',
@@ -493,11 +496,15 @@ final class SpecificationChecker {
       '.agents/skills/spec-sync/SKILL.md',
     ],
     'AGENTS.md': [
+      'SPEC-SYNC-ROOT-INTAKE-BOUNDARY',
+      'SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE',
       'docs/specification.md',
       '.agents/skills/spec-sync/SKILL.md',
       'docs/spec-process/conflicts/current/',
     ],
     '.agents/skills/spec-sync/SKILL.md': [
+      'SPEC-SYNC-ROOT-INTAKE-BOUNDARY',
+      'SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE',
       'docs/specification.md',
       'docs/specs/00-inventory.md',
       'docs/specs/01-authority-map.md',
@@ -507,9 +514,12 @@ final class SpecificationChecker {
       'SPEC-SYNC-ACCEPTANCE-GUARDRAILS',
     ],
     'docs/spec-process/eval-cases.md': [
+      'SPEC-SYNC-ROOT-INTAKE-BOUNDARY',
+      'SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE',
       'SPEC-SYNC-ACCEPTANCE-GUARDRAILS',
     ],
     'docs/spec-process/rules.md': [
+      'SPEC-SYNC-ROOT-INTAKE-BOUNDARY',
       'docs/specs/01-authority-map.md',
       'docs/specs/02-repository-map.md',
       'docs/spec-process/acceptance-records/',
@@ -1225,6 +1235,13 @@ final class SpecificationChecker {
           'Plan Started must be a valid YYYY-MM-DD date',
         );
       }
+      if (started != null && _validDate(started) && started.compareTo(specificationProcessEffectiveDate) >= 0) {
+        _addIssue(
+          relativePath,
+          'root-intake-boundary',
+          'Checked-in target plans started 2026-08-10 or later are forbidden; retain new Root-routed execution plans in the private Root Harness',
+        );
+      }
       for (final section in requiredSections) {
         final indexes = sectionIndexes[_normalizeHeading(section)] ?? const [];
         if (indexes.length != 1) {
@@ -1908,6 +1925,7 @@ final class SpecificationChecker {
         );
         continue;
       }
+      _checkTargetRecordArchiveCutoff(relativePath);
       _parseRecord(
         _RecordLocation(
           kind: _RecordKind.productInput,
@@ -1950,6 +1968,7 @@ final class SpecificationChecker {
         );
         continue;
       }
+      _checkTargetRecordArchiveCutoff(relativePath);
       _parseRecord(
         _RecordLocation(
           kind: kind,
@@ -1993,6 +2012,7 @@ final class SpecificationChecker {
         );
         continue;
       }
+      _checkTargetRecordArchiveCutoff(relativePath);
       _parseRecord(
         _RecordLocation(
           kind: _RecordKind.conflict,
@@ -2013,6 +2033,20 @@ final class SpecificationChecker {
       'Specification record roots must be real directories, not symbolic links',
     );
     return true;
+  }
+
+  void _checkTargetRecordArchiveCutoff(String relativePath) {
+    final filename = path.basenameWithoutExtension(relativePath);
+    final match = RegExp(r'^(?:PI|DEC|OBS|CF|ACC)-(\d{8})-').firstMatch(filename);
+    final recordDate = match?.group(1);
+    if (recordDate == null || recordDate.compareTo(targetRecordArchiveCutoffDate) < 0) {
+      return;
+    }
+    _addIssue(
+      relativePath,
+      'root-intake-boundary',
+      'Target-side PI, DEC, OBS, CF, and ACC records dated 2026-08-10 or later are forbidden; retain new Root-routed request provenance in the private Root Harness',
+    );
   }
 
   bool _rejectRecordLink(FileSystemEntity entity) {
@@ -2844,7 +2878,7 @@ final class SpecificationChecker {
   }
 
   bool _isMigratedLegacyPrivateSurface(String sourcePath, String repositoryPath) {
-    if (!_isHistoricalProjectRecord(sourcePath)) {
+    if (!_isHistoricalProjectRecord(sourcePath) && !_isHistoricalProductInputRecord(sourcePath)) {
       return false;
     }
     return repositoryPath.startsWith('docs/product-inputs/') ||
@@ -2858,6 +2892,48 @@ final class SpecificationChecker {
     ).firstMatch(sourcePath);
     final recordDate = recordMatch?.group(1);
     return recordDate != null && recordDate.compareTo('20260806') < 0;
+  }
+
+  bool _isHistoricalProductInputRecord(String sourcePath) {
+    final recordMatch = RegExp(
+      r'^docs/product-inputs/\d{4}-\d{2}-\d{2}/PI-(\d{8})-',
+    ).firstMatch(sourcePath);
+    final recordDate = recordMatch?.group(1);
+    return recordDate != null && recordDate.compareTo(targetRecordArchiveCutoffDate) < 0;
+  }
+
+  bool _isPreCutoffTargetRecord(_SpecificationRecord record) {
+    final date = record.scalar(record.kind.dateField)?.replaceAll('-', '');
+    return date != null && date.compareTo(targetRecordArchiveCutoffDate) < 0;
+  }
+
+  bool _isPartialHistoricalAcceptanceSnapshot(_SpecificationRecord record) {
+    if (record.kind != _RecordKind.acceptance || !_isPreCutoffTargetRecord(record)) {
+      return false;
+    }
+    bool hasKnown = false;
+    bool hasOpaque = false;
+    final changedSurfaces = record.list('changed_surfaces').toSet();
+    for (final inputId in record.list('inputs')) {
+      if (!_validIdForKind(inputId, _RecordKind.productInput)) {
+        return false;
+      }
+      final idMatch = RegExp(r'^PI-(\d{4})(\d{2})(\d{2})-').firstMatch(inputId);
+      if (idMatch == null || '${idMatch.group(1)}${idMatch.group(2)}${idMatch.group(3)}'.compareTo(targetRecordArchiveCutoffDate) >= 0) {
+        return false;
+      }
+      final historicalPath = 'docs/product-inputs/${idMatch.group(1)}-${idMatch.group(2)}-${idMatch.group(3)}/$inputId.md';
+      if (!changedSurfaces.contains(historicalPath)) {
+        return false;
+      }
+      final target = _recordsById[inputId];
+      if (target?.kind == _RecordKind.productInput) {
+        hasKnown = true;
+      } else {
+        hasOpaque = true;
+      }
+    }
+    return hasKnown && hasOpaque;
   }
 
   bool _looksLikeAbsoluteMachinePath(String value) {
@@ -3236,7 +3312,9 @@ final class SpecificationChecker {
       final target = _recordsById[reference];
       if (target == null) {
         if (expectedKind == _RecordKind.productInput &&
-            !_records.any((_SpecificationRecord candidate) => candidate.kind == _RecordKind.productInput)) {
+            field == 'inputs' &&
+            record.kind != _RecordKind.productInput &&
+            _isPreCutoffTargetRecord(record)) {
           continue;
         }
         _addIssue(
@@ -3767,6 +3845,9 @@ final class SpecificationChecker {
       if (target == null) {
         continue;
       }
+      if (target.kind == _RecordKind.productInput && _isPartialHistoricalAcceptanceSnapshot(source)) {
+        continue;
+      }
       final backlinks = targetSingleReference ? target.singleReferenceAsList(targetField) : target.list(targetField);
       if (backlinks.contains(sourceId)) {
         continue;
@@ -4139,6 +4220,9 @@ final class SpecificationChecker {
       for (final inputId in acceptance.list('inputs')) {
         final input = _recordsById[inputId];
         if (input == null || input.kind != _RecordKind.productInput) {
+          continue;
+        }
+        if (_isPartialHistoricalAcceptanceSnapshot(acceptance)) {
           continue;
         }
         final independentlyCovered =

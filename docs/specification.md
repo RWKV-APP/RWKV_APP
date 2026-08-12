@@ -1,7 +1,7 @@
 # RWKV App Specification
 
-Process version: v1.7
-Last reviewed: 2026-07-23
+Process version: v1.8
+Last reviewed: 2026-08-12
 
 This is the canonical entrypoint for product and process truth in `rwkv_app`.
 
@@ -16,7 +16,8 @@ When the user says `Specification flow` or `Specification`, treat that wording a
 - Strict record templates: `docs/spec-process/templates.md`
 - Derived workflow explanation: `SPEC-LOOP.md`
 - Executable agent guidance: `.agents/skills/spec-sync/SKILL.md`
-- Private source intake: retained outside this repository by the Root Harness; project records may use opaque source IDs without source wording or private paths
+- Root-routed request provenance and combined acceptance: private Root Harness Mission and Result records, never copied into this repository
+- Historical project input and process records: `docs/product-inputs/` and `docs/spec-process/`, retained read-only for pre-v1.8 provenance
 - Current semantic conflicts: `docs/spec-process/conflicts/current/`
 - Product identity and design principles: `PRODUCT.md`
 
@@ -29,6 +30,8 @@ RWKV App lets people download, run, evaluate, and compare RWKV models on phones 
 The supported application platforms are Android, iOS, Windows, macOS, and Linux. Platform availability of a specific model, backend, or feature remains governed by its narrower canonical owner and current implementation.
 
 RWKV App quantization is governed by `SPEC-RWKV-QUANTIZATION-CATALOG-CONTROL` and `SPEC-RWKV-QUANTIZATION-DELIVERY`. Work begins with the live `remote/latest.json` artifact matrix and its application consumers; converter libraries and host accelerators are selected from the required catalog cohort and are not inferred as product targets from the word quantization.
+
+For the current release, G1i CoreML is intentionally deferred: the current catalog and release contain no G1i CoreML rows, no new G1i CoreML conversion or publication is performed, already published G1i CoreML bytes are retained without promotion, and the existing G1f CoreML rows remain available. A later explicit human ruling is required before G1i CoreML work or release resumes.
 
 The Windows Debug App includes ordinary-chat real local Agent file actions governed by `SPEC-RWKV-LOCAL-AGENT-FILE-ACTIONS`. A clear natural-language file request can trigger workspace authorization, in-chat review of every mutation, and a verified assistant result. This workflow remains separate from deterministic Agentic Evaluation scoring.
 
@@ -81,16 +84,83 @@ Static analysis, unit tests, widget tests, builds, and deterministic scripts pro
 
 The root Codex agent delivering a task must inspect the combined diff and personally review representative outcomes at the level a user consumes them. For work that crosses the Flutter app, adapter, native engine, or website, verify every relevant repository and representation within the authorized scope.
 
+## SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE — RWKV Chat Acceptance Uses One App Identity
+
+Every App-level RWKV Chat acceptance must use the canonical RWKV Chat product
+name, display name, application or bundle identifier, persistence namespace,
+and user-consumed App surface for the target platform.
+
+Do not create, rename, or retain an acceptance-only App, alternate bundle or
+application identifier, parallel sandbox, or separate cache and local-storage
+namespace solely for acceptance. Test catalogs, unpublished artifacts, prompts,
+and instrumentation must enter through supported paths inside that same App
+identity.
+
+Preserve pre-existing conversations, settings, caches, downloaded models, and
+other user state unless the current acceptance explicitly requires a bounded
+change. A destructive reset requires separate approval. If same-App acceptance
+cannot protect existing state safely, stop and request direction instead of
+changing App identity.
+
+Unit, widget, CLI, converter, and engine checks remain mechanical evidence; they
+do not substitute for App-level proof through the user-consumed RWKV Chat App.
+
+## SPEC-RWKV-CHAT-VISIBLE-UI-E2E-ACCEPTANCE — App Acceptance Requires Visible UI End To End
+
+Every RWKV Chat App, device, model download, model-runtime, and performance
+acceptance must execute through the canonical App's real, visible,
+user-interactive UI from the first user action to the asserted result. The
+evidence must show the user-facing model list or control, the UI action that
+selects or starts the operation, visible progress or state transitions, and the
+final UI outcome. A test that only launches the App without exercising the
+relevant UI is not acceptance.
+
+Do not use a hidden background runner, acceptance-only startup hook,
+command-line model selection, direct store call, direct engine call, or
+auto-exiting instrumentation path to perform App acceptance. Unit, widget,
+static, CLI, build, and engine checks may support engineering diagnosis, but
+they remain mechanical evidence and cannot replace or be reported as App,
+device, runtime, download, or performance acceptance.
+
+If the canonical App UI cannot be both controlled and observed end to end on
+the selected device, refuse the requested test and state the exact UI,
+automation, device, signing, permission, or observability blocker. Do not
+silently fall back to a hidden runner or claim partial background execution as
+the requested test.
+
 ## SPEC-SYNC-PRIVATE-INTAKE-BOUNDARY — Private Source Intake Boundary
 
-Raw user wording, copied stakeholder communication, attachments, and other near-source material are retained only by the private Root Harness. Do not create `docs/product-inputs/` or copy private source bodies, private paths, or unnecessary personal context into this repository.
+New raw user wording, copied stakeholder communication, attachments, and other near-source material are retained only by the private Root Harness. Do not create a new `docs/product-inputs/` record or copy new private source bodies, private paths, or unnecessary personal context into this repository.
 
-RWKV App keeps the normalized product and technical truth it owns. A project decision, observation, conflict, or acceptance record may retain an opaque source ID for traceability, but it must be independently understandable from its project-safe assertions, surfaces, and evidence.
+RWKV App keeps the normalized product and technical truth it owns. An existing
+historical project input, decision, observation, conflict, or acceptance record may
+retain an opaque source ID for traceability, but it must be independently
+understandable from its project-safe assertions, surfaces, and evidence.
 
-Use `docs/spec-process/templates.md` for project-safe records and run:
+`docs/spec-process/templates.md` defines validation for the historical target
+record archive. Run:
 
 ```bash
 dart run tools/bin/check_specification.dart
 ```
 
-An unresolved semantic contradiction belongs under `docs/spec-process/conflicts/current/`. Pause only the behavior named by its blocking scope and ask for the ruling recorded in its `Required decision` section.
+Historical target conflicts remain under `docs/spec-process/conflicts/`.
+New Root-routed contradictions stay in the private Root Mission while target
+canonical truth remains unchanged.
+
+## SPEC-SYNC-ROOT-INTAKE-BOUNDARY — Root-Routed Input Retention
+
+Every RWKV request is first captured in a private Root Harness Mission. Raw
+wording, copied chat, voice transcripts, redactions, per-task Changes briefs,
+execution plans, rulings, conflict provenance, and combined acceptance stay in
+Root Source, Mission, Result, and Specification-record surfaces.
+
+A Root-routed task must not add `docs/product-inputs/`, Changes Markdown, a
+standalone task brief, a checked-in request plan, or a new PI, DEC, OBS, CF, or
+ACC record to this repository.
+
+This boundary does not remove target authority. RWKV App continues to own
+canonical Specification, source code, tests, architecture, and required
+durable product documentation. Existing v1.7 PI, DEC, OBS, CF, and ACC files
+remain a validated read-only historical archive and are neither bulk-deleted
+nor extended for new Root Missions.

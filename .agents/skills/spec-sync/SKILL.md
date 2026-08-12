@@ -1,11 +1,13 @@
 ---
 name: spec-sync
-description: Synchronize product and process truth into the rwkv_app Specification before implementation. Use when the user mentions Specification or Specification flow, provides product behavior, API or model expectations, UI rules, acceptance criteria, copied stakeholder messages, voice-transcribed requirements, cross-repository contracts, or requests a change to the Specification process itself.
+description: Synchronize a private Root Harness Delivery Contract into rwkv_app canonical product or process truth before implementation, without storing request-provenance Markdown in the target repository. Use when the user mentions Specification or Specification flow, provides product behavior, API or model expectations, UI rules, acceptance criteria, copied stakeholder messages, voice-transcribed requirements, cross-repository contracts, or requests a change to the Specification process itself.
 ---
 
 # Spec Sync
 
-Turn product conversation into checked-in, traceable project truth before changing behavior.
+Turn the sanitized Root Delivery Contract into checked-in canonical project
+truth before changing behavior. Request provenance remains in the private Root
+Harness.
 
 ## Read First
 
@@ -13,13 +15,18 @@ Turn product conversation into checked-in, traceable project truth before changi
 2. Read `docs/specs/00-inventory.md`
 3. Read `docs/specs/01-authority-map.md`
 4. Read the relevant canonical owner and its required drift surfaces
-5. Search the exact relevant `SPEC-*` IDs under canonical owners and `docs/spec-process/`, then read the connected DEC, OBS, CF, and ACC records needed to understand project provenance, supersession, and current delivery state; request only the smallest necessary opaque private source references from the Root Harness
+5. Search the exact relevant `SPEC-*` IDs under canonical owners, historical `docs/product-inputs/`, and `docs/spec-process/`, then read only the connected historical PI, DEC, OBS, CF, and ACC records needed to understand project provenance, supersession, and current delivery state
 6. Read all records under `docs/spec-process/conflicts/current/`
 7. Read `docs/spec-process/rules.md` when the input affects this workflow
 
-Do not read every historical record when exact-ID search identifies the relevant graph. Use repository aliases from `docs/specs/02-repository-map.md` for cross-repository references. Do not store machine-local absolute paths as durable links.
+Do not read every historical record when exact-ID search identifies the relevant
+graph. Use repository aliases from `docs/specs/02-repository-map.md` for
+cross-repository references. Do not store machine-local absolute paths as
+durable links.
 
-Memory can help locate context, but it cannot override checked-in Specification. Verify remembered facts that may have changed against the current owner and delivery surfaces.
+Memory can help locate context, but it cannot override checked-in
+Specification. Verify remembered facts that may have changed against the
+current owner and delivery surfaces.
 
 ## Classify The Request
 
@@ -29,53 +36,55 @@ Memory can help locate context, but it cannot override checked-in Specification.
 - `implementation-only`: mechanics that preserve current canonical behavior
 - `general chat`: explanation or brainstorming with no request to change project truth
 
-Handle product, process, or mixed input before implementation. Do not create a product-input record for implementation-only work or general chat.
+Handle product, process, or mixed input before implementation. Under
+`SPEC-SYNC-ROOT-INTAKE-BOUNDARY`, none of these classes creates target-side
+request-provenance Markdown for a Root-routed task.
 
-## Capture Product Or Process Input Privately
+## Use Root Mission Intake
 
-1. Route raw wording, copied stakeholder communication, and attachments to the private Root Harness; never write them into this repository
-2. When the Root Harness is available, retain the source there and use only an opaque source ID in project records
-3. If the Root Harness is unavailable, do not create a substitute raw-input file in this repository
-4. Remove credentials, tokens, signed URLs, personal data, machine-local attachment paths, private motivation, and unnecessary source wording from project-safe material
-5. Split independently evolving assertions and identify stable `SPEC-*` IDs plus delivery surfaces
-6. Compare the normalized assertions with the current canonical owner and applicable conflicts
+1. Confirm that the private Root Harness captured the source in a Mission and dispatched the smallest useful Delivery Contract
+2. Keep raw wording, copied chat, voice transcription, redactions, per-task Changes notes, planning, conflict provenance, and delivery evidence in that Root Mission
+3. Do not create a new `docs/product-inputs/` record, Changes Markdown, standalone task brief, checked-in request plan, or PI/DEC/OBS/CF/ACC record for Root-routed work
+4. Remove credentials, tokens, signed URLs, personal data, machine-local attachment paths, private motivation, and unnecessary source wording from target-safe material
+5. Extract concise shareable assertions, identify stable `SPEC-*` IDs, and identify target-owned delivery surfaces
+6. Compare those assertions with the current canonical owner and applicable historical conflicts
 
-Use `docs/spec-process/templates.md` for project DEC, OBS, CF, and ACC structure. Do not create `docs/product-inputs/` or a legacy-format substitute.
+If a request reaches this repository without a Root Mission, return it to the
+Root Harness before target mutation. Existing project PI, DEC, OBS, CF, and ACC
+files remain a strict read-only historical archive; do not bulk-delete or
+extend it for new Root-routed work.
 
 ## Merge Or Record A Conflict
 
 For a compatible assertion:
 
 1. Update the canonical owner first
-2. Synchronize required derived, implementation, runtime, and evidence surfaces
-3. Keep only the opaque private source reference needed for provenance
-4. Track current effect and delivery through project truth and acceptance independently
+2. Synchronize required derived, implementation, runtime, and durable product documentation surfaces
+3. Track current effect, validation, and acceptance in the Root Mission Result
 
 For a semantic conflict:
 
-1. Create `docs/spec-process/conflicts/current/CF-YYYYMMDD-SLUG.md`
-2. Link a project `OBS-*` record and, when useful, an opaque private `PI-*` source ID
-3. Name the competing assertions, stable `SPEC-*` IDs, affected surfaces, and narrow blocking scope
-4. Leave private input lifecycle changes to the Root Harness and mark only the project delivery scope as blocked
-5. Stop only behavior changes that depend on the unresolved assertion
-6. Ask the user for the exact ruling needed
+1. Record the competing assertions, stable `SPEC-*` IDs, affected surfaces, and narrow blocking scope in the private Root Mission
+2. Leave target canonical truth unchanged while the ruling is unresolved
+3. Stop only behavior changes that depend on the unresolved assertion
+4. Ask the user for the exact ruling needed through the Root task
 
-Implementation or derived-document drift against an unambiguous canonical assertion is ordinary drift. Synchronize it without manufacturing a conflict. Git history is provenance and sequence evidence; commit order alone cannot resolve product ambiguity.
+Implementation or derived-document drift against an unambiguous canonical
+assertion is ordinary drift. Synchronize it without manufacturing a conflict.
+Git history is provenance and sequence evidence; commit order alone cannot
+resolve product ambiguity.
 
 ## Resolve And Supersede
 
 After an explicit human ruling:
 
-1. Create or update the `DEC-*` record, set `approved_by` to the explicit human decision authority, and use `approved` or `rejected` according to that ruling
-2. Synchronize the canonical owner and required drift surfaces
-3. Keep project decision, observation, conflict, and acceptance relationships current; private input state remains Root-owned
-4. Link all supersession relationships in both directions
-5. Move a resolved conflict from `conflicts/current/` to `conflicts/resolved/`
-6. Preserve raw statements only in the private Root Harness and preserve historical project acceptance snapshots here
+1. Record the ruling and supersession in the private Root Mission or Root Specification graph
+2. Synchronize the target canonical owner and required drift surfaces
+3. Preserve existing target-side historical records without creating a new request-provenance record
 
-Use project decisions and canonical-owner lifecycle changes to distinguish rejected proposals from superseded product truth. Do not copy private source-state metadata into this repository.
-
-Only an approved decision can resolve an observation or conflict. A source label, copied message, implementation state, Git order, or Agent preference is not human approval.
+Only an explicit human ruling can resolve a semantic contradiction. A source
+label, copied message, implementation state, Git order, or agent preference is
+not human approval.
 
 ## Verify And Accept
 
@@ -85,18 +94,42 @@ Run the deterministic checker:
 dart run tools/bin/check_specification.dart
 ```
 
-Then run focused engineering checks required by the changed module and `AGENTS.md`.
+Then run focused engineering checks required by the changed module and
+`AGENTS.md`.
 
-The root Codex agent delivering the task owns final combined acceptance, including delegated work. Automated checks, status codes, counts, screenshots, model judges, and sub-agent reports are evidence only. For generated, parsed, visual, device, model, network, or cross-repository behavior, personally inspect representative real outcomes and all relevant representations.
+For app-level RWKV Chat acceptance, apply
+`SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE`: keep the canonical product name,
+application or bundle identifier, persistence namespace, and user-consumed app
+surface. Never create a renamed or separately sandboxed acceptance app. If the
+same-app path cannot protect existing user state, stop for explicit direction
+instead of changing the app identity.
 
-Create an `ACC-*` record only after the recorded review is true. Private input delivery state remains Root-owned; project acceptance covers its declared assertions, decisions, surfaces, conflicts, evidence, and exclusions.
+Also apply `SPEC-RWKV-CHAT-VISIBLE-UI-E2E-ACCEPTANCE` to every App, device,
+model-download, model-runtime, and performance acceptance. Drive and observe
+the complete operation through the real visible user-facing UI. A hidden
+background runner, acceptance-only startup hook, command-line model selector,
+direct store call, direct engine call, or merely launching the App is not
+acceptance. If the selected device UI cannot be controlled and observed end to
+end, refuse the test and report the exact blocker instead of silently falling
+back to background execution.
+
+The root Codex agent delivering the task owns final combined acceptance,
+including delegated work. Automated checks, status codes, counts, screenshots,
+model judges, and sub-agent reports are evidence only. For generated, parsed,
+visual, device, model, network, or cross-repository behavior, personally inspect
+representative real outcomes and all relevant representations.
+
+Record combined acceptance in the Root Mission Result. Existing target-side
+ACC files remain historical snapshots; do not create a new ACC merely to mirror
+Root acceptance.
 
 ## SPEC-SYNC-ACCEPTANCE-GUARDRAILS
 
-Before changing business logic, Prompt rules, normalization, validation, or rejection behavior because a result looks wrong:
+Before changing business logic, Prompt rules, normalization, validation, or
+rejection behavior because a result looks wrong:
 
 1. Name the exact active `SPEC-*` assertion and acceptance criterion being enforced
-2. If none exists, create an `OBS-*` and ask for a product ruling instead of inventing a restriction
+2. If none exists, record a Root observation and ask for a product ruling instead of inventing a restriction
 3. Do not turn one sample or reviewer preference into a keyword blacklist, regular-expression rejection, or generalized prohibition
 4. For a confirmed general defect, implement the narrow reusable rule and review the original case plus at least one independent holdout case
-5. Record the evidence boundary and remaining unverified behavior in acceptance
+5. Record the evidence boundary and remaining unverified behavior in Root acceptance

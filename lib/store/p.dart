@@ -203,7 +203,6 @@ part "talk.dart";
 part "translator.dart";
 part "ocr.dart";
 part "md_render.dart";
-part "modelscope_debug_acceptance.dart";
 part "font.dart";
 part "ui.dart";
 part "pth.dart";
@@ -255,10 +254,6 @@ abstract class P {
   static final telemetry = _Telemetry();
   static final webDemo = _WebDemo();
   static bool _postFirstFrameInitStarted = false;
-
-  static Future<void> runModelScopeDebugAcceptance() async {
-    await _runModelScopeDebugAcceptance();
-  }
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();

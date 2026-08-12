@@ -33,6 +33,12 @@ debug row is evidence of intended availability only; it does not by itself prove
 that the artifact was produced, uploaded, downloadable, loadable, accepted on a
 declared platform, or approved for release.
 
+Catalog platform values name real consumer operating systems. `macos_debug` is
+not a valid product platform and must not appear in current or retained catalog
+JSON or in platform-filtering code. Debug or experimental state, when genuinely
+needed, uses separate lifecycle metadata and never creates a synthetic
+operating-system name.
+
 ### Verified Weight Discovery, Download, And Load Flow
 
 The application resolves catalog weights through the following path:
@@ -103,7 +109,8 @@ Quantization delivery proceeds against an explicit catalog cohort:
 5. validate JSON parsing, `FileInfo` mapping, platform and SoC filtering, local
    recognition, download identity, file size and digest behavior
 6. verify representative loading and generation on every platform or device
-   claimed by the row
+   claimed by the row through the canonical App's visible user-facing UI under
+   `SPEC-RWKV-CHAT-VISIBLE-UI-E2E-ACCEPTANCE`
 
 Uploading artifacts, deploying a new remote catalog, or promoting debug rows to
 release visibility are separate distribution actions and require explicit
@@ -117,19 +124,21 @@ additional surfaces must be checked when the selected cohort needs them.
 
 ## G1i Formal Supersession Policy
 
-`DEC-20260811-G1I-FORMAL-CATALOG-SUPERSESSION` establishes G1i as the formal
-catalog generation for equivalent G1h slots and for the specifically approved
-G1g slot below. A replacement must not change the application consumer
-contract: model size, quantization, backend, artifact shape, platform and, when
-applicable, SoC limitation must match.
+G1i is the formal catalog generation for equivalent G1h slots and for the
+specifically approved G1g slot below. A replacement must not change the
+application consumer contract: model size, quantization, backend, artifact
+shape, platform and, when applicable, SoC limitation must match.
 
-Promoting a G1i row removes Debug-only naming and visibility only for the
-platforms and SoCs currently declared by that row. Remove the corresponding
-G1h row when its complete compatibility scope is replaced. When one G1h row
-also covers platforms not yet declared for G1i, narrow the G1h platform list to
-the unmatched scope instead of removing the row. Retain G1h rows for unique
-backends, platforms or SoCs until an equivalent G1i artifact and consumer
-contract are available.
+Promoting a G1i row uses only real product platform names. When an exact G1i
+artifact is approved for an Apple-capable backend already present in RWKV Chat,
+declare both `macos` and `ios`; do not hide either platform behind a Debug-only
+pseudo-platform. Record load, generation, performance, cache, and device
+limitations as separate runtime evidence. Remove the corresponding G1h row
+when its complete compatibility scope is replaced. When one G1h row also covers
+platforms not declared for G1i, narrow the G1h platform list to the unmatched
+scope instead of removing the row. Retain G1h rows for unique backends,
+platforms or SoCs until an equivalent G1i artifact and consumer contract are
+available.
 
 The identified earlier-generation replacement is limited to the G1g 7.2B
 Android QNN w4a16 RMPack for Snapdragon 8 Gen 3. The formal G1i 7.2B row
@@ -137,14 +146,21 @@ occupies that complete slot, so the duplicate G1g row is removed. Other G1g
 rows remain available when they target a SoC or consumer slot not declared by
 an equivalent formal G1i row.
 
-For iOS, the approved equivalent replacement is deliberately limited to the
-1.5B and 2.9B WebRWKV NF4 slots that previously selected G1h. Those two G1i
-rows declare iOS while the corresponding G1h rows retain only Web. The 7.2B
-and 13.3B WebRWKV rows do not gain iOS through this decision because there was
-no equivalent G1h iOS slot to replace. Catalog visibility records the approved
-selection contract; a Debug build, successful model load and representative
-generation on the target iPad remain required before recording iOS device
-acceptance.
+The current G1i Apple catalog applies that rule to the non-QNN llama.cpp,
+WebRWKV, and MLX rows: their exact artifacts are visible to both macOS and iOS,
+while Snapdragon QNN rows remain Android-only. Catalog visibility is the
+user-facing selection contract and is not a claim that every size or backend
+has passed runtime or performance acceptance on every Apple device. Those
+outcomes remain separately recorded and never justify inventing `macos_debug`
+or silently removing an approved non-CoreML Apple entry.
+
+G1i CoreML is explicitly deferred for the current release. `remote/latest.json`
+must contain no G1i CoreML row, and no new G1i CoreML artifact is converted,
+published, promoted, or released until a later explicit human ruling reopens
+that cohort. Existing G1f CoreML catalog rows remain available. G1i CoreML
+bytes that were already published remain preserved at their immutable remote
+paths; artifact availability does not make them current catalog or release
+candidates, and this deferral does not authorize remote deletion.
 
 This supersession changes catalog selection, not artifact identity or remote
 distribution state. Every promoted G1i row must retain a source-selectable

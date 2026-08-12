@@ -1,31 +1,23 @@
 <a id="SPEC-SYNC-EXECUTION-PLANS"></a>
 
-# Specification-Aware Execution Plans
+# Historical Specification-Aware Execution Plans
 
-Use a checked-in execution plan for complex product changes, cross-repository work, large refactors, release flows, real-model or real-device investigations, and tasks whose implementation or verification spans several stages.
+This file defines the validation contract for the existing checked-in plan
+archive. Under `SPEC-SYNC-ROOT-INTAKE-BOUNDARY`, new Root-routed execution
+plans, milestones, discoveries, decisions, and delivery evidence stay in the
+private Root Mission.
 
-An execution plan is a living implementation handoff. It does not replace private Root intake, canonical assertions, decisions, conflicts, or final acceptance.
+A historical plan is an implementation handoff snapshot. It does not replace
+canonical assertions, project truth, or Root acceptance.
 
-## When To Use A Plan
+## Historical Plan Contract
 
-Use a plan when one or more conditions apply:
-
-- product behavior changes across several modules or repositories
-- the correct implementation path needs research
-- staged migration, recovery, or release work must remain resumable
-- real-model, real-device, network, visual, or cross-platform verification has several checkpoints
-- several agents or future tasks need a shared progress surface
-
-Small implementation-only changes can skip a checked-in plan when the active Specification and focused verification path are already clear.
-
-## Required Sections
-
-Every plan includes:
+Every retained plan includes:
 
 - `Status: in progress`, `Status: blocked`, or `Status: completed`
 - `Started: YYYY-MM-DD` using the actual start date
 - title and scope
-- opaque private source IDs when needed, plus linked `SPEC-*`, `DEC-*`, and applicable current `CF-*` IDs
+- linked `SPEC-*`, historical `DEC-*`, and applicable historical `CF-*` IDs
 - intended behavior and exclusions
 - implementation milestones with observable outcomes
 - mechanical checks and result-level review
@@ -33,19 +25,21 @@ Every plan includes:
 - discoveries and decisions
 - final outcome, remaining gaps, and retrospective
 
-`in progress` means execution or verification remains. `blocked` means a named external ruling or state change is required before meaningful progress can continue. `completed` requires an honest final Outcome, Remaining Gaps, and Retrospective; it does not imply that excluded or conflict-blocked product work was completed.
-
-Every plan has a non-empty H1. Each required section contains meaningful content, and Progress includes at least one `YYYY-MM-DD` timestamp. Empty headings do not satisfy the contract.
+Every plan has a non-empty H1. Each required section contains meaningful
+content, and Progress includes at least one `YYYY-MM-DD` timestamp. Empty
+headings do not satisfy the contract.
 
 ## Rules
 
-- Resolve the canonical owner before planning implementation
-- Keep milestone state synchronized with the actual working tree
-- Record durable product or process decisions in their own `DEC-*` records
-- Stop only conflict-dependent milestones when a current conflict appears
-- Do not mark a milestone complete from an unexecuted command or delegated report
-- Preserve dirty-worktree and cross-repository scope in handoffs
+- Do not create a new checked-in plan for a Root-routed task
+- Keep active execution state, coordination, and acceptance in the Root Mission
+- Synchronize lasting target-owned truth into canonical contracts, source, tests, architecture, and required durable documentation
+- Treat historical plan status as a snapshot; it does not prove current delivery
+- Preserve dirty-worktree and cross-repository scope in Root handoffs
 
 ## Completion
 
-A plan is complete when canonical truth and delivery surfaces agree, required checks and outcome review are recorded, unresolved conflicts and exclusions remain visible, and the final `ACC-*` record accurately represents the delivered scope.
+A retained historical plan is complete only when its own recorded Outcome,
+Remaining Gaps, and Retrospective are honest. Current delivery and acceptance
+are established by the active Root Mission Result, not by extending this
+archive.

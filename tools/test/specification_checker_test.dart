@@ -21,15 +21,114 @@ void main() {
       root.deleteSync(recursive: true);
     });
 
-    test('accepts a complete v1.7 fixture', () {
+    test('accepts a complete v1.8 fixture', () {
       final result = SpecificationChecker(root).check();
       expect(result.issues, isEmpty, reason: _messages(result));
+    });
+
+    test('rejects target-side request records at the Root intake cutoff', () {
+      final historicalPath = _inputPath(root);
+      final newPath = path.join(
+        root.path,
+        'docs/product-inputs/2026-08-10/PI-20260810-NEW-ROOT-REQUEST.md',
+      );
+      final content = File(historicalPath)
+          .readAsStringSync()
+          .replaceAll('PI-20260723-SPEC-SYSTEM-MIGRATION', 'PI-20260810-NEW-ROOT-REQUEST')
+          .replaceAll('captured_date: 2026-07-23', 'captured_date: 2026-08-10');
+      _write(newPath, content);
+      final result = SpecificationChecker(root).check();
+      _expectCode(result, 'root-intake-boundary');
     });
 
     test('accepts opaque private PI references without a local input tree', () {
       Directory(path.join(root.path, 'docs/product-inputs')).deleteSync(recursive: true);
       final result = SpecificationChecker(root).check();
       expect(result.issues, isEmpty, reason: _messages(result));
+    });
+
+    test('accepts opaque PI references beside a partial historical input archive', () {
+      _replace(
+        _acceptancePath(root),
+        'inputs:\n  - PI-20260723-SPEC-SYSTEM-MIGRATION',
+        'inputs:\n  - PI-20260723-SPEC-SYSTEM-MIGRATION\n  - PI-20260806-ROOT-PRIVATE-SOURCE',
+      );
+      _replace(_inputPath(root), 'delivery_status: verified', 'delivery_status: planned');
+      _replace(
+        _inputPath(root),
+        'acceptance_records:\n  - ACC-20260723-SPEC-MIGRATION',
+        'acceptance_records: []',
+      );
+      _replace(
+        _acceptancePath(root),
+        'changed_surfaces:\n  - docs/specification.md',
+        'changed_surfaces:\n'
+            '  - docs/specification.md\n'
+            '  - docs/product-inputs/2026-07-23/PI-20260723-SPEC-SYSTEM-MIGRATION.md\n'
+            '  - docs/product-inputs/2026-08-06/PI-20260806-ROOT-PRIVATE-SOURCE.md',
+      );
+      final result = SpecificationChecker(root).check();
+      expect(result.issues, isEmpty, reason: _messages(result));
+    });
+
+    test('rejects malformed opaque PI references in historical inputs', () {
+      _replace(
+        _acceptancePath(root),
+        'inputs:\n  - PI-20260723-SPEC-SYSTEM-MIGRATION',
+        'inputs:\n  - PI-bad',
+      );
+      final result = SpecificationChecker(root).check();
+      _expectCode(result, 'record-reference');
+    });
+
+    test('rejects missing PI supersession targets in the historical archive', () {
+      _replace(
+        _inputPath(root),
+        'supersedes: []',
+        'supersedes:\n  - PI-20260722-MISSING-INPUT',
+      );
+      final result = SpecificationChecker(root).check();
+      _expectCode(result, 'unknown-reference');
+    });
+
+    test('does not let an unrelated opaque PI suppress a complete graph error', () {
+      final opaqueAcceptancePath = path.join(
+        root.path,
+        'docs/spec-process/acceptance-records/ACC-20260724-OPAQUE-SOURCE.md',
+      );
+      final opaqueAcceptance = File(_acceptancePath(root))
+          .readAsStringSync()
+          .replaceAll('ACC-20260723-SPEC-MIGRATION', 'ACC-20260724-OPAQUE-SOURCE')
+          .replaceAll('date: 2026-07-23', 'date: 2026-07-24')
+          .replaceAll('PI-20260723-SPEC-SYSTEM-MIGRATION', 'PI-20260724-ROOT-PRIVATE-SOURCE')
+          .replaceAll('decisions:\n  - DEC-20260723-ADAPT-SPEC', 'decisions: []');
+      _write(opaqueAcceptancePath, opaqueAcceptance);
+      _replace(_inputPath(root), 'delivery_status: verified', 'delivery_status: planned');
+      _replace(
+        _inputPath(root),
+        'acceptance_records:\n  - ACC-20260723-SPEC-MIGRATION',
+        'acceptance_records: []',
+      );
+      final result = SpecificationChecker(root).check();
+      _expectCode(result, 'missing-backlink');
+      _expectCode(result, 'accepted-acceptance-closure');
+    });
+
+    test('keeps known PI links strict without an explicit partial-archive surface inventory', () {
+      _replace(
+        _acceptancePath(root),
+        'inputs:\n  - PI-20260723-SPEC-SYSTEM-MIGRATION',
+        'inputs:\n  - PI-20260723-SPEC-SYSTEM-MIGRATION\n  - PI-20260806-ROOT-PRIVATE-SOURCE',
+      );
+      _replace(_inputPath(root), 'delivery_status: verified', 'delivery_status: planned');
+      _replace(
+        _inputPath(root),
+        'acceptance_records:\n  - ACC-20260723-SPEC-MIGRATION',
+        'acceptance_records: []',
+      );
+      final result = SpecificationChecker(root).check();
+      _expectCode(result, 'missing-backlink');
+      _expectCode(result, 'accepted-acceptance-closure');
     });
 
     test('discovers the root from root, tools, and docs', () {
@@ -544,6 +643,31 @@ void main() {
       expect(adapter.existsSync(), isTrue);
       final result = SpecificationChecker(root).check();
       expect(result.issues, isEmpty, reason: _messages(result));
+    });
+
+    test('preserves migrated requirement surfaces in historical product inputs', () {
+      _replace(
+        _inputPath(root),
+        'delivery_surfaces:\n  - docs/specification.md',
+        'delivery_surfaces:\n  - docs/requirements/retired.md',
+      );
+      _replace(
+        _acceptancePath(root),
+        'changed_surfaces:\n  - docs/specification.md',
+        'changed_surfaces:\n  - docs/requirements/retired.md',
+      );
+      final result = SpecificationChecker(root).check();
+      expect(result.issues, isEmpty, reason: _messages(result));
+    });
+
+    test('rejects unrelated missing surfaces in historical product inputs', () {
+      _replace(
+        _inputPath(root),
+        'delivery_surfaces:\n  - docs/specification.md',
+        'delivery_surfaces:\n  - docs/unrelated-missing.md',
+      );
+      final result = SpecificationChecker(root).check();
+      _expectCode(result, 'repository-reference-missing');
     });
 
     test('rejects missing required repository roots', () {
@@ -1158,7 +1282,7 @@ Example endpoint: <https://example.test/file?token=$signedValue>
 
     test('checks all declared process versions and in-progress plan structure', () {
       final templatesPath = path.join(root.path, 'docs/spec-process/templates.md');
-      _replace(templatesPath, 'Process version: v1.7', 'Process version: v1.8');
+      _replace(templatesPath, 'Process version: v1.8', 'Process version: v1.9');
       _write(
         path.join(root.path, 'docs/plans/2026-07-23-active.md'),
         '# Active plan\n\nStatus: in progress\n\n## Scope\n\nOnly scope.\n',
@@ -1233,6 +1357,15 @@ Started: not-a-date
       );
       final result = SpecificationChecker(root).check();
       expect(result.issues, isEmpty, reason: _messages(result));
+    });
+
+    test('rejects checked-in plans at the Root intake cutoff', () {
+      _write(
+        path.join(root.path, 'docs/plans/2026-08-10-root-routed.md'),
+        _validPlanContent('completed').replaceAll('2026-07-23', '2026-08-10'),
+      );
+      final result = SpecificationChecker(root).check();
+      _expectCode(result, 'root-intake-boundary');
     });
 
     test('rejects completed plans with an empty section or empty H1', () {
@@ -1360,7 +1493,9 @@ void _createHappyFixture(Directory root) {
 # Agent instructions
 
 Read `docs/specification.md` and use `.agents/skills/spec-sync/SKILL.md`.
-Create `docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md`.
+Apply `SPEC-SYNC-ROOT-INTAKE-BOUNDARY`.
+Apply `SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE`.
+Do not create a new target-side product-input record.
 Track current conflicts under `docs/spec-process/conflicts/current/`.
 ''';
   _write(path.join(root.path, 'AGENTS.md'), agents);
@@ -1370,15 +1505,17 @@ Track current conflicts under `docs/spec-process/conflicts/current/`.
     'SPEC-LOOP.md': '''
 # Spec Sync Loop
 
-Process version: v1.7
-Effective date: 2026-07-23
+Process version: v1.8
+Effective date: 2026-08-10
 ''',
     'docs/specification.md': '''
 # Fixture Specification
 
-Process version: v1.7
+Process version: v1.8
 
 SPEC-PROCESS-LOOP
+SPEC-SYNC-ROOT-INTAKE-BOUNDARY
+SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE
 
 See `SPEC-LOOP.md`, `docs/specs/00-inventory.md`, `docs/specs/01-authority-map.md`,
 `docs/specs/02-repository-map.md`, `docs/spec-process/rules.md`,
@@ -1388,8 +1525,8 @@ See `SPEC-LOOP.md`, `docs/specs/00-inventory.md`, `docs/specs/01-authority-map.m
     'docs/specs/00-inventory.md': '''
 # Inventory
 
-Process version: v1.7
-Effective date: 2026-07-23
+Process version: v1.8
+Effective date: 2026-08-10
 
 - `docs/specification.md`
 - `docs/specs/01-authority-map.md`
@@ -1398,8 +1535,8 @@ Effective date: 2026-07-23
     'docs/specs/01-authority-map.md': '''
 # Authority Map
 
-Process version: v1.7
-Effective date: 2026-07-23
+Process version: v1.8
+Effective date: 2026-08-10
 
 | Topic | Assertion IDs | Lifecycle | Canonical owner | Required drift surfaces |
 | --- | --- | --- | --- | --- |
@@ -1408,7 +1545,7 @@ Effective date: 2026-07-23
     'docs/specs/02-repository-map.md': '''
 # Repository Map
 
-Process version: v1.7
+Process version: v1.8
 
 | Alias | Root | Required | Description |
 | --- | --- | --- | --- |
@@ -1416,9 +1553,10 @@ Process version: v1.7
     'docs/spec-process/rules.md': '''
 # Rules
 
-Process version: v1.7
-Effective date: 2026-07-23
+Process version: v1.8
+Effective date: 2026-08-10
 
+SPEC-SYNC-ROOT-INTAKE-BOUNDARY
 See `docs/specs/01-authority-map.md`, `docs/specs/02-repository-map.md`, and
 `docs/spec-process/acceptance-records/`.
 
@@ -1434,24 +1572,26 @@ See `docs/specs/01-authority-map.md`, `docs/specs/02-repository-map.md`, and
     'docs/spec-process/changelog.md': '''
 # Changelog
 
-Process version: v1.7
-Effective date: 2026-07-23
+Process version: v1.8
+Effective date: 2026-08-10
 
-## v1.7 - 2026-07-23
+## v1.8 - 2026-08-10
 ''',
     'docs/spec-process/eval-cases.md': '''
 # Eval Cases
 
-Process version: v1.7
+Process version: v1.8
 
+SPEC-SYNC-ROOT-INTAKE-BOUNDARY
+SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE
 SPEC-SYNC-ACCEPTANCE-GUARDRAILS
 ''',
     'docs/spec-process/templates.md': '''
 # Templates
 
-Process version: v1.7
+Process version: v1.8
 
-## Product Or Process Input
+## Private Source Reference
 
 Path: `docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md`
 
@@ -1645,16 +1785,18 @@ None.
     'docs/spec-process/acceptance-records/README.md': '''
 # Acceptance records
 
-Process version: v1.7
+Process version: v1.8
 ''',
     '.agents/skills/spec-sync/SKILL.md': '''
 # Spec Sync
 
 Read `docs/specification.md`, `docs/specs/00-inventory.md`,
 `docs/specs/01-authority-map.md`, `docs/specs/02-repository-map.md`,
-`docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md`, and
-`docs/spec-process/conflicts/current/`.
+`docs/spec-process/conflicts/current/`, and the smallest relevant historical
+record graph.
 Run `tools/bin/check_specification.dart`.
+Apply `SPEC-SYNC-ROOT-INTAKE-BOUNDARY`.
+Apply `SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE`.
 Apply `SPEC-SYNC-ACCEPTANCE-GUARDRAILS`.
 ''',
     '.agents/skills/spec-sync/agents/openai.yaml': 'name: spec-sync\n',

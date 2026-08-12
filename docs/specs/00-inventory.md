@@ -1,8 +1,8 @@
 # Specification Source Inventory
 
-Process version: v1.7
-Effective date: 2026-07-23
-Last reviewed: 2026-07-27
+Process version: v1.8
+Effective date: 2026-08-10
+Last reviewed: 2026-08-10
 
 This inventory lists the checked-in surfaces used to resolve product truth, implementation ownership, drift, and delivery evidence. Inclusion does not make a file canonical; use `docs/specs/01-authority-map.md` for the single owner of each topic.
 
@@ -17,16 +17,18 @@ This inventory lists the checked-in surfaces used to resolve product truth, impl
 - `.agents/skills/spec-sync/SKILL.md`: derived Codex execution workflow
 - `.agents/skills/spec-sync/agents/openai.yaml`: skill discovery metadata
 - `AGENTS.md` and `.github/copilot-instructions.md`: synchronized repository instructions
-- `docs/plans/PLANS.md`: Specification-aware living execution-plan contract
+- `docs/plans/PLANS.md`: historical checked-in execution-plan archive contract; new Root-routed plans stay in the private Root Mission
 
 ## Record And Evidence Surfaces
 
-- Private Root source IDs referenced by project records: provenance only; raw bodies and private paths are not stored in this repository
-- `docs/spec-process/decisions/DEC-*.md`: explicit product or process ruling history, including approved, superseded, and rejected decisions
-- `docs/spec-process/observations/OBS-*.md`: workflow or product drift observations
-- `docs/spec-process/conflicts/current/CF-*.md`: unresolved semantic conflicts
-- `docs/spec-process/conflicts/resolved/CF-*.md`: resolved conflict history
-- `docs/spec-process/acceptance-records/ACC-*.md`: delivery-time acceptance snapshots
+- Private Root Mission and Result records: current request provenance, plans, rulings, conflicts, delivery evidence, and combined acceptance
+- `docs/product-inputs/YYYY-MM-DD/PI-*.md`: read-only pre-v1.8 input archive; no new records for Root-routed work
+- `docs/product-inputs/evidence/2026-07-23-geo-ai-spec-v16-core-manifest.md`: reproducible historical source-core provenance for the Specification migration
+- `docs/spec-process/decisions/DEC-*.md`: pre-v1.8 explicit ruling history
+- `docs/spec-process/observations/OBS-*.md`: pre-v1.8 workflow or product drift observations
+- `docs/spec-process/conflicts/current/CF-*.md`: unresolved historical semantic conflicts
+- `docs/spec-process/conflicts/resolved/CF-*.md`: resolved historical conflict archive
+- `docs/spec-process/acceptance-records/ACC-*.md`: historical delivery-time acceptance snapshots
 - `docs/spec-process/changelog.md`: Specification process version history
 - `docs/spec-process/eval-cases.md`: workflow behavior examples
 
@@ -76,5 +78,7 @@ This inventory lists the checked-in surfaces used to resolve product truth, impl
 - Local Agent file actions are active in Windows Debug ordinary chat and remain separate from deterministic Agentic Evaluation scoring
 - Desktop UI redesign is authorized; detailed reference sets, feature scope, Projects, Agent expansion, and visual acceptance proposals remain outside this repository until explicitly promoted
 - The multi-question document records an implemented feature family but must still be compared with current code before delivery claims
-- Raw intake, historical requirement narratives, and unresolved proposals are owned by the private Root Harness rather than this repository
+- New raw intake, historical requirement narratives removed by explicit ruling, and unresolved proposals are owned by the private Root Harness rather than this repository; retained pre-v1.8 PI records remain read-only provenance
+- App-level RWKV Chat acceptance uses the canonical product identity and persistence namespace; alternate-ID or separately sandboxed acceptance Apps are prohibited
+- New Root-routed work does not extend the historical PI, DEC, OBS, CF, ACC, or checked-in plan archives
 - Runtime model names, versions, download URLs, service endpoints, and platform support can drift; consult their canonical or runtime owner instead of copying them into broad Specification prose

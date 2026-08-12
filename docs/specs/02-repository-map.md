@@ -1,7 +1,7 @@
 # Specification Repository Map
 
-Process version: v1.7
-Last reviewed: 2026-07-27
+Process version: v1.8
+Last reviewed: 2026-08-10
 
 Repository-qualified references use `alias:path`. The path is relative to the registered repository root. Optional sibling repositories are validated when present and remain syntactically checkable in CI when absent.
 

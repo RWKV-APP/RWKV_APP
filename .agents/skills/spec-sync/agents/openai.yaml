@@ -1,4 +1,4 @@
 interface:
   display_name: "Spec Sync"
   short_description: "Synchronize product truth, conflicts, and acceptance"
-  default_prompt: "Use $spec-sync to keep raw input in the private Root Harness and synchronize only normalized project truth before implementation."
+  default_prompt: "Use $spec-sync to apply the private Root Mission contract, synchronize only normalized canonical project truth, avoid new target-side request-record Markdown, and preserve the pre-v1.8 historical archive."

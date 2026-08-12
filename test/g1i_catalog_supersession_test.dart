@@ -4,33 +4,42 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('G1i replaces the equivalent G1h iOS WebRWKV slots', () {
+  test('current G1i Apple release excludes CoreML and keeps other rows on macOS and iOS', () {
     final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
     Map<String, dynamic> row(String name) => rows.singleWhere((entry) => entry['name'] == name);
 
-    for (final size in ['1.5B', '2.9B']) {
-      final g1i = row('RWKV7-G1i $size (WebRWKV)');
-      expect(g1i['platforms'], containsAll(<String>['ios', 'macos', 'windows']));
+    final g1iRows = rows.where((entry) => (entry['name'] as String).contains('RWKV7-G1i')).toList();
+    final appleRows = g1iRows.where((entry) => (entry['backends'] as List<dynamic>).single != 'qnn').toList();
+
+    expect(g1iRows, hasLength(15));
+    expect(appleRows, hasLength(12));
+    expect(
+      g1iRows.where((entry) => (entry['backends'] as List<dynamic>).contains('coreml')),
+      isEmpty,
+    );
+    for (final g1i in appleRows) {
+      expect(g1i['platforms'], containsAll(<String>['macos', 'ios']));
+      expect(g1i['platforms'], isNot(contains('macos_debug')));
       expect(g1i['isDebug'], isNull);
-      expect(g1i['quantization'], 'NF4');
-      expect(g1i['backends'], <String>['webRwkv']);
       expect(g1i['url'], startsWith('HaloWang/rwkv-weights/resolve/main/'));
       expect(g1i['url'], isNot(startsWith('http://')));
       expect(g1i['url'], isNot(startsWith('https://')));
       expect(g1i['url'], contains('-g1i-'));
       expect(g1i['sha256'], isNotEmpty);
-
-      final g1h = row('RWKV7-G1h $size (WebRWKV)');
-      expect(g1h['platforms'], <String>['web']);
     }
 
-    for (final size in ['7.2B', '13.3B']) {
-      final g1i = row('RWKV7-G1i $size (WebRWKV)');
-      expect(g1i['platforms'], isNot(contains('ios')));
-    }
+    expect(row('RWKV7-G1h 1.5B (WebRWKV)')['platforms'], <String>['web']);
+    expect(row('RWKV7-G1h 2.9B (WebRWKV)')['platforms'], <String>['web']);
+
+    final g1fCoreMlRows = rows.where((entry) {
+      final name = entry['name'] as String;
+      final backends = (entry['backends'] as List<dynamic>?) ?? const <dynamic>[];
+      return name.contains('RWKV7-G1f') && backends.contains('coreml');
+    }).toList();
+    expect(g1fCoreMlRows, hasLength(2));
   });
 
   test('G1i replaces the equivalent G1g 7.2B 8 Gen 3 QNN slot', () {

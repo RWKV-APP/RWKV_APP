@@ -1,13 +1,30 @@
 # Spec Sync Loop Changelog
 
-Process version: v1.7
-Effective date: 2026-07-23
+Process version: v1.8
+Effective date: 2026-08-10
 
 Only the newest version is active.
 
-## v1.7 private-intake boundary amendment - 2026-08-06
+## v1.8 - 2026-08-10
 
 Status: active
+
+Changes:
+
+- Added `SPEC-SYNC-ROOT-INTAKE-BOUNDARY`
+- Kept raw requests, copied conversations, voice transcripts, per-task Changes, plans, conflict provenance, and combined acceptance in private Root Missions
+- Prohibited new `docs/product-inputs/` records, Changes Markdown, task briefs, checked-in request plans, and PI/DEC/OBS/CF/ACC records for Root-routed work
+- Preserved target ownership of canonical Specification, source, tests, architecture, and required durable product documentation
+- Retained pre-v1.8 target input and process records as a validated read-only historical archive without bulk deletion or extension
+- Added `SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE` for canonical RWKV Chat identity, persistence namespace, and user-consumed App acceptance
+
+Authority:
+
+- Explicit user rulings retained by the private Root Harness Specification graph
+
+## v1.7 private-intake boundary amendment - 2026-08-06
+
+Status: historical
 
 Changes:
 
@@ -15,7 +32,7 @@ Changes:
 - Prohibited new `docs/product-inputs/` records in this repository
 - Kept opaque private source IDs as provenance while requiring project records to stand on normalized assertions, decisions, surfaces, and evidence
 - Reclassified active product and technical truth as contracts and removed unresolved proposal narratives from project authority
-- Preserved legacy local `PI-*` parsing only as a migration compatibility path
+- Preserved legacy local PI parsing only as a migration compatibility path
 - Added checker coverage for external private input references
 
 Authority:
@@ -50,6 +67,6 @@ Changes:
 
 Notes:
 
-- The source reference was the uncommitted `geo-ai` working-tree v1.6 implementation, not a stable source revision
+- The source reference was an uncommitted `geo-ai` working-tree implementation, not a stable source revision
 - GEO business records, pnpm commands, ports, backend/frontend paths, and deployment rules were intentionally excluded
 - The user explicitly authorized migration plus correction of unreasonable design and omissions

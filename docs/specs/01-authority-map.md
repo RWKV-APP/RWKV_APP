@@ -1,8 +1,8 @@
 # Specification Authority Map
 
-Process version: v1.7
-Effective date: 2026-07-23
-Last reviewed: 2026-07-27
+Process version: v1.8
+Effective date: 2026-08-10
+Last reviewed: 2026-08-10
 
 This map assigns one canonical owner and one lifecycle to each topic. Stable `SPEC-*` IDs remain valid when a heading is renamed. Other files in the row are required drift or delivery surfaces and cannot silently override the owner.
 
@@ -10,11 +10,13 @@ This map assigns one canonical owner and one lifecycle to each topic. Stable `SP
 
 | Topic | Assertion IDs | Lifecycle | Canonical owner | Required drift surfaces |
 | --- | --- | --- | --- | --- |
-| Specification classification, private intake boundary, authority, state, conflict, acceptance, and anti-overfitting mechanics | `SPEC-SYNC-CLASSIFICATION`, `SPEC-SYNC-PRIVATE-INTAKE-BOUNDARY`, `SPEC-SYNC-AUTHORITY`, `SPEC-SYNC-STATE-MODEL`, `SPEC-SYNC-CONFLICTS`, `SPEC-SYNC-ACCEPTANCE`, `SPEC-SYNC-ACCEPTANCE-GUARDRAILS` | active | `docs/spec-process/rules.md` | `SPEC-LOOP.md`, `docs/specification.md`, `docs/spec-process/templates.md`, `docs/spec-process/changelog.md`, `docs/spec-process/eval-cases.md`, `docs/spec-process/acceptance-records/README.md`, `.agents/skills/spec-sync/SKILL.md`, `AGENTS.md`, `tools/lib/specification/specification_checker.dart`, `tools/bin/check_specification.dart`, `tools/bin/agent_check.dart`, `tools/README.md`, `.github/workflows/unit-tests.yml` |
+| Specification classification, private intake and Root request-record boundaries, authority, historical state, conflict, acceptance, and anti-overfitting mechanics | `SPEC-SYNC-CLASSIFICATION`, `SPEC-SYNC-PRIVATE-INTAKE-BOUNDARY`, `SPEC-SYNC-ROOT-INTAKE-BOUNDARY`, `SPEC-SYNC-AUTHORITY`, `SPEC-SYNC-STATE-MODEL`, `SPEC-SYNC-CONFLICTS`, `SPEC-SYNC-ACCEPTANCE`, `SPEC-SYNC-ACCEPTANCE-GUARDRAILS` | active | `docs/spec-process/rules.md` | `SPEC-LOOP.md`, `docs/specification.md`, `docs/spec-process/templates.md`, `docs/spec-process/changelog.md`, `docs/spec-process/eval-cases.md`, `docs/spec-process/acceptance-records/README.md`, `.agents/skills/spec-sync/SKILL.md`, `AGENTS.md`, `tools/lib/specification/specification_checker.dart`, `tools/bin/check_specification.dart`, `tools/bin/agent_check.dart`, `tools/README.md`, `.github/workflows/unit-tests.yml` |
 | Specification topic ownership and stable assertion registry | `SPEC-SYNC-AUTHORITY-MAP` | active | `docs/specs/01-authority-map.md` | `docs/specs/00-inventory.md`, `docs/specs/02-repository-map.md` |
 | Specification-aware execution plans | `SPEC-SYNC-EXECUTION-PLANS` | active | `docs/plans/PLANS.md` | `docs/specification.md`, `docs/spec-process/acceptance-records/README.md` |
 | Product users, purpose, and design principles, excluding narrower inference and data-flow semantics | `SPEC-RWKV-PRODUCT-USERS`, `SPEC-RWKV-PRODUCT-PURPOSE`, `SPEC-RWKV-DESIGN-PRINCIPLES` | active | `PRODUCT.md` | `docs/specification.md`, `README.md`, `docs/README.zh-hans.md`, `docs/README.zh-hant.md`, `docs/README.ja.md`, `docs/README.ko.md`, `docs/README.ru.md`, `rwkv_org_profile:profile/README.md`, `rwkv_org_profile:profile/assets/hero.svg`, `rwkv_org_profile:profile/assets/hero-mobile.svg` |
 | Repository-wide product scope, repository boundaries, inference boundary, and verification | `SPEC-RWKV-PRODUCT-SCOPE`, `SPEC-RWKV-REPOSITORY-BOUNDARIES`, `SPEC-RWKV-INFERENCE-BOUNDARY`, `SPEC-RWKV-VERIFICATION-BOUNDARY` | active | `docs/specification.md` | `AGENTS.md`, `docs/architecture/workspace-map.md`, `lib/store/p.dart`, `README.md`, `docs/README.zh-hans.md`, `docs/README.zh-hant.md`, `docs/README.ja.md`, `docs/README.ko.md`, `docs/README.ru.md`, `rwkv_mobile_flutter:.`, `rwkv_mobile:.`, `app_website:.` |
+| App-level RWKV Chat acceptance identity and persistence boundary | `SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE` | active | `docs/specification.md` | `AGENTS.md`, `.agents/skills/spec-sync/SKILL.md`, `android/app/build.gradle`, `android/app/src/main/AndroidManifest.xml`, `android/app/src/debug/AndroidManifest.xml`, `ios/Runner.xcodeproj/project.pbxproj`, `macos/Runner/Configs/AppInfo.xcconfig`, `windows/runner/Runner.rc`, `linux/CMakeLists.txt`, `test/same_app_acceptance_identity_test.dart` |
+| Visible user-facing UI end-to-end acceptance for App, device, model download, runtime, and performance work | `SPEC-RWKV-CHAT-VISIBLE-UI-E2E-ACCEPTANCE` | active | `docs/specification.md` | `AGENTS.md`, `.agents/skills/spec-sync/SKILL.md`, `lib/main.dart`, `lib/page/home.dart`, `lib/widgets/chat_app_bar.dart`, `lib/widgets/model_selector.dart`, `test/same_app_acceptance_identity_test.dart` |
 | Telemetry privacy, collection, and transmission contract | `SPEC-RWKV-TELEMETRY-PRIVACY-CONTRACT` | active | `docs/specification.md` | `docs/privacy_policy.html`, `PRODUCT.md`, `README.md`, `docs/README.zh-hans.md`, `docs/README.zh-hant.md`, `docs/README.ja.md`, `docs/README.ko.md`, `docs/README.ru.md`, `docs/architecture/store-map.md`, `lib/store/telemetry.dart`, `lib/store/chat_generation_completion.dart`, `lib/store/benchmark.dart` |
 | Cloud Web Demo prompt-transmission and disclosure contract | `SPEC-RWKV-WEB-DEMO-DATA-FLOW` | conflicted | `docs/specification.md` | `docs/privacy_policy.html`, `PRODUCT.md`, `README.md`, `docs/README.zh-hans.md`, `docs/README.zh-hant.md`, `docs/README.ja.md`, `docs/README.ko.md`, `docs/README.ru.md`, `AGENTS.md`, `lib/store/web_demo.dart` |
 | Public privacy-policy revision provenance proposal | `SPEC-RWKV-PRIVACY-POLICY-METADATA` | proposal | `docs/specification.md` | `docs/privacy_policy.html`, `docs/spec-process/observations/OBS-20260723-PRIVACY-POLICY-DATE.md` |
@@ -34,7 +36,7 @@ This map assigns one canonical owner and one lifecycle to each topic. Stable `SP
 1. Find the topic and stable assertion ID in this table
 2. Check `docs/spec-process/conflicts/current/` for an applicable blocking scope
 3. Read the exact assertion in the canonical owner
-4. Use product inputs and approved decisions for provenance and explicit supersession
+4. Use private Root records and historical target decisions for provenance and explicit supersession
 5. Compare required drift surfaces with the canonical assertion
 6. Synchronize unambiguous drift; record a semantic conflict when traceable competing rulings leave intent genuinely ambiguous
 

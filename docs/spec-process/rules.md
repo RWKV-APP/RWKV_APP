@@ -1,7 +1,7 @@
 # Spec Sync Loop Rules
 
-Process version: v1.7
-Effective date: 2026-07-23
+Process version: v1.8
+Effective date: 2026-08-10
 Scope: `rwkv_app`
 
 Official trigger terms:
@@ -9,7 +9,9 @@ Official trigger terms:
 - `Specification flow`
 - `Specification`
 
-The v1.7 target design is adapted from the `geo-ai` working-tree v1.6 system. It keeps the original traceability and narrow-conflict principles while replacing aggregate Markdown ledgers, date-based legacy bypasses, incomplete state combinations, and Node/pnpm-specific checks.
+The v1.8 process retains the v1.7 historical validator and canonical ownership
+model while moving every new Root-routed request record back to the private
+Root Harness.
 
 ## SPEC-SYNC-CLASSIFICATION — Request Classification
 
@@ -21,7 +23,28 @@ Classify every request before changing business behavior:
 - `implementation-only`: mechanics that preserve current canonical behavior
 - `general chat`: explanation or brainstorming with no request to change project truth
 
-Product, process, and mixed input enters the Specification flow before implementation. Raw source retention belongs to the private Root Harness; this repository receives only normalized project-safe assertions. Implementation-only input and general chat do not create a project record.
+Product, process, and mixed input enters the private Root Harness Specification
+flow before implementation. No request class creates target-side
+request-provenance Markdown for Root-routed work.
+
+## SPEC-SYNC-ROOT-INTAKE-BOUNDARY — Root Mission Owns Request Provenance
+
+All RWKV requests are captured and classified in the private Root Harness. The
+Root Source, Mission, Result, and Specification graph own raw wording, copied
+chat, voice transcripts, redactions, per-task Changes briefs, execution plans,
+decisions, conflict provenance, and delivery evidence.
+
+The Project Delivery Contract is used for execution without being written into
+this working tree. A Root-routed task must not create a new
+`docs/product-inputs/` record, Changes Markdown, standalone task brief,
+checked-in request plan, or PI/DEC/OBS/CF/ACC record.
+
+The target repository continues to own canonical Specification, source code,
+tests, architecture, and required durable product documentation. Synchronize
+those project-truth surfaces after resolving the stable `SPEC-*` owner.
+Existing v1.7 target PI, DEC, OBS, CF, and ACC records remain a validated
+read-only historical archive and are not retroactively bulk-deleted or extended
+for new Root-routed work.
 
 ## SPEC-SYNC-AUTHORITY — Truth And Ownership
 
@@ -30,7 +53,7 @@ Truth is organized into four layers:
 1. The canonical owner registered for a stable `SPEC-*` assertion in `docs/specs/01-authority-map.md`
 2. Derived user or developer documentation that must reflect the owner
 3. Implementation and runtime truth that proves current behavior and exposes drift
-4. Opaque private source IDs plus project observations, decisions, conflicts, Git history, tests, and acceptance records that preserve appropriate provenance
+4. Root-private request provenance plus historical project inputs, observations, decisions, conflicts, Git history, tests, and acceptance records
 
 Resolve truth in this order:
 
@@ -47,13 +70,15 @@ Each authority-map row must have a unique topic, one canonical owner, one lifecy
 
 Use repository aliases from `docs/specs/02-repository-map.md` for external delivery surfaces.
 
-Every repository reference must remain inside its registered alias root after path and symlink resolution. Strict PI, DEC, OBS, CF, and ACC records cannot be symlinks.
+Every repository reference must remain inside its registered alias root after path and symlink resolution. PI, DEC, OBS, CF, and ACC records cannot be symlinks.
 
 ## SPEC-SYNC-PRIVATE-INTAKE-BOUNDARY — Private Source Intake
 
-The private Root Harness owns raw or near-raw product and process intake. This
-repository must not contain user chat, copied stakeholder messages, attachment
-paths, full source transcripts, or `docs/product-inputs/` records.
+The private Root Harness owns every new raw or near-raw product and process
+intake. This repository must not receive new user chat, copied stakeholder
+messages, attachment paths, full source transcripts, or `docs/product-inputs/`
+records. The pre-v1.8 `docs/product-inputs/` tree remains a read-only historical
+archive.
 
 The Root Harness may assign an opaque `PI-*` source ID. Project `DEC-*`,
 `OBS-*`, `CF-*`, and `ACC-*` records may retain that ID in an `inputs` field,
@@ -67,22 +92,41 @@ Before project-safe material enters this repository:
 - replace machine-local evidence paths with repository-owned evidence or a descriptive unavailable-evidence note
 - extract independently understandable assertions, decisions, surfaces, and acceptance criteria
 
-The checker accepts unresolved `PI-*` references when no local product-input
-tree exists. That behavior preserves traceability without requiring private
-source material in a public or team repository. Legacy checkouts containing a
-local product-input tree remain readable for migration only; agents must not
-create new local `PI-*` files.
+For pre-v1.8 `DEC-*`, `OBS-*`, `CF-*`, and `ACC-*` records, the checker accepts
+a syntactically valid unresolved `PI-*` only in the record's `inputs` field
+when the local historical product-input archive is absent or partial. That
+behavior preserves traceability without requiring private source material in a
+public or team repository. References to historical records that are present
+remain strictly validated. A pre-v1.8 acceptance snapshot that mixes local and
+opaque PI inputs, and whose immutable `changed_surfaces` inventory names both
+the local and missing PI paths, does not require the local PI to be rewritten
+with a new backlink or closure state. A complete local graph, or a mixed record
+without that explicit historical surface inventory, remains strict. Agents must
+not create new local `PI-*` files.
 
 The templates and exact project-record metadata fields live in
 `docs/spec-process/templates.md`. Every `DEC-*` record names the human decision
 authority in `approved_by`, plus the stable assertions and affected surfaces
 governed by that ruling.
 
-## SPEC-SYNC-STATE-MODEL — Private Input State References
+## Historical Product And Process Input Archive
 
-The following state vocabulary describes opaque private `PI-*` source records
-and legacy local records. The Root Harness owns the current source state; this
-repository does not duplicate or update it.
+Existing pre-v1.8 inputs remain under
+`docs/product-inputs/YYYY-MM-DD/PI-YYYYMMDD-SLUG.md`. The directory date is the
+historical capture date, while `source_date` preserves the communication date
+or the literal `unknown`. Their strict schema, redaction, chronology,
+supersession, secret scan, and non-symlink checks remain active.
+
+Supporting audit artifacts already under `docs/product-inputs/evidence/` remain
+provenance only and cannot establish canonical product authority. The entire
+tree is read-only historical provenance: do not add a new record or artifact,
+rewrite a raw statement, or extend it for Root-routed work.
+
+## SPEC-SYNC-STATE-MODEL — Historical Target Record State
+
+The following state vocabulary validates existing target-side records. The
+Root Harness owns current request state; this repository does not duplicate or
+update it and does not create new Root-routed process records.
 
 `status` describes review and synchronization:
 
@@ -124,7 +168,10 @@ Allowed combinations are strict:
 
 A legacy local `merged` or `conflict` input must name at least one stable canonical assertion. This rule exists only so older checkouts remain auditable during migration.
 
-## Supersession
+## Historical Target Record Supersession
+
+The following rules apply only to existing target-side records. New
+Root-routed supersession is retained in the Root Specification graph.
 
 When a later ruling replaces a formerly canonical assertion:
 
@@ -143,9 +190,12 @@ A dismissed proposal was never canonical and is not described as superseded.
 
 An approved decision can supersede a decision marked `superseded` only when they share a stable assertion. Acceptance attempts can supersede each other only when they share at least one input and stable assertion. The earlier acceptance record's date, result, evidence body, and delivery-time conflict snapshot remain unchanged; only relationship metadata such as `superseded_by` may be appended.
 
-## SPEC-SYNC-CONFLICTS — Semantic Conflicts
+## SPEC-SYNC-CONFLICTS — Historical Semantic Conflicts
 
-Create a current conflict when traceable assertions leave intended behavior genuinely ambiguous. Plain implementation or documentation drift against an unambiguous active assertion is drift to synchronize.
+The following rules preserve and validate existing target-side conflicts. A new
+Root-routed semantic contradiction is retained in the private Root Mission and
+does not create a target `CF-*` file. Plain implementation or documentation
+drift against an unambiguous active assertion is drift to synchronize.
 
 Store conflicts under:
 
@@ -169,13 +219,18 @@ An unresolved conflict has no decision or resolution date. A resolved conflict m
 
 ## Process Evolution
 
-Record a discovered issue as `OBS-*` and route it through non-empty `canonical_assertions` and `affected_surfaces` lists. A core process change requires an approved `DEC-*`, synchronized rules, a changelog entry, relevant Eval Cases, checker coverage, and acceptance. Decision status is `approved`, `superseded`, or `rejected`; only an approved decision that covers the observation's assertions and affected surfaces can resolve it.
+Record new process observations, user rulings, and acceptance in the private
+Root Specification graph. A core process change requires explicit user
+approval, synchronized rules, a changelog entry, relevant Eval Cases, checker
+coverage, and Root acceptance. Existing target-side OBS and DEC relationships
+retain their historical state semantics.
 
 The workflow does not depend on an automatic hook. Agents run the deterministic checker explicitly and CI runs it for pull requests. A repository hook may assist unrelated work, but no hook or automation may silently edit canonical truth, approve a decision, resolve a conflict, or create final acceptance.
 
 `.github/copilot-instructions.md` remains the tracked symlink to `../AGENTS.md`. The checker requires identical resolved content; only a Windows checkout with symlinks disabled may use Git's exact `../AGENTS.md` placeholder representation.
 
-Use `docs/plans/PLANS.md` for complex, multi-stage, or cross-repository implementation. A plan tracks execution and handoff state; it does not replace the canonical Specification records.
+`docs/plans/PLANS.md` defines the historical checked-in plan contract. New
+Root-routed execution plans and handoff state stay in the private Root Mission.
 
 ## SPEC-SYNC-ACCEPTANCE — Verification And Acceptance
 
@@ -183,7 +238,7 @@ Engineering checks prove only the properties they exercise. Generated language, 
 
 The root Codex agent delivering the task owns final combined requirement and response acceptance, including delegated contributions. The record field is exactly `owner: root Codex agent`. The root agent must inspect the combined diff, relevant sources, and every persisted or rendered representation in scope. Tests, scripts, status codes, counts, screenshots, scores, model judges, and sub-agent reports remain evidence.
 
-An `ACC-*` record captures:
+For Root-routed work, the Root Mission Result captures:
 
   - opaque private source IDs when needed, plus exact project decision IDs
 - stable canonical assertion IDs
@@ -194,11 +249,15 @@ An `ACC-*` record captures:
 - exclusions and known limits
 - accepted, rejected, or partial result
 
-Store records under `docs/spec-process/acceptance-records/` using the strict template.
+Existing ACC files under `docs/spec-process/acceptance-records/` remain
+historical snapshots using the strict template. Do not create a new target ACC
+for Root-routed work.
 
 Every acceptance record names at least one stable canonical assertion and one changed surface. Acceptance supersession must be bidirectional, acyclic, chronological, and topic-related. An opaque private source ID supplies provenance only; acceptance is judged from the project assertions, decisions, surfaces, and evidence present here.
 
-Several partial records cannot be combined implicitly; create a final aggregate acceptance record after staged review. A current accepted acceptance record must independently cover its declared canonical assertions, governing project decisions, changed surfaces, conflicts, evidence, and exclusions. Private input delivery state is not copied into this repository.
+Several historical partial records cannot be combined implicitly. A current
+Root acceptance result must independently cover its declared assertions,
+governing rulings, changed surfaces, conflicts, evidence, and exclusions.
 
 ### SPEC-SYNC-ACCEPTANCE-GUARDRAILS — Prevent Review Preference From Becoming Product Law
 
@@ -206,7 +265,7 @@ Before changing business logic, Prompt rules, normalization, validation, or reje
 
 If no exact active assertion exists:
 
-- record the issue as an observation and ask for a product ruling
+- record the issue as a Root observation and ask for a product ruling
 - do not create a new product restriction from reviewer preference, implementation convenience, or one surprising sample
 - do not turn a single example into a keyword blacklist, regular-expression rejection, or generalized prohibition
 

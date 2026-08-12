@@ -1,8 +1,13 @@
 # Specification Acceptance Records
 
-Process version: v1.7
+Process version: v1.8
 
-Store each delivery snapshot as `ACC-YYYYMMDD-SLUG.md` using `docs/spec-process/templates.md`.
+This directory retains historical v1.7 delivery snapshots. For Root-routed
+work, record combined delivery evidence and acceptance in the private Root
+Mission Result; do not create a new target-side `ACC-*` only to mirror it.
+
+Existing snapshots remain `ACC-YYYYMMDD-SLUG.md` files using
+`docs/spec-process/templates.md`.
 
 An acceptance record must include exact project decision, assertion, changed-surface, and unresolved-conflict references. It may include opaque private source IDs for provenance. Its date, ID date, and filename date must match; project decisions cannot occur after acceptance.
 

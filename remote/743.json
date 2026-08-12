@@ -221,7 +221,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-0.1b-20260129-ctx8192-coreml-int8-wkvstate.zip",
         "fileSize": 243479219,
         "quantization": "INT8",
-        "platforms": ["ios", "macos_debug"],
+        "platforms": ["ios", "macos"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
         "date": 1777209436
@@ -232,7 +232,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-0.4b-20260210-ctx8192-coreml-int8-wkvstate.zip",
         "fileSize": 522109232,
         "quantization": "INT8",
-        "platforms": ["ios", "macos_debug"],
+        "platforms": ["ios", "macos"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
         "date": 1777210348
@@ -243,7 +243,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1f-1.5b-20260419-ctx8192-coreml-omni-int4lut6mix-attout-lut6-wkvstate.zip",
         "fileSize": 876775977,
         "quantization": "INT4",
-        "platforms": ["ios", "macos_debug"],
+        "platforms": ["ios", "macos"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
         "date": 1777217659
@@ -254,7 +254,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1f-2.9b-20260420-ctx8192-coreml-omni-int4lut6mix-attout-lut6-wkvstate.zip",
         "fileSize": 1645774799,
         "quantization": "INT4",
-        "platforms": ["ios", "macos_debug"],
+        "platforms": ["ios", "macos"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
         "date": 1777626519

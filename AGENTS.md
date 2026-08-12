@@ -32,15 +32,18 @@
 ### 2.3 Specification flow
 
 - 用户提到 `Specification flow` 或 `Specification` 时，默认指本仓库的规格同步与自进化流程
-- 开始处理前必须读取 `SPEC-LOOP.md`、`docs/specification.md`、`docs/specs/01-authority-map.md` 和 `.agents/skills/spec-sync/SKILL.md`
+- 开始处理前必须读取 `SPEC-LOOP.md`、`docs/specification.md`、`docs/specs/01-authority-map.md`、`docs/spec-process/conflicts/current/` 和 `.agents/skills/spec-sync/SKILL.md`
 - 用户消息包含产品行为、API 或模型约定、Prompt 规则、UI 规则、验收口径、隐私或数据流承诺、复制的产品沟通内容、语音转述需求、跨仓集成合同或 Specification 流程变更时，必须先执行 `spec-sync`
-- 用户原话、复制的沟通内容和其他接近原始输入的材料由私有 `rwkv_harness` 保管，严禁写入本仓库
-- 本仓库只保留完成产品或技术权威所需的规范化合同、决定、观察、冲突和验收记录；不得创建 `docs/product-inputs/`
+- `SPEC-SYNC-ROOT-INTAKE-BOUNDARY` 要求所有 Root-routed 请求先由私有 `rwkv_harness` Mission 捕获；用户原话、复制沟通、Changes 摘要、任务计划、冲突来源和交付证据严禁写入本仓库
+- 本仓库只新增 canonical Specification、源码、测试、架构和必要的长期产品文档；不得新增 `docs/product-inputs/` 记录、Changes Markdown、任务简报或新的目标侧请求/流程记录
+- 现有 v1.7 PI、DEC、OBS、CF 和 ACC 仅作为已校验只读历史档案保留；2026-08-10 起的 Root-routed 工作不得删除或继续扩展该档案
 - 从私有来源提炼项目记录前必须移除凭据、Token、签名 URL、无关个人信息、机器本地附件路径和不必要的原始措辞
 - 每个主题以 `docs/specs/01-authority-map.md` 中登记的唯一 canonical owner 和稳定 `SPEC-*` ID 为准
-- 新输入与当前 canonical assertion 冲突时，记录到 `docs/spec-process/conflicts/current/`，只停止依赖该冲突的业务改动并等待用户裁决
+- 新 Root-routed 输入与当前 canonical assertion 冲突时，在私有 Root Mission 中保留冲突并等待用户裁决；目标仓的 canonical truth 在裁决前保持不变
 - 派生文档或实现与无歧义 canonical assertion 不一致时属于 drift，应直接同步，不要制造语义冲突
 - 私有来源引用只用于追溯，不能替代 canonical truth，也不能当作已实现或已验收
+- RWKV Chat 的 App 级验收必须遵循 `SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE`：使用正式产品名称、application/bundle ID、持久化命名空间和用户实际使用的 App，不得创建改名、替代 ID 或独立 sandbox 的验收 App
+- App、设备、模型下载、模型运行和性能验收必须遵循 `SPEC-RWKV-CHAT-VISIBLE-UI-E2E-ACCEPTANCE`：只能通过真实可见且可交互的用户 UI 端到端执行；禁止隐藏后台 runner、验收专用启动 hook、命令行直选模型或直接调用 store/engine 冒充 App 验收；无法控制并观察 UI 时必须拒绝测试并说明阻塞
 - Specification 相关改动必须运行 `dart run tools/bin/check_specification.dart`
 - 不要把大量产品上下文追加到 `AGENTS.md`
 
