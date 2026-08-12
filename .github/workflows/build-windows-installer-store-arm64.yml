@@ -330,7 +330,9 @@ jobs:
       - name: Checkout upload script
         uses: actions/checkout@v4
         with:
-          sparse-checkout: scripts/upload_to_hf.py
+          sparse-checkout: |
+            scripts/upload_to_hf.py
+            scripts/upload_to_modelscope.py
           sparse-checkout-cone-mode: false
 
       - name: Download artifact
@@ -360,3 +362,28 @@ jobs:
             --path-in-repo "windows-arm64-installer-store/${INSTALLER_NAME}.exe" \
             --hf-token "$HF_TOKEN" \
             --hf-endpoint "$HF_ENDPOINT"
+
+      - name: Install ModelScope dependency
+        if: always()
+        env:
+          MODELSCOPE_API_TOKEN: ${{ secrets.MODELSCOPE_API_TOKEN }}
+        run: |
+          if [ -z "${MODELSCOPE_API_TOKEN:-}" ]; then echo "MODELSCOPE_API_TOKEN is not configured; skipping ModelScope setup"; exit 0; fi
+          pip install modelscope-hub
+
+      - name: Upload to ModelScope
+        if: always()
+        env:
+          MODELSCOPE_API_TOKEN: ${{ secrets.MODELSCOPE_API_TOKEN }}
+          MODELSCOPE_ENDPOINT: ${{ secrets.MODELSCOPE_ENDPOINT || 'https://modelscope.cn' }}
+          MODELSCOPE_REPO_ID: ${{ secrets.MODELSCOPE_REPO_ID || 'HaloWang1991/rwkv-chat' }}
+          MODELSCOPE_REVISION: ${{ secrets.MODELSCOPE_REVISION || 'master' }}
+          INSTALLER_NAME: ${{ needs.setup.outputs.installer_name }}
+        run: |
+          if [ -z "${MODELSCOPE_API_TOKEN:-}" ]; then echo "MODELSCOPE_API_TOKEN is not configured; skipping ModelScope upload"; exit 0; fi
+          python scripts/upload_to_modelscope.py \
+            --repo-id "$MODELSCOPE_REPO_ID" \
+            --file "${INSTALLER_NAME}.exe" \
+            --path-in-repo "windows-arm64-installer-store/${INSTALLER_NAME}.exe" \
+            --endpoint "$MODELSCOPE_ENDPOINT" \
+            --revision "$MODELSCOPE_REVISION"

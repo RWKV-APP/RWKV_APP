@@ -44,6 +44,10 @@ SECRETS_TO_SYNC=(
     "MACOS_IDENTITY_ID"
     "HF_TOKEN"
     "HF_DATASETS_ID"
+    "MODELSCOPE_API_TOKEN"
+    "MODELSCOPE_REPO_ID"
+    "MODELSCOPE_ENDPOINT"
+    "MODELSCOPE_REVISION"
     "PGYER_API_KEY"
 )
 
@@ -114,4 +118,3 @@ if [ $FAIL_COUNT -eq 0 ] && [ $SUCCESS_COUNT -gt 0 ]; then
     echo "🎉 所有 secrets 已成功同步到 GitHub!"
     echo "   查看: https://github.com/$REPO/settings/secrets/actions"
 fi
-

@@ -67,7 +67,6 @@ assets/filter.txt
 *.appx
 *.zip
 android/app/.cxx/
-fastlane/README.md
 fastlane/report.xml
 sentry-wizard
 android/build/

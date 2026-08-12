@@ -212,14 +212,14 @@ lane :all do |params|
   # Use github_release action for consistent release management
   upload_to_github = params[:upload_to_github] == false ? false : true
   if upload_to_github
-    # Get full version from pubspec.yaml (read from project root)
     require 'yaml'
     project_root = File.expand_path('..', __dir__)
     pubspec_path = File.join(project_root, 'pubspec.yaml')
     pubspec = YAML.load_file(pubspec_path)
     full_version = pubspec['version'] # e.g., "3.4.0+609"
-    # Extract semantic version for release name (tag name is also semantic version)
-    semantic_version = full_version.split('+')[0] # e.g., "3.4.0"
+    semantic_version = full_version.split('+')[0]
+    absolute_apk_path = File.expand_path(apk_path, project_root)
+    apk_filename = File.basename(apk_path)
 
     github_release(
       repo: 'RWKV-APP/RWKV_APP',
@@ -234,11 +234,9 @@ lane :all do |params|
 
     # 🔥 上传到 Hugging Face (android-arm64)
     if ENV['HF_TOKEN'] && !ENV['HF_TOKEN'].empty?
-      absolute_apk_path = File.expand_path(apk_path, project_root)
-      apk_filename = File.basename(apk_path)
       UI.header '上传 APK 到 Hugging Face'
       huggingface(
-        repo_id: ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat',
+        repo_id: ENV['HF_DATASETS_ID'] || 'HaloWang/rwkv-chat',
         file_path: absolute_apk_path,
         path_in_repo: "android-arm64/#{apk_filename}",
         commit_message: "Upload APK #{apk_filename} (v#{full_version})",
@@ -247,6 +245,19 @@ lane :all do |params|
       UI.success '✅ APK 已上传到 Hugging Face'
     else
       UI.important '跳过 Hugging Face 上传 (HF_TOKEN 未设置)'
+    end
+
+    if ENV['MODELSCOPE_API_TOKEN'] && !ENV['MODELSCOPE_API_TOKEN'].empty?
+      UI.header '上传 APK 到 ModelScope'
+      modelscope(
+        repo_id: ENV['MODELSCOPE_REPO_ID'] || 'HaloWang1991/rwkv-chat',
+        file_path: absolute_apk_path,
+        path_in_repo: "android-arm64/#{apk_filename}",
+        commit_message: "Upload APK #{apk_filename} (v#{full_version})",
+      )
+      UI.success '✅ APK 已上传到 ModelScope'
+    else
+      UI.important '跳过 ModelScope 上传 (MODELSCOPE_API_TOKEN 未设置)'
     end
   end
 
@@ -374,6 +385,7 @@ end
 lane :macos_build_and_upload do |params|
   upload_to_github = params[:upload_to_github] == false ? false : true
   upload_to_huggingface = params[:upload_to_huggingface] == false ? false : true
+  upload_to_modelscope = params[:upload_to_modelscope] == false ? false : true
   upload_retry_count = (params[:upload_retry_count] || 100).to_i
   if upload_retry_count < 1
     upload_retry_count = 100
@@ -501,7 +513,7 @@ lane :macos_build_and_upload do |params|
     dmg_filename = File.basename(dmg_path)
     UI.header '上传 DMG 到 Hugging Face'
     huggingface(
-      repo_id: ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat',
+      repo_id: ENV['HF_DATASETS_ID'] || 'HaloWang/rwkv-chat',
       file_path: absolute_dmg_path,
       path_in_repo: "macos-universal/#{dmg_filename}",
       commit_message: "Upload DMG #{dmg_filename} (v#{full_version})",
@@ -511,12 +523,26 @@ lane :macos_build_and_upload do |params|
   else
     UI.important '跳过 Hugging Face 上传 (HF_TOKEN 未设置)'
   end
+
+  if upload_to_modelscope && ENV['MODELSCOPE_API_TOKEN'] && !ENV['MODELSCOPE_API_TOKEN'].empty?
+    dmg_filename = File.basename(dmg_path)
+    UI.header '上传 DMG 到 ModelScope'
+    modelscope(
+      repo_id: ENV['MODELSCOPE_REPO_ID'] || 'HaloWang1991/rwkv-chat',
+      file_path: absolute_dmg_path,
+      path_in_repo: "macos-universal/#{dmg_filename}",
+      commit_message: "Upload DMG #{dmg_filename} (v#{full_version})",
+    )
+    UI.success '✅ DMG 已上传到 ModelScope'
+  else
+    UI.important '跳过 ModelScope 上传 (已禁用或 MODELSCOPE_API_TOKEN 未设置)'
+  end
 end
 
 # 测试上传到 Hugging Face
 lane :test_huggingface do |params|
   # 从参数或环境变量获取配置
-  repo_id = params[:repo_id] || ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat'
+  repo_id = params[:repo_id] || ENV['HF_DATASETS_ID'] || 'HaloWang/rwkv-chat'
   file_path = params[:file_path] || ENV['HF_FILE_PATH']
   path_in_repo = params[:path_in_repo] || ENV['HF_PATH_IN_REPO']
   commit_message = params[:commit_message] || ENV['HF_COMMIT_MESSAGE'] || 'Test upload via fastlane'
@@ -641,11 +667,21 @@ lane :resume_upload do |params|
       if ENV['HF_TOKEN'] && !ENV['HF_TOKEN'].empty?
         apk_filename = File.basename(apk_path)
         huggingface(
-          repo_id: ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat',
+          repo_id: ENV['HF_DATASETS_ID'] || 'HaloWang/rwkv-chat',
           file_path: apk_path,
           path_in_repo: "android-arm64/#{apk_filename}",
           commit_message: "Upload APK #{apk_filename} (v#{full_version})",
           repo_type: 'dataset',
+        )
+      end
+
+      if ENV['MODELSCOPE_API_TOKEN'] && !ENV['MODELSCOPE_API_TOKEN'].empty?
+        apk_filename = File.basename(apk_path)
+        modelscope(
+          repo_id: ENV['MODELSCOPE_REPO_ID'] || 'HaloWang1991/rwkv-chat',
+          file_path: apk_path,
+          path_in_repo: "android-arm64/#{apk_filename}",
+          commit_message: "Upload APK #{apk_filename} (v#{full_version})",
         )
       end
     else

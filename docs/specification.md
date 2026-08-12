@@ -40,6 +40,10 @@ This repository owns the Flutter application, routes, Riverpod state, local pers
 
 The `rwkv_mobile_flutter` repository owns the Flutter adapter and FFI bridge. The `rwkv_mobile` repository owns native inference-engine internals. The `app_website` repository owns the public download website and its HTTP services. Cross-repository requirements define the integration contract here while each external repository remains authoritative for its own implementation.
 
+App binary publication across GitHub Release, Hugging Face, ModelScope, and the
+public download website is governed by `SPEC-RWKV-APP-BINARY-DISTRIBUTION` in
+`docs/contracts/app_distribution.md`.
+
 ## SPEC-RWKV-INFERENCE-BOUNDARY — Local And Connected Execution
 
 Loaded local model inference runs on the user's device through CPU, GPU, or NPU backends and uses device memory or unified memory.
