@@ -199,9 +199,47 @@ void main() {
         },
       };
 
-      final fileNames = localChatExcludedConfigFileNamesFromConfig(config);
+      final fileNames = localChatExcludedConfigFileNamesFromConfig(config, currentPlatform: "macos");
 
       expect(fileNames, containsAll(<String>["chat.gguf", "chat-state.gguf", "talk.gguf", "talk-state.st", "see.gguf", "see-state.gguf"]));
+    });
+
+    test('does not hide local GGUF files for catalog rows on other platforms', () {
+      const g1iFileName = "rwkv7-g1i-1.5b-20260805-ctx16384-Q6_K.gguf";
+      const g1hFileName = "rwkv7-g1h-1.5b-20260710-ctx10240-Q6_K.gguf";
+      final config = <String, dynamic>{
+        "chat": {
+          "model_config": [
+            {
+              "name": "RWKV7-G1i 1.5B",
+              "url": "owner/repo/resolve/main/gguf/$g1iFileName",
+              "fileSize": 1,
+              "platforms": ["windows", "android", "macos", "ios"],
+            },
+            {
+              "name": "RWKV7-G1h 1.5B",
+              "url": "owner/repo/resolve/main/gguf/$g1hFileName",
+              "fileSize": 1,
+              "platforms": ["linux"],
+            },
+          ],
+        },
+      };
+
+      final linuxFileNames = localChatExcludedConfigFileNamesFromConfig(config, currentPlatform: "linux");
+      final macosFileNames = localChatExcludedConfigFileNamesFromConfig(config, currentPlatform: "macos");
+
+      expect(linuxFileNames, contains(g1hFileName));
+      expect(linuxFileNames, isNot(contains(g1iFileName)));
+      expect(
+        shouldShowLocalChatModelFile(
+          fileInfo: _localGgufFile(g1iFileName),
+          excludedConfigFileNames: linuxFileNames,
+        ),
+        isTrue,
+      );
+      expect(macosFileNames, contains(g1iFileName));
+      expect(macosFileNames, isNot(contains(g1hFileName)));
     });
 
     test('hides known Chat, See, and Talk local GGUF files only', () {

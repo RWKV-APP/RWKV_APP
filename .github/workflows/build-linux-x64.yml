@@ -145,6 +145,13 @@ jobs:
           --dart-define=SENTRY_RELEASE=rwkv-chat@${{ needs.setup.outputs.version }}+${{ needs.setup.outputs.build_number }}
           --dart-define=SENTRY_DIST=${{ needs.setup.outputs.build_number }}
 
+      - name: Ensure crashpad handler is executable
+        run: |
+          CRASHPAD_HANDLER="build/linux/x64/release/bundle/lib/crashpad_handler"
+          test -f "$CRASHPAD_HANDLER"
+          chmod 755 "$CRASHPAD_HANDLER"
+          test -x "$CRASHPAD_HANDLER"
+
       - name: Remove aarch64 libraries
         run: |
           LIB_DIR="build/linux/x64/release/bundle/lib"

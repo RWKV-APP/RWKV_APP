@@ -53,6 +53,10 @@ The application resolves catalog weights through the following path:
    `FileInfo.fromJSON()`. The catalog URL path basename becomes the local file
    name; backend, platform, SoC, debug visibility, declared byte size, optional
    digest, and other row metadata determine visibility and downstream behavior.
+   When the local-model scanner de-duplicates an exact GGUF file name against
+   catalog rows, only rows that support the current operating system may hide
+   that local file. A catalog row limited to other platforms must not make a
+   manually supplied local GGUF disappear from the current platform's picker.
 3. Relative catalog URLs are resolved by the user-selected download source. The
    reviewed catalog uses Hugging Face-style relative namespaces. The legacy
    `mollysama/rwkv-mobile-models/resolve/main/...` namespace maps to
@@ -157,6 +161,13 @@ declared size or backend has passed runtime or performance acceptance on every
 Apple device. Those outcomes remain separately recorded and never justify
 inventing `macos_debug`, adding an unsupported iOS entry, or silently removing
 an approved platform.
+
+The G1i 1.5B Q6_K and 2.9B, 7.2B, and 13.3B Q4_K_M llama.cpp artifacts are
+Linux consumer artifacts. Each Linux scope replaces only the equivalent G1h
+size and quantization slot after the exact G1i bytes have been discovered,
+loaded, and used for representative generation through the canonical Linux App
+UI. G1h rows for other backends, platforms, or SoCs remain available until an
+equivalent G1i consumer contract independently passes its acceptance boundary.
 
 G1i CoreML is explicitly deferred for the current release. `remote/latest.json`
 must contain no G1i CoreML row, and no new G1i CoreML artifact is converted,

@@ -4,7 +4,10 @@ import 'package:path/path.dart' as p;
 // Project imports:
 import 'package:zone/model/file_info.dart';
 
-Set<String> localChatExcludedConfigFileNamesFromConfig(Map<String, dynamic>? config) {
+Set<String> localChatExcludedConfigFileNamesFromConfig(
+  Map<String, dynamic>? config, {
+  required String currentPlatform,
+}) {
   if (config == null) return {};
 
   final result = <String>{};
@@ -17,6 +20,7 @@ Set<String> localChatExcludedConfigFileNamesFromConfig(Map<String, dynamic>? con
 
     for (final entry in modelConfig) {
       if (entry is! Map) continue;
+      if (!_supportsPlatform(entry, currentPlatform)) continue;
       _addConfigFileName(result, entry);
 
       final state = entry["state"];
@@ -30,6 +34,12 @@ Set<String> localChatExcludedConfigFileNamesFromConfig(Map<String, dynamic>? con
   }
 
   return result;
+}
+
+bool _supportsPlatform(Map<dynamic, dynamic> entry, String currentPlatform) {
+  final platforms = entry["platforms"];
+  if (platforms is! Iterable) return false;
+  return platforms.any((platform) => platform == currentPlatform);
 }
 
 bool shouldShowLocalChatModelFile({

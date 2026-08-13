@@ -106,7 +106,7 @@ class _Remote {
 
   late final localChatExcludedConfigFileNames = qp<Set<String>>((ref) {
     final config = ref.watch(P.app._config);
-    return localChatExcludedConfigFileNamesFromConfig(config);
+    return localChatExcludedConfigFileNamesFromConfig(config, currentPlatform: Platform.operatingSystem);
   });
 
   late final hasActiveDownload = qp<bool>((ref) {
@@ -1966,7 +1966,7 @@ extension $Remote on _Remote {
   }
 
   void initDownloader() async {
-    if (!P.preference._enableSystemProxy) {
+    if (!P.preference._enableSystemProxy || Platform.isLinux) {
       DownloadConfig.init(allowAllSsl: true);
       return;
     }
