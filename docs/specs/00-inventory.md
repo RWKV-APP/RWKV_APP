@@ -41,6 +41,8 @@ This inventory lists the checked-in surfaces used to resolve product truth, impl
 - `docs/architecture/vl-model-update-guide.md`: VL model configuration/display update contract
 - `docs/contracts/model_quantization_catalog.md`: catalog-driven model quantization and application acceptance contract
 - `docs/contracts/app_distribution.md`: App binary publication channels, provider parity, and release authorization boundary
+- `tools/fastlane/apple_auth_gate.rb`: fail-fast TestFlight authentication and version-bound completion checkpoint helper
+- `tools/fastlane/apple_auth_gate_test.rb`: focused authentication-gate and checkpoint regression tests
 - `docs/agentic-evaluation/eval-spec-v0.1.md`: Agentic Evaluation protocol
 - `docs/contracts/local_agent_file_actions.md`: user-authorized Windows local Agent file CRUD contract
 - `docs/contracts/desktop_ui_redesign.md`: scoped desktop UI redesign authorization

@@ -1,3 +1,5 @@
+require_relative '../tools/fastlane/apple_auth_gate'
+
 def fastlane_env_value(*keys)
   keys.each do |key|
     value = ENV[key]
@@ -64,7 +66,7 @@ def ios_built_ipa_path
   ipa_paths.max_by { |path| File.mtime(path) }
 end
 
-def ios_resolve_app_store_connect_context
+def ios_resolve_app_store_connect_context(params = {})
   key_id = fastlane_env_value(
     'APP_STORE_CONNECT_KEY_ID',
     'APP_STORE_CONNECT_API_KEY_KEY_ID',
@@ -86,7 +88,29 @@ def ios_resolve_app_store_connect_context
     'APP_STORE_CONNECT_KEY_CONTENT',
     'ASC_KEY_CONTENT',
   )
-  return nil if key_id.nil? && issuer_id.nil? && key_filepath.nil? && key_content.nil?
+  api_key_configured = !key_id.nil? || !issuer_id.nil? || !key_filepath.nil? || !key_content.nil?
+  begin
+    auth_mode = RwkvAppleAuthGate.resolve(
+      api_key_configured: api_key_configured,
+      allow_interactive: params[:allow_interactive_apple_auth] == true,
+      acknowledgement: params[:interactive_apple_auth_acknowledgement].to_s,
+      stdin_tty: $stdin.tty?,
+      stdout_tty: $stdout.tty?,
+    )
+  rescue RwkvAppleAuthGate::GateError => error
+    UI.user_error!(error.message)
+  end
+
+  if auth_mode == :interactive_once
+    ENV['SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA'] = 'true'
+    UI.important('允许一次可见的 Apple ID 认证尝试；失败后流程停止且不会自动重试')
+    UI.important('Root 自动化不得输入 sms 或再次请求验证码，除非用户在本次交互中明确要求')
+    return {
+      api_key: nil,
+      mode: auth_mode,
+      cleanup_dir: nil,
+    }
+  end
 
   if key_id.nil? || issuer_id.nil?
     UI.user_error!('缺少 App Store Connect API key 的 key_id 或 issuer_id')
@@ -126,6 +150,7 @@ def ios_resolve_app_store_connect_context
 
   {
     api_key: api_key,
+    mode: auth_mode,
     key_id: key_id,
     issuer_id: issuer_id,
     key_filepath: resolved_key_filepath,
@@ -141,6 +166,19 @@ def ios_cleanup_app_store_connect_context(context)
   require 'fileutils'
 
   FileUtils.rm_rf(context[:cleanup_dir])
+end
+
+def ios_preflight_app_store_connect_auth(params)
+  context = ios_resolve_app_store_connect_context(params)
+  UI.message("Apple authentication preflight: #{context[:mode]}")
+ensure
+  ios_cleanup_app_store_connect_context(context)
+end
+
+def ios_testflight_checkpoint_complete?(path, version)
+  RwkvAppleAuthGate.checkpoint_complete?(path: path, version: version)
+rescue RwkvAppleAuthGate::GateError => error
+  UI.user_error!(error.message)
 end
 
 lane :all do |params|
@@ -175,9 +213,16 @@ lane :all do |params|
       upload_retry_count: upload_retry_count,
       upload_timeout_seconds: upload_timeout_seconds,
       upload_to_testflight: upload_to_testflight,
+      allow_interactive_apple_auth: params[:allow_interactive_apple_auth],
+      interactive_apple_auth_acknowledgement: params[:interactive_apple_auth_acknowledgement],
+      testflight_checkpoint_path: params[:testflight_checkpoint_path],
       skip_git_reset: skip_git_reset,
     )
     next
+  end
+
+  if upload_to_testflight
+    ios_preflight_app_store_connect_auth(params)
   end
 
   build_number = raw_increase_build_number()
@@ -188,6 +233,10 @@ lane :all do |params|
   if increase_version
     version_number = raw_increase_version_number()
   end
+  require 'yaml'
+  project_root = File.expand_path('..', __dir__)
+  pubspec = YAML.load_file(File.join(project_root, 'pubspec.yaml'))
+  full_version = pubspec['version']
   if env == 'chat'
     git_commit(message: version_number.to_s + '(' + build_number.to_s + ')', path: ['*', '.github/workflows'])
     # Push changes to remote repository
@@ -213,7 +262,6 @@ lane :all do |params|
   upload_to_github = params[:upload_to_github] == false ? false : true
   if upload_to_github
     require 'yaml'
-    project_root = File.expand_path('..', __dir__)
     pubspec_path = File.join(project_root, 'pubspec.yaml')
     pubspec = YAML.load_file(pubspec_path)
     full_version = pubspec['version'] # e.g., "3.4.0+609"
@@ -270,7 +318,20 @@ lane :all do |params|
 
   # 🔥 上传到 TestFlight
   if upload_to_testflight
-    ios_upload(groups: ['External'])
+    testflight_checkpoint_path = params[:testflight_checkpoint_path]
+    if ios_testflight_checkpoint_complete?(testflight_checkpoint_path, full_version)
+      UI.success("TestFlight 已由版本检查点确认完成: #{full_version}")
+    else
+      ios_upload(
+        groups: ['External'],
+        allow_interactive_apple_auth: params[:allow_interactive_apple_auth],
+        interactive_apple_auth_acknowledgement: params[:interactive_apple_auth_acknowledgement],
+      )
+      RwkvAppleAuthGate.write_checkpoint(
+        path: testflight_checkpoint_path,
+        version: full_version,
+      )
+    end
   end
 
   if env == 'chat' && !skip_git_reset
@@ -278,12 +339,11 @@ lane :all do |params|
   end
 end
 
+desc 'Build an IPA and upload it using API-key authentication by default'
 lane :ios_upload do |params|
-  app_store_connect_context = ios_resolve_app_store_connect_context()
+  app_store_connect_context = ios_resolve_app_store_connect_context(params)
 
-  if app_store_connect_context.nil?
-    UI.important('未检测到 App Store Connect API key，TestFlight 上传将依赖本机 fastlane 或 Xcode 登录状态')
-  else
+  if app_store_connect_context[:mode] == :api_key
     UI.message('使用 App Store Connect API key 执行 TestFlight 上传')
   end
 
@@ -300,8 +360,9 @@ lane :ios_upload do |params|
   end
 end
 
+desc 'Upload an existing IPA using API-key authentication by default'
 lane :ios_upload_to_testflight do |params|
-  app_store_connect_context = ios_resolve_app_store_connect_context()
+  app_store_connect_context = ios_resolve_app_store_connect_context(params)
 
   begin
     upload_to_testflight(
@@ -313,6 +374,12 @@ lane :ios_upload_to_testflight do |params|
   ensure
     ios_cleanup_app_store_connect_context(app_store_connect_context)
   end
+end
+
+desc 'Validate TestFlight authentication without contacting Apple or sending a verification code'
+lane :ios_auth_preflight do |params|
+  ios_preflight_app_store_connect_auth(params)
+  UI.success('Apple authentication preflight passed; no Apple login request was sent')
 end
 
 lane :global_replace do |params|
@@ -584,6 +651,7 @@ end
 #  🚑 紧急恢复专用 Lane
 #  用于 all lane 构建成功但在上传阶段失败时，从上传 APK 开始继续执行
 # -----------------------------------------------------------------------
+desc 'Resume remaining release stages with fail-fast Apple authentication and an optional version checkpoint'
 lane :resume_upload do |params|
   run_android = params[:run_android] == false ? false : true
   upload_to_pgyer = params[:upload_to_pgyer] == true ? true : false
@@ -598,6 +666,7 @@ lane :resume_upload do |params|
   if upload_timeout_seconds < 30
     upload_timeout_seconds = 1200
   end
+  upload_to_testflight_flag = params[:upload_to_testflight] == false ? false : true
 
   # 1. 读取当前 pubspec.yaml 中的版本号 (因为之前的 all lane 已经修改并提交了)
   require 'yaml'
@@ -609,6 +678,13 @@ lane :resume_upload do |params|
   version_parts = full_version.split('+')
   semantic_version = version_parts[0] # "3.4.3"
   build_number = version_parts[1]     # "629"
+
+  testflight_checkpoint_path = params[:testflight_checkpoint_path]
+  testflight_checkpoint_complete = upload_to_testflight_flag &&
+                                   ios_testflight_checkpoint_complete?(testflight_checkpoint_path, full_version)
+  if upload_to_testflight_flag && !testflight_checkpoint_complete
+    ios_preflight_app_store_connect_auth(params)
+  end
 
   UI.message "🔄 恢复上传流程: 版本 #{full_version}"
 
@@ -703,9 +779,20 @@ lane :resume_upload do |params|
   end
 
   # 7. 🔥 继续 iOS 流程 (iOS lane 内部会自己构建，所以是安全的)
-  upload_to_testflight_flag = params[:upload_to_testflight] == false ? false : true
   if upload_to_testflight_flag
-    ios_upload(groups: ['External'])
+    if testflight_checkpoint_complete
+      UI.success("TestFlight 已由版本检查点确认完成: #{full_version}")
+    else
+      ios_upload(
+        groups: ['External'],
+        allow_interactive_apple_auth: params[:allow_interactive_apple_auth],
+        interactive_apple_auth_acknowledgement: params[:interactive_apple_auth_acknowledgement],
+      )
+      RwkvAppleAuthGate.write_checkpoint(
+        path: testflight_checkpoint_path,
+        version: full_version,
+      )
+    end
   end
 
   # 8. Git Reset (清理)
