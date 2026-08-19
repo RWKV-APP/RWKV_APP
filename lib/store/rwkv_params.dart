@@ -270,18 +270,35 @@ extension $RWKVParams on _RWKVParams {
     }
   }
 
-  Future<void> onThinkModeTapped() async {
+  Future<void> onThinkModeTapped({DemoType preferredDemoType = .chat}) async {
     final receiving = P.rwkvGeneration.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
 
-    if (!checkModelSelection(preferredDemoType: .chat)) return;
+    if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
     P.app.hapticLight();
 
     final s = S.current;
+    if (preferredDemoType == .see) {
+      final currentModel = P.rwkvModel.latest.q;
+      if (!supportsConfigurableVisionThinking(currentModel)) return;
+
+      final next = toggledVisionThinkingMode(thinkingMode.q);
+      await setModelConfig(thinkingMode: next, setPrompt: false);
+      switch (next) {
+        case .fastWithSpacePrefix:
+          Alert.success(s.think_button_mode_fast(s.thinking_mode_alert_footer));
+        case .free:
+          Alert.success(s.thinking_mode_high(s.thinking_mode_alert_footer));
+        default:
+          break;
+      }
+      return;
+    }
+
     final albatrossCanUse = P.albatrossRuntime.canUse.q;
 
     final currentModelIsBefore20250922 = P.rwkvParams.currentModelIsBefore20250922.q;

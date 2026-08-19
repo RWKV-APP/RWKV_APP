@@ -123,6 +123,14 @@ class ModelTag extends ConsumerWidget {
           displayTagName: tagName.toUpperCase(),
           fontWeight: .w400,
         );
+      case "thinking":
+        return _RenderingOptions(
+          bgColor: primary.withValues(alpha: .12),
+          textColor: primary,
+          borderColor: primary.withValues(alpha: .28),
+          displayTagName: "Thinking",
+          fontWeight: .w500,
+        );
       case "gpu":
       default:
         return _RenderingOptions(

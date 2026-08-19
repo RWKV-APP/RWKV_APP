@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
+import 'package:zone/func/thinking_prefix.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/interaction_visual_state.dart';
+import 'package:zone/widgets/chat/thinking_mode_button.dart';
 import 'package:zone/widgets/input_interactions.dart';
 import 'package:zone/widgets/suggestion_chips.dart';
 
@@ -16,24 +19,35 @@ class FloatingSuggestions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final suggestions = ref.watch(P.suggestion.worldSuggestion);
+    final currentModel = ref.watch(P.rwkvModel.latest);
+    final showVisionThinking = supportsConfigurableVisionThinking(currentModel);
 
-    if (suggestions.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    if (suggestions.isEmpty && !showVisionThinking) return const SizedBox.shrink();
 
     final appTheme = ref.watch(P.app.theme);
-    final bgColor = appTheme.qb144;
+    final colors = interactionVisualColors(
+      appTheme: appTheme,
+      state: .available,
+    );
 
     return SuggestionChips(
       suggestions: suggestions,
       onTap: (String item) => P.see.onSuggestionTap(item),
       height: InputInteractions.calculateButtonHeight(context),
-      listPadding: const .only(left: 12, right: 12, bottom: 0),
+      listPadding: .symmetric(horizontal: appTheme.inputBarHorizontalPadding),
       chipPadding: const .symmetric(horizontal: 12, vertical: 0),
-      backgroundColor: bgColor,
-      borderColor: appTheme.qb11,
-      textColor: appTheme.qb4,
+      backgroundColor: colors.background,
+      borderColor: colors.border,
+      textColor: colors.foreground,
+      fontWeight: .w500,
+      matchInteractionTextMetrics: true,
+      separatorWidth: 4,
+      leadingWidgets: [
+        if (showVisionThinking) const ThinkingModeButton(preferredDemoType: .see),
+      ],
     );
   }
 }

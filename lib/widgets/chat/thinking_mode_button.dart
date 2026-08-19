@@ -11,11 +11,14 @@ import 'package:flutter_svg/svg.dart';
 // Project imports:
 import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
 
 class ThinkingModeButton extends ConsumerWidget {
-  const ThinkingModeButton({super.key});
+  final DemoType preferredDemoType;
+
+  const ThinkingModeButton({super.key, this.preferredDemoType = .chat});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,7 +79,7 @@ class ThinkingModeButton extends ConsumerWidget {
           opacity: loading ? .33 : 1,
           duration: const Duration(milliseconds: 250),
           child: GestureDetector(
-            onTap: P.rwkvParams.onThinkModeTapped,
+            onTap: () => P.rwkvParams.onThinkModeTapped(preferredDemoType: preferredDemoType),
             child: ClipRRect(
               borderRadius: .circular(60),
               child: BackdropFilter(

@@ -1,4 +1,5 @@
 <a id="SPEC-RWKV-VL-MODEL-UPDATE"></a>
+<a id="SPEC-RWKV-VL-THINKING-CAPABILITY"></a>
 
 # VL 模型更新与展示映射检查
 
@@ -58,6 +59,44 @@ VL 模型选择列表没有直接遍历 `latest.json` 中所有可用的 `world`
 4. `WorldGroupItem` 使用 `FileInfo.worldType` 和核心权重文件名筛选模型及其 encoder、adapter 依赖
 5. 两处映射和远程配置同时匹配时，VL 模型才会显示
 
+## 可配置 Thinking 能力
+
+`thinking` 是 VL 模型组支持用户切换思考模式的能力标签，不是所有 VL
+模型的默认属性。只有已经确认同时支持下列两种前缀的 VL 模型组才能声明：
+
+- Thinking 开启：`<think>`
+- Thinking 关闭（界面命名沿用 Chat 的“快思考”）：`<think>\n</think>`
+
+同一可配置模型组的核心权重、vision encoder 和 vision adapter 目录项都要
+包含小写 `thinking` 标签。App 以当前加载的核心权重为运行时判断依据：See
+页仅在该权重具有 `thinking` 标签时显示 Thinking 按钮；标签缺失时不显示，
+不得根据模型名称、`reason` 标签或 `WorldType.isReasoning` 猜测能力。
+
+在 See 页中，Suggested Prompts 与 Thinking 按钮属于同一组输入选项，必须
+使用同一个横向滚动行、相同控件高度和相同输入栏边距。显示为 Fast 或 High
+的 Thinking 按钮必须固定为整行最左项，Suggested Prompts 按既有顺序跟在其后；
+不得让 Thinking 按钮单独占据第二行。Suggested Prompts 的空闲态背景、边框、
+文字颜色和文字粗细必须复用 Fast 按钮的可用态视觉规则，不能在浅色模式下使用
+额外的灰色填充或阴影。
+模型选择列表还必须在核心权重的模型卡片上显示独立的 `Thinking` 能力标签。
+该列表标签与 See 页按钮使用同一个核心权重 `thinking` 判断，不从 encoder、
+adapter、模型名称或其他标签推导。
+
+当前目录中只有 `RWKV-VL 1.5B Thinking Preview · 260815` 这一组的三个组成
+条目具备该能力。此前的 `RWKV-VL-260625`、FineVisionMax 非 Thinking Preview
+以及更早的 VL 条目都不具备可配置 Thinking 能力，必须保持无 `thinking`
+标签。
+
+VL Thinking 按钮复用 Chat 的 Thinking 模式状态和原生
+`SetThinkingToken` 链路，但在 See 页只提供“快思考/高思考”两态切换。
+当前 VL 模板把 `spaceAfterRoles` 设为 `false`，因此传给原生运行时的 token
+必须分别精确为 `<think>\n</think>` 和 `<think>`，不能附加空格，也不能把
+VL 选择写回 Chat 的首选 Thinking 模式。
+
+旧版或不支持切换的 VL 模型继续不带 `thinking` 标签，即使它会自行输出
+`<think>\n</think>`，也不能因此显示切换按钮。以后新增支持切换的 VL 权重
+时，能力标签、前缀测试和 See 页可见性测试必须与目录项一起交付。
+
 ## Agent 更新检查清单
 
 以后新增、替换或重命名 VL 模型时，必须逐项完成以下检查
@@ -69,6 +108,8 @@ VL 模型选择列表没有直接遍历 `latest.json` 中所有可用的 `world`
 - 确认 `platforms`、`backends`、`tags`、`socLimitations` 和 `fileSize` 正确
 - NPU 核心权重使用 `core` 标签
 - encoder 和 adapter 使用对应标签，并确认它们与核心权重属于同一个 `WorldType`
+- 支持用户切换 Thinking 的模型组在核心权重、encoder 和 adapter 上都使用 `thinking` 标签；不支持切换的模型组不得添加
+- 核心权重带 `thinking` 时，模型选择列表显示独立的 `Thinking` 标签；核心权重不带时不显示
 
 ### 2. 同步文件类型映射
 
@@ -98,8 +139,8 @@ VL 文件名和 SoC 映射位于 App 代码中，远程更新 `latest.json` 不�
 
 ```bash
 jq empty remote/latest.json
-flutter test test/world_type_test.dart
-dart analyze lib/model/world_type.dart lib/model/file_info.dart test/world_type_test.dart
+flutter test test/world_type_test.dart test/vl_thinking_capability_test.dart
+dart analyze lib/model/world_type.dart lib/model/file_info.dart lib/func/thinking_prefix.dart lib/store/rwkv_params.dart lib/page/see.dart lib/widgets/input_interactions.dart lib/widgets/see/floating_suggestions.dart lib/widgets/suggestion_chips.dart lib/widgets/chat/thinking_mode_button.dart lib/widgets/world_group_item.dart lib/widgets/model_tag.dart test/world_type_test.dart test/vl_thinking_capability_test.dart
 dart run tools/bin/agent_check.dart --rules-only
 ```
 
@@ -111,8 +152,10 @@ dart run tools/bin/agent_check.dart --rules-only
 
 - `P.rwkvBackend.socName.q` 与 `socLimitations`、`socPairs` 使用相同字符串
 - VL 模型出现在 See 页模型选择器中
+- 支持切换的 VL 模型卡片显示独立 `Thinking` 标签，不支持切换的卡片不显示
 - 下载分组同时包含核心权重、encoder 和 adapter
 - 下载完成后能够加载模型并开始视觉对话
+- Thinking 按钮位于 Suggested Prompts 左侧并在同一横向行内等高对齐；Suggested Prompts 的空闲态视觉与 Fast 按钮一致，且不支持切换的模型没有 Thinking 按钮
 
 ## Agent 注意事项
 

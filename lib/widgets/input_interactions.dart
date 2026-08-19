@@ -56,7 +56,7 @@ class _ItemList extends ConsumerWidget {
     final children = [
       if (preferredDemoType == .chat) const DecodeParamButton(),
       if (preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
-      if (preferredDemoType == .chat) const ThinkingModeButton(),
+      if (preferredDemoType == .chat) ThinkingModeButton(preferredDemoType: preferredDemoType),
       if (preferredDemoType == .chat) const BatchButton(),
       if (preferredDemoType == .chat && currentLangIsZh) const ResponseStyleButton(),
       if (preferredDemoType == .chat && isDesktop) const WebSearchModeButton(),

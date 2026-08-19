@@ -14,6 +14,7 @@ import 'package:sprintf/sprintf.dart';
 import 'package:zone/func/collection_utils.dart';
 import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/format_bytes.dart';
+import 'package:zone/func/thinking_prefix.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/world_type.dart';
@@ -358,7 +359,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                         networkSpeed: networkSpeed,
                         remainText: remainText,
                         socPair: widget.socPair,
-                        quantization: modelFileKey.quantization,
+                        fileInfo: modelFileKey,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -474,8 +475,7 @@ class _CollapsedContent extends ConsumerWidget {
   final double networkSpeed;
   final String remainText;
   final (String, String) socPair;
-  final String? quantization;
-  final Backend? backend;
+  final FileInfo fileInfo;
 
   const _CollapsedContent({
     required this.modelName,
@@ -485,9 +485,7 @@ class _CollapsedContent extends ConsumerWidget {
     required this.networkSpeed,
     required this.remainText,
     required this.socPair,
-    this.quantization,
-    // ignore: unused_element_parameter
-    this.backend,
+    required this.fileInfo,
   });
 
   @override
@@ -515,7 +513,7 @@ class _CollapsedContent extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 4),
-        _WorldTags(socPair: socPair, quantization: quantization, backend: backend),
+        WorldModelTags(socPair: socPair, fileInfo: fileInfo),
         if (downloading) ...[
           const SizedBox(height: 8),
           Padding(
@@ -547,15 +545,16 @@ class _CollapsedContent extends ConsumerWidget {
   }
 }
 
-class _WorldTags extends ConsumerWidget {
+class WorldModelTags extends ConsumerWidget {
   final (String, String) socPair;
-  final String? quantization;
-  final Backend? backend;
+  final FileInfo fileInfo;
 
-  const _WorldTags({required this.socPair, this.quantization, this.backend});
+  const WorldModelTags({super.key, required this.socPair, required this.fileInfo});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final isNPU = socPair.$1.isNotEmpty;
 
     return Wrap(
@@ -563,9 +562,10 @@ class _WorldTags extends ConsumerWidget {
       runSpacing: 8,
       children: <ModelTag>[
         const ModelTag(tag: "Vision"),
+        if (supportsConfigurableVisionThinking(fileInfo)) const ModelTag(tag: "Thinking"),
         ModelTag(tag: isNPU ? "NPU" : "CPU"),
-        if (backend == Backend.webRwkv) const ModelTag(tag: "WebRWKV"),
-        if (quantization != null && quantization!.isNotEmpty) ModelTag(tag: quantization!, forceUppercase: true),
+        if (fileInfo.backend == Backend.webRwkv) const ModelTag(tag: "WebRWKV"),
+        if (fileInfo.quantization != null && fileInfo.quantization!.isNotEmpty) ModelTag(tag: fileInfo.quantization!, forceUppercase: true),
       ],
     );
   }

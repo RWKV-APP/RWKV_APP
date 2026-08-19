@@ -3,8 +3,22 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/model/thinking_mode.dart';
 
 const String compactFastThinkingPrefix = '<think></think';
+const String configurableVisionThinkingTag = 'thinking';
+const String visionThinkingDisabledPrefix = '<think>\n</think>';
+const String visionThinkingEnabledPrefix = '<think>';
 
 final DateTime compactFastThinkingPrefixCutoff = DateTime.utc(2026, 7, 10);
+
+bool supportsConfigurableVisionThinking(FileInfo? fileInfo) {
+  if (fileInfo == null) return false;
+  if (fileInfo.worldType == null) return false;
+  return fileInfo.hasTag(configurableVisionThinkingTag);
+}
+
+ThinkingMode toggledVisionThinkingMode(ThinkingMode current) {
+  if (current == ThinkingMode.free) return ThinkingMode.fastWithSpacePrefix;
+  return ThinkingMode.free;
+}
 
 bool usesCompactFastThinkingPrefix(FileInfo fileInfo) {
   final identity = '${fileInfo.name} ${fileInfo.fileName} ${fileInfo.raw}'.toLowerCase();
@@ -24,6 +38,14 @@ String thinkingTokenForModel({
   required String configuredThinkingToken,
   required FileInfo fileInfo,
 }) {
+  if (supportsConfigurableVisionThinking(fileInfo)) {
+    return switch (thinkingMode) {
+      ThinkingMode.free => visionThinkingEnabledPrefix,
+      ThinkingMode.fastWithSpacePrefix => visionThinkingDisabledPrefix,
+      _ => configuredThinkingToken,
+    };
+  }
+
   if (thinkingMode != ThinkingMode.fast) return configuredThinkingToken;
   if (configuredThinkingToken != ThinkingMode.fast.header) return configuredThinkingToken;
   if (!usesCompactFastThinkingPrefix(fileInfo)) return configuredThinkingToken;

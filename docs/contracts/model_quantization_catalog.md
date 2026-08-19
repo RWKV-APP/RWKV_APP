@@ -21,6 +21,13 @@ remote configuration. `FileInfo` parsing and remote-store filtering then use
 the rows for model visibility, compatibility, local-file recognition, download
 identity, and integrity metadata.
 
+Capability tags are executable catalog contracts, not descriptive labels. In
+particular, the VL `thinking` tag is governed by
+`SPEC-RWKV-VL-THINKING-CAPABILITY`: only a VL cohort verified to support the
+configured on/off prefixes may carry it, every required row in that cohort must
+carry it, and the See UI derives both control visibility and the model-list
+`Thinking` capability tag from the loaded or listed core row.
+
 A catalog `backend` identifies the intended application consumer. Conversion
 libraries, accelerators, and host compute are implementation choices selected
 only after the required catalog rows are known. Existing MNN entries for other

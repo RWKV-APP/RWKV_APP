@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
+import 'package:zone/func/thinking_prefix.dart';
 import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
@@ -19,6 +20,8 @@ class PageSee extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final inputHeight = ref.watch(P.chat.inputHeight);
     return Scaffold(
       body: Stack(
@@ -51,9 +54,12 @@ class _List extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final messages = ref.watch(P.msg.list);
     final suggestions = ref.watch(P.suggestion.worldSuggestion);
-    final hasSuggestions = suggestions.isNotEmpty;
+    final currentModel = ref.watch(P.rwkvModel.latest);
+    final hasFloatingOptions = suggestions.isNotEmpty || supportsConfigurableVisionThinking(currentModel);
     final paddingTop = ref.watch(P.app.paddingTop);
     final paddingLeft = ref.watch(P.app.paddingLeft);
     final paddingRight = ref.watch(P.app.paddingRight);
@@ -63,7 +69,7 @@ class _List extends ConsumerWidget {
     double bottom = inputHeight + 12;
     double scrollBarBottom = inputHeight + 4;
 
-    if (hasSuggestions) {
+    if (hasFloatingOptions) {
       bottom += FloatingSuggestions.defaultHeight;
       scrollBarBottom += FloatingSuggestions.defaultHeight;
     }
@@ -105,6 +111,8 @@ class _Empty extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final logoSquare = Assets.img.chat.logoSquare;
     final inputHeight = ref.watch(P.chat.inputHeight);
     final version = ref.watch(P.app.version);

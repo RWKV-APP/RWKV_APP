@@ -31,6 +31,7 @@ This map assigns one canonical owner and one lifecycle to each topic. Stable `SP
 | Desktop UI redesign authorization | `SPEC-RWKV-DESKTOP-UI-REDESIGN-AUTHORIZATION` | active | `docs/contracts/desktop_ui_redesign.md` | `docs/specification.md`, `PRODUCT.md` |
 | Multi-question parallel inference behavior | `SPEC-RWKV-MULTI-QUESTION-PARALLEL` | active | `docs/contracts/multi_question_parallel.md` | `lib/store/multi_question.dart`, `lib/store/chat.dart` |
 | VL model update and display mapping | `SPEC-RWKV-VL-MODEL-UPDATE` | active | `docs/architecture/vl-model-update-guide.md` | `remote/latest.json`, `lib/model/file_info.dart`, `lib/store/remote.dart` |
+| Catalog-declared configurable thinking for VL models | `SPEC-RWKV-VL-THINKING-CAPABILITY` | active | `docs/architecture/vl-model-update-guide.md` | `docs/contracts/model_quantization_catalog.md`, `remote/latest.json`, `lib/model/file_info.dart`, `lib/func/thinking_prefix.dart`, `lib/store/rwkv_params.dart`, `lib/page/see.dart`, `lib/widgets/input_interactions.dart`, `lib/widgets/see/floating_suggestions.dart`, `lib/widgets/suggestion_chips.dart`, `lib/widgets/chat/thinking_mode_button.dart`, `lib/widgets/world_group_item.dart`, `lib/widgets/model_tag.dart`, `test/vl_thinking_capability_test.dart` |
 
 ## Truth Resolution
 

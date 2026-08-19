@@ -19,8 +19,11 @@ class SuggestionChips extends ConsumerWidget {
   final Color backgroundColor;
   final Color borderColor;
   final Color textColor;
+  final FontWeight fontWeight;
+  final bool matchInteractionTextMetrics;
   final double borderRadius;
   final double separatorWidth;
+  final List<Widget> leadingWidgets;
 
   const SuggestionChips({
     super.key,
@@ -32,13 +35,18 @@ class SuggestionChips extends ConsumerWidget {
     required this.backgroundColor,
     required this.borderColor,
     required this.textColor,
+    this.fontWeight = FontWeight.w400,
+    this.matchInteractionTextMetrics = false,
     this.borderRadius = 1000,
     this.separatorWidth = 6,
+    this.leadingWidgets = const [],
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (suggestions.isEmpty) return const SizedBox.shrink();
+    final theme = Theme.of(context);
+    final _ = theme;
+    if (suggestions.isEmpty && leadingWidgets.isEmpty) return const SizedBox.shrink();
 
     final bool userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final double backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
@@ -58,7 +66,9 @@ class SuggestionChips extends ConsumerWidget {
         scrollDirection: .horizontal,
         padding: listPadding,
         itemBuilder: (BuildContext context, int index) {
-          final item = suggestions[index];
+          if (index < leadingWidgets.length) return leadingWidgets[index];
+          final suggestionIndex = index - leadingWidgets.length;
+          final item = suggestions[suggestionIndex];
           return GestureDetector(
             onTap: () {
               onTap(item);
@@ -72,6 +82,7 @@ class SuggestionChips extends ConsumerWidget {
                 ),
                 enabled: userBackdropFilterForInputOptions,
                 child: Container(
+                  key: Key('_SuggestionChip-$suggestionIndex'),
                   height: height,
                   decoration: BoxDecoration(
                     color: chipBackgroundColor,
@@ -87,8 +98,17 @@ class SuggestionChips extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 14,
                         color: textColor,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: fontWeight,
+                        height: matchInteractionTextMetrics ? 1 : null,
                       ),
+                      strutStyle: matchInteractionTextMetrics
+                          ? const StrutStyle(
+                              fontSize: 14,
+                              height: 1,
+                              forceStrutHeight: true,
+                              leadingDistribution: TextLeadingDistribution.even,
+                            )
+                          : null,
                     ),
                   ),
                 ),
@@ -99,7 +119,7 @@ class SuggestionChips extends ConsumerWidget {
         separatorBuilder: (BuildContext context, int index) {
           return SizedBox(width: separatorWidth);
         },
-        itemCount: suggestions.length,
+        itemCount: leadingWidgets.length + suggestions.length,
       ),
     );
   }

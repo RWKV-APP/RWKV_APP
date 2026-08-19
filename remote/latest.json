@@ -2040,7 +2040,7 @@
         "quantization": "w8a16",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["mnn"],
-        "tags": ["encoder"],
+        "tags": ["encoder", "thinking"],
         "isDebug": true,
         "date": 1786723200
       },
@@ -2052,7 +2052,7 @@
         "quantization": "w8a16",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["mnn"],
-        "tags": ["adapter"],
+        "tags": ["adapter", "thinking"],
         "isDebug": true,
         "date": 1786723200
       },
@@ -2065,7 +2065,7 @@
         "quantization": "q8_0",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu"],
+        "tags": ["reason", "gpu", "thinking"],
         "isDebug": true,
         "date": 1786723200
       },
