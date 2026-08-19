@@ -2034,7 +2034,7 @@
       },
       {
         "name": "RWKV-VL 1.5B Thinking Preview · 260815 Vision Encoder",
-        "url": "http://192.168.1.26:8765/rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-vision-encoder.mnn",
+        "url": "https://modelscope.cn/models/HaloWang1991/rwkv-weights-tmp/resolve/2d332927321c9500fc4395ba51c6325622739e12/artifacts/rwkv-vl/vision/1.5v100m/mnn/rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-vision-encoder.mnn",
         "fileSize": 402661092,
         "sha256": "aee85cab60053ceeba01d344835a990a080f5de7370520c5b6713070e8374e1b",
         "quantization": "w8a16",
@@ -2046,7 +2046,7 @@
       },
       {
         "name": "RWKV-VL 1.5B Thinking Preview · 260815 Vision Adapter",
-        "url": "http://192.168.1.26:8765/rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-vision-adapter.mnn",
+        "url": "https://modelscope.cn/models/HaloWang1991/rwkv-weights-tmp/resolve/2d332927321c9500fc4395ba51c6325622739e12/artifacts/rwkv-vl/vision/1.5v100m/mnn/rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-vision-adapter.mnn",
         "fileSize": 100743264,
         "sha256": "39ce766a950ea71d6478f1bf5a822417823235504436956c5963de6afe8f31aa",
         "quantization": "w8a16",
@@ -2059,7 +2059,7 @@
       {
         "name": "RWKV-VL 1.5B Thinking Preview · 260815",
         "modelSize": 1.5,
-        "url": "http://192.168.1.26:8765/rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-Q8_0.gguf",
+        "url": "https://modelscope.cn/models/HaloWang1991/rwkv-weights-tmp/resolve/2d332927321c9500fc4395ba51c6325622739e12/artifacts/rwkv-vl/vision/1.5v100m/llamacpp/rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-Q8_0.gguf",
         "fileSize": 1655185536,
         "sha256": "7a2e5e515638fdf67c3a4bee7664c722e8a7d5be6da847ca44ef270e63344676",
         "quantization": "q8_0",
