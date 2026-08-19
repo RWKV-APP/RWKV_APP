@@ -99,7 +99,7 @@ must therefore not be represented as certificate-verified artifact provenance.
 Download completion, runtime load completion, representative generation, and
 real-device acceptance remain separate evidence states.
 
-## SPEC-RWKV-QUANTIZATION-DELIVERY — Artifact And App Acceptance
+## SPEC-RWKV-QUANTIZATION-DELIVERY — Artifact Publication And App Acceptance
 
 Quantization delivery proceeds against an explicit catalog cohort:
 
@@ -112,14 +112,21 @@ Quantization delivery proceeds against an explicit catalog cohort:
    formats or backends
 5. validate JSON parsing, `FileInfo` mapping, platform and SoC filtering, local
    recognition, download identity, file size and digest behavior
-6. verify representative loading and generation on every platform or device
-   claimed by the row through the canonical App's visible user-facing UI under
+6. record catalog publication and device runtime acceptance as independent
+   states; when download, loading, generation, or performance acceptance is
+   claimed for a platform or device, verify it through the canonical App's
+   visible user-facing UI under
    `SPEC-RWKV-CHAT-VISIBLE-UI-E2E-ACCEPTANCE`
 
 Uploading artifacts, deploying a new remote catalog, or promoting debug rows to
 release visibility are separate distribution actions and require explicit
-authorization. A local conversion success or valid JSON file is not sufficient
-application acceptance.
+authorization. Exact-device visible-UI acceptance is not a prerequisite for an
+explicitly authorized artifact or catalog publication when immutable artifact
+identity, size and digest, formal distribution sources, catalog parsing and
+filtering, and compatibility with the already released application/runtime
+contract are verified. Publication alone is not application, download,
+runtime, generation, device, or performance acceptance, and no such claim may
+be made until its independent acceptance is complete.
 
 `remote/latest.json` is the core catalog, but specialized consumers can require
 additional application mappings. For example, a VL model row may also require
@@ -146,21 +153,41 @@ declared for G1i, narrow the G1h platform list to the unmatched scope instead
 of removing the row. Retain G1h rows for unique backends, platforms or SoCs
 until an equivalent G1i artifact and consumer contract are available.
 
-The identified earlier-generation replacement is limited to the G1g 7.2B
-Android QNN w4a16 RMPack for Snapdragon 8 Gen 3. The formal G1i 7.2B row
-occupies that complete slot, so the duplicate G1g row is removed. Other G1g
-rows remain available when they target a SoC or consumer slot not declared by
-an equivalent formal G1i row.
+The identified earlier-generation replacements are limited to the G1g 7.2B
+Android QNN w4a16 RMPacks for Snapdragon 8 Gen 3 and 8s Gen 3. The formal G1i
+7.2B rows occupy those complete slots, so the duplicate G1g rows are removed.
+Other G1g rows remain available when they target a SoC or consumer slot not
+declared by an equivalent formal G1i row.
 
 The current G1i Apple catalog exposes the non-QNN llama.cpp, WebRWKV, and MLX
 rows for 1.5B, 2.9B, and 7.2B on both macOS and iOS. G1i 13.3B is intentionally
 unsupported on iPhone and iPad, so its non-QNN Apple catalog scope includes
-`macos` and excludes `ios`. Snapdragon QNN rows remain Android-only. Catalog
-visibility is the user-facing selection contract and is not a claim that every
-declared size or backend has passed runtime or performance acceptance on every
-Apple device. Those outcomes remain separately recorded and never justify
-inventing `macos_debug`, adding an unsupported iOS entry, or silently removing
-an approved platform.
+`macos` and excludes `ios`. Mobile Snapdragon QNN rows remain Android-only;
+Snapdragon X Elite and X2 Elite QNN rows use the released Windows consumer
+contract. Catalog visibility is the user-facing selection contract and is not a
+claim that every declared size or backend has passed runtime or performance
+acceptance on every Apple device. Those outcomes remain separately recorded and
+never justify inventing `macos_debug`, adding an unsupported iOS entry, or
+silently removing an approved platform.
+
+The current Android G1i QNN catalog exposes 1.5B for Snapdragon 8 Elite Gen5,
+8 Gen 5, 8 Elite, 8 Gen 3, 8s Gen 3, 7+ Gen 3, 8 Gen 2, 8+ Gen 1, 888, and
+778. It exposes 2.9B for the same set except 778. Where an approved artifact
+has identical bytes for more than one compatible SoC, each SoC keeps its own
+catalog row and shares the immutable URL, size, and SHA-256 identity.
+
+The current Windows G1i QNN catalog exposes 1.5B and 2.9B for Snapdragon X
+Elite, X Plus, and X1 through the X Elite artifact, and for Snapdragon X2 Elite
+Extreme, X2 Elite, and X2 Plus through the X2 Elite artifact. These rows replace
+the equivalent G1h Windows QNN slots. Their formal artifact publication and
+catalog visibility do not claim exact-device runtime or performance acceptance.
+
+The current Android G1i MediaTek catalog exposes the 1.5B w8a16 NP7 artifact
+for Dimensity 9300 and the 1.5B w8a16 plus 2.9B w4a16 NP9 artifacts for
+Dimensity 9500. The Dimensity 9300 1.5B row replaces its equivalent G1h NP7
+slot. There is no formal Dimensity 9300 2.9B G1i catalog row in this cohort.
+Formal artifact publication and catalog visibility remain separate from
+exact-device loading, generation, and performance acceptance.
 
 The G1i 1.5B Q6_K and 2.9B, 7.2B, and 13.3B Q4_K_M llama.cpp artifacts are
 Linux consumer artifacts. Each Linux scope replaces only the equivalent G1h

@@ -39,7 +39,7 @@ This inventory lists the checked-in surfaces used to resolve product truth, impl
 - `docs/architecture/workspace-map.md`: repository and symptom-to-entry ownership
 - `docs/architecture/store-map.md`: Riverpod store ownership and verification pointers
 - `docs/architecture/vl-model-update-guide.md`: VL model configuration/display update contract
-- `docs/contracts/model_quantization_catalog.md`: catalog-driven model quantization and application acceptance contract
+- `docs/contracts/model_quantization_catalog.md`: catalog-driven model quantization, artifact publication, and separate application acceptance contract
 - `docs/contracts/app_distribution.md`: App binary publication channels, provider parity, and release authorization boundary
 - `tools/fastlane/apple_auth_gate.rb`: fail-fast TestFlight authentication and version-bound completion checkpoint helper
 - `tools/fastlane/apple_auth_gate_test.rb`: focused authentication-gate and checkpoint regression tests
