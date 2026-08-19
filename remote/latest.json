@@ -2033,6 +2033,43 @@
         "date": 1784040567
       },
       {
+        "name": "RWKV-VL 1.5B Thinking Preview · 260815 Vision Encoder",
+        "url": "http://192.168.1.26:8765/rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-vision-encoder.mnn",
+        "fileSize": 402661092,
+        "sha256": "aee85cab60053ceeba01d344835a990a080f5de7370520c5b6713070e8374e1b",
+        "quantization": "w8a16",
+        "platforms": ["macos", "linux", "android", "ios", "windows"],
+        "backends": ["mnn"],
+        "tags": ["encoder"],
+        "isDebug": true,
+        "date": 1786723200
+      },
+      {
+        "name": "RWKV-VL 1.5B Thinking Preview · 260815 Vision Adapter",
+        "url": "http://192.168.1.26:8765/rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-vision-adapter.mnn",
+        "fileSize": 100743264,
+        "sha256": "39ce766a950ea71d6478f1bf5a822417823235504436956c5963de6afe8f31aa",
+        "quantization": "w8a16",
+        "platforms": ["macos", "linux", "android", "ios", "windows"],
+        "backends": ["mnn"],
+        "tags": ["adapter"],
+        "isDebug": true,
+        "date": 1786723200
+      },
+      {
+        "name": "RWKV-VL 1.5B Thinking Preview · 260815",
+        "modelSize": 1.5,
+        "url": "http://192.168.1.26:8765/rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-Q8_0.gguf",
+        "fileSize": 1655185536,
+        "sha256": "7a2e5e515638fdf67c3a4bee7664c722e8a7d5be6da847ca44ef270e63344676",
+        "quantization": "q8_0",
+        "platforms": ["macos", "linux", "android", "ios", "windows"],
+        "backends": ["llamacpp"],
+        "tags": ["reason", "gpu"],
+        "isDebug": true,
+        "date": 1786723200
+      },
+      {
         "name": "(Preview) RWKV-VL-260625 1.5B (8 Elite)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8elite.rmpack",

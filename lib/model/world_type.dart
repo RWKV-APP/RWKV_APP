@@ -2,6 +2,7 @@ enum WorldType {
   modrwkvV2,
   modrwkvV3,
   fineVisionMax,
+  fineVisionMaxThinkingPreview,
   reasoningQA,
   ocr;
 
@@ -11,6 +12,7 @@ enum WorldType {
     modrwkvV2 => "Visual QA (🇨🇳 Chinese & 🇺🇸 English)",
     modrwkvV3 => "Visual QA (🇨🇳 Chinese & 🇺🇸 English)",
     fineVisionMax => "Visual QA (🇨🇳 Chinese & 🇺🇸 English)",
+    fineVisionMaxThinkingPreview => "Visual QA Thinking Preview · 260815 (🇨🇳 Chinese & 🇺🇸 English)",
   };
 
   String get taskDescription => switch (this) {
@@ -18,6 +20,7 @@ enum WorldType {
     modrwkvV2 => "Visual Question Answering",
     modrwkvV3 => "Visual Question Answering",
     fineVisionMax => "Visual Question Answering",
+    fineVisionMaxThinkingPreview => "Visual Question Answering (Thinking Preview)",
     ocr => "Visual + OCR",
   };
 
@@ -29,6 +32,7 @@ enum WorldType {
     reasoningQA => true,
     modrwkvV3 => true,
     fineVisionMax => true,
+    fineVisionMaxThinkingPreview => true,
     _ => false,
   };
 
@@ -37,6 +41,7 @@ enum WorldType {
     modrwkvV2 => false,
     modrwkvV3 => true,
     fineVisionMax => true,
+    fineVisionMaxThinkingPreview => true,
     ocr => false,
   };
 
@@ -79,6 +84,9 @@ enum WorldType {
       ("8 Gen 5", "rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen5.rmpack"),
       ("Dimensity 9300", "rwkv-vl-1.5v100m-finevisionmax-rwkv-MT6989.rmpack"),
       ("Dimensity 9500", "rwkv-vl-1.5v100m-finevisionmax-rwkv-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack"),
+    ],
+    fineVisionMaxThinkingPreview => [
+      ("", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-Q8_0.gguf"),
     ],
   };
 }

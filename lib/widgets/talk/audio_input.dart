@@ -68,6 +68,7 @@ class AudioInput extends ConsumerWidget {
         case WorldType.modrwkvV2:
         case WorldType.modrwkvV3:
         case WorldType.fineVisionMax:
+        case WorldType.fineVisionMaxThinkingPreview:
           shouldShow = false;
       }
     }
@@ -83,6 +84,7 @@ class AudioInput extends ConsumerWidget {
         case WorldType.modrwkvV2:
         case WorldType.modrwkvV3:
         case WorldType.fineVisionMax:
+        case WorldType.fineVisionMaxThinkingPreview:
           bottomMessage = "";
       }
     }

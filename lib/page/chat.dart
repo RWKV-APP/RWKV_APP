@@ -204,6 +204,7 @@ class _List extends ConsumerWidget {
       case WorldType.modrwkvV2:
       case WorldType.modrwkvV3:
       case WorldType.fineVisionMax:
+      case WorldType.fineVisionMaxThinkingPreview:
         if (messages.length == 1 && messages.first.type == model.MessageType.userImage) {
           bottom += 46;
         }

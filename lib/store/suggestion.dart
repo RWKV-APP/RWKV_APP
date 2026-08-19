@@ -176,6 +176,7 @@ class _Suggestion {
       case WorldType.modrwkvV2:
       case WorldType.modrwkvV3:
       case WorldType.fineVisionMax:
+      case WorldType.fineVisionMaxThinkingPreview:
         return shuffledList([...config.seeReasoningQa, ...config.seeOcr]).take(5).toList();
       case null:
         return [];
@@ -199,6 +200,7 @@ class _Suggestion {
       case WorldType.modrwkvV2:
       case WorldType.modrwkvV3:
       case WorldType.fineVisionMax:
+      case WorldType.fineVisionMaxThinkingPreview:
         return config.seeReasoningQa;
       case null:
         return [];
