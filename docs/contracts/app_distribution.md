@@ -24,25 +24,29 @@ remain explicit release actions rather than consequences of a local code change.
 
 ## SPEC-RWKV-APPLE-RELEASE-AUTH-GATE
 
-TestFlight automation defaults to App Store Connect API-key authentication.
-The key ID, issuer ID, and private-key path or content are runtime secrets; the
-private key stays outside Git and logs. External tester distribution requires
-an API key whose App Store Connect role permits build metadata and tester
-management.
+TestFlight release automation defaults to a foreground Apple ID
+preauthentication stage. Before changing a version, building an application,
+or uploading any release artifact, the lane starts a fresh, process-local
+Spaceship session and performs App Store Connect login. The stage does not
+read an IPA, build an IPA, invoke an upload action, or send any artifact to App
+Store Connect. If Apple requires two-factor verification, the trusted-device
+code is therefore requested and entered before the long-running release work.
+Apple remains the authority on whether a fresh login actually requires a code.
 
-When API-key configuration is absent or incomplete, `all`, `resume_upload`,
-`ios_upload`, and `ios_upload_to_testflight` must stop before starting an Apple
-login. They must not silently reuse an Apple ID session, request a trusted
-device code, send an SMS, or wait on an invisible prompt. The authentication
-preflight runs before build, upload, or other release effects that would make
-the operator wait for this decision.
+The default stage must run in a visible foreground TTY. It isolates the release
+from cached Spaceship cookies and `FASTLANE_SESSION`, disables automatic SMS
+selection, and retains the newly verified cookie only for the current Fastlane
+process. Later TestFlight work in that process reuses the verified session.
+The temporary cookie directory is private, is never printed, and is removed
+after the upload or when the process exits. Authentication failure stops the
+lane before any version, build, commit, push, or upload effect.
 
-An Apple ID login is an exceptional foreground path. It requires both the
-explicit `allow_interactive_apple_auth:true` option and the exact one-attempt
-acknowledgement printed by the preflight, plus an interactive terminal. One
-failed or expired attempt ends the lane; release automation never requests an
-SMS code or starts another Apple login automatically. Root reports the blocked
-state and waits for a fresh user instruction.
+App Store Connect API-key authentication remains an optional explicit mode for
+non-interactive operation. It is selected with `apple_auth_mode:api_key` or
+`RWKV_APPLE_AUTH_MODE=api_key`; only that mode requires the key ID, issuer ID,
+and private-key path or content. The private key remains outside Git and logs.
+Merely having API-key variables in the environment does not override the
+default Apple ID preauthentication path.
 
 Resume automation may provide a private version-bound TestFlight checkpoint.
 The checkpoint is written only after Fastlane finishes build processing and

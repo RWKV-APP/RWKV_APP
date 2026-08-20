@@ -189,6 +189,17 @@ Extreme, X2 Elite, and X2 Plus through the X2 Elite artifact. These rows replace
 the equivalent G1h Windows QNN slots. Their formal artifact publication and
 catalog visibility do not claim exact-device runtime or performance acceptance.
 
+An unpromoted Windows G1i 7.2B QNN test cohort may be exposed to those same
+Snapdragon X and X2 SoC groups through the online `latest.json` while its bytes
+remain in `HaloWang1991/rwkv-weights-tmp`. Each such row must use the exact
+anonymous HTTPS ModelScope resolve URL at a 40-hex immutable revision, stay
+under the `artifacts/` namespace, declare `availableIn: ["modelscope"]`, and
+match the independently verified byte size and SHA-256. The direct absolute URL
+intentionally bypasses the user's selected mirror for this ModelScope-only test
+cohort. Catalog publication remains pre-release visibility, not formal artifact
+promotion or device runtime acceptance; formal promotion replaces the row with
+the byte-identical source-selectable dual-repository URL.
+
 The current Android G1i MediaTek catalog exposes the 1.5B w8a16 NP7 artifact
 for Dimensity 9300 and the 1.5B w8a16 plus 2.9B w4a16 NP9 artifacts for
 Dimensity 9500. The Dimensity 9300 1.5B row replaces its equivalent G1h NP7

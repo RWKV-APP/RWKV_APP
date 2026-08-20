@@ -17,7 +17,7 @@ void main() {
     final mobileAppleRows = appleRows.where((entry) => entry['modelSize'] != 13.3).toList();
     final macOnly13bRows = appleRows.where((entry) => entry['modelSize'] == 13.3).toList();
 
-    expect(g1iRows, hasLength(40));
+    expect(g1iRows, hasLength(42));
     expect(appleRows, hasLength(12));
     expect(mobileAppleRows, hasLength(9));
     expect(macOnly13bRows, hasLength(3));
@@ -258,6 +258,43 @@ void main() {
 
       final replacedName = entry.key.replaceFirst('RWKV7-G1i', 'RWKV7-G1h');
       expect(rows.where((candidate) => candidate['name'] == replacedName), isEmpty);
+    }
+  });
+
+  test('G1i 7.2B Snapdragon X rows use the formal dual-repository path', () {
+    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+    final chat = json['chat'] as Map<String, dynamic>;
+    final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
+
+    const expectedRows = <String, Map<String, Object>>{
+      'RWKV7-G1i 7.2B (X Elite)': {
+        'fileSize': 4867481600,
+        'sha256': '9eb4d1e191bacb3a2998412ac4d4dbac4ec8199c15a4e9f4372635608ea95c0d',
+        'socs': <String>['X Elite', 'X Plus', 'X1'],
+      },
+      'RWKV7-G1i 7.2B (X2 Elite)': {
+        'fileSize': 4887171072,
+        'sha256': '9883f708d5c9675eb672de278a27ca588153ec61b39061ab2df88804f92f6549',
+        'socs': <String>['X2 Elite Extreme', 'X2 Elite', 'X2 Plus'],
+      },
+    };
+
+    for (final entry in expectedRows.entries) {
+      final row = rows.singleWhere((candidate) => candidate['name'] == entry.key);
+      expect(row['modelSize'], 7.2);
+      expect(row['quantization'], 'w4a16');
+      expect(row['platforms'], <String>['windows']);
+      expect(row['backends'], <String>['qnn']);
+      expect(row['tags'], containsAll(<String>['reason', 'npu', 'batch']));
+      expect(row['availableIn'], isNull);
+      expect(row['socLimitations'], entry.value['socs']);
+      expect(
+        row['url'],
+        startsWith('HaloWang/rwkv-weights/resolve/main/artifacts/'),
+      );
+      expect(row['url'], isNot(contains('rwkv-weights-tmp')));
+      expect(row['fileSize'], entry.value['fileSize']);
+      expect(row['sha256'], entry.value['sha256']);
     }
   });
 }

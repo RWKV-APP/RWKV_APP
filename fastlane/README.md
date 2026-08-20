@@ -1,62 +1,166 @@
-# RWKV App Fastlane Release Notes
+fastlane documentation
+----
 
-The `all` and `resume_upload` lanes can change versions, commit, push, upload
-artifacts, and reset the worktree. Run them only after reviewing the exact lane,
-Git state, credentials, and intended release destinations.
+# Installation
 
-## TestFlight authentication
+Make sure you have the latest version of the Xcode command line tools installed:
 
-Automated TestFlight lanes use an App Store Connect API key by default. Set
-`APP_STORE_CONNECT_KEY_ID`, `APP_STORE_CONNECT_ISSUER_ID`, and
-`APP_STORE_CONNECT_KEY_FILEPATH` in the runtime environment, with the `.p8`
-file stored outside this repository using mode `0600`.
-
-Run `fastlane ios_auth_preflight` to validate the local configuration without
-contacting Apple or sending a verification code. Missing API-key configuration
-stops `all`, `resume_upload`, `ios_upload`, and `ios_upload_to_testflight`
-before Apple ID authentication begins.
-
-Apple ID authentication is available only as an explicit one-attempt foreground
-operation. It requires `allow_interactive_apple_auth:true`, the exact
-acknowledgement named by the preflight error, and an interactive terminal. Do
-not use this mode in a background or redirected release process.
-
-For Resume work, pass a private `testflight_checkpoint_path`. A successful
-TestFlight upload and tester distribution writes a mode-`0600` checkpoint for
-the exact `version+build`; a matching checkpoint skips TestFlight on a later
-Resume without starting another Apple authentication session.
-
-## ModelScope App distribution
-
-Android APK and macOS DMG publication mirrors the Hugging Face dataset layout:
-
-- Android: `android-arm64/<artifact-name>.apk`
-- macOS: `macos-universal/<artifact-name>.dmg`
-
-Configure these values in the runtime environment or secret manager:
-
-```text
-MODELSCOPE_API_TOKEN=<write-capable token>
-MODELSCOPE_REPO_ID=HaloWang1991/rwkv-chat
-MODELSCOPE_ENDPOINT=https://modelscope.cn
-MODELSCOPE_REVISION=master
+```sh
+xcode-select --install
 ```
 
-The target is a public ModelScope `dataset` repository. It must exist before a
-release lane runs. Repository creation is a separate, explicit release action:
+For _fastlane_ installation instructions, see [Installing _fastlane_](https://docs.fastlane.tools/#installing-fastlane)
 
-```bash
-ms-hub create HaloWang1991/rwkv-chat \
-  --repo-type dataset \
-  --visibility public \
-  --description "RWKV Chat application release packages"
+# Available Actions
+
+### all
+
+```sh
+[bundle exec] fastlane all
 ```
 
-The custom `modelscope` action delegates to
-`scripts/upload_to_modelscope.py`, keeps the token in the process environment,
-and does not place it on the command line. When the token is absent, the normal
-Android and macOS lanes skip ModelScope while preserving the existing release
-channels.
 
-After the first upload, verify the dataset file tree and an anonymous resolve
-URL before enabling or deploying the ModelScope source in `app_website`.
+
+### ios_upload
+
+```sh
+[bundle exec] fastlane ios_upload
+```
+
+Preauthenticate with Apple ID before building, then build and upload an IPA; API-key mode is optional
+
+### ios_upload_to_testflight
+
+```sh
+[bundle exec] fastlane ios_upload_to_testflight
+```
+
+Preauthenticate with Apple ID, then upload an existing IPA; API-key mode is optional
+
+### ios_auth_preflight
+
+```sh
+[bundle exec] fastlane ios_auth_preflight
+```
+
+Authenticate to App Store Connect without building or uploading an artifact
+
+### global_replace
+
+```sh
+[bundle exec] fastlane global_replace
+```
+
+
+
+### switch_env
+
+```sh
+[bundle exec] fastlane switch_env
+```
+
+
+
+### test
+
+```sh
+[bundle exec] fastlane test
+```
+
+
+
+### lint
+
+```sh
+[bundle exec] fastlane lint
+```
+
+
+
+### bump_version_and_build_number
+
+```sh
+[bundle exec] fastlane bump_version_and_build_number
+```
+
+
+
+### dart_fix
+
+```sh
+[bundle exec] fastlane dart_fix
+```
+
+
+
+### sort_imports
+
+```sh
+[bundle exec] fastlane sort_imports
+```
+
+
+
+### git_reset
+
+```sh
+[bundle exec] fastlane git_reset
+```
+
+
+
+### build_assets
+
+```sh
+[bundle exec] fastlane build_assets
+```
+
+
+
+### android_play_store
+
+```sh
+[bundle exec] fastlane android_play_store
+```
+
+
+
+### macos_build_and_upload
+
+```sh
+[bundle exec] fastlane macos_build_and_upload
+```
+
+
+
+### test_huggingface
+
+```sh
+[bundle exec] fastlane test_huggingface
+```
+
+
+
+### resume_upload
+
+```sh
+[bundle exec] fastlane resume_upload
+```
+
+Resume remaining release stages after no-artifact Apple preauthentication, with an optional version checkpoint
+
+### test_macos_dmg
+
+```sh
+[bundle exec] fastlane test_macos_dmg
+```
+
+
+
+----
+
+This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
+
+More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).
+
+The documentation of _fastlane_ can be found on [docs.fastlane.tools](https://docs.fastlane.tools).

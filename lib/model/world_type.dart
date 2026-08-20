@@ -87,6 +87,23 @@ enum WorldType {
     ],
     fineVisionMaxThinkingPreview => [
       ("", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-Q8_0.gguf"),
+      ("8 Elite", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-8elite.rmpack"),
+      ("8 Elite Gen5", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-8elitegen5.rmpack"),
+      ("8 Gen 5", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-8gen5.rmpack"),
+      ("8 Gen 2", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-8gen2.rmpack"),
+      ("8 Gen 3", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-8gen3.rmpack"),
+      ("8s Gen 3", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-8sgen3.rmpack"),
+      ("X Elite", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-xelite-nocustomop.rmpack"),
+      ("X Plus", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-xelite-nocustomop.rmpack"),
+      ("X1", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-xelite-nocustomop.rmpack"),
+      ("X2 Elite Extreme", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-x2elite-nocustomop.rmpack"),
+      ("X2 Elite", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-x2elite-nocustomop.rmpack"),
+      ("X2 Plus", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-x2elite-nocustomop.rmpack"),
+      ("Dimensity 9300", "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-MT6989.rmpack"),
+      (
+        "Dimensity 9500",
+        "rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-mt6993-np9-sdk9.0.10-a16w8-prefill16-batch.rmpack",
+      ),
     ],
   };
 }

@@ -20,7 +20,7 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_download_source.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/folder.dart';
-import 'package:zone/model/world_type.dart';
+import 'package:zone/model/model_weight_sort.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
@@ -293,20 +293,14 @@ class _ModelsInConfigFile extends ConsumerWidget {
     final shouldShowNpuHint =
         Platform.isAndroid && !inTranslator && !inBenchmark && !rolePlayOnly && !hasNpuModel && availableModels.isNotEmpty;
 
-    final displayModels = availableModels.where((e) => showNeko == e.isNeko).sorted(_compare);
+    final displayModels = availableModels.where((e) => showNeko == e.isNeko).sorted(compareModelWeights);
 
     final items = switch (preferredDemoType) {
-      .see =>
-        WorldType.values
-            .where((e) => e.available)
-            .expand(
-              (e) => e.socPairs
-                  .where((pair) => pair.$1.isEmpty || pair.$1 == P.rwkvBackend.socName.q)
-                  .sortedBy<num>((pair) => -pair.$1.length)
-                  .map((pair) => WorldGroupItem(e, socPair: pair)),
-            )
-            .toList(),
-      .tts => ttsCores.sorted(_compare).map((fileInfo) => TTSGroupItem(fileInfo)).toList(),
+      .see => sortedWorldModelSelections(
+        availableModels: availableModels,
+        socName: P.rwkvBackend.socName.q,
+      ).map((selection) => WorldGroupItem(selection.worldType, socPair: selection.socPair)).toList(),
+      .tts => ttsCores.sorted(compareModelWeights).map((fileInfo) => TTSGroupItem(fileInfo)).toList(),
       .chat => _modelItemsWithNpuRecommendationDivider(
         displayModels: displayModels,
         showTags: userType.isGreaterThan(.user),
@@ -377,33 +371,6 @@ class _ModelsInConfigFile extends ConsumerWidget {
     }
 
     return items;
-  }
-
-  /// 根据专有加速进行排序
-  ///
-  /// 只要没用 CPU 就排前面
-  int _compare(FileInfo a, FileInfo b) {
-    final aHasCoreML = a.hasEffectiveTag("coreml");
-    final bHasCoreML = b.hasEffectiveTag("coreml");
-    if (aHasCoreML != bHasCoreML) return aHasCoreML ? -1 : 1;
-
-    final aHasMLX = a.hasEffectiveTag("mlx");
-    final bHasMLX = b.hasEffectiveTag("mlx");
-    if (aHasMLX != bHasMLX) return aHasMLX ? -1 : 1;
-
-    final aHasNpu = a.hasEffectiveTag("npu");
-    final bHasNpu = b.hasEffectiveTag("npu");
-    if (aHasNpu != bHasNpu) return aHasNpu ? -1 : 1;
-
-    final aHasGpu = a.hasEffectiveTag("gpu");
-    final bHasGpu = b.hasEffectiveTag("gpu");
-    if (aHasGpu != bHasGpu) return aHasGpu ? -1 : 1;
-
-    final aHasWebRWKV = a.hasEffectiveTag("webRwkv");
-    final bHasWebRWKV = b.hasEffectiveTag("webRwkv");
-    if (aHasWebRWKV != bHasWebRWKV) return aHasWebRWKV ? -1 : 1;
-
-    return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
   }
 }
 

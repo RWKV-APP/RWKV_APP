@@ -91,9 +91,8 @@ def ios_resolve_app_store_connect_context(params = {})
   api_key_configured = !key_id.nil? || !issuer_id.nil? || !key_filepath.nil? || !key_content.nil?
   begin
     auth_mode = RwkvAppleAuthGate.resolve(
+      requested_mode: params[:apple_auth_mode] || fastlane_env_value('RWKV_APPLE_AUTH_MODE'),
       api_key_configured: api_key_configured,
-      allow_interactive: params[:allow_interactive_apple_auth] == true,
-      acknowledgement: params[:interactive_apple_auth_acknowledgement].to_s,
       stdin_tty: $stdin.tty?,
       stdout_tty: $stdout.tty?,
     )
@@ -101,13 +100,11 @@ def ios_resolve_app_store_connect_context(params = {})
     UI.user_error!(error.message)
   end
 
-  if auth_mode == :interactive_once
-    ENV['SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA'] = 'true'
-    UI.important('允许一次可见的 Apple ID 认证尝试；失败后流程停止且不会自动重试')
-    UI.important('Root 自动化不得输入 sms 或再次请求验证码，除非用户在本次交互中明确要求')
+  if auth_mode == :apple_id_preauthentication
     return {
       api_key: nil,
       mode: auth_mode,
+      session_environment: RwkvAppleAuthGate.fresh_session_environment,
       cleanup_dir: nil,
     }
   end
@@ -158,21 +155,87 @@ def ios_resolve_app_store_connect_context(params = {})
   }
 end
 
+def ios_apple_id_login_identity
+  require 'credentials_manager/appfile_config'
+
+  username = fastlane_env_value('FASTLANE_USER', 'APPLE_ID_EMAIL')
+  username ||= CredentialsManager::AppfileConfig.try_fetch_value(:apple_id)
+  if username.nil?
+    UI.user_error!('apple_auth_username_required: 缺少 FASTLANE_USER、APPLE_ID_EMAIL 或 Appfile apple_id')
+  end
+
+  tunes_team_id = fastlane_env_value('FASTLANE_ITC_TEAM_ID')
+  tunes_team_id ||= CredentialsManager::AppfileConfig.try_fetch_value(:itc_team_id)
+
+  {
+    username: username,
+    tunes_team_id: tunes_team_id,
+  }
+end
+
+def ios_preauthenticate_with_apple_id(context)
+  return context unless context[:mode] == :apple_id_preauthentication
+
+  active_environment = RwkvAppleAuthGate.fresh_session_environment
+  unless active_environment.nil?
+    context[:session_environment] = active_environment
+    UI.message('复用本次 Fastlane 进程中已经完成的 Apple ID 预认证')
+    return context
+  end
+
+  session_environment = RwkvAppleAuthGate.start_fresh_session_environment
+  context[:session_environment] = session_environment
+  identity = ios_apple_id_login_identity
+
+  UI.header('发布前 Apple ID 预认证')
+  UI.important('现在向 Apple 发起全新登录；如 Apple 要求验证码，请在当前可见终端完成')
+  UI.important('此阶段不会构建、读取或上传 IPA，也不会自动选择 SMS')
+
+  require 'spaceship'
+
+  Spaceship::Tunes.client = nil
+  Spaceship::ConnectAPI.client = nil
+  Spaceship::ConnectAPI.login(
+    identity[:username],
+    nil,
+    use_portal: false,
+    use_tunes: true,
+    tunes_team_id: identity[:tunes_team_id],
+  )
+  session_environment.secure_cookie_files
+  UI.success('Apple ID 预认证完成；现在才允许继续后续发布阶段')
+  context
+rescue => error
+  RwkvAppleAuthGate.finish_fresh_session_environment
+  UI.user_error!("apple_id_preauthentication_failed: #{error.message}")
+end
+
 def ios_cleanup_app_store_connect_context(context)
   return if context.nil?
-  return if context[:cleanup_dir].nil?
-  return unless Dir.exist?(context[:cleanup_dir])
 
-  require 'fileutils'
+  unless context[:cleanup_dir].nil?
+    if Dir.exist?(context[:cleanup_dir])
+      require 'fileutils'
 
-  FileUtils.rm_rf(context[:cleanup_dir])
+      FileUtils.rm_rf(context[:cleanup_dir])
+    end
+  end
+
+  if context[:mode] == :apple_id_preauthentication
+    RwkvAppleAuthGate.finish_fresh_session_environment
+  end
 end
 
 def ios_preflight_app_store_connect_auth(params)
   context = ios_resolve_app_store_connect_context(params)
+  if context[:mode] == :apple_id_preauthentication
+    ios_preauthenticate_with_apple_id(context)
+  else
+    UI.message('显式使用 App Store Connect API key；不会触发 Apple ID 验证码')
+    ios_cleanup_app_store_connect_context(context)
+  end
   UI.message("Apple authentication preflight: #{context[:mode]}")
-ensure
-  ios_cleanup_app_store_connect_context(context)
+  context
 end
 
 def ios_testflight_checkpoint_complete?(path, version)
@@ -213,8 +276,7 @@ lane :all do |params|
       upload_retry_count: upload_retry_count,
       upload_timeout_seconds: upload_timeout_seconds,
       upload_to_testflight: upload_to_testflight,
-      allow_interactive_apple_auth: params[:allow_interactive_apple_auth],
-      interactive_apple_auth_acknowledgement: params[:interactive_apple_auth_acknowledgement],
+      apple_auth_mode: params[:apple_auth_mode],
       testflight_checkpoint_path: params[:testflight_checkpoint_path],
       skip_git_reset: skip_git_reset,
     )
@@ -324,8 +386,7 @@ lane :all do |params|
     else
       ios_upload(
         groups: ['External'],
-        allow_interactive_apple_auth: params[:allow_interactive_apple_auth],
-        interactive_apple_auth_acknowledgement: params[:interactive_apple_auth_acknowledgement],
+        apple_auth_mode: params[:apple_auth_mode],
       )
       RwkvAppleAuthGate.write_checkpoint(
         path: testflight_checkpoint_path,
@@ -339,12 +400,15 @@ lane :all do |params|
   end
 end
 
-desc 'Build an IPA and upload it using API-key authentication by default'
+desc 'Preauthenticate with Apple ID before building, then build and upload an IPA; API-key mode is optional'
 lane :ios_upload do |params|
+  ios_preflight_app_store_connect_auth(params)
   app_store_connect_context = ios_resolve_app_store_connect_context(params)
 
   if app_store_connect_context[:mode] == :api_key
     UI.message('使用 App Store Connect API key 执行 TestFlight 上传')
+  else
+    UI.message('使用本次发布开始时验证的 Apple ID 会话执行 TestFlight 上传')
   end
 
   begin
@@ -360,8 +424,9 @@ lane :ios_upload do |params|
   end
 end
 
-desc 'Upload an existing IPA using API-key authentication by default'
+desc 'Preauthenticate with Apple ID, then upload an existing IPA; API-key mode is optional'
 lane :ios_upload_to_testflight do |params|
+  ios_preflight_app_store_connect_auth(params)
   app_store_connect_context = ios_resolve_app_store_connect_context(params)
 
   begin
@@ -376,10 +441,12 @@ lane :ios_upload_to_testflight do |params|
   end
 end
 
-desc 'Validate TestFlight authentication without contacting Apple or sending a verification code'
+desc 'Authenticate to App Store Connect without building or uploading an artifact'
 lane :ios_auth_preflight do |params|
-  ios_preflight_app_store_connect_auth(params)
-  UI.success('Apple authentication preflight passed; no Apple login request was sent')
+  context = ios_preflight_app_store_connect_auth(params)
+  UI.success('Apple authentication preflight passed; no artifact was built or uploaded')
+ensure
+  ios_cleanup_app_store_connect_context(context)
 end
 
 lane :global_replace do |params|
@@ -651,7 +718,7 @@ end
 #  🚑 紧急恢复专用 Lane
 #  用于 all lane 构建成功但在上传阶段失败时，从上传 APK 开始继续执行
 # -----------------------------------------------------------------------
-desc 'Resume remaining release stages with fail-fast Apple authentication and an optional version checkpoint'
+desc 'Resume remaining release stages after no-artifact Apple preauthentication, with an optional version checkpoint'
 lane :resume_upload do |params|
   run_android = params[:run_android] == false ? false : true
   upload_to_pgyer = params[:upload_to_pgyer] == true ? true : false
@@ -785,8 +852,7 @@ lane :resume_upload do |params|
     else
       ios_upload(
         groups: ['External'],
-        allow_interactive_apple_auth: params[:allow_interactive_apple_auth],
-        interactive_apple_auth_acknowledgement: params[:interactive_apple_auth_acknowledgement],
+        apple_auth_mode: params[:apple_auth_mode],
       )
       RwkvAppleAuthGate.write_checkpoint(
         path: testflight_checkpoint_path,

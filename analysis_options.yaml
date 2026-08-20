@@ -24,6 +24,12 @@ analyzer:
     - packages/local_web_search/**
     - rwkv_mobile_flutter/**
     - tools/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
   plugins:
     # - custom_lint
   errors:

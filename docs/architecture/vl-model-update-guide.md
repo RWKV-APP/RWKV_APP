@@ -59,6 +59,23 @@ VL 模型选择列表没有直接遍历 `latest.json` 中所有可用的 `world`
 4. `WorldGroupItem` 使用 `FileInfo.worldType` 和核心权重文件名筛选模型及其 encoder、adapter 依赖
 5. 两处映射和远程配置同时匹配时，VL 模型才会显示
 
+## 模型选择器统一排序
+
+VL 模型选择器必须沿用 Chat 模型选择器的同一个核心权重 comparator，不能维护
+另一套独立优先级。完成当前平台和 SoC 过滤后，每个 `WorldType + socPair`
+展示项先通过核心权重文件名解析为 `FileInfo`，再按下列顺序排列：
+
+1. Core ML
+2. MLX
+3. NPU
+4. GPU
+5. WebRWKV
+6. 同类权重按 `modelSize` 从大到小
+
+同一 comparator 也继续用于 Chat 和 TTS。以后调整加速后端或模型大小优先级时，
+三个选择器必须同时生效，不能只修改其中一个分支。VL 的 SoC 过滤规则保持不变；
+`remote/latest.json` 中 `world.model_config` 的书写顺序不构成展示排序规则。
+
 ## 可配置 Thinking 能力
 
 `thinking` 是 VL 模型组支持用户切换思考模式的能力标签，不是所有 VL
@@ -139,8 +156,8 @@ VL 文件名和 SoC 映射位于 App 代码中，远程更新 `latest.json` 不�
 
 ```bash
 jq empty remote/latest.json
-flutter test test/world_type_test.dart test/vl_thinking_capability_test.dart
-dart analyze lib/model/world_type.dart lib/model/file_info.dart lib/func/thinking_prefix.dart lib/store/rwkv_params.dart lib/page/see.dart lib/widgets/input_interactions.dart lib/widgets/see/floating_suggestions.dart lib/widgets/suggestion_chips.dart lib/widgets/chat/thinking_mode_button.dart lib/widgets/world_group_item.dart lib/widgets/model_tag.dart test/world_type_test.dart test/vl_thinking_capability_test.dart
+flutter test test/model_weight_sort_test.dart test/world_type_test.dart test/vl_thinking_capability_test.dart
+dart analyze lib/model/model_weight_sort.dart lib/model/world_type.dart lib/model/file_info.dart lib/func/thinking_prefix.dart lib/store/rwkv_params.dart lib/page/see.dart lib/widgets/model_selector.dart lib/widgets/input_interactions.dart lib/widgets/see/floating_suggestions.dart lib/widgets/suggestion_chips.dart lib/widgets/chat/thinking_mode_button.dart lib/widgets/world_group_item.dart lib/widgets/model_tag.dart test/model_weight_sort_test.dart test/world_type_test.dart test/vl_thinking_capability_test.dart
 dart run tools/bin/agent_check.dart --rules-only
 ```
 
@@ -152,6 +169,7 @@ dart run tools/bin/agent_check.dart --rules-only
 
 - `P.rwkvBackend.socName.q` 与 `socLimitations`、`socPairs` 使用相同字符串
 - VL 模型出现在 See 页模型选择器中
+- VL 模型与 Chat 使用相同的加速后端和模型大小优先级；当前 SoC 的专用核心权重与通用核心权重都位于正确排序位置
 - 支持切换的 VL 模型卡片显示独立 `Thinking` 标签，不支持切换的卡片不显示
 - 下载分组同时包含核心权重、encoder 和 adapter
 - 下载完成后能够加载模型并开始视觉对话

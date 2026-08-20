@@ -1,9 +1,91 @@
 # frozen_string_literal: true
 
 module RwkvAppleAuthGate
-  INTERACTIVE_ACKNOWLEDGEMENT = 'ALLOW_ONE_INTERACTIVE_APPLE_AUTH_ATTEMPT'
+  APPLE_ID_MODE = 'apple_id'
+  API_KEY_MODE = 'api_key'
+  SESSION_ENV_KEYS = %w[
+    SPACESHIP_COOKIE_PATH
+    FASTLANE_SESSION
+    SPACESHIP_SESSION
+    SPACESHIP_2FA_SMS_DEFAULT_PHONE_NUMBER
+    SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA
+  ].freeze
 
   class GateError < StandardError; end
+
+  class FreshSessionEnvironment
+    attr_reader :root
+
+    def initialize(env: ENV)
+      @env = env
+      @original_values = {}
+      @active = false
+    end
+
+    def active?
+      @active
+    end
+
+    def activate
+      return self if active?
+
+      require 'tmpdir'
+
+      @root = Dir.mktmpdir('rwkv_apple_auth_session')
+      SESSION_ENV_KEYS.each do |key|
+        @original_values[key] = @env.key?(key) ? [:present, @env[key]] : [:absent, nil]
+      end
+
+      @env['SPACESHIP_COOKIE_PATH'] = @root
+      @env.delete('FASTLANE_SESSION')
+      @env.delete('SPACESHIP_SESSION')
+      @env.delete('SPACESHIP_2FA_SMS_DEFAULT_PHONE_NUMBER')
+      @env['SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA'] = 'true'
+      @active = true
+      self
+    rescue
+      cleanup
+      raise
+    end
+
+    def secure_cookie_files
+      return unless active?
+
+      Dir.glob(File.join(@root, 'spaceship', '**', 'cookie')).each do |path|
+        File.chmod(0o600, path) if File.file?(path)
+      end
+    end
+
+    def cleanup
+      SESSION_ENV_KEYS.each do |key|
+        original = @original_values[key]
+        next if original.nil?
+
+        if original.first == :present
+          @env[key] = original.last
+        else
+          @env.delete(key)
+        end
+      end
+
+      if !@root.nil? && Dir.exist?(@root)
+        require 'fileutils'
+
+        expanded_root = File.expand_path(@root)
+        temporary_root = File.expand_path(Dir.tmpdir)
+        unless File.dirname(expanded_root) == temporary_root &&
+               File.basename(expanded_root).start_with?('rwkv_apple_auth_session')
+          raise GateError, "apple_auth_session_cleanup_refused: 非预期临时目录 #{expanded_root}"
+        end
+
+        FileUtils.remove_entry(expanded_root)
+      end
+
+      @active = false
+      @root = nil
+      self
+    end
+  end
 
   def self.checkpoint_complete?(path:, version:)
     return false if path.nil? || path.to_s.strip.empty?
@@ -47,27 +129,49 @@ module RwkvAppleAuthGate
     File.delete(temporary_path) if defined?(temporary_path) && File.exist?(temporary_path)
   end
 
-  def self.resolve(api_key_configured:, allow_interactive:, acknowledgement:, stdin_tty:, stdout_tty:)
-    return :api_key if api_key_configured
+  def self.resolve(requested_mode:, api_key_configured:, stdin_tty:, stdout_tty:)
+    normalized_mode = requested_mode.to_s.strip.downcase.tr('-', '_')
+    normalized_mode = APPLE_ID_MODE if normalized_mode.empty?
 
-    unless allow_interactive
+    case normalized_mode
+    when APPLE_ID_MODE
+      unless stdin_tty && stdout_tty
+        raise GateError,
+              'apple_auth_tty_required: 默认 Apple ID 预认证只能在可见的交互式终端运行；' \
+              '后台任务必须显式选择 api_key，且不会在此错误路径联系 Apple'
+      end
+
+      :apple_id_preauthentication
+    when API_KEY_MODE
+      unless api_key_configured
+        raise GateError,
+              'apple_auth_api_key_required: 已显式选择 api_key，但没有配置 App Store Connect API key'
+      end
+
+      :api_key
+    else
       raise GateError,
-            'apple_auth_preflight_required: TestFlight 默认只允许 App Store Connect API key；' \
-            '未向 Apple 发起登录，也不会发送验证码'
+            "apple_auth_mode_invalid: #{requested_mode.inspect}；可选值为 apple_id 或 api_key"
     end
+  end
 
-    unless acknowledgement == INTERACTIVE_ACKNOWLEDGEMENT
-      raise GateError,
-            "apple_auth_acknowledgement_required: 人工认证必须显式传入 " \
-            "interactive_apple_auth_acknowledgement:#{INTERACTIVE_ACKNOWLEDGEMENT}"
-    end
+  def self.start_fresh_session_environment
+    return @fresh_session_environment if @fresh_session_environment&.active?
 
-    unless stdin_tty && stdout_tty
-      raise GateError,
-            'apple_auth_tty_required: 人工 Apple 认证只能在可见的交互式终端运行；' \
-            '后台任务和重定向日志不得触发验证码'
-    end
+    @fresh_session_environment = FreshSessionEnvironment.new.activate
+    at_exit { finish_fresh_session_environment }
+    @fresh_session_environment
+  end
 
-    :interactive_once
+  def self.fresh_session_environment
+    return nil unless @fresh_session_environment&.active?
+
+    @fresh_session_environment
+  end
+
+  def self.finish_fresh_session_environment
+    @fresh_session_environment&.cleanup
+  ensure
+    @fresh_session_environment = nil
   end
 end
