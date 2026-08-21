@@ -1,4 +1,5 @@
 require_relative '../tools/fastlane/apple_auth_gate'
+require_relative '../tools/fastlane/release_git_staging'
 
 def fastlane_env_value(*keys)
   keys.each do |key|
@@ -254,9 +255,9 @@ lane :all do |params|
   if upload_retry_count < 1
     upload_retry_count = 100
   end
-  upload_timeout_seconds = (params[:upload_timeout_seconds] || 1200).to_i
+  upload_timeout_seconds = (params[:upload_timeout_seconds] || 300).to_i
   if upload_timeout_seconds < 30
-    upload_timeout_seconds = 1200
+    upload_timeout_seconds = 300
   end
 
   resume_upload_only = params[:resume_upload] == true ? true : false
@@ -300,7 +301,16 @@ lane :all do |params|
   pubspec = YAML.load_file(File.join(project_root, 'pubspec.yaml'))
   full_version = pubspec['version']
   if env == 'chat'
-    git_commit(message: version_number.to_s + '(' + build_number.to_s + ')', path: ['*', '.github/workflows'])
+    staged_release_paths = RwkvReleaseGitStaging.stage!(project_root: project_root)
+    UI.message("Release source staged: #{staged_release_paths.length} path(s); generated artwork remains local")
+    sh(
+      'git',
+      '-C',
+      project_root,
+      'commit',
+      '-m',
+      version_number.to_s + '(' + build_number.to_s + ')',
+    )
     # Push changes to remote repository
     push_to_git_remote()
   end
@@ -524,9 +534,9 @@ lane :macos_build_and_upload do |params|
   if upload_retry_count < 1
     upload_retry_count = 100
   end
-  upload_timeout_seconds = (params[:upload_timeout_seconds] || 1200).to_i
+  upload_timeout_seconds = (params[:upload_timeout_seconds] || 300).to_i
   if upload_timeout_seconds < 30
-    upload_timeout_seconds = 1200
+    upload_timeout_seconds = 300
   end
 
   # 1. 基础信息准备
@@ -729,9 +739,9 @@ lane :resume_upload do |params|
   if upload_retry_count < 1
     upload_retry_count = 100
   end
-  upload_timeout_seconds = (params[:upload_timeout_seconds] || 1200).to_i
+  upload_timeout_seconds = (params[:upload_timeout_seconds] || 300).to_i
   if upload_timeout_seconds < 30
-    upload_timeout_seconds = 1200
+    upload_timeout_seconds = 300
   end
   upload_to_testflight_flag = params[:upload_to_testflight] == false ? false : true
 

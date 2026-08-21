@@ -7,7 +7,7 @@ module Fastlane
     class GithubReleaseAction < Action
       DEFAULT_GH_COMMAND_TIMEOUT_SECONDS = 60
       DEFAULT_GH_CREATE_TIMEOUT_SECONDS = 180
-      DEFAULT_UPLOAD_TIMEOUT_SECONDS = 1200
+      DEFAULT_UPLOAD_TIMEOUT_SECONDS = 300
 
       def self.run(params)
         UI.message("The github_release plugin is working.")

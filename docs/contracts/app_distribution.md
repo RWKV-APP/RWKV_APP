@@ -16,6 +16,12 @@ GitHub Actions owns Linux and Windows package publication. Fastlane owns Android
 APK and macOS DMG publication. Authentication tokens are supplied only through
 runtime secrets and must never be written to tracked files or command output.
 
+Before Fastlane creates and pushes a release tag, its release commit must include
+every changed or untracked source file needed by a clean checkout. Generated
+release artwork remains local and is excluded from that commit. A clean checkout
+of the tag must therefore contain every imported source file before GitHub
+Actions starts Linux or Windows packaging.
+
 The public download website is owned by `app_website`. It may advertise a
 ModelScope source only after the corresponding dataset file is visible through
 the provider's anonymous file-tree and resolve surfaces. Creating the remote
