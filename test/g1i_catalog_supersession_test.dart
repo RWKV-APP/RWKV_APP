@@ -106,7 +106,7 @@ void main() {
     for (final soc in <String>['8 Gen 3', '8s Gen 3']) {
       final g1i = rows.singleWhere((entry) => entry['name'] == 'RWKV7-G1i 7.2B ($soc)');
       expect(g1i['modelSize'], 7.2);
-      expect(g1i['quantization'], 'w4a16');
+      expect(g1i['quantization'], 'W4');
       expect(g1i['platforms'], <String>['android']);
       expect(g1i['backends'], <String>['qnn']);
       expect(g1i['tags'], containsAll(<String>['reason', 'npu']));
@@ -130,7 +130,7 @@ void main() {
       final sizeLabel = modelSize.toStringAsFixed(1);
       final g1i = rows.singleWhere((entry) => entry['name'] == 'RWKV7-G1i ${sizeLabel}B (MLX)');
       expect(g1i['modelSize'], modelSize);
-      expect(g1i['quantization'], 'INT6');
+      expect(g1i['quantization'], 'W6');
       expect(g1i['backends'], <String>['mlx']);
       expect(g1i['platforms'], contains('macos'));
       expect(g1i['url'], startsWith('HaloWang/rwkv-weights/resolve/main/'));
@@ -149,23 +149,23 @@ void main() {
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
     const expectedRows = <String, Map<String, Object>>{
-      'RWKV7-G1i 1.5B (8 Elite Gen5)': {'modelSize': 1.5, 'quantization': 'w8a16', 'soc': '8 Elite Gen5'},
-      'RWKV7-G1i 1.5B (8 Gen 5)': {'modelSize': 1.5, 'quantization': 'w8a16', 'soc': '8 Gen 5'},
-      'RWKV7-G1i 1.5B (8 Elite)': {'modelSize': 1.5, 'quantization': 'w8a16', 'soc': '8 Elite'},
-      'RWKV7-G1i 1.5B (8s Gen 3)': {'modelSize': 1.5, 'quantization': 'w8a16', 'soc': '8s Gen 3'},
-      'RWKV7-G1i 1.5B (7+ Gen 3)': {'modelSize': 1.5, 'quantization': 'w8a16', 'soc': '7+ Gen 3'},
-      'RWKV7-G1i 1.5B (8 Gen 2)': {'modelSize': 1.5, 'quantization': 'w8a16', 'soc': '8 Gen 2'},
-      'RWKV7-G1i 1.5B (8+ Gen 1)': {'modelSize': 1.5, 'quantization': 'w8a16', 'soc': '8+ Gen 1'},
-      'RWKV7-G1i 1.5B (888)': {'modelSize': 1.5, 'quantization': 'w8a16', 'soc': '888'},
-      'RWKV7-G1i 1.5B (778)': {'modelSize': 1.5, 'quantization': 'w8a16', 'soc': '778'},
-      'RWKV7-G1i 2.9B (8 Elite Gen5)': {'modelSize': 2.9, 'quantization': 'w4a16', 'soc': '8 Elite Gen5'},
-      'RWKV7-G1i 2.9B (8 Gen 5)': {'modelSize': 2.9, 'quantization': 'w4a16', 'soc': '8 Gen 5'},
-      'RWKV7-G1i 2.9B (8 Elite)': {'modelSize': 2.9, 'quantization': 'w4a16', 'soc': '8 Elite'},
-      'RWKV7-G1i 2.9B (8s Gen 3)': {'modelSize': 2.9, 'quantization': 'w4a16', 'soc': '8s Gen 3'},
-      'RWKV7-G1i 2.9B (7+ Gen 3)': {'modelSize': 2.9, 'quantization': 'w4a16', 'soc': '7+ Gen 3'},
-      'RWKV7-G1i 2.9B (8 Gen 2)': {'modelSize': 2.9, 'quantization': 'w4a16', 'soc': '8 Gen 2'},
-      'RWKV7-G1i 2.9B (8+ Gen 1)': {'modelSize': 2.9, 'quantization': 'w4a16', 'soc': '8+ Gen 1'},
-      'RWKV7-G1i 2.9B (888)': {'modelSize': 2.9, 'quantization': 'w4a16', 'soc': '888'},
+      'RWKV7-G1i 1.5B (8 Elite Gen5)': {'modelSize': 1.5, 'quantization': 'W8', 'soc': '8 Elite Gen5'},
+      'RWKV7-G1i 1.5B (8 Gen 5)': {'modelSize': 1.5, 'quantization': 'W8', 'soc': '8 Gen 5'},
+      'RWKV7-G1i 1.5B (8 Elite)': {'modelSize': 1.5, 'quantization': 'W8', 'soc': '8 Elite'},
+      'RWKV7-G1i 1.5B (8s Gen 3)': {'modelSize': 1.5, 'quantization': 'W8', 'soc': '8s Gen 3'},
+      'RWKV7-G1i 1.5B (7+ Gen 3)': {'modelSize': 1.5, 'quantization': 'W8', 'soc': '7+ Gen 3'},
+      'RWKV7-G1i 1.5B (8 Gen 2)': {'modelSize': 1.5, 'quantization': 'W8', 'soc': '8 Gen 2'},
+      'RWKV7-G1i 1.5B (8+ Gen 1)': {'modelSize': 1.5, 'quantization': 'W8', 'soc': '8+ Gen 1'},
+      'RWKV7-G1i 1.5B (888)': {'modelSize': 1.5, 'quantization': 'W8', 'soc': '888'},
+      'RWKV7-G1i 1.5B (778)': {'modelSize': 1.5, 'quantization': 'W8', 'soc': '778'},
+      'RWKV7-G1i 2.9B (8 Elite Gen5)': {'modelSize': 2.9, 'quantization': 'W4', 'soc': '8 Elite Gen5'},
+      'RWKV7-G1i 2.9B (8 Gen 5)': {'modelSize': 2.9, 'quantization': 'W4', 'soc': '8 Gen 5'},
+      'RWKV7-G1i 2.9B (8 Elite)': {'modelSize': 2.9, 'quantization': 'W4', 'soc': '8 Elite'},
+      'RWKV7-G1i 2.9B (8s Gen 3)': {'modelSize': 2.9, 'quantization': 'W4', 'soc': '8s Gen 3'},
+      'RWKV7-G1i 2.9B (7+ Gen 3)': {'modelSize': 2.9, 'quantization': 'W4', 'soc': '7+ Gen 3'},
+      'RWKV7-G1i 2.9B (8 Gen 2)': {'modelSize': 2.9, 'quantization': 'W4', 'soc': '8 Gen 2'},
+      'RWKV7-G1i 2.9B (8+ Gen 1)': {'modelSize': 2.9, 'quantization': 'W4', 'soc': '8+ Gen 1'},
+      'RWKV7-G1i 2.9B (888)': {'modelSize': 2.9, 'quantization': 'W4', 'soc': '888'},
     };
 
     for (final entry in expectedRows.entries) {
@@ -189,8 +189,8 @@ void main() {
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
     const expectedRows = <String, Map<String, Object>>{
-      'RWKV7-G1i 1.5B (Dimensity 9500)': {'modelSize': 1.5, 'quantization': 'w8a16'},
-      'RWKV7-G1i 2.9B (Dimensity 9500)': {'modelSize': 2.9, 'quantization': 'w4a16'},
+      'RWKV7-G1i 1.5B (Dimensity 9500)': {'modelSize': 1.5, 'quantization': 'W8'},
+      'RWKV7-G1i 2.9B (Dimensity 9500)': {'modelSize': 2.9, 'quantization': 'W4'},
     };
 
     for (final entry in expectedRows.entries) {
@@ -217,7 +217,7 @@ void main() {
 
     final row = rows.singleWhere((candidate) => candidate['name'] == 'RWKV7-G1i 1.5B (Dimensity 9300)');
     expect(row['modelSize'], 1.5);
-    expect(row['quantization'], 'w8a16');
+    expect(row['quantization'], 'W8');
     expect(row['platforms'], <String>['android']);
     expect(row['backends'], <String>['mtk_np7']);
     expect(row['tags'], containsAll(<String>['reason', 'npu']));
@@ -291,22 +291,22 @@ void main() {
     const expectedRows = <String, Map<String, Object>>{
       'RWKV7-G1i 1.5B (X Elite)': {
         'modelSize': 1.5,
-        'quantization': 'w8a16',
+        'quantization': 'W8',
         'socs': <String>['X Elite', 'X Plus', 'X1'],
       },
       'RWKV7-G1i 1.5B (X2 Elite)': {
         'modelSize': 1.5,
-        'quantization': 'w8a16',
+        'quantization': 'W8',
         'socs': <String>['X2 Elite Extreme', 'X2 Elite', 'X2 Plus'],
       },
       'RWKV7-G1i 2.9B (X Elite)': {
         'modelSize': 2.9,
-        'quantization': 'w4a16',
+        'quantization': 'W4',
         'socs': <String>['X Elite', 'X Plus', 'X1'],
       },
       'RWKV7-G1i 2.9B (X2 Elite)': {
         'modelSize': 2.9,
-        'quantization': 'w4a16',
+        'quantization': 'W4',
         'socs': <String>['X2 Elite Extreme', 'X2 Elite', 'X2 Plus'],
       },
     };
@@ -349,7 +349,7 @@ void main() {
     for (final entry in expectedRows.entries) {
       final row = rows.singleWhere((candidate) => candidate['name'] == entry.key);
       expect(row['modelSize'], 7.2);
-      expect(row['quantization'], 'w4a16');
+      expect(row['quantization'], 'W4');
       expect(row['platforms'], <String>['windows']);
       expect(row['backends'], <String>['qnn']);
       expect(row['tags'], containsAll(<String>['reason', 'npu', 'batch']));

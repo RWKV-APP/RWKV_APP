@@ -133,7 +133,7 @@ void main() {
       expect(config['backends'], [expected.backend]);
       expect(config['socLimitations'], expected.socs);
       expect(config['tags'], containsAll(['npu', 'core', 'thinking']));
-      expect(config['quantization'], 'w8a16');
+      expect(config['quantization'], 'W8');
     }
 
     expect(previewFiles.every((file) => !file.isDebug), isTrue);

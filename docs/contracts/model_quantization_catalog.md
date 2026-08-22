@@ -21,6 +21,29 @@ remote configuration. `FileInfo` parsing and remote-store filtering then use
 the rows for model visibility, compatibility, local-file recognition, download
 identity, and integrity metadata.
 
+The catalog `quantization` field is a user-facing weight label, but named
+technical formats remain distinguishable from generic weight-width aliases.
+Every bundled build catalog and the `latest.json` fallback apply the following
+normalization boundary:
+
+- preserve named formats such as `Q4_K_M`, `NF4`, `Q6_K`, `Q8_0`, `LUT4`,
+  `LUT6`, `LUT8`, `FP16`, and `BF16`, using their conventional uppercase spelling
+- use `W4` for generic `INT4`, `4-Bit`, `w4a16`, `a16w4`, and equivalent
+  activation/weight-order aliases
+- use `W6` for generic `INT6`, `6-Bit`, `w6a16`, `a16w6`, and equivalent aliases
+- use `W8` for generic `INT8`, `8-Bit`, `w8a16`, `a16w8`, and equivalent aliases
+- keep existing `W4`, `W6`, and `W8` values unchanged
+- preserve previously unseen technical format names until an explicit product
+  ruling adds a display alias
+
+Do not infer a `Wn` label solely from a digit embedded in a named format.
+`Q6_K` and `Q8_0` retain their GGUF scheme identities, and `LUT6` does not imply
+`W6`. G1f and G1i Core ML mixed INT4/LUT6 artifacts display `W4` because their
+approved primary projection weight label is W4; that model-specific decision
+does not convert standalone LUT formats into generic W labels. Artifact
+filenames, URLs, immutable manifests, conversion records, and runtime evidence
+continue to retain their exact technical schemes.
+
 Capability tags are executable catalog contracts, not descriptive labels. In
 particular, the VL `thinking` tag is governed by
 `SPEC-RWKV-VL-THINKING-CAPABILITY`: only a VL cohort verified to support the
@@ -161,8 +184,9 @@ of removing the row. Retain G1h rows for unique backends, platforms or SoCs
 until an equivalent G1i artifact and consumer contract are available.
 
 The identified earlier-generation replacements include the G1g 1.5B, 2.9B,
-and 7.2B Apple MLX INT6 rows plus the G1g 7.2B Android QNN w4a16 RMPacks for
-Snapdragon 8 Gen 3 and 8s Gen 3. The formal G1i rows occupy those complete
+and 7.2B Apple MLX `W6` rows plus the G1g 7.2B Android QNN `W4` RMPacks for
+Snapdragon 8 Gen 3 and 8s Gen 3. The artifact filenames retain their exact
+six-bit MLX and `a16w4` schemes. The formal G1i rows occupy those complete
 slots, so the duplicate G1g rows are removed. Other G1g rows remain available
 when they target a SoC or consumer slot not declared by an equivalent formal
 G1i row.
@@ -201,19 +225,20 @@ cohort. Catalog publication remains pre-release visibility, not formal artifact
 promotion or device runtime acceptance; formal promotion replaces the row with
 the byte-identical source-selectable dual-repository URL.
 
-The current Android G1i MediaTek catalog exposes the 1.5B w8a16 NP7 artifact
-for Dimensity 9300 and the 1.5B w8a16 plus 2.9B w4a16 NP9 artifacts for
+The current Android G1i MediaTek catalog exposes the 1.5B `W8` NP7 artifact
+for Dimensity 9300 and the 1.5B `W8` plus 2.9B `W4` NP9 artifacts for
 Dimensity 9500. The Dimensity 9300 1.5B row replaces its equivalent G1h NP7
 slot. There is no formal Dimensity 9300 2.9B G1i catalog row in this cohort.
 Formal artifact publication and catalog visibility remain separate from
 exact-device loading, generation, and performance acceptance.
 
-The G1i 1.5B Q6_K and 2.9B, 7.2B, and 13.3B Q4_K_M llama.cpp artifacts are
-Linux consumer artifacts. Each Linux scope replaces only the equivalent G1h
-size and quantization slot after the exact G1i bytes have been discovered,
-loaded, and used for representative generation through the canonical Linux App
-UI. G1h rows for other backends, platforms, or SoCs remain available until an
-equivalent G1i consumer contract independently passes its acceptance boundary.
+The G1i 1.5B `Q6_K` and the 2.9B, 7.2B, and 13.3B `Q4_K_M` llama.cpp artifacts
+retain those named catalog labels. They are Linux consumer artifacts. Each
+Linux scope replaces only the equivalent G1h size and technical quantization
+slot after the exact G1i bytes have been discovered, loaded, and used for
+representative generation through the canonical Linux App UI. G1h rows for
+other backends, platforms, or SoCs remain available until an equivalent G1i
+consumer contract independently passes its acceptance boundary.
 
 The explicit human rulings on 2026-08-22 authorize formal publication of the
 accepted G1i CoreML 1.5B and 2.9B artifacts for macOS and iOS, followed by a
