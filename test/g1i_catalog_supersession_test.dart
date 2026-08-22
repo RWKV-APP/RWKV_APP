@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('current G1i Apple release excludes CoreML and keeps 13.3B off iOS', () {
+  test('local G1i CoreML rows supersede G1f and separate formal and canary scope', () {
     final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
@@ -14,17 +14,34 @@ void main() {
     final g1iRows = rows.where((entry) => (entry['name'] as String).contains('RWKV7-G1i')).toList();
     const appleBackends = <String>{'llamacpp', 'webRwkv', 'mlx'};
     final appleRows = g1iRows.where((entry) => appleBackends.contains((entry['backends'] as List<dynamic>).single)).toList();
+    final coreMlRows = g1iRows.where((entry) => (entry['backends'] as List<dynamic>).contains('coreml')).toList();
+    final formalCoreMlRows = coreMlRows.where((entry) => entry['isDebug'] != true).toList();
+    final coreMlCanaries = coreMlRows.where((entry) => entry['isDebug'] == true).toList();
     final mobileAppleRows = appleRows.where((entry) => entry['modelSize'] != 13.3).toList();
     final macOnly13bRows = appleRows.where((entry) => entry['modelSize'] == 13.3).toList();
 
-    expect(g1iRows, hasLength(42));
+    expect(g1iRows, hasLength(46));
     expect(appleRows, hasLength(12));
     expect(mobileAppleRows, hasLength(9));
     expect(macOnly13bRows, hasLength(3));
-    expect(
-      g1iRows.where((entry) => (entry['backends'] as List<dynamic>).contains('coreml')),
-      isEmpty,
-    );
+    expect(formalCoreMlRows.map((entry) => entry['modelSize']), <dynamic>[1.5, 2.9, 7.2]);
+    expect(coreMlCanaries.map((entry) => entry['modelSize']), <dynamic>[13.3]);
+    for (final formal in formalCoreMlRows) {
+      expect(formal['platforms'], formal['modelSize'] == 7.2 ? <String>['macos'] : <String>['macos', 'ios']);
+      expect(formal['availableIn'], isNull);
+      expect(formal['isDebug'], isNull);
+      expect(formal['url'], startsWith('HaloWang/rwkv-weights/resolve/main/'));
+      expect(formal['url'], contains('/coreml/'));
+      expect(formal['sha256'], isNotEmpty);
+    }
+    for (final canary in coreMlCanaries) {
+      expect(canary['platforms'], <String>['macos']);
+      expect(canary['availableIn'], <String>['modelscope']);
+      expect(canary['isDebug'], isTrue);
+      expect(canary['url'], startsWith('https://modelscope.cn/models/HaloWang1991/rwkv-weights-tmp/resolve/'));
+      expect(canary['url'], contains('/coreml/'));
+      expect(canary['sha256'], isNotEmpty);
+    }
     for (final g1i in mobileAppleRows) {
       expect(g1i['platforms'], containsAll(<String>['macos', 'ios']));
     }
@@ -50,7 +67,35 @@ void main() {
       final backends = (entry['backends'] as List<dynamic>?) ?? const <dynamic>[];
       return name.contains('RWKV7-G1f') && backends.contains('coreml');
     }).toList();
-    expect(g1fCoreMlRows, hasLength(2));
+    expect(g1fCoreMlRows, isEmpty);
+  });
+
+  test('build 752 exposes the three formal G1i CoreML rows', () {
+    final json = jsonDecode(File('remote/752.json').readAsStringSync()) as Map<String, dynamic>;
+    final chat = json['chat'] as Map<String, dynamic>;
+    final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
+    final coreMlRows = rows.where((entry) {
+      final name = entry['name'] as String;
+      final backends = (entry['backends'] as List<dynamic>?) ?? const <dynamic>[];
+      return name.contains('RWKV7-G1i') && backends.contains('coreml');
+    }).toList();
+    final g1fCoreMlRows = rows.where((entry) {
+      final name = entry['name'] as String;
+      final backends = (entry['backends'] as List<dynamic>?) ?? const <dynamic>[];
+      return name.contains('RWKV7-G1f') && backends.contains('coreml');
+    }).toList();
+
+    expect(coreMlRows.map((entry) => entry['modelSize']), <dynamic>[1.5, 2.9, 7.2]);
+    expect(g1fCoreMlRows, isEmpty);
+    for (final row in coreMlRows) {
+      expect(row['name'], isNot(contains('Canary')));
+      expect(row['platforms'], row['modelSize'] == 7.2 ? <String>['macos'] : <String>['macos', 'ios']);
+      expect(row['availableIn'], isNull);
+      expect(row['isDebug'], isNull);
+      expect(row['url'], startsWith('HaloWang/rwkv-weights/resolve/main/'));
+      expect(row['url'], contains('/coreml/'));
+      expect(row['sha256'], isNotEmpty);
+    }
   });
 
   test('G1i replaces the equivalent G1g 7.2B Snapdragon QNN slots', () {
@@ -71,6 +116,28 @@ void main() {
 
       expect(
         rows.where((entry) => entry['name'] == 'RWKV7-G1g 7.2B ($soc)'),
+        isEmpty,
+      );
+    }
+  });
+
+  test('G1i replaces the equivalent G1g Apple MLX slots', () {
+    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+    final chat = json['chat'] as Map<String, dynamic>;
+    final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
+
+    for (final modelSize in <double>[1.5, 2.9, 7.2]) {
+      final sizeLabel = modelSize.toStringAsFixed(1);
+      final g1i = rows.singleWhere((entry) => entry['name'] == 'RWKV7-G1i ${sizeLabel}B (MLX)');
+      expect(g1i['modelSize'], modelSize);
+      expect(g1i['quantization'], 'INT6');
+      expect(g1i['backends'], <String>['mlx']);
+      expect(g1i['platforms'], contains('macos'));
+      expect(g1i['url'], startsWith('HaloWang/rwkv-weights/resolve/main/'));
+      expect(g1i['sha256'], isNotEmpty);
+
+      expect(
+        rows.where((entry) => entry['name'] == 'RWKV7-G1g ${sizeLabel}B (MLX)'),
         isEmpty,
       );
     }

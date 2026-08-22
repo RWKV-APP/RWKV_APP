@@ -160,11 +160,12 @@ declared for G1i, narrow the G1h platform list to the unmatched scope instead
 of removing the row. Retain G1h rows for unique backends, platforms or SoCs
 until an equivalent G1i artifact and consumer contract are available.
 
-The identified earlier-generation replacements are limited to the G1g 7.2B
-Android QNN w4a16 RMPacks for Snapdragon 8 Gen 3 and 8s Gen 3. The formal G1i
-7.2B rows occupy those complete slots, so the duplicate G1g rows are removed.
-Other G1g rows remain available when they target a SoC or consumer slot not
-declared by an equivalent formal G1i row.
+The identified earlier-generation replacements include the G1g 1.5B, 2.9B,
+and 7.2B Apple MLX INT6 rows plus the G1g 7.2B Android QNN w4a16 RMPacks for
+Snapdragon 8 Gen 3 and 8s Gen 3. The formal G1i rows occupy those complete
+slots, so the duplicate G1g rows are removed. Other G1g rows remain available
+when they target a SoC or consumer slot not declared by an equivalent formal
+G1i row.
 
 The current G1i Apple catalog exposes the non-QNN llama.cpp, WebRWKV, and MLX
 rows for 1.5B, 2.9B, and 7.2B on both macOS and iOS. G1i 13.3B is intentionally
@@ -214,13 +215,36 @@ loaded, and used for representative generation through the canonical Linux App
 UI. G1h rows for other backends, platforms, or SoCs remain available until an
 equivalent G1i consumer contract independently passes its acceptance boundary.
 
-G1i CoreML is explicitly deferred for the current release. `remote/latest.json`
-must contain no G1i CoreML row, and no new G1i CoreML artifact is converted,
-published, promoted, or released until a later explicit human ruling reopens
-that cohort. Existing G1f CoreML catalog rows remain available. G1i CoreML
-bytes that were already published remain preserved at their immutable remote
-paths; artifact availability does not make them current catalog or release
-candidates, and this deferral does not authorize remote deletion.
+The explicit human rulings on 2026-08-22 authorize formal publication of the
+accepted G1i CoreML 1.5B and 2.9B artifacts for macOS and iOS, followed by a
+separate macOS-only formal partial release of the accepted 7.2B artifact. The
+formal G1i 1.5B and 2.9B rows fully replace the matching G1f CoreML consumer
+slots, so the superseded G1f rows are absent from the current bundled
+`latest.json`, build-752 catalog, and their production selectors. Historical
+build-743 and build-750 catalog snapshots remain unchanged, and delisting does
+not delete the legacy provider artifacts. Promote each exact accepted cohort
+through immutable TMP identity first to
+formal ModelScope and then byte-identically to Hugging Face, verify both
+providers anonymously, and expose source-selectable formal URLs with size and
+SHA-256 identity in the bundled `latest.json` plus the production `latest.json`
+and `752.json`. These formal rows do not use Debug lifecycle metadata. Build
+752 and the latest fallback must both return the rows so RWKV Chat 4.7.0 and
+4.7.1 can discover and download them. The 7.2B row declares only `macos` and
+must not acquire iOS availability through the shared Apple weight lineage.
+
+This publication is explicitly backend-scoped and partial. The retained macOS
+visible performance and runtime evidence supports the formal artifact choice;
+exact-device iOS load, generation, cache, memory, and performance acceptance
+remains unverified and must not be inferred from shared Apple bytes or catalog
+availability. Existing required G1i MediaTek rows also retain their independent
+runtime-acceptance status, so this delivery is not a standard complete Chat
+weight release. The formal 7.2B package is compatible with the released 4.7.0
+and 4.7.1 config parser because unknown YAML keys are ignored, but those native
+runtimes still load Decode and Prefill with CPU and Neural Engine. Catalog
+publication to those versions therefore does not deliver the separately
+measured CPU-and-GPU Decode speedup; that execution placement requires a later
+App/runtime release. The 13.3B CoreML row remains a local Debug canary outside
+formal or online publication and remains excluded from iOS.
 
 This supersession changes catalog selection, not artifact identity or remote
 distribution state. Every promoted G1i row must retain a source-selectable

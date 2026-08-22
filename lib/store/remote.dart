@@ -321,11 +321,14 @@ extension $Remote on _Remote {
       }
 
       final pathExists = await File(path).exists();
-      bool fileSizeVerified = false;
+      bool fileSizeVerified = await _hasDebugInPlaceCache(
+        fileInfo: fileInfo,
+        archivePath: path,
+      );
       if (pathExists) {
         final expectFileSize = fileInfo.fileSize;
         final fileSize = await File(path).length();
-        fileSizeVerified = expectFileSize == fileSize;
+        fileSizeVerified = fileSizeVerified || expectFileSize == fileSize;
         if (kDebugMode) {
           if (!fileSizeVerified) {
             qqw("fileSizeVerified: $fileSizeVerified");
@@ -436,6 +439,14 @@ extension $Remote on _Remote {
     return false;
   }
 
+  Future<bool> _hasDebugInPlaceCache({
+    required FileInfo fileInfo,
+    required String archivePath,
+  }) async {
+    if (!kDebugMode || !_hasInPlaceCacheDirectory(fileInfo)) return false;
+    return Directory(withoutExtension(archivePath)).exists();
+  }
+
   Future<void> _deleteDownloadArtifacts({
     required FileInfo fileInfo,
     required String path,
@@ -509,31 +520,61 @@ extension $Remote on _Remote {
         return;
       }
 
-      task
-          .events()
-          .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
-          .listen(
-            (e) {
-              if (randomBool(truePercentage: .2)) {
-                qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s, ${e.totalSize}');
-              }
-              state.q = state.q.copyWith(
-                timeRemaining: Duration(seconds: e.remainSeconds.round().clamp(0, 60 * 60 * 24)),
-                progress: e.progress,
-                state: e.state,
-                networkSpeed: e.speedInMB,
-                hasFile: e.state == TaskState.completed,
-              );
-            },
-            onError: (e) {
-              qqe(e);
-              Alert.error(S.current.download_failed);
-              Sentry.captureException(e, stackTrace: StackTrace.current);
-            },
-            onDone: () {
-              qqq('event done');
-            },
+      var lastDownloadUpdateAt = DateTime.fromMillisecondsSinceEpoch(0);
+      task.events().listen(
+        (e) {
+          final now = DateTime.now();
+          final isTerminal = e.state == TaskState.completed || e.state == TaskState.stopped;
+          if (!isTerminal && now.difference(lastDownloadUpdateAt) < const Duration(milliseconds: 1000)) {
+            return;
+          }
+          lastDownloadUpdateAt = now;
+          if (randomBool(truePercentage: .2)) {
+            qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s, ${e.totalSize}');
+          }
+          state.q = state.q.copyWith(
+            timeRemaining: Duration(seconds: e.remainSeconds.round().clamp(0, 60 * 60 * 24)),
+            progress: e.progress,
+            state: e.state,
+            networkSpeed: e.speedInMB,
+            hasFile: e.state == TaskState.completed,
           );
+        },
+        onError: (e) {
+          qqe(e);
+          state.q = state.q.copyWith(
+            state: TaskState.stopped,
+            hasFile: false,
+          );
+          Alert.error(S.current.download_failed);
+          Sentry.captureException(e, stackTrace: StackTrace.current);
+        },
+        onDone: () async {
+          qqq('event done');
+          // A throttled stream can close before forwarding the downloader's
+          // final `completed` event. Reconcile the terminal UI state with
+          // the exact file that the downloader has already renamed into
+          // place, instead of leaving the model stuck as `running`.
+          final targetFile = File(path);
+          final completed = await targetFile.exists() && await targetFile.length() == fileInfo.fileSize;
+          if (completed) {
+            state.q = state.q.copyWith(
+              progress: 100,
+              state: TaskState.completed,
+              networkSpeed: 0,
+              timeRemaining: Duration.zero,
+              hasFile: true,
+            );
+          } else if (state.q.state == TaskState.running) {
+            state.q = state.q.copyWith(
+              state: TaskState.stopped,
+              networkSpeed: 0,
+              timeRemaining: Duration.zero,
+              hasFile: false,
+            );
+          }
+        },
+      );
 
       // 开始下载时，重置进度并确保 hasFile 为 false（避免进度计算错误）
       state.q = state.q.copyWith(progress: 0, state: TaskState.running, hasFile: false);
@@ -2229,6 +2270,17 @@ extension _$Remote on _Remote {
         continue;
       }
       final url = downloadSource.q.resolveUrl(fileInfo.raw);
+      if (await _hasDebugInPlaceCache(
+        fileInfo: fileInfo,
+        archivePath: path,
+      )) {
+        fileState.q = fileState.q.copyWith(
+          hasFile: true,
+          progress: 100,
+          state: TaskState.completed,
+        );
+        continue;
+      }
       try {
         final task = await DownloadTask.create(
           url: url,
