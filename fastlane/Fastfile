@@ -239,12 +239,6 @@ def ios_preflight_app_store_connect_auth(params)
   context
 end
 
-def ios_testflight_checkpoint_complete?(path, version)
-  RwkvAppleAuthGate.checkpoint_complete?(path: path, version: version)
-rescue RwkvAppleAuthGate::GateError => error
-  UI.user_error!(error.message)
-end
-
 lane :all do |params|
   env = (params[:env] != 'chat' && params[:env] != nil && params[:env] != '') ? params[:env] : 'chat'
   increase_version = params[:increase_version] == false ? false : true
@@ -278,7 +272,6 @@ lane :all do |params|
       upload_timeout_seconds: upload_timeout_seconds,
       upload_to_testflight: upload_to_testflight,
       apple_auth_mode: params[:apple_auth_mode],
-      testflight_checkpoint_path: params[:testflight_checkpoint_path],
       skip_git_reset: skip_git_reset,
     )
     next
@@ -390,19 +383,10 @@ lane :all do |params|
 
   # 🔥 上传到 TestFlight
   if upload_to_testflight
-    testflight_checkpoint_path = params[:testflight_checkpoint_path]
-    if ios_testflight_checkpoint_complete?(testflight_checkpoint_path, full_version)
-      UI.success("TestFlight 已由版本检查点确认完成: #{full_version}")
-    else
-      ios_upload(
-        groups: ['External'],
-        apple_auth_mode: params[:apple_auth_mode],
-      )
-      RwkvAppleAuthGate.write_checkpoint(
-        path: testflight_checkpoint_path,
-        version: full_version,
-      )
-    end
+    ios_upload(
+      groups: ['External'],
+      apple_auth_mode: params[:apple_auth_mode],
+    )
   end
 
   if env == 'chat' && !skip_git_reset
@@ -728,7 +712,7 @@ end
 #  🚑 紧急恢复专用 Lane
 #  用于 all lane 构建成功但在上传阶段失败时，从上传 APK 开始继续执行
 # -----------------------------------------------------------------------
-desc 'Resume remaining release stages after no-artifact Apple preauthentication, with an optional version checkpoint'
+desc 'Resume remaining release stages after no-artifact Apple preauthentication'
 lane :resume_upload do |params|
   run_android = params[:run_android] == false ? false : true
   upload_to_pgyer = params[:upload_to_pgyer] == true ? true : false
@@ -756,10 +740,7 @@ lane :resume_upload do |params|
   semantic_version = version_parts[0] # "3.4.3"
   build_number = version_parts[1]     # "629"
 
-  testflight_checkpoint_path = params[:testflight_checkpoint_path]
-  testflight_checkpoint_complete = upload_to_testflight_flag &&
-                                   ios_testflight_checkpoint_complete?(testflight_checkpoint_path, full_version)
-  if upload_to_testflight_flag && !testflight_checkpoint_complete
+  if upload_to_testflight_flag
     ios_preflight_app_store_connect_auth(params)
   end
 
@@ -857,18 +838,10 @@ lane :resume_upload do |params|
 
   # 7. 🔥 继续 iOS 流程 (iOS lane 内部会自己构建，所以是安全的)
   if upload_to_testflight_flag
-    if testflight_checkpoint_complete
-      UI.success("TestFlight 已由版本检查点确认完成: #{full_version}")
-    else
-      ios_upload(
-        groups: ['External'],
-        apple_auth_mode: params[:apple_auth_mode],
-      )
-      RwkvAppleAuthGate.write_checkpoint(
-        path: testflight_checkpoint_path,
-        version: full_version,
-      )
-    end
+    ios_upload(
+      groups: ['External'],
+      apple_auth_mode: params[:apple_auth_mode],
+    )
   end
 
   # 8. Git Reset (清理)

@@ -147,7 +147,7 @@ Authenticate to App Store Connect without building or uploading an artifact
 [bundle exec] fastlane resume_upload
 ```
 
-Resume remaining release stages after no-artifact Apple preauthentication, with an optional version checkpoint
+Resume remaining release stages after no-artifact Apple preauthentication
 
 ### test_macos_dmg
 

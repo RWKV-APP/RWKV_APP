@@ -53,9 +53,3 @@ non-interactive operation. It is selected with `apple_auth_mode:api_key` or
 and private-key path or content. The private key remains outside Git and logs.
 Merely having API-key variables in the environment does not override the
 default Apple ID preauthentication path.
-
-Resume automation may provide a private version-bound TestFlight checkpoint.
-The checkpoint is written only after Fastlane finishes build processing and
-tester distribution, uses mode `0600`, and must match the exact version and
-build before a later run skips TestFlight. A missing, invalid, or mismatched
-checkpoint never suppresses the upload.

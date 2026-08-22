@@ -87,48 +87,6 @@ module RwkvAppleAuthGate
     end
   end
 
-  def self.checkpoint_complete?(path:, version:)
-    return false if path.nil? || path.to_s.strip.empty?
-    return false unless File.exist?(path)
-
-    require 'json'
-
-    checkpoint = JSON.parse(File.read(path))
-    unless checkpoint['status'] == 'succeeded' && checkpoint['version'] == version
-      raise GateError,
-            "testflight_checkpoint_mismatch: #{path} 不属于当前版本 #{version}，拒绝跳过 TestFlight"
-    end
-
-    true
-  rescue JSON::ParserError
-    raise GateError, "testflight_checkpoint_invalid: #{path} 不是有效的 JSON 检查点"
-  end
-
-  def self.write_checkpoint(path:, version:)
-    return if path.nil? || path.to_s.strip.empty?
-
-    require 'fileutils'
-    require 'json'
-    require 'time'
-
-    expanded_path = File.expand_path(path)
-    FileUtils.mkdir_p(File.dirname(expanded_path))
-    temporary_path = "#{expanded_path}.tmp-#{Process.pid}"
-    payload = {
-      version: version,
-      status: 'succeeded',
-      recorded_at: Time.now.utc.iso8601,
-    }
-    File.open(temporary_path, File::WRONLY | File::CREAT | File::TRUNC, 0o600) do |file|
-      file.write(JSON.pretty_generate(payload))
-      file.write("\n")
-    end
-    File.rename(temporary_path, expanded_path)
-    File.chmod(0o600, expanded_path)
-  ensure
-    File.delete(temporary_path) if defined?(temporary_path) && File.exist?(temporary_path)
-  end
-
   def self.resolve(requested_mode:, api_key_configured:, stdin_tty:, stdout_tty:)
     normalized_mode = requested_mode.to_s.strip.downcase.tr('-', '_')
     normalized_mode = APPLE_ID_MODE if normalized_mode.empty?

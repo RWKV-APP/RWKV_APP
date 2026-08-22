@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require 'tmpdir'
 require_relative 'apple_auth_gate'
 
 class RwkvAppleAuthGateTest < Minitest::Test
@@ -111,24 +110,5 @@ class RwkvAppleAuthGateTest < Minitest::Test
     assert preauth_method, 'Apple ID preauthentication helper must exist'
     assert_match 'Spaceship::ConnectAPI.login', preauth_method
     refute_match(/run_flutter_build_ipa|ipa_path|upload_to_testflight/, preauth_method)
-  end
-
-  def test_success_checkpoint_is_version_bound_and_private
-    Dir.mktmpdir do |directory|
-      checkpoint_path = File.join(directory, 'testflight.json')
-      RwkvAppleAuthGate.write_checkpoint(path: checkpoint_path, version: '4.7.0+752')
-
-      assert RwkvAppleAuthGate.checkpoint_complete?(
-        path: checkpoint_path,
-        version: '4.7.0+752',
-      )
-      assert_equal 0o600, File.stat(checkpoint_path).mode & 0o777
-      assert_raises(RwkvAppleAuthGate::GateError) do
-        RwkvAppleAuthGate.checkpoint_complete?(
-          path: checkpoint_path,
-          version: '4.7.1+753',
-        )
-      end
-    end
   end
 end
