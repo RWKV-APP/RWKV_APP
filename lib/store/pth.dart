@@ -325,7 +325,7 @@ extension $Pth on _Pth {
     try {
       final type = await FileSystemEntity.type(itemPath, followLinks: true);
       if (type == FileSystemEntityType.directory) {
-        return _createFolderEntry(itemPath, fallbackBookmark: droppedBookmark);
+        return await _createFolderEntry(itemPath, fallbackBookmark: droppedBookmark);
       }
 
       if (type != FileSystemEntityType.file) return null;
