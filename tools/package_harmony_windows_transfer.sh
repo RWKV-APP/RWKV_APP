@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+echo "retired: the legacy rwkv_harmony plus rwkv_mobile Windows transfer workflow must not be executed; use rwkv_harmony_standalone and the active rwkv-mobile checkout" >&2
+exit 64
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APP_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 WORKSPACE_ROOT="$(cd "${APP_ROOT}/.." && pwd)"

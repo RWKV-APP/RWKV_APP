@@ -9,7 +9,7 @@ Repository-qualified references use `alias:path`. The path is relative to the re
 | --- | --- | --- | --- |
 | rwkv_app | `.` | yes | Flutter application and this Specification system |
 | rwkv_mobile_flutter | `../rwkv_mobile_flutter` | no | Flutter adapter and FFI bridge |
-| rwkv_mobile | `../rwkv-mobile` | no | Native inference engine workspace |
+| rwkv_mobile | `../rwkv-mobile` | no | Active native inference engine workspace; the former `../rwkv_mobile` checkout is retired |
 | app_website | `../app_website` | no | Public download website and HTTP service |
 | rwkv_org_profile | `../.github` | no | Public RWKV-APP organization profile repository |
 

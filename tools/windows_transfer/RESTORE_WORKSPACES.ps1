@@ -5,6 +5,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+throw 'Retired: this legacy rwkv_harmony plus rwkv_mobile restore workflow must not run. Use rwkv_harmony_standalone and the active rwkv-mobile checkout.'
 $packageRoot = $PSScriptRoot
 $sourceRoot = Join-Path $packageRoot 'sources'
 $stateRoot = Join-Path $packageRoot 'state'

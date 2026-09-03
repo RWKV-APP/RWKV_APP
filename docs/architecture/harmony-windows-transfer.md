@@ -1,6 +1,13 @@
-# HarmonyOS Kirin workspace transfer to Windows
+# Retired HarmonyOS Kirin workspace transfer to Windows
 
-This guide describes how to preserve and resume the current Huawei Pura 80 Pro and Kirin 9020 work on a new Windows computer
+> Status: historical and non-executable as of 2026-08-28. The legacy
+> `rwkv_harmony` plus `rwkv_mobile` transfer topology has been retired. Do not
+> use this document to create or restore those directories. Current HarmonyOS
+> product work belongs to `rwkv_harmony_standalone`; current native-engine work
+> uses the sibling `rwkv-mobile` checkout. The remaining text is preserved only
+> as historical migration evidence.
+
+This guide described how to preserve and resume an earlier Huawei Pura 80 Pro and Kirin 9020 workspace on a new Windows computer
 
 ## Transfer boundary
 

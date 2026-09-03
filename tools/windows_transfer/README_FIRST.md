@@ -1,6 +1,11 @@
-# RWKV HarmonyOS Windows transfer
+# Retired RWKV HarmonyOS Windows transfer
 
-This folder is a private transfer set for continuing the current RWKV Chat, HarmonyOS NNRT, and Kirin 9020 development work on another computer
+> Do not execute or restore this transfer set. The legacy `rwkv_harmony` plus
+> `rwkv_mobile` topology was retired on 2026-08-28. Current HarmonyOS work uses
+> `rwkv_harmony_standalone`, and current native-engine work uses `rwkv-mobile`.
+> The remaining content is historical evidence only.
+
+This folder was a private transfer set for an earlier RWKV Chat, HarmonyOS NNRT, and Kirin 9020 workspace
 
 Before extraction, compare the all-in-one ZIP with the adjacent `.sha256` file:
 

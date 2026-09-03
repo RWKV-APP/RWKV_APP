@@ -51,7 +51,7 @@
 
 - Flutter 前端仓库：`./`（当前仓库）
 - Flutter C++ 桥接层：`../rwkv_mobile_flutter`
-- C++ 后端推理引擎：`../rwkv_mobile`（可能为空）
+- C++ 后端推理引擎：`../rwkv-mobile`（可能为空）
 - App 下载页与 HTTP 服务端：`../app_website`（可能为空）
 
 ## 4. 全局规则

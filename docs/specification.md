@@ -1,7 +1,7 @@
 # RWKV App Specification
 
 Process version: v1.8
-Last reviewed: 2026-08-12
+Last reviewed: 2026-08-28
 
 This is the canonical entrypoint for product and process truth in `rwkv_app`.
 
@@ -41,7 +41,7 @@ Desktop UI redesign is authorized by `SPEC-RWKV-DESKTOP-UI-REDESIGN-AUTHORIZATIO
 
 This repository owns the Flutter application, routes, Riverpod state, local persistence, model selection, local API UI, user-facing workflows, app packaging, and repository-level release automation.
 
-The `rwkv_mobile_flutter` repository owns the Flutter adapter and FFI bridge. The `rwkv_mobile` repository owns native inference-engine internals. The `app_website` repository owns the public download website and its HTTP services. Cross-repository requirements define the integration contract here while each external repository remains authoritative for its own implementation.
+The `rwkv_mobile_flutter` repository owns the Flutter adapter and FFI bridge. The `rwkv-mobile` repository owns native inference-engine internals. The former sibling checkout named `rwkv_mobile` is retired and is not an integration dependency or fallback. The `app_website` repository owns the public download website and its HTTP services. Cross-repository requirements define the integration contract here while each external repository remains authoritative for its own implementation.
 
 App binary publication across GitHub Release, Hugging Face, ModelScope, and the
 public download website is governed by `SPEC-RWKV-APP-BINARY-DISTRIBUTION` in

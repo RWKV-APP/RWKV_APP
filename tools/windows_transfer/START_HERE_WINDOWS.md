@@ -1,4 +1,9 @@
-# Start here on Windows
+# Retired Windows restore instructions
+
+> Do not execute this package. The legacy `rwkv_harmony` plus `rwkv_mobile`
+> workspace has been retired. Current HarmonyOS work uses
+> `rwkv_harmony_standalone`, and current native-engine work uses
+> `rwkv-mobile`. The remaining instructions are historical evidence only.
 
 ## 1. Verify the code archive
 

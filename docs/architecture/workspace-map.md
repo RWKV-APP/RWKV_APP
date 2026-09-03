@@ -12,7 +12,7 @@ Use it to choose the right edit location before changing code
 | --- | --- | --- |
 | `./` | Flutter app frontend | UI, routing, Riverpod state, model selection, local API page, release scripts |
 | `../rwkv_mobile_flutter` | Flutter adapter and FFI bridge | Dart API surface to the native engine, platform bridge behavior, generated/native message contract |
-| `../rwkv_mobile` | C++ inference engine | Runtime kernels, model execution, tokenizer or engine internals |
+| `../rwkv-mobile` | C++ inference engine | Runtime kernels, model execution, tokenizer or engine internals |
 | `../app_website` | Download page and HTTP service | Public download page, backend admin or public web service behavior |
 
 ## Symptom To Entry
