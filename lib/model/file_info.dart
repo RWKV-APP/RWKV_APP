@@ -197,6 +197,7 @@ class FileInfo extends Equatable {
   }
 
   bool get available {
+    if (backend == Backend.palm && !P.rwkvBackend.availableBackendNames.q.contains('palm')) return false;
     if (isDebug) return kDebugMode && platformSupported;
     if (fileType == FileType.downloadTest) return kDebugMode;
     if (unsupportedSocBrand.contains(P.rwkvBackend.socBrand.q)) return false;

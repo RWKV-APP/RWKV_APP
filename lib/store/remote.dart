@@ -1465,7 +1465,7 @@ extension $Remote on _Remote {
     final result = await file_picker.FilePicker.pickFiles(
       type: file_picker.FileType.custom,
       allowMultiple: true,
-      allowedExtensions: ['st', 'gguf', 'prefab', 'bin', 'rmpack', 'mnn', 'zip'],
+      allowedExtensions: ['st', 'gguf', 'mollm', 'prefab', 'bin', 'rmpack', 'mnn', 'zip'],
     );
 
     if (result == null || result.files.isEmpty) {

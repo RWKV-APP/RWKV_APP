@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "version": "4.8.0",
+  "build": 755,
+  "flutterVersion": "3.44.8",
+  "adapter": {
+    "repository": "RWKV-APP/rwkv_mobile_flutter",
+    "commit": "7a4b85d3a92f44eff5c23c32ed19789c15e59b64"
+  },
+  "native": {
+    "repository": "RWKV-APP/rwkv-mobile",
+    "tag": "4.8.0-native.1",
+    "commit": "1425665b7f00aa2fdda67c454b0c6fdcd0208937"
+  },
+  "channels": {
+    "github": true,
+    "modelscope": true,
+    "huggingface": false
+  },
+  "weights": {
+    "repository": "HaloWang1991/rwkv-weights",
+    "revision": "45a3a40322397e470a937d16b24aec5895bb6a8e",
+    "artifactCount": 31,
+    "includedSizes": [
+      "1.5B",
+      "2.9B"
+    ],
+    "excluded": [
+      "MTK",
+      "7.2B",
+      "13.3B"
+    ]
+  }
+}

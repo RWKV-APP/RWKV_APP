@@ -16,11 +16,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Validate frozen release
+        id: frozen
+        run: python3 scripts/release_identity.py --github-output "$GITHUB_OUTPUT"
+
       - name: Checkout rwkv_mobile_flutter dependency
         uses: actions/checkout@v4
         with:
           repository: RWKV-APP/rwkv_mobile_flutter
-          ref: dev
+          ref: ${{ steps.frozen.outputs.adapter_ref }}
           path: rwkv_mobile_flutter
           fetch-depth: 1
 
@@ -30,7 +34,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.44.0"
+          flutter-version: ${{ steps.frozen.outputs.flutter_version }}
           channel: "stable"
           cache: true
 

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import os
@@ -67,6 +68,7 @@ class ModelScopeUploader:
 
         self.endpoint = endpoint.rstrip("/")
         self.api = api_factory(token=token.strip(), endpoint=self.endpoint)
+        self.anonymous_api = api_factory(token="", endpoint=self.endpoint)
 
     def upload_file(
         self,
@@ -90,15 +92,31 @@ class ModelScopeUploader:
             normalized_repo_id,
             normalized_path,
         )
-        result = self.api.upload_file(
-            normalized_repo_id,
-            "dataset",
-            str(artifact),
-            normalized_path,
-            revision=revision,
-            commit_message=message,
-            disable_tqdm=True,
-        )
+        digest = hashlib.sha256()
+        with artifact.open('rb') as stream:
+            for chunk in iter(lambda: stream.read(8 * 1024 * 1024), b''):
+                digest.update(chunk)
+        expected = (artifact.stat().st_size, digest.hexdigest())
+        existing = next((item for item in self.api.list_repo_files(normalized_repo_id, 'dataset', revision=revision)
+                         if item.path == normalized_path), None)
+        if existing is not None:
+            if (existing.size, existing.sha256) != expected:
+                raise ValueError(f'Refusing to overwrite different release bytes: {normalized_path}')
+            result = {'skipped': True, 'sha256': expected[1]}
+        else:
+            result = self.api.upload_file(
+                normalized_repo_id,
+                "dataset",
+                str(artifact),
+                normalized_path,
+                revision=revision,
+                commit_message=message,
+                disable_tqdm=True,
+            )
+        published = next((item for item in self.anonymous_api.list_repo_files(normalized_repo_id, 'dataset', revision=revision)
+                          if item.path == normalized_path), None)
+        if published is None or (published.size, published.sha256) != expected:
+            raise RuntimeError(f'Anonymous ModelScope release checksum verification failed: {normalized_path}')
         logger.info(
             "ModelScope upload completed: %s",
             build_download_url(

@@ -28,6 +28,36 @@ the provider's anonymous file-tree and resolve surfaces. Creating the remote
 dataset, granting write authority, uploading files, and deploying the website
 remain explicit release actions rather than consequences of a local code change.
 
+## SPEC-RWKV-FROZEN-RELEASE — Shared Release Identity And Apple Continuation
+
+`release.json` freezes the semantic version, build number, Flutter version, adapter commit,
+native-library release and commit, and enabled distribution channels. Each
+application build must match `pubspec.yaml` and use that adapter revision.
+Native libraries come from the RWKV-APP fork at an immutable release with
+verified archive checksums; a mutable `latest` release or adapter branch is not
+a release dependency. The application tag identifies the exact App commit.
+
+CI uploads package assets into an already-created GitHub Release and preserves
+its draft or published state. A repeated upload must match the existing size
+and SHA-256; a different file with the same name is rejected. Publication is a
+separate step after the enabled package matrix and acceptance checks complete.
+
+RWKV Chat 4.8.0 uses build 755. Its first delivery includes Windows x64 and
+ARM64 installers and ZIPs, Linux x64 tar.gz and AppImage, and the Android arm64
+APK. GitHub and ModelScope are enabled; Hugging Face upload and verification
+are explicitly deferred for this release. A missing deferred provider must
+remain visible as deferred, never as verified parity. Later uploads reuse the
+accepted bytes and their digests.
+
+The Apple-only Fastlane entrypoint continues the same release on a Mac. It
+checks the App tag, version/build, adapter commit and native library identity,
+then publishes a signed and notarized macOS DMG to the existing GitHub release
+and ModelScope dataset and uploads the matching iOS version/build to TestFlight.
+It does not bump the version, run the all-platform lane, move an existing tag,
+or replace accepted packages from other platforms. Resume checks completed
+remote artifacts before skipping stages. Apple build, signing and TestFlight
+acceptance remain pending until actually performed on a capable Mac.
+
 ## SPEC-RWKV-APPLE-RELEASE-AUTH-GATE
 
 TestFlight release automation defaults to a foreground Apple ID

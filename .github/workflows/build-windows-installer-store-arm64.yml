@@ -26,12 +26,26 @@ jobs:
       build_number: ${{ steps.meta.outputs.build_number }}
       installer_name: ${{ steps.meta.outputs.installer_name }}
       should_publish: ${{ steps.meta.outputs.should_publish }}
+      flutter_version: ${{ steps.frozen.outputs.flutter_version }}
+      adapter_ref: ${{ steps.frozen.outputs.adapter_ref }}
+      upload_huggingface: ${{ steps.frozen.outputs.upload_huggingface }}
+      upload_modelscope: ${{ steps.frozen.outputs.upload_modelscope }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          sparse-checkout: pubspec.yaml
+          ref: ${{ inputs.release_tag || github.ref }}
+          sparse-checkout: |
+            pubspec.yaml
+            release.json
+            scripts/release_identity.py
           sparse-checkout-cone-mode: false
+
+      - name: Validate frozen release
+        id: frozen
+        env:
+          RWKV_RELEASE_TAG: ${{ inputs.release_tag }}
+        run: python3 scripts/release_identity.py --github-output "$GITHUB_OUTPUT"
 
       - name: Extract version metadata
         id: meta
@@ -62,20 +76,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.release_tag || github.ref }}
           fetch-depth: 0
 
       - name: Checkout rwkv_mobile_flutter dependency
         uses: actions/checkout@v4
         with:
           repository: RWKV-APP/rwkv_mobile_flutter
-          ref: dev
+          ref: ${{ needs.setup.outputs.adapter_ref }}
           path: rwkv_mobile_flutter
           fetch-depth: 1
+
+      - name: Verify pinned native libraries
+        run: python rwkv_mobile_flutter/tools/fetch_native_libraries.py --verify-only --platform windows-arm64
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.44.0"
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
           channel: "stable"
           architecture: "x64"
           cache: true
@@ -308,21 +326,28 @@ jobs:
     if: needs.setup.outputs.should_publish == 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout release identity
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag || github.ref }}
+          sparse-checkout: |
+            pubspec.yaml
+            release.json
+            scripts/release_identity.py
+          sparse-checkout-cone-mode: false
+
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: windows-installer-store-arm64
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ inputs.release_tag }}
-          generate_release_notes: false
-          fail_on_unmatched_files: true
-          files: "*.exe"
+      - name: Upload verified GitHub assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/release_identity.py --upload-github "true"
 
-  upload-hf:
-    name: Upload to HuggingFace
+  upload-providers:
+    name: Upload enabled providers
     needs: [setup, build]
     if: needs.setup.outputs.should_publish == 'true'
     runs-on: ubuntu-latest
@@ -330,6 +355,7 @@ jobs:
       - name: Checkout upload script
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.release_tag || github.ref }}
           sparse-checkout: |
             scripts/upload_to_hf.py
             scripts/upload_to_modelscope.py
@@ -346,10 +372,12 @@ jobs:
           python-version: "3.11"
           check-latest: true
 
-      - name: Install dependencies
+      - name: Install Hugging Face dependency
+        if: needs.setup.outputs.upload_huggingface == 'true'
         run: pip install huggingface_hub
 
       - name: Upload to HuggingFace
+        if: needs.setup.outputs.upload_huggingface == 'true'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_ENDPOINT: ${{ secrets.HF_ENDPOINT || 'https://huggingface.co' }}
@@ -364,15 +392,15 @@ jobs:
             --hf-endpoint "$HF_ENDPOINT"
 
       - name: Install ModelScope dependency
-        if: always()
+        if: needs.setup.outputs.upload_modelscope == 'true'
         env:
           MODELSCOPE_API_TOKEN: ${{ secrets.MODELSCOPE_API_TOKEN }}
         run: |
-          if [ -z "${MODELSCOPE_API_TOKEN:-}" ]; then echo "MODELSCOPE_API_TOKEN is not configured; skipping ModelScope setup"; exit 0; fi
+          if [ -z "${MODELSCOPE_API_TOKEN:-}" ]; then echo "MODELSCOPE_API_TOKEN is required by release.json" >&2; exit 1; fi
           pip install modelscope-hub
 
       - name: Upload to ModelScope
-        if: always()
+        if: needs.setup.outputs.upload_modelscope == 'true'
         env:
           MODELSCOPE_API_TOKEN: ${{ secrets.MODELSCOPE_API_TOKEN }}
           MODELSCOPE_ENDPOINT: ${{ secrets.MODELSCOPE_ENDPOINT || 'https://modelscope.cn' }}
@@ -380,7 +408,7 @@ jobs:
           MODELSCOPE_REVISION: ${{ secrets.MODELSCOPE_REVISION || 'master' }}
           INSTALLER_NAME: ${{ needs.setup.outputs.installer_name }}
         run: |
-          if [ -z "${MODELSCOPE_API_TOKEN:-}" ]; then echo "MODELSCOPE_API_TOKEN is not configured; skipping ModelScope upload"; exit 0; fi
+          if [ -z "${MODELSCOPE_API_TOKEN:-}" ]; then echo "MODELSCOPE_API_TOKEN is required by release.json" >&2; exit 1; fi
           python scripts/upload_to_modelscope.py \
             --repo-id "$MODELSCOPE_REPO_ID" \
             --file "${INSTALLER_NAME}.exe" \

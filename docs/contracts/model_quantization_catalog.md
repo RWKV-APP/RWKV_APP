@@ -21,6 +21,14 @@ remote configuration. `FileInfo` parsing and remote-store filtering then use
 the rows for model visibility, compatibility, local-file recognition, download
 identity, and integrity metadata.
 
+From build 755, a remote or cached configuration replaces the bundled catalog
+only when its integer `configBuild` equals the running App build number. An
+unversioned, older, or future-build response is ignored and the matching bundled
+catalog remains usable. This prevents a server's older `latest.json` fallback
+from removing the current release's models. Publishing build-755 configuration
+requires the same marker in `755.json` and `latest.json`; preserve the previously
+published catalog as `754.json` before changing the server's latest fallback.
+
 The catalog `quantization` field is a user-facing weight label, but named
 technical formats remain distinguishable from generic weight-width aliases.
 Every bundled build catalog and the `latest.json` fallback apply the following
@@ -128,6 +136,46 @@ initialization also currently enables `allowAllSsl`; successful HTTPS transfer
 must therefore not be represented as certificate-verified artifact provenance.
 Download completion, runtime load completion, representative generation, and
 real-device acceptance remain separate evidence states.
+
+## SPEC-RWKV-PALM-RUNTIME — Palm As An Optional Bundled Backend
+
+Palm is an optional CPU inference backend selected by the catalog value `palm`.
+It is compiled into the ordinary RWKV Chat native runtime artifacts for
+Android, iOS, macOS, Windows, and Linux. Palm remains independently selectable;
+it is not an implicit fallback for models that declare another backend, and it
+is not downloaded or replaced as executable code after App installation.
+
+Palm `.mollm` packages remain external model resources and follow the existing
+catalog, download, local-file, and `LoadRWKVModel` flow. Model bytes must not be
+bundled into an App package. One exact `.mollm` artifact may be shared across
+platform rows only when its URL, byte size, SHA-256, package format, and model
+semantics are identical and loading plus generation are accepted separately on
+each claimed platform.
+
+The initial backend is CPU-only. Architecture-specific SIMD dispatch may change
+performance, but it does not change model identity. Apple Metal, CUDA, Vulkan,
+QNN, CANN, and other accelerator paths remain separate capabilities and must
+not be inferred from Palm CPU availability.
+
+Palm model visibility also requires the installed native library to enumerate
+the `palm` backend. On Android and Linux ARM64 that enumeration is gated by the
+CPU's dot-product and FP16 arithmetic support. Unsupported devices must not be
+offered Palm as a runnable model.
+
+## G1J 4.8.0 Distribution Scope
+
+The 4.8.0 G1J cohort is an explicit partial release of the 20260831 context-16384
+1.5B and 2.9B checkpoints. It includes the produced llama.cpp, WebRWKV, Palm,
+QNN, CoreML and MLX packages. MTK and the 7.2B and 13.3B models are excluded
+from this cohort; existing releases for those slots retain their own status.
+
+This cohort is published and verified on ModelScope. Hugging Face upload and
+testing are deferred. Until that destination is populated and independently
+verified, G1J rows use exact absolute ModelScope HTTPS URLs at an immutable
+40-hex revision, declare `availableIn: ["modelscope"]`, and preserve the file
+size and SHA-256. This is a release-specific exception to dual-provider
+promotion, not a claim of Hugging Face availability. Model catalog publication
+does not imply runtime acceptance of every artifact on every listed platform.
 
 ## SPEC-RWKV-QUANTIZATION-DELIVERY — Artifact Publication And App Acceptance
 

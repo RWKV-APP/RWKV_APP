@@ -13,6 +13,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
+### apple
+
+```sh
+[bundle exec] fastlane apple
+```
+
+Continue the published release on a Mac with the frozen version, build and native libraries. See [Apple continuation](../tools/README.md#apple-continuation) for prerequisites and resume behavior.
+
 ### all
 
 ```sh

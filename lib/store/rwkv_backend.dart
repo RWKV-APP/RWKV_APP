@@ -16,6 +16,7 @@ class _RWKVBackend {
   late final socName = qs("");
   late final socBrand = qs(SocBrand.unknown);
   late final commitId = qs<String>("");
+  late final availableBackendNames = qs<Set<String>>({});
 
   late final frontendSocName = qs<String?>(null);
   late final frontendSocBrand = qs<SocBrand?>(null);
@@ -31,12 +32,15 @@ extension _$RWKVBackend on _RWKVBackend {
       final socName = RWKVMobile.getSocName();
       final platformName = RWKVMobile.getPlatformName();
       final commitId = RWKVMobile.getRWKVMobileCommitHash();
+      final backends = RWKVMobile.getAvailableBackendNames().split(',').where((name) => name.isNotEmpty).toSet();
       final socBrand = SocBrand.fromString(platformName);
-      return (socName, socBrand, commitId);
+      return (socName, socBrand, commitId, backends);
     }, []);
     socName.q = r.$1;
     socBrand.q = r.$2;
     commitId.q = r.$3;
+    availableBackendNames.q = r.$4;
+    await P.remote.syncAvailableModels();
 
     if (!Platform.isAndroid) {
       return;

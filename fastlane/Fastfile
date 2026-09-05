@@ -1,5 +1,6 @@
 require_relative '../tools/fastlane/apple_auth_gate'
 require_relative '../tools/fastlane/release_git_staging'
+require_relative '../tools/fastlane/frozen_release'
 
 def fastlane_env_value(*keys)
   keys.each do |key|
@@ -239,6 +240,28 @@ def ios_preflight_app_store_connect_auth(params)
   context
 end
 
+desc 'Continue the published release on a Mac with the frozen version, build and native libraries'
+lane :apple do |params|
+  project_root = File.expand_path('..', __dir__)
+  release = JSON.parse(File.read(File.join(project_root, 'release.json')))
+  UI.user_error!('ModelScope credentials are required by release.json') if release['channels']['modelscope'] && fastlane_env_value('MODELSCOPE_API_TOKEN').nil?
+  ios_preflight_app_store_connect_auth(params)
+  begin
+    sh('python3', File.join(project_root, 'scripts/release_identity.py'), '--prepare-apple')
+    build_assets()
+    macos_build_and_upload(
+      frozen_release: true,
+      upload_to_github: release['channels']['github'],
+      upload_to_modelscope: release['channels']['modelscope'],
+      upload_to_huggingface: release['channels']['huggingface'],
+      upload_retry_count: 3,
+    )
+    ios_upload(groups: params[:groups] || ['External'], apple_auth_mode: params[:apple_auth_mode], frozen_release: release)
+  ensure
+    RwkvAppleAuthGate.finish_fresh_session_environment
+  end
+end
+
 lane :all do |params|
   env = (params[:env] != 'chat' && params[:env] != nil && params[:env] != '') ? params[:env] : 'chat'
   increase_version = params[:increase_version] == false ? false : true
@@ -406,6 +429,28 @@ lane :ios_upload do |params|
   end
 
   begin
+    frozen = params[:frozen_release]
+    if frozen
+      require 'spaceship'
+      app = Spaceship::ConnectAPI::App.find('com.rwkv.chat.v7.100m')
+      UI.user_error!('Canonical iOS app was not found in App Store Connect') if app.nil?
+      existing_build = Spaceship::ConnectAPI::Build.all(
+        app_id: app.id, version: frozen['version'], build_number: frozen['build'].to_s, platform: 'IOS',
+      ).first
+      if existing_build
+        if existing_build.expired || %w[FAILED INVALID].include?(existing_build.processing_state)
+          UI.user_error!("The frozen iOS build cannot be reused: #{existing_build.processing_state}, expired=#{existing_build.expired}")
+        end
+        UI.message("Resuming TestFlight distribution for #{frozen['version']} (#{frozen['build']}); existing state: #{existing_build.processing_state}")
+        upload_to_testflight(
+          ios_upload_to_testflight_options(params, app_store_connect_context[:api_key]).merge(
+            distribute_only: true, app_version: frozen['version'], build_number: frozen['build'].to_s,
+            notify_external_testers: false,
+          ),
+        )
+        next
+      end
+    end
     run_flutter_build_ipa()
     ipa_path = ios_built_ipa_path()
     upload_to_testflight(
@@ -546,9 +591,11 @@ lane :macos_build_and_upload do |params|
   keychain_pwd = 'temp_password_123'
   # 关键修复：使用 -db 后缀，这是 macOS 的标准物理文件名后缀
   keychain_db_path = File.expand_path("~/Library/Keychains/#{keychain_name}-db")
-  signing_identity = nil
+  signing_identity = fastlane_env_value('MACOS_SIGNING_IDENTITY')
+  resumed_dmg = params[:frozen_release] ? RwkvFrozenRelease.resume_macos(project_root, version_number, build_number) : nil
+  created_keychain = false
 
-  if p12_path && File.exist?(p12_path)
+  if resumed_dmg.nil? && p12_path && File.exist?(p12_path)
     # 彻底清理旧的
     # 只有当文件确实存在时才尝试删除
     if File.exist?(keychain_db_path)
@@ -563,6 +610,8 @@ lane :macos_build_and_upload do |params|
       unlock: true,
       timeout: 3600,
     )
+
+    created_keychain = true
 
     # 导入证书
     import_certificate(
@@ -582,7 +631,7 @@ lane :macos_build_and_upload do |params|
 
     # 核心修复：手动设置 Partition List，防止签名时弹出密码输入框
     # 注意这里使用的是上面定义的带 -db 的绝对路径
-    sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k #{Shellwords.escape(keychain_pwd)} #{keychain_db_path}")
+    sh('security', 'set-key-partition-list', '-S', 'apple-tool:,apple:,codesign:', '-s', '-k', keychain_pwd, keychain_db_path, log: false)
 
     # 获取签名标识
     identity_output = `security find-identity -v -p codesigning #{keychain_db_path} | grep -o '"[^"]*"' | head -1 | tr -d '"'`.strip
@@ -591,40 +640,55 @@ lane :macos_build_and_upload do |params|
   end
 
   begin
-    # 3. 编译 DMG (确保已开启 Hardened Runtime 以通过公证)
-    dmg_path = run_flutter_build_macos_dmg(
-      identity_id: signing_identity,
-      keychain_name: signing_identity ? keychain_db_path : nil,
-    )
+    if resumed_dmg
+      dmg_path = resumed_dmg
+      absolute_dmg_path = resumed_dmg
+      UI.message('Verified existing macOS DMG; continuing remaining provider uploads')
+    else
+        if params[:frozen_release]
+        %w[APPLE_ID_EMAIL MACOS_APP_PASSWORD MACOS_TEAM_ID].each do |key|
+          UI.user_error!("#{key} is required for notarization") if fastlane_env_value(key).nil?
+        end
+        signing_identity ||= RwkvFrozenRelease.run!('security', 'find-identity', '-v', '-p', 'codesigning').lines.filter_map { |line| line[/"(Developer ID Application: [^"]+)"/, 1] }.find { |name| name.include?(ENV.fetch('MACOS_TEAM_ID')) }
+        UI.user_error!('A Developer ID Application signing identity is required') if signing_identity.to_s.empty?
+      end
+      # 3. 编译 DMG (确保已开启 Hardened Runtime 以通过公证)
+      dmg_path = run_flutter_build_macos_dmg(
+        identity_id: signing_identity,
+        keychain_name: created_keychain ? keychain_db_path : nil,
+      )
 
-    # 核心修复：确保 dmg_path 是绝对路径
-    # 使用之前定义的 project_root 来锚定路径
-    absolute_dmg_path = File.expand_path(dmg_path, project_root)
-    UI.message("准备公证文件，绝对路径为: #{absolute_dmg_path}")
+      # 核心修复：确保 dmg_path 是绝对路径
+      # 使用之前定义的 project_root 来锚定路径
+      absolute_dmg_path = File.expand_path(dmg_path, project_root)
+      UI.message("准备公证文件，绝对路径为: #{absolute_dmg_path}")
 
-    # 4. 🔥 公证 (Notarization)
-    UI.header '开始公证 (Notarizing)...'
+      # 4. 🔥 公证 (Notarization)
+      UI.header '开始公证 (Notarizing)...'
 
-    # 使用绝对路径调用 notarytool
-    sh("xcrun notarytool submit #{Shellwords.escape(absolute_dmg_path)} " \
-    "--apple-id #{Shellwords.escape(ENV['APPLE_ID_EMAIL'])} " \
-    "--password #{Shellwords.escape(ENV['MACOS_APP_PASSWORD'])} " \
-    "--team-id #{Shellwords.escape(ENV['MACOS_TEAM_ID'])} " \
-    '--wait')
+      # 使用绝对路径调用 notarytool
+      sh("xcrun notarytool submit #{Shellwords.escape(absolute_dmg_path)} " \
+      "--apple-id #{Shellwords.escape(ENV['APPLE_ID_EMAIL'])} " \
+      "--password #{Shellwords.escape(ENV['MACOS_APP_PASSWORD'])} " \
+      "--team-id #{Shellwords.escape(ENV['MACOS_TEAM_ID'])} " \
+      '--wait', log: false)
 
-    # 5. 🔥 钉住证书 (Stapler)
-    UI.message '公证成功，正在执行 Staple...'
-    sh("xcrun stapler staple #{Shellwords.escape(absolute_dmg_path)}")
+      # 5. 🔥 钉住证书 (Stapler)
+      UI.message '公证成功，正在执行 Staple...'
+      sh("xcrun stapler staple #{Shellwords.escape(absolute_dmg_path)}")
 
-    UI.success '✅ macOS 应用公证并缝合完成！'
+      UI.success '✅ macOS 应用公证并缝合完成！'
+    end
   ensure
     # 无论结果如何，清理临时钥匙串
-    if p12_path && File.exist?(p12_path)
+    if created_keychain
       delete_keychain(name: keychain_name)
     end
   end
 
-  if upload_to_github
+  if upload_to_github && params[:frozen_release]
+    RwkvFrozenRelease.publish_macos(version_number, absolute_dmg_path)
+  elsif upload_to_github
     github_release(
       repo: 'RWKV-APP/RWKV_APP',
       version: full_version,

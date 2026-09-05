@@ -39,6 +39,7 @@ class _App extends RawApp {
   }
 
   String get _configForAllDemosKey => "configForAllDemosKey_${buildNumber.q}";
+  bool acceptsConfig(Map<String, dynamic> config) => config['configBuild'] is int && config['configBuild'] == int.tryParse(buildNumber.q);
   static const String officialDownloadPageUrl = "https://rwkv.halowang.cloud/";
 
   @override
@@ -588,8 +589,13 @@ extension _$App on _App {
       final data = res["data"];
       if (success != true) throw "success is false, success: $success, message: $message";
       if (data is! Map) throw "data is not a Map, data: ${data.runtimeType}";
+      final config = castJsonMap(data);
+      if (!acceptsConfig(config)) {
+        qqw("Ignoring remote config for a different or unspecified App build");
+        return null;
+      }
       qqr("pull remote config success");
-      return castJsonMap(data);
+      return config;
     } catch (e) {
       qe;
       qqe(e);
@@ -904,7 +910,9 @@ extension _$App on _App {
 
     final jsonString = sp.getString(_configForAllDemosKey);
     final rawJSON = jsonDecode(jsonString!);
-    final json = castJsonMap(rawJSON);
+    final cached = castJsonMap(rawJSON);
+    final json = acceptsConfig(cached) ? cached : await _loadConfigFromBundle();
+    if (!identical(json, cached)) await sp.setString(_configForAllDemosKey, jsonEncode(json));
 
     final endTime = DateTime.now().millisecondsSinceEpoch;
     qqw("load config from local sandbox and bundle time: ${endTime - startTime}ms");

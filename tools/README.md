@@ -57,7 +57,45 @@ required backlinks, process versions, and synchronized Agent instructions
 
 Specification failures are blocking even though historical lightweight rule warnings remain non-blocking by default
 
-## Other Scripts
+## Apple continuation
+
+On the App checkout at the published release tag, run `fastlane apple` (or
+`fl apple` when `fl` is the local Fastlane alias). For 4.8.0 this preserves
+build 755 and appends the macOS DMG to the existing 4.8.0 GitHub Release and
+ModelScope dataset, then uploads the same iOS version/build to TestFlight.
+Hugging Face remains disabled by this release's `release.json`.
+
+The Mac needs Xcode, Flutter 3.44.8, Fastlane, Python 3.10+, an authenticated
+GitHub CLI, the exact sibling `rwkv_mobile_flutter` checkout, and existing Apple
+signing credentials. The lane checks the App tag and a clean source tree, then
+fetches and checks out the adapter commit in `release.json` if necessary. It
+refuses to discard local adapter changes and verifies the pinned iOS/macOS
+native libraries before building. The native macOS library targets Apple Silicon.
+
+Set `MODELSCOPE_API_TOKEN`, `APPLE_ID_EMAIL`, `MACOS_APP_PASSWORD` and
+`MACOS_TEAM_ID` in the Mac's existing private release environment. A Developer ID
+Application certificate must be available in the keychain; `MACOS_SIGNING_IDENTITY`
+can select it explicitly. Existing `MACOS_CERTIFICATE_PATH` and
+`MACOS_CERTIFICATE_PWD` support importing a P12 for the run. Never commit these
+values. The existing Apple ID preauthentication gate runs first in the foreground;
+App Store Connect API-key authentication remains an explicit optional mode.
+
+Rerunning the same command downloads and verifies an already published DMG and
+continues its remaining uploads without rebuilding or replacing accepted bytes.
+ModelScope checks the remote size and SHA-256 anonymously. An existing TestFlight
+version/build resumes distribution without uploading another IPA. Apple processing
+or external beta review may remain pending and must be checked on App Store Connect.
+The command never increments the build number or resets the App worktree.
+
+Offline release helper checks:
+
+```sh
+python3 -m unittest discover -s scripts -p 'test_*.py'
+ruby tools/fastlane/frozen_release_test.rb
+ruby tools/fastlane/apple_auth_gate_test.rb
+```
+
+## Script index
 
 | Script | Purpose | Notes |
 | --- | --- | --- |
