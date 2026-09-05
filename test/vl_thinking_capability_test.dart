@@ -36,12 +36,15 @@ void main() {
         return (entry['tags'] as List<dynamic>).contains(configurableVisionThinkingTag);
       }).toList();
 
-      expect(thinkingPreview, hasLength(3));
+      expect(thinkingPreview, isNotEmpty);
+      for (final suffix in ['-vision-encoder.mnn', '-vision-adapter.mnn', '-Q8_0.gguf']) {
+        expect(thinkingPreview.any((entry) => (entry['url'] as String).endsWith(suffix)), isTrue);
+      }
       expect(
         thinkingPreview.every((entry) => (entry['tags'] as List<dynamic>).contains(configurableVisionThinkingTag)),
         isTrue,
       );
-      expect(taggedVisionConfigs, hasLength(3));
+      expect(taggedVisionConfigs, hasLength(thinkingPreview.length));
       expect(
         taggedVisionConfigs.every((entry) {
           final url = entry['url'] as String;

@@ -99,8 +99,9 @@ VL 模型选择器必须沿用 Chat 模型选择器的同一个核心权重 comp
 该列表标签与 See 页按钮使用同一个核心权重 `thinking` 判断，不从 encoder、
 adapter、模型名称或其他标签推导。
 
-当前目录中只有 `RWKV-VL 1.5B Thinking Preview · 260815` 这一组的三个组成
-条目具备该能力。此前的 `RWKV-VL-260625`、FineVisionMax 非 Thinking Preview
+当前目录中只有 `RWKV-VL 1.5B Thinking Preview · 260815` 这一组的核心权重、
+vision encoder 和 vision adapter 具备该能力；同组不同后端的权重沿用该能力。
+此前的 `RWKV-VL-260625`、FineVisionMax 非 Thinking Preview
 以及更早的 VL 条目都不具备可配置 Thinking 能力，必须保持无 `thinking`
 标签。
 

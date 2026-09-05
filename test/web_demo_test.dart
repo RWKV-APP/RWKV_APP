@@ -282,7 +282,16 @@ noise
 
     test('saves HTML into the web demo directory', () async {
       final root = Directory.systemTemp.createTempSync('rwkv_web_demo_test_');
+      final previousDocumentsDir = P.app.documentsDir.q;
+      const pathProviderChannel = MethodChannel('plugins.flutter.io/path_provider');
+      final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(pathProviderChannel, (call) async {
+        expect(call.method, 'getApplicationDocumentsDirectory');
+        return root.path;
+      });
       addTearDown(() {
+        messenger.setMockMethodCallHandler(pathProviderChannel, null);
+        P.app.documentsDir.q = previousDocumentsDir;
         if (root.existsSync()) root.deleteSync(recursive: true);
       });
       P.app.documentsDir.q = root;
@@ -293,7 +302,7 @@ noise
       );
 
       expect(file.existsSync(), isTrue);
-      expect(file.path, contains('/web_demo/'));
+      expect(file.parent.path, '${root.path}${Platform.pathSeparator}web_demo');
       expect(file.readAsStringSync(), '<!doctype html><html><body>Saved page</body></html>');
       expect(P.webDemo.lastSavedHtmlPath.q, file.path);
     });
