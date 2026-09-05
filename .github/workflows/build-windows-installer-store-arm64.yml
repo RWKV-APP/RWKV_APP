@@ -344,7 +344,7 @@ jobs:
       - name: Upload verified GitHub assets
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/release_identity.py --upload-github "true"
+        run: python3 scripts/release_identity.py --upload-github "*.exe"
 
   upload-providers:
     name: Upload enabled providers
