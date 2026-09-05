@@ -84,6 +84,24 @@ Static analysis, unit tests, widget tests, builds, and deterministic scripts pro
 
 The root Codex agent delivering a task must inspect the combined diff and personally review representative outcomes at the level a user consumes them. For work that crosses the Flutter app, adapter, native engine, or website, verify every relevant repository and representation within the authorized scope.
 
+## SPEC-RWKV-MODEL-PARAMETER-HELP — Model Settings Parameter Help
+
+Model settings display an accessible information button beside Temperature,
+Top P, Presence Penalty, Frequency Penalty, Penalty Decay, and Max Length.
+Desktop users can hover, click, or activate the button from the keyboard to
+read a tooltip, and dismiss it with Escape or an outside click. Android and
+iOS users tap the button to read a scrollable bottom sheet with a close action
+and safe-area padding. Closing help preserves the settings panel and values.
+
+Each explanation states what the parameter controls and how higher and lower
+values affect generation, using plain language in every supported locale.
+Penalty Decay explains that values closer to 1 retain repetition penalties
+longer. Max Length is a generated-token ceiling, including generated thinking
+tokens, rather than a character count or a guaranteed response length. Help
+does not promise factual accuracy, alter sampling, or change the existing
+Apply, Cancel, and Reset behavior. Section labels identify reasoning mode in
+the selected language.
+
 ## SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE — RWKV Chat Acceptance Uses One App Identity
 
 Every App-level RWKV Chat acceptance must use the canonical RWKV Chat product

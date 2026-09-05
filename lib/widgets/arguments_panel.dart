@@ -118,6 +118,7 @@ class ArgumentsPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     return ClipRRect(
@@ -152,7 +153,7 @@ class ArgumentsPanel extends ConsumerWidget {
                             const WidgetSpan(child: SizedBox(width: 8)),
                             TextSpan(
                               text: title ?? s.model_settings,
-                              style: const TextStyle(fontSize: 16, fontWeight: .w500),
+                              style: theme.textTheme.titleMedium?.copyWith(fontSize: 16, fontWeight: .w500),
                             ),
                           ],
                         ),
@@ -199,6 +200,7 @@ class _SamplerOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final reasoning = ref.watch(P.rwkvParams.reasoning);
     final qb = ref.watch(P.app.qb);
@@ -208,7 +210,12 @@ class _SamplerOptions extends ConsumerWidget {
       child: Row(
         children: [
           const SizedBox(width: 12),
-          Expanded(child: Text("Sampler Options" + (reasoning ? " (Reason)" : ""))),
+          Expanded(
+            child: Text(
+              reasoning ? s.sampler_options_reasoning : s.sampler_options,
+              style: theme.textTheme.bodyMedium,
+            ),
+          ),
           TextButton(
             style: TextButton.styleFrom(
               padding: .zero,
@@ -230,6 +237,7 @@ class _CompletionOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final reasoning = ref.watch(P.rwkvParams.reasoning);
@@ -239,7 +247,12 @@ class _CompletionOptions extends ConsumerWidget {
       child: Row(
         children: [
           const SizedBox(width: 12),
-          Expanded(child: Text("Completion Options" + (reasoning ? " (Reason)" : ""))),
+          Expanded(
+            child: Text(
+              reasoning ? s.completion_options_reasoning : s.completion_options,
+              style: theme.textTheme.bodyMedium,
+            ),
+          ),
           TextButton(
             style: TextButton.styleFrom(
               padding: .zero,

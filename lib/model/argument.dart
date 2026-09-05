@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 
 // Project imports:
 import 'package:zone/args.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/store/p.dart';
 
@@ -15,6 +16,16 @@ enum Argument {
   penaltyDecay,
   maxLength,
   batchCount;
+
+  String? helpDescription(S s) => switch (this) {
+    temperature => s.parameter_help_temperature,
+    topP => s.parameter_help_top_p,
+    presencePenalty => s.parameter_help_presence_penalty,
+    frequencyPenalty => s.parameter_help_frequency_penalty,
+    penaltyDecay => s.parameter_help_penalty_decay,
+    maxLength => s.parameter_help_max_length,
+    topK || batchCount => null,
+  };
 
   bool get configureable => switch (this) {
     temperature => true,

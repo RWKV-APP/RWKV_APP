@@ -125,78 +125,80 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m47(os) => "현재 OS(${os})에서는 폴더 열기 작업을 지원하지 않습니다.";
 
-  static String m48(path) => "경로: ${path}";
+  static String m48(name) => "${name} 알아보기";
 
-  static String m49(value) => "Penalty Decay: ${value}";
+  static String m49(path) => "경로: ${path}";
 
-  static String m50(index) => "메시지 ${index}에 설정할 샘플러 및 페널티 매개변수를 선택하세요";
+  static String m50(value) => "Penalty Decay: ${value}";
 
-  static String m51(percent) => "프리필 진행률 ${percent}";
+  static String m51(index) => "메시지 ${index}에 설정할 샘플러 및 페널티 매개변수를 선택하세요";
 
-  static String m52(value) => "Presence Penalty: ${value}";
+  static String m52(percent) => "프리필 진행률 ${percent}";
 
-  static String m53(count) =>
+  static String m53(value) => "Presence Penalty: ${value}";
+
+  static String m54(count) =>
       "생성을 누르면 RWKV가 고른 질문 시작을 바탕으로 최대 ${count}개의 질문 아이디어를 만들어 줍니다.";
 
-  static String m54(count) => "대기열: ${count}";
+  static String m55(count) => "대기열: ${count}";
 
-  static String m55(count) => "이 모델은 ${count}개의 응답 스타일을 지원하지 않습니다";
+  static String m56(count) => "이 모델은 ${count}개의 응답 스타일을 지원하지 않습니다";
 
-  static String m56(count) => "동시에 무작위 질문 ${count}개에 답변";
+  static String m57(count) => "동시에 무작위 질문 ${count}개에 답변";
 
-  static String m57(count) => "무작위 질문 ${count}개를 만들 프리셋이 부족합니다";
+  static String m58(count) => "무작위 질문 ${count}개를 만들 프리셋이 부족합니다";
 
-  static String m58(count) => "선택됨 ${count}";
+  static String m59(count) => "선택됨 ${count}";
 
-  static String m59(text) => "소스 텍스트: ${text}";
+  static String m60(text) => "소스 텍스트: ${text}";
 
-  static String m60(text) => "타겟 텍스트: ${text}";
+  static String m61(text) => "타겟 텍스트: ${text}";
 
-  static String m61(value) => "Temperature: ${value}";
+  static String m62(value) => "Temperature: ${value}";
 
-  static String m62(footer) => "추론${footer}-영어";
+  static String m63(footer) => "추론${footer}-영어";
 
-  static String m63(footer) => "추론${footer}-영어 길게";
+  static String m64(footer) => "추론${footer}-영어 길게";
 
-  static String m64(footer) => "추론${footer}-영어 짧게";
+  static String m65(footer) => "추론${footer}-영어 짧게";
 
-  static String m65(footer) => "추론${footer}-빠름";
+  static String m66(footer) => "추론${footer}-빠름";
 
-  static String m66(footer) => "추론${footer}-자동";
+  static String m67(footer) => "추론${footer}-자동";
 
-  static String m67(footer) => "추론${footer}-높음";
+  static String m68(footer) => "추론${footer}-높음";
 
-  static String m68(footer) => "추론${footer}-바보";
+  static String m69(footer) => "추론${footer}-바보";
 
-  static String m69(value) => "Top P: ${value}";
+  static String m70(value) => "Top P: ${value}";
 
-  static String m70(count) => "총 테스트 항목: ${count}";
+  static String m71(count) => "총 테스트 항목: ${count}";
 
-  static String m71(model) => "공식 클라우드 ${model}";
+  static String m72(model) => "공식 클라우드 ${model}";
 
-  static String m72(error) => "Web Demo 실패: ${error}";
+  static String m73(error) => "Web Demo 실패: ${error}";
 
-  static String m73(count, backend) => "${count}개 페이지 · ${backend}";
+  static String m74(count, backend) => "${count}개 페이지 · ${backend}";
 
-  static String m74(index) => "웹 ${index}";
+  static String m75(index) => "웹 ${index}";
 
-  static String m75(label) => "${label} 소스";
+  static String m76(label) => "${label} 소스";
 
-  static String m76(tokens, bytes) => "${tokens} tokens, ${bytes} bytes";
+  static String m77(tokens, bytes) => "${tokens} tokens, ${bytes} bytes";
 
-  static String m77(port) => "WebSocket 서비스 (포트: ${port})";
+  static String m78(port) => "WebSocket 서비스 (포트: ${port})";
 
-  static String m78(id) => "창 ${id}";
-
-  static String m79(buildArchitecture, operatingSystemArchitecture, url) =>
-      "현재 앱의 Build Architecture는 ${buildArchitecture}이고, Windows Operating System의 Architecture는 ${operatingSystemArchitecture}입니다.\n\n공식 다운로드 페이지에서 아키텍처에 맞는 실행 파일을 다운로드하세요:\n${url}";
+  static String m79(id) => "창 ${id}";
 
   static String m80(buildArchitecture, operatingSystemArchitecture, url) =>
+      "현재 앱의 Build Architecture는 ${buildArchitecture}이고, Windows Operating System의 Architecture는 ${operatingSystemArchitecture}입니다.\n\n공식 다운로드 페이지에서 아키텍처에 맞는 실행 파일을 다운로드하세요:\n${url}";
+
+  static String m81(buildArchitecture, operatingSystemArchitecture, url) =>
       "아키텍처 불일치가 감지되었습니다: 현재 앱의 Build Architecture는 ${buildArchitecture}이고, Windows Operating System의 Architecture는 ${operatingSystemArchitecture}입니다. 공식 다운로드 페이지에서 일치하는 버전을 다운로드하세요: ${url}";
 
-  static String m81(count) => "${count}개의 탭";
+  static String m82(count) => "${count}개의 탭";
 
-  static String m82(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
+  static String m83(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -692,10 +694,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "clear": MessageLookupByLibrary.simpleMessage("지우기"),
     "clear_application_cache": MessageLookupByLibrary.simpleMessage("캐시 지우기"),
-    "clear_application_cache_confirmation":
-        MessageLookupByLibrary.simpleMessage(
-          "앱 설정과 로컬 구성 캐시를 지우시겠습니까? 채팅 기록, 내보낸 파일, 가중치 파일은 삭제되지 않습니다. 사용자 지정 모델 폴더 연결은 유지됩니다.",
-        ),
+    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "앱 설정과 로컬 구성 캐시를 지우시겠습니까? 채팅 기록, 내보낸 파일, 가중치 파일은 삭제되지 않습니다. 사용자 지정 모델 폴더 연결은 유지됩니다.",
+    ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage("메모리 캐시 지우기"),
     "clear_text": MessageLookupByLibrary.simpleMessage("텍스트 지우기"),
     "click_here_to_select_a_new_model": MessageLookupByLibrary.simpleMessage(
@@ -726,6 +727,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "completion": MessageLookupByLibrary.simpleMessage("완성"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("완성 모드"),
+    "completion_options": MessageLookupByLibrary.simpleMessage("생성 설정"),
+    "completion_options_reasoning": MessageLookupByLibrary.simpleMessage(
+      "생성 설정(생각 모드)",
+    ),
     "confirm": MessageLookupByLibrary.simpleMessage("확인"),
     "confirm_delete_file_message": MessageLookupByLibrary.simpleMessage(
       "이 파일은 로컬 디스크에서 영구적으로 삭제됩니다",
@@ -1285,7 +1290,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "parameter_description_detail": MessageLookupByLibrary.simpleMessage(
       "Temperature: 출력의 무작위성을 제어합니다. 높은 값(예: 0.8)은 더 창의적이고 무작위적으로, 낮은 값(예: 0.2)은 더 집중적이고 결정적으로 만듭니다.\n\nTop P: 출력의 다양성을 제어합니다. 모델은 누적 확률이 Top P에 도달하는 토큰만 고려합니다. 낮은 값(예: 0.5)은 확률이 낮은 단어를 무시하여 관련성을 높입니다.\n\nPresence Penalty: 토큰이 텍스트에 이미 나타났는지 여부에 따라 페널티를 부여합니다. 양수 값은 새로운 주제에 대해 이야기할 가능성을 높입니다.\n\nFrequency Penalty: 텍스트 내 빈도에 따라 토큰에 페널티를 부여합니다. 양수 값은 같은 줄을 그대로 반복할 가능성을 줄입니다.\n\nPenalty Decay: 거리에 따른 페널티 감소를 제어합니다.",
     ),
-    "path_label": m48,
+    "parameter_help_frequency_penalty": MessageLookupByLibrary.simpleMessage(
+      "토큰(텍스트 조각)이 나온 횟수에 따라 반복을 억제합니다. 자주 나온 토큰일수록 더 강한 영향을 받습니다.\n\n높게: 같은 표현의 반복을 더 강하게 줄입니다.\n낮게: 더 많은 반복을 허용합니다.\n\n너무 높으면 글의 흐름이 부자연스러워질 수 있습니다.",
+    ),
+    "parameter_help_label": m48,
+    "parameter_help_max_length": MessageLookupByLibrary.simpleMessage(
+      "한 번의 응답에서 생성할 수 있는 최대 토큰 수입니다. 생성된 생각 과정도 포함합니다. 토큰은 텍스트 조각으로, 글자 수나 단어 수와 다릅니다.\n\n낮게: 한도에 빨리 도달해 응답이 중간에 잘릴 수 있습니다.\n높게: 더 긴 출력을 허용하며 시간이 더 걸릴 수 있습니다.\n\n상한선이므로 모델이 더 일찍 끝낼 수도 있습니다.",
+    ),
+    "parameter_help_penalty_decay": MessageLookupByLibrary.simpleMessage(
+      "텍스트를 생성하면서 반복 억제 효과가 약해지는 속도를 조절합니다.\n\n낮게(예: 0.990): 더 빨리 약해져 이전 표현을 다시 쓰기 쉬워집니다.\n높게(예: 0.999): 더 천천히 약해져 반복 억제 효과가 오래갑니다.\n\n모델이 기억하는 문맥의 길이를 바꾸지는 않습니다.",
+    ),
+    "parameter_help_presence_penalty": MessageLookupByLibrary.simpleMessage(
+      "이미 나온 토큰(텍스트 조각)을 다시 쓰는 경향을 줄입니다.\n\n높게: 다른 표현을 선택하도록 유도합니다.\n낮게: 이전 표현을 다시 쓰기 쉬워집니다.\n\n너무 높으면 이름, 용어, 코드를 반복해야 하는 내용에 영향을 줄 수 있습니다.",
+    ),
+    "parameter_help_temperature": MessageLookupByLibrary.simpleMessage(
+      "다음 토큰(텍스트 조각)을 고를 때의 무작위성을 조절합니다.\n\n낮게: 익숙하고 예측하기 쉬운 표현을 선호합니다.\n높게: 표현이 다양해지지만 주제에서 벗어날 수 있습니다.\n\n잘 모르겠다면 기본값을 유지하세요. 값을 낮춰도 정답이 보장되지는 않습니다.",
+    ),
+    "parameter_help_top_p": MessageLookupByLibrary.simpleMessage(
+      "다음 토큰(텍스트 조각)의 후보 범위를 제한합니다. 확률이 높은 후보부터 누적 확률이 Top P에 도달할 때까지 남깁니다.\n\n낮게: 선택 범위가 좁아집니다.\n높게: 더 다양한 표현을 허용합니다.\n\n예를 들어 0.5는 누적 확률이 약 50%라는 뜻이며, 전체 어휘의 절반을 쓴다는 뜻은 아닙니다.",
+    ),
+    "path_label": m49,
     "pause": MessageLookupByLibrary.simpleMessage("일시 정지"),
     "paused_reply_edit_hint": MessageLookupByLibrary.simpleMessage(
       "답변이 일시 중지되었습니다. 이전 질문을 수정해야 한다면 원래 질문을 편집한 뒤 다시 생성하면 더 정확한 답변을 얻을 수 있습니다.",
@@ -1297,7 +1321,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "답변을 일시 중지하면 원래 질문을 수정하고 다시 생성하도록 안내합니다.",
         ),
-    "penalty_decay_with_value": m49,
+    "penalty_decay_with_value": m50,
     "performance_test": MessageLookupByLibrary.simpleMessage("성능 테스트"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
       "속도와 정확도 테스트",
@@ -1357,7 +1381,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "난이도를 선택해주세요",
     ),
     "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m50,
+        m51,
     "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
         MessageLookupByLibrary.simpleMessage(
           "모든 메시지에 설정할 샘플러 및 페널티 매개변수를 선택하세요",
@@ -1381,13 +1405,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefer": MessageLookupByLibrary.simpleMessage("사용"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("중국어 추론 사용"),
     "prefill": MessageLookupByLibrary.simpleMessage("사전 채우기"),
-    "prefill_progress_percent": m51,
+    "prefill_progress_percent": m52,
     "prefill_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "프리필 속도(초당 토큰 수)",
     ),
     "prefix_bank": MessageLookupByLibrary.simpleMessage("접두사 묶음"),
     "prefix_examples": MessageLookupByLibrary.simpleMessage("접두사 예시"),
-    "presence_penalty_with_value": m52,
+    "presence_penalty_with_value": m53,
     "preview": MessageLookupByLibrary.simpleMessage("미리보기"),
     "processing_image": MessageLookupByLibrary.simpleMessage("이미지를 처리하는 중..."),
     "prompt": MessageLookupByLibrary.simpleMessage("프롬프트"),
@@ -1435,11 +1459,11 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "생성된 질문을 탭하면 대화 입력창에 바로 붙여 넣을 수 있습니다.",
         ),
-    "question_generator_tap_generate_hint": m53,
+    "question_generator_tap_generate_hint": m54,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "RWKV가 이 언어로 질문해 줬으면 좋겠어요...",
     ),
-    "queued_x": m54,
+    "queued_x": m55,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("빠른 사고"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "빠른 사고가 활성화되었습니다",
@@ -1473,14 +1497,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_auto_switched_to_jin": MessageLookupByLibrary.simpleMessage(
       "자동으로 今 스타일로 전환했습니다",
     ),
-    "response_style_batch_not_supported": m55,
+    "response_style_batch_not_supported": m56,
     "response_style_button": MessageLookupByLibrary.simpleMessage("스타일"),
     "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
       "응답 스타일을 최소 하나는 켜 두어야 합니다",
     ),
     "response_style_many": MessageLookupByLibrary.simpleMessage("여러 스타일"),
-    "response_style_random_questions": m56,
-    "response_style_random_questions_not_enough": m57,
+    "response_style_random_questions": m57,
+    "response_style_random_questions_not_enough": m58,
     "response_style_route_en": MessageLookupByLibrary.simpleMessage("영어 답변"),
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
       "최종 답변은 영어로만 작성",
@@ -1513,6 +1537,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV 채팅"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 오셀로"),
+    "sampler_options": MessageLookupByLibrary.simpleMessage("샘플링 설정"),
+    "sampler_options_reasoning": MessageLookupByLibrary.simpleMessage(
+      "샘플링 설정(생각 모드)",
+    ),
     "save": MessageLookupByLibrary.simpleMessage("저장"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("QR 코드 스캔"),
     "scanning_folder_for_pth": MessageLookupByLibrary.simpleMessage(
@@ -1548,7 +1576,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
       "설정 파일의 가중치 또는 로컬 모델 파일 선택",
     ),
-    "selected_count": m58,
+    "selected_count": m59,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
       "RWKV에게 메시지 보내기",
     ),
@@ -1579,7 +1607,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "skip_this_version": MessageLookupByLibrary.simpleMessage("이 버전 건너뛰기"),
     "small": MessageLookupByLibrary.simpleMessage("작게 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("소스 코드"),
-    "source_text": m59,
+    "source_text": m60,
     "space_rendered": MessageLookupByLibrary.simpleMessage("공백이 표시되었습니다"),
     "space_symbol_settings": MessageLookupByLibrary.simpleMessage("공백 기호 설정"),
     "space_symbol_style": MessageLookupByLibrary.simpleMessage("공백 기호 스타일"),
@@ -1643,11 +1671,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tag_day_of_week": MessageLookupByLibrary.simpleMessage("요일"),
     "tag_time": MessageLookupByLibrary.simpleMessage("시간"),
     "take_photo": MessageLookupByLibrary.simpleMessage("사진 찍기"),
-    "target_text": m60,
+    "target_text": m61,
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
       "기술 연구 그룹",
     ),
-    "temperature_with_value": m61,
+    "temperature_with_value": m62,
     "test_data": MessageLookupByLibrary.simpleMessage("테스트 데이터"),
     "test_result": MessageLookupByLibrary.simpleMessage("테스트 결과"),
     "test_results": MessageLookupByLibrary.simpleMessage("테스트 결과"),
@@ -1663,10 +1691,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("검정"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("그럼 이제 RWKV와 채팅을 시작할 수 있습니다"),
-    "think_button_mode_en": m62,
-    "think_button_mode_en_long": m63,
-    "think_button_mode_en_short": m64,
-    "think_button_mode_fast": m65,
+    "think_button_mode_en": m63,
+    "think_button_mode_en_long": m64,
+    "think_button_mode_en_short": m65,
+    "think_button_mode_fast": m66,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "추론 모드는 모델의 추론 성능에 영향을 미칩니다",
     ),
@@ -1678,7 +1706,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("생각 중..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("모드"),
-    "thinking_mode_auto": m66,
+    "thinking_mode_auto": m67,
     "thinking_mode_button_auto": MessageLookupByLibrary.simpleMessage("자동"),
     "thinking_mode_button_en": MessageLookupByLibrary.simpleMessage("영어"),
     "thinking_mode_button_en_long": MessageLookupByLibrary.simpleMessage(
@@ -1690,8 +1718,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking_mode_button_fast": MessageLookupByLibrary.simpleMessage("빠름"),
     "thinking_mode_button_high": MessageLookupByLibrary.simpleMessage("높음"),
     "thinking_mode_button_off": MessageLookupByLibrary.simpleMessage("바보"),
-    "thinking_mode_high": m67,
-    "thinking_mode_off": m68,
+    "thinking_mode_high": m68,
+    "thinking_mode_off": m69,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("사고 모드 템플릿"),
     "thinking_tag_preview": MessageLookupByLibrary.simpleMessage("사고 과정 표시 압축"),
     "thinking_tag_preview_subtitle": MessageLookupByLibrary.simpleMessage(
@@ -1705,10 +1733,10 @@ class MessageLookup extends MessageLookupByLibrary {
           "이 모델은 병렬 추론을 지원하지 않습니다. \'batch\' 태그가 있는 모델을 선택해주세요",
         ),
     "thought_result": MessageLookupByLibrary.simpleMessage("생각 결과"),
-    "top_p_with_value": m69,
+    "top_p_with_value": m70,
     "total_count": MessageLookupByLibrary.simpleMessage("총 수"),
     "total_disk_usage": MessageLookupByLibrary.simpleMessage("저장 공간 사용량"),
-    "total_test_items": m70,
+    "total_test_items": m71,
     "translate": MessageLookupByLibrary.simpleMessage("번역"),
     "translating": MessageLookupByLibrary.simpleMessage("번역 중..."),
     "translation": MessageLookupByLibrary.simpleMessage("번역"),
@@ -1794,7 +1822,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_demo_backend_local_rwkv_mobile": MessageLookupByLibrary.simpleMessage(
       "로컬 RWKV Mobile",
     ),
-    "web_demo_backend_official_cloud": m71,
+    "web_demo_backend_official_cloud": m72,
     "web_demo_cloud": MessageLookupByLibrary.simpleMessage("클라우드"),
     "web_demo_concurrency": MessageLookupByLibrary.simpleMessage("동시 실행 수"),
     "web_demo_continue_editing": MessageLookupByLibrary.simpleMessage("계속 편집"),
@@ -1814,7 +1842,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_demo_endpoint_key_missing": MessageLookupByLibrary.simpleMessage(
       "공식 Web Demo 엔드포인트 키가 설정되지 않았습니다",
     ),
-    "web_demo_failed": m72,
+    "web_demo_failed": m73,
     "web_demo_failed_to_open_html": MessageLookupByLibrary.simpleMessage(
       "HTML을 열지 못했습니다",
     ),
@@ -1842,7 +1870,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_demo_open_in_browser": MessageLookupByLibrary.simpleMessage(
       "브라우저에서 열기",
     ),
-    "web_demo_pages_status": m73,
+    "web_demo_pages_status": m74,
     "web_demo_penalty_decay": MessageLookupByLibrary.simpleMessage(
       "Penalty Decay",
     ),
@@ -1871,15 +1899,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_demo_result_copied": MessageLookupByLibrary.simpleMessage(
       "결과를 복사했습니다",
     ),
-    "web_demo_result_label": m74,
+    "web_demo_result_label": m75,
     "web_demo_save_html": MessageLookupByLibrary.simpleMessage("HTML 저장"),
-    "web_demo_source_title": m75,
+    "web_demo_source_title": m76,
     "web_demo_status_complete": MessageLookupByLibrary.simpleMessage("완료"),
     "web_demo_status_live": MessageLookupByLibrary.simpleMessage("실시간"),
     "web_demo_status_parsing": MessageLookupByLibrary.simpleMessage("분석 중"),
     "web_demo_status_waiting": MessageLookupByLibrary.simpleMessage("대기 중"),
     "web_demo_temperature": MessageLookupByLibrary.simpleMessage("Temperature"),
-    "web_demo_tokens_and_bytes": m76,
+    "web_demo_tokens_and_bytes": m77,
     "web_demo_top_p": MessageLookupByLibrary.simpleMessage("Top P"),
     "web_demo_view_source": MessageLookupByLibrary.simpleMessage("소스 보기"),
     "web_demo_waiting_for_first_tokens": MessageLookupByLibrary.simpleMessage(
@@ -1890,7 +1918,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search": MessageLookupByLibrary.simpleMessage("웹 검색"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("웹 검색 템플릿"),
-    "websocket_service_port": m77,
+    "websocket_service_port": m78,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("가중치 파일 관리"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "가중치 파일 저장 디렉토리",
@@ -1910,16 +1938,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("백"),
     "white_score": MessageLookupByLibrary.simpleMessage("백 점수"),
     "white_wins": MessageLookupByLibrary.simpleMessage("백이 이겼습니다!"),
-    "window_id": m78,
-    "windows_architecture_mismatch_dialog_message": m79,
+    "window_id": m79,
+    "windows_architecture_mismatch_dialog_message": m80,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("아키텍처 불일치"),
-    "windows_architecture_mismatch_warning": m80,
+    "windows_architecture_mismatch_warning": m81,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d개 메시지 선택됨"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d페이지 찾음"),
-    "x_tabs": m81,
-    "you_are_now_using": m82,
+    "x_tabs": m82,
+    "you_are_now_using": m83,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "이제 RWKV와 채팅을 시작할 수 있습니다",
     ),

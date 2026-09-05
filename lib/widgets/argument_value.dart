@@ -6,9 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
 import 'package:zone/func/string_utils.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
+import 'package:zone/widgets/parameter_help_button.dart';
 
 class ArgumentValue extends ConsumerWidget {
   final Argument argument;
@@ -59,6 +61,8 @@ class ArgumentValue extends ConsumerWidget {
     }
     if (!argument.show) return const SizedBox.shrink();
     final qb = ref.watch(P.app.qb);
+    final title = codeToName(argument.name);
+    final help = argument.helpDescription(S.of(context));
 
     return Column(
       crossAxisAlignment: .stretch,
@@ -69,12 +73,16 @@ class ArgumentValue extends ConsumerWidget {
             SizedBox(width: padding.left),
             Expanded(
               child: showTitle
-                  ? Text(
-                      codeToName(argument.name),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: .w500,
-                      ),
+                  ? Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            title,
+                            style: const TextStyle(fontSize: 14, fontWeight: .w500),
+                          ),
+                        ),
+                        if (help != null) ParameterHelpButton(title: title, message: help),
+                      ],
                     )
                   : const SizedBox.shrink(),
             ),

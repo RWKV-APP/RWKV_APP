@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -53,6 +52,106 @@ class S {
 
   static S? maybeOf(BuildContext context) {
     return Localizations.of<S>(context, S);
+  }
+
+  /// `了解 {name}`
+  String parameter_help_label(Object name) {
+    return Intl.message(
+      '了解 $name',
+      name: 'parameter_help_label',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `控制选词的随机程度。\n\n调低：更倾向常见、稳妥的表达。\n调高：用词和表达更多样，也更容易偏题。\n\n不确定时保留默认值。调低不代表答案一定正确。`
+  String get parameter_help_temperature {
+    return Intl.message(
+      '控制选词的随机程度。\n\n调低：更倾向常见、稳妥的表达。\n调高：用词和表达更多样，也更容易偏题。\n\n不确定时保留默认值。调低不代表答案一定正确。',
+      name: 'parameter_help_temperature',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `控制下一步选词的候选范围。模型按概率从高到低保留候选，直到累计概率达到 Top P。\n\n调低：选择更集中。\n调高：允许更多不同的表达。\n\n例如 0.5 表示候选的累计概率约为 50%，不是只使用一半的词汇。`
+  String get parameter_help_top_p {
+    return Intl.message(
+      '控制下一步选词的候选范围。模型按概率从高到低保留候选，直到累计概率达到 Top P。\n\n调低：选择更集中。\n调高：允许更多不同的表达。\n\n例如 0.5 表示候选的累计概率约为 50%，不是只使用一半的词汇。',
+      name: 'parameter_help_top_p',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `降低再次使用已经出现过的词元（token，也就是文字片段）的倾向。\n\n调高：更倾向换一种用词。\n调低：更容易复用之前的词。\n\n过高可能影响需要重复名称、术语或代码的内容。`
+  String get parameter_help_presence_penalty {
+    return Intl.message(
+      '降低再次使用已经出现过的词元（token，也就是文字片段）的倾向。\n\n调高：更倾向换一种用词。\n调低：更容易复用之前的词。\n\n过高可能影响需要重复名称、术语或代码的内容。',
+      name: 'parameter_help_presence_penalty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `根据词元（token，也就是文字片段）的出现次数抑制重复。出现越频繁，受到的影响越大。\n\n调高：更强地减少反复使用相同的词。\n调低：更容易保留重复的表达。\n\n过高可能影响表达的连贯性。`
+  String get parameter_help_frequency_penalty {
+    return Intl.message(
+      '根据词元（token，也就是文字片段）的出现次数抑制重复。出现越频繁，受到的影响越大。\n\n调高：更强地减少反复使用相同的词。\n调低：更容易保留重复的表达。\n\n过高可能影响表达的连贯性。',
+      name: 'parameter_help_frequency_penalty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `控制重复惩罚随生成过程减弱的速度。\n\n调低（如 0.990）：更快减弱，较早出现的词更容易再次使用。\n调高（如 0.999）：更慢减弱，抑制重复的影响持续更久。\n\n它不改变模型的上下文记忆长度。`
+  String get parameter_help_penalty_decay {
+    return Intl.message(
+      '控制重复惩罚随生成过程减弱的速度。\n\n调低（如 0.990）：更快减弱，较早出现的词更容易再次使用。\n调高（如 0.999）：更慢减弱，抑制重复的影响持续更久。\n\n它不改变模型的上下文记忆长度。',
+      name: 'parameter_help_penalty_decay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `限制单次最多生成多少个 token，包括生成的思考内容。Token 是文字片段，不等同于字数或单词数。\n\n调低：更早到达上限，回答可能被截断。\n调高：允许继续生成更长的内容，可能耗时更多。\n\n这是上限，模型也可能提前结束。`
+  String get parameter_help_max_length {
+    return Intl.message(
+      '限制单次最多生成多少个 token，包括生成的思考内容。Token 是文字片段，不等同于字数或单词数。\n\n调低：更早到达上限，回答可能被截断。\n调高：允许继续生成更长的内容，可能耗时更多。\n\n这是上限，模型也可能提前结束。',
+      name: 'parameter_help_max_length',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `采样设置`
+  String get sampler_options {
+    return Intl.message('采样设置', name: 'sampler_options', desc: '', args: []);
+  }
+
+  /// `采样设置（思考模式）`
+  String get sampler_options_reasoning {
+    return Intl.message(
+      '采样设置（思考模式）',
+      name: 'sampler_options_reasoning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `生成设置`
+  String get completion_options {
+    return Intl.message('生成设置', name: 'completion_options', desc: '', args: []);
+  }
+
+  /// `生成设置（思考模式）`
+  String get completion_options_reasoning {
+    return Intl.message(
+      '生成设置（思考模式）',
+      name: 'completion_options_reasoning',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `{count} 条消息正在队列中`
@@ -2272,7 +2371,8 @@ class S {
   get in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2 {
     return Intl.message(
       '当搜索深度和宽度都大于 2 时，将激活上下文搜索',
-      name: 'in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2',
+      name:
+          'in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2',
       desc: '',
       args: [],
     );
@@ -4889,7 +4989,8 @@ class S {
   ) {
     return Intl.message(
       '请选择要为第 $index 条消息设置的采样和惩罚参数',
-      name: 'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
+      name:
+          'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
       desc: '',
       args: [index],
     );
@@ -4900,7 +5001,8 @@ class S {
   get please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages {
     return Intl.message(
       '请选择要为所有消息设置的采样和惩罚参数',
-      name: 'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
+      name:
+          'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
       desc: '',
       args: [],
     );
