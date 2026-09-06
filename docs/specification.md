@@ -84,6 +84,13 @@ Static analysis, unit tests, widget tests, builds, and deterministic scripts pro
 
 The root Codex agent delivering a task must inspect the combined diff and personally review representative outcomes at the level a user consumes them. For work that crosses the Flutter app, adapter, native engine, or website, verify every relevant repository and representation within the authorized scope.
 
+Ordinary text-chat release acceptance requires a nonempty, coherent assistant
+answer beyond the user's prompt for each advertised backend and thinking mode
+in the scoped delivery. Natural termination, generated-token counts, repeated
+user text, or thinking without an answer cannot satisfy that acceptance.
+Verify the APK consumed through the public download entry in the canonical
+chat page; local candidate success alone does not verify the published APK.
+
 ## SPEC-RWKV-MODEL-PARAMETER-HELP — Model Settings Parameter Help
 
 Model settings display an accessible information button beside Temperature,
