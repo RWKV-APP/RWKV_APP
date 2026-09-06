@@ -253,14 +253,14 @@
       {
         "name": "RWKV7-G1j 2.9B",
         "modelSize": 2.9,
-        "url": "https://modelscope.cn/models/HaloWang1991/rwkv-weights/resolve/45a3a40322397e470a937d16b24aec5895bb6a8e/artifacts/rwkv7/chat/2.9b/llamacpp/rwkv7-g1j-2.9b-20260831-ctx16384-Q4_K_M.gguf",
-        "fileSize": 1919047552,
-        "sha256": "59a9888822d6691caaaaf174faaf9884ca88ee56db42d18e5300ed93dc0e8e8d",
-        "quantization": "Q4_K_M",
+        "url": "https://modelscope.cn/models/HaloWang1991/rwkv-weights/resolve/d00e26bb323443451a0e1a14a658d45654a5cf72/artifacts/rwkv7/chat/2.9b/llamacpp/rwkv7-g1j-2.9b-20260831-ctx16384-Q8_0.gguf",
+        "fileSize": 3258603392,
+        "sha256": "53086c2a7664a874ad32ce479b450534b2133fbd05edeb2abdff76a521632b95",
+        "quantization": "Q8_0",
         "platforms": ["windows", "android", "macos", "ios", "linux"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1788600939,
+        "date": 1788729866,
         "availableIn": ["modelscope"]
       },
       {

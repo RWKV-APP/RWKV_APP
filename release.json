@@ -5,12 +5,12 @@
   "flutterVersion": "3.44.8",
   "adapter": {
     "repository": "RWKV-APP/rwkv_mobile_flutter",
-    "commit": "b8167db370db843e6d8cbf940c48bdedb21bfcf6"
+    "commit": "c87936afbcc40fa99d6d9bdaa18884d96193a825"
   },
   "native": {
     "repository": "RWKV-APP/rwkv-mobile",
-    "tag": "4.8.0-native.3",
-    "commit": "2454afccd75532bab8dd8ea62edf44e1caaed443"
+    "tag": "4.8.0-native.4",
+    "commit": "205d4848f2b769efe4a1df268e1cdf6548158b5d"
   },
   "channels": {
     "github": true,
@@ -23,12 +23,17 @@
       {
         "repository": "HaloWang1991/rwkv-weights",
         "revision": "45a3a40322397e470a937d16b24aec5895bb6a8e",
-        "artifactCount": 19
+        "artifactCount": 18
       },
       {
         "repository": "HaloWang1991/rwkv-weights",
         "revision": "d786219b58c22c100ae73d1bea3fbee10f9bf0e7",
         "artifactCount": 2
+      },
+      {
+        "repository": "HaloWang1991/rwkv-weights",
+        "revision": "d00e26bb323443451a0e1a14a658d45654a5cf72",
+        "artifactCount": 1
       },
       {
         "repository": "HaloWang1991/rwkv-weights-tmp",
