@@ -136,6 +136,8 @@ dependencies:
   lua_dardo_co: ^0.0.10
 
 dependency_overrides:
+  flutter_inappwebview_windows:
+    path: packages/flutter_inappwebview_windows
   sprintf: 7.0.0
   proxy_setting_android:
     git:

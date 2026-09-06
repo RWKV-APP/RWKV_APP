@@ -22,6 +22,7 @@ analyzer:
     - lib/**/*.g.dart
     - lib/**/*.steps.dart
     - packages/local_web_search/**
+    - packages/flutter_inappwebview_windows/**
     - rwkv_mobile_flutter/**
     - tools/**
     - android/**

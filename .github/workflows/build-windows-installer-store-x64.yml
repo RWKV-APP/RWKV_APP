@@ -97,6 +97,8 @@ jobs:
       - name: Override dependency path
         run: |
           echo "dependency_overrides:" > pubspec_overrides.yaml
+            echo "  flutter_inappwebview_windows:" >> pubspec_overrides.yaml
+            echo "    path: packages/flutter_inappwebview_windows" >> pubspec_overrides.yaml
             echo "  proxy_setting_android:" >> pubspec_overrides.yaml
             echo "    git:" >> pubspec_overrides.yaml
             echo "      url: https://github.com/dengzii/proxy_setting.git" >> pubspec_overrides.yaml

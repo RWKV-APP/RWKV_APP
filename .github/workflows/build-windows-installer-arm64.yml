@@ -12,6 +12,11 @@ on:
         description: "Tag to publish installer assets to (e.g. 4.0.6). Leave empty to skip release/upload."
         required: false
         type: string
+      upload_symbols:
+        description: "Upload this candidate build's Sentry symbols without publishing packages"
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -123,6 +128,8 @@ jobs:
       - name: Override dependency path
         run: |
           echo "dependency_overrides:" > pubspec_overrides.yaml
+            echo "  flutter_inappwebview_windows:" >> pubspec_overrides.yaml
+            echo "    path: packages/flutter_inappwebview_windows" >> pubspec_overrides.yaml
             echo "  proxy_setting_android:" >> pubspec_overrides.yaml
             echo "    git:" >> pubspec_overrides.yaml
             echo "      url: https://github.com/dengzii/proxy_setting.git" >> pubspec_overrides.yaml
@@ -229,7 +236,7 @@ jobs:
           Write-Host "Found Windows PDB: $pdbPath"
 
       - name: Upload Sentry debug files
-        if: needs.setup.outputs.should_publish == 'true'
+        if: needs.setup.outputs.should_publish == 'true' || inputs.upload_symbols == true
         shell: pwsh
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

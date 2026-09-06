@@ -42,6 +42,8 @@ jobs:
         run: |
           cat > pubspec_overrides.yaml <<'YAML'
           dependency_overrides:
+            flutter_inappwebview_windows:
+              path: packages/flutter_inappwebview_windows
             proxy_setting_android:
               git:
                 url: https://github.com/dengzii/proxy_setting.git

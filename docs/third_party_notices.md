@@ -1,5 +1,9 @@
 # Third Party Notices
 
+## flutter_inappwebview_windows
+
+The Windows WebView implementation in `packages/flutter_inappwebview_windows` is based on version 0.6.0 of [flutter_inappwebview](https://github.com/pichillilorenzo/flutter_inappwebview), under the included Apache License 2.0. Its `UPSTREAM.md` records the source archive identity and the local lifecycle fixes.
+
 ## Halo-derived internal code
 
 This project includes small internal implementations based on the following MIT-licensed packages:
