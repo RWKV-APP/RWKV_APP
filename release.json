@@ -5,12 +5,12 @@
   "flutterVersion": "3.44.8",
   "adapter": {
     "repository": "RWKV-APP/rwkv_mobile_flutter",
-    "commit": "7a4b85d3a92f44eff5c23c32ed19789c15e59b64"
+    "commit": "faaa72f3fec3496bcdd94717cfde0423ed623bd6"
   },
   "native": {
     "repository": "RWKV-APP/rwkv-mobile",
-    "tag": "4.8.0-native.1",
-    "commit": "1425665b7f00aa2fdda67c454b0c6fdcd0208937"
+    "tag": "4.8.0-native.2",
+    "commit": "522bc96cd41bf72451c71b33c85dc93a36587727"
   },
   "channels": {
     "github": true,
