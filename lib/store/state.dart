@@ -114,6 +114,7 @@ abstract class RawApp with WidgetsBindingObserver {
 
   Future<void> init() async {
     WidgetsBinding.instance.addObserver(this);
+    if (Platform.isWindows) registerWindowsExitHandler();
 
     final packageInfo = await PackageInfo.fromPlatform();
     version.q = packageInfo.version;
@@ -130,6 +131,13 @@ abstract class RawApp with WidgetsBindingObserver {
     light.lv(_onLightChanged);
 
     await _syncAllDir();
+  }
+
+  void registerWindowsExitHandler() {
+    const BasicMessageChannel<Object?>('com.rwkvzone.chat/lifecycle', StandardMessageCodec()).setMessageHandler((message) async {
+      if (message != 'requestAppExit') return ui.AppExitResponse.cancel.name;
+      return (await WidgetsBinding.instance.handleRequestAppExit()).name;
+    });
   }
 
   void _onLightChanged() {

@@ -1,5 +1,8 @@
 #include "flutter_window.h"
 
+#include <flutter/basic_message_channel.h>
+#include <flutter/standard_message_codec.h>
+
 #include <optional>
 
 #include "flutter/generated_plugin_registrant.h"
@@ -67,6 +70,32 @@ FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
     if (result) {
       return *result;
     }
+  }
+
+  // WebView helper windows can prevent Flutter from recognizing the final
+  // application window. Forward an otherwise unhandled close to Dart cleanup.
+  if (message == WM_CLOSE && flutter_controller_ && !exit_ready_) {
+    if (!exit_pending_) {
+      exit_pending_ = true;
+      flutter::BasicMessageChannel<flutter::EncodableValue> channel(
+          flutter_controller_->engine()->messenger(),
+          "com.rwkvzone.chat/lifecycle",
+          &flutter::StandardMessageCodec::GetInstance());
+      channel.Send(
+          flutter::EncodableValue("requestAppExit"),
+          [this, hwnd, wparam, lparam](const uint8_t* data, size_t size) {
+            exit_pending_ = false;
+            const auto response =
+                flutter::StandardMessageCodec::GetInstance().DecodeMessage(data, size);
+            const auto* decision =
+                response ? std::get_if<std::string>(response.get()) : nullptr;
+            if (decision && *decision == "exit") {
+              exit_ready_ = true;
+              ::PostMessage(hwnd, WM_CLOSE, wparam, lparam);
+            }
+          });
+    }
+    return 0;
   }
 
   switch (message) {

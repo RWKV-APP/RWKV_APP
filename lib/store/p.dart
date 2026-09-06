@@ -7,6 +7,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:math' as math;
 import 'dart:math';
+import 'dart:ui' as ui;
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';

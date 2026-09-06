@@ -11,6 +11,7 @@ class _App extends RawApp {
   // ===========================================================================
 
   late final db.AppDatabase _db;
+  Future<void>? _closingDatabase;
   bool _screenAwakeApplied = false;
   bool _screenAwakeSyncing = false;
   bool _screenAwakeNeedsSync = false;
@@ -41,6 +42,14 @@ class _App extends RawApp {
   String get _configForAllDemosKey => "configForAllDemosKey_${buildNumber.q}";
   bool acceptsConfig(Map<String, dynamic> config) => config['configBuild'] is int && config['configBuild'] == int.tryParse(buildNumber.q);
   static const String officialDownloadPageUrl = "https://rwkv.halowang.cloud/";
+
+  @override
+  Future<ui.AppExitResponse> didRequestAppExit() async {
+    // Finish SQLite callbacks while their Dart isolate is still alive.
+    await (_closingDatabase ??= _db.close());
+    qqq("Chat database closed before app exit");
+    return ui.AppExitResponse.exit;
+  }
 
   @override
   BuildContext? get context => getContext();
@@ -424,8 +433,6 @@ extension _$App on _App {
 
       if (Args.testingSeeQueue) P.see.autoTest();
     }
-
-    WidgetsBinding.instance.addObserver(this);
 
     lifecycleState.lv(_onLifecycleStateChanged);
 
