@@ -131,7 +131,9 @@ class ModelSelector extends ConsumerWidget {
         children: [
           _PanelBar(scrollController: _scrollController),
           Expanded(
-            child: ListView.builder(
+            // Keep section semantics mounted while scrolling. Recycling these
+            // few sections leaves stale child counts in Windows accessibility.
+            child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: .only(
                 left: _listPadding,
@@ -139,10 +141,7 @@ class ModelSelector extends ConsumerWidget {
                 bottom: _listPadding,
               ),
               controller: _scrollController,
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return items[index];
-              },
+              child: Column(crossAxisAlignment: .stretch, children: items),
             ),
           ),
         ],
