@@ -18,18 +18,11 @@ void main() {
     final catalog = jsonDecode(File('remote/755.json').readAsStringSync()) as Map<String, dynamic>;
     expect(P.app.acceptsConfig(catalog), isTrue);
     final models = (catalog['chat']['model_config'] as List).where((dynamic row) => (row['url'] as String).contains('g1j'));
-    expect(models.length, 22);
+    expect(models.length, 47);
     for (final row in models) {
-      expect(row['modelSize'], anyOf(1.5, 2.9));
-      expect(row['availableIn'], ['modelscope']);
-      expect(row['backends'].toString(), isNot(contains('mtk')));
-      final isQnnCanary = row['backends'].contains('qnn') && row['modelSize'] == 2.9;
-      if (isQnnCanary) {
-        expect(row['quantization'], 'W8');
-        expect(row['url'], contains('/rwkv-weights-tmp/resolve/5b9edcb13b27c28376a89ecfb94b7d3c57424698/'));
-      } else {
-        expect(row['url'], matches(r'^https://modelscope.cn/models/HaloWang1991/rwkv-weights/resolve/[a-f0-9]{40}/'));
-      }
+      expect(row['modelSize'], anyOf(1.5, 2.9, 7.2, 13.3));
+      expect(row['availableIn'], ['modelscope', 'huggingface']);
+      expect(row['url'], startsWith('HaloWang/rwkv-weights/resolve/main/artifacts/'));
     }
     final palm = models.where((dynamic row) => row['backends'].contains('palm')).toList();
     expect(palm.length, 2);

@@ -37,6 +37,15 @@ Native libraries come from the RWKV-APP fork at an immutable release with
 verified archive checksums; a mutable `latest` release or adapter branch is not
 a release dependency. The application tag identifies the exact App commit.
 
+The G1J weight target is the 45-artifact, four-size partial cohort governed by
+`docs/contracts/model_quantization_catalog.md`. `release.json.weights` records
+each selected identity, quantization, consumer mapping and currently populated
+distribution source separately from pending publication. Its counts must not
+be interpreted as model-runtime or complete-release acceptance. The App
+version, build, Flutter version, adapter and native pins remain unchanged when
+preparing this catalog. An already-built package retains its original bundled
+catalog and digest; a local catalog edit does not retroactively update it.
+
 CI uploads package assets into an already-created GitHub Release and preserves
 its draft or published state. A repeated upload must match the existing size
 and SHA-256; a different file with the same name is rejected. Publication is a
@@ -44,10 +53,13 @@ separate step after the enabled package matrix and acceptance checks complete.
 
 RWKV Chat 4.8.0 uses build 755. Its first delivery includes Windows x64 and
 ARM64 installers and ZIPs, Linux x64 tar.gz and AppImage, and the Android arm64
-APK. GitHub and ModelScope are enabled; Hugging Face upload and verification
-are explicitly deferred for this release. A missing deferred provider must
-remain visible as deferred, never as verified parity. Later uploads reuse the
-accepted bytes and their digests.
+APK. GitHub, ModelScope and Hugging Face are enabled. Provider uploads use
+complete, size- and SHA-256-verified files on the operator's local publication
+host. All GitHub and Hugging Face transfers for this delivery use that host.
+The accepted non-Apple packages retain their build-source identity and bundled
+catalog; the build-755 online model configuration is published separately.
+macOS, iOS and iPadOS package delivery and platform validation are explicitly
+deferred to a separate Apple continuation and do not block this delivery.
 
 The Apple-only Fastlane entrypoint continues the same release on a Mac. It
 checks the App tag, version/build, adapter commit and native library identity,

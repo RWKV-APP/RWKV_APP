@@ -164,18 +164,60 @@ offered Palm as a runnable model.
 
 ## G1J 4.8.0 Distribution Scope
 
-The 4.8.0 G1J cohort is an explicit partial release of the 20260831 context-16384
-1.5B and 2.9B checkpoints. It includes the produced llama.cpp, WebRWKV, Palm,
-QNN, CoreML and MLX packages. MTK and the 7.2B and 13.3B models are excluded
-from this cohort; existing releases for those slots retain their own status.
+The 4.8.0 G1J target cohort contains 45 distinct artifacts from the 20260831
+context-16384 1.5B, 2.9B, 7.2B and 13.3B checkpoints. Its quantization choices
+are fixed per generation, model size, backend and compatible SoC target:
 
-This cohort is published and verified on ModelScope. Hugging Face upload and
-testing are deferred. Until that destination is populated and independently
-verified, G1J rows use exact absolute ModelScope HTTPS URLs at an immutable
-40-hex revision, declare `availableIn: ["modelscope"]`, and preserve the file
-size and SHA-256. This is a release-specific exception to dual-provider
-promotion, not a claim of Hugging Face availability. Model catalog publication
-does not imply runtime acceptance of every artifact on every listed platform.
+| Backend | 1.5B | 2.9B | 7.2B | 13.3B |
+| --- | --- | --- | --- | --- |
+| llama.cpp | Q6_K | Q4_K_M | Q4_K_M | Q4_K_M |
+| WebRWKV | NF4 | NF4 | NF4 | NF4 |
+| MLX | INT6 | INT6 | INT6 | INT6 |
+| CoreML | INT4/LUT6 mixed, 1 chunk | INT4/LUT6 mixed, 2 chunks | INT4/LUT6 mixed, 2 chunks, CPU/GPU Decode | Deferred |
+| Palm CPU | W8 per-channel, ctx256 | W8 per-channel, ctx256 | Excluded | Excluded |
+| QNN | A16W8, 11 artifacts | A16W4 LPBQ b32, 10 artifacts | A16W4 LPBQ b32, 4 artifacts | Excluded |
+| MTK NP7 / MT6989 | A16W8 | Excluded | Excluded | Excluded |
+| MTK NP9 / MT6993 | A16W8 | A16W4 VSQ32T8 | Deferred | Deferred |
+
+Generic catalog labels remain `W4`, `W6` and `W8`; artifact identities retain
+the full technical recipe. The 13.3B rows exclude iOS, and CoreML 7.2B remains
+macOS-only. Other existing G1i platform and SoC mappings provide the intended
+consumer scope; they do not transfer G1i runtime acceptance to G1J. Compatible
+SoC aliases may share one artifact without creating an additional quantization
+choice. Existing G1i rows and build-754 configuration remain available while
+G1J promotion and consumer verification are incomplete.
+
+This is an explicitly scoped partial release. MTK NP9 7.2B and 13.3B are
+deferred, so those devices receive no G1J NP9 artifact for those sizes in this
+cohort. Existing 1.5B NP7/NP9 and 2.9B NP9 targets remain included. CoreML 13.3B,
+larger Palm variants, and QNN 13.3B are not added. Palm W4, the damaged G1J
+2.9B / 8 Gen 3 W4 file, its W8 experiment, and G1J 2.9B Q8_0 are not selected.
+The selected 8 Gen 3 repair retains the W4 recipe.
+
+`release.json.weights.artifacts` records all 45 target identities and their
+intended catalog mappings. `weights.artifactCount` counts selected artifacts,
+not successful uploads or JSON rows. A target with no populated distribution
+URL has `distribution: null` and remains outside `remote/latest.json` until
+its exact bytes are uploaded and verified; its absence blocks cohort
+completion without silently deleting the target. The selected repair digest
+is `65a26f52ad7a06a22d1214f6b828fe0a4792df6a1df4835c517eed2c5796f98b`.
+The formal catalog contains all 45 distinct files, including the selected
+repair artifact; the two shared 7+ Gen 3 mappings make 47 G1J catalog rows.
+
+G1J formal publication includes ModelScope and Hugging Face. Each selected
+artifact is published at the same relative path with the same size and SHA-256
+on both formal repositories before its catalog row enables both providers.
+Formal rows use the existing source-selectable
+`HaloWang/rwkv-weights/resolve/main/` schema and preserve the exact size and
+SHA-256; release metadata retains the independently verified immutable
+provider revisions. Unpromoted artifacts retain populated absolute ModelScope
+TMP URLs at immutable revisions with `availableIn: ["modelscope"]` until both
+formal mirrors are verified. A TMP URL is not formal promotion.
+All provider uploads use complete verified local publisher files. Existing
+Apple-format weight bytes may be distributed, but macOS, iOS and iPadOS
+platform validation is outside this publication. Catalog preparation and
+publication do not establish runtime acceptance of every artifact on every
+listed platform.
 
 ## SPEC-RWKV-QUANTIZATION-DELIVERY — Artifact Publication And App Acceptance
 
