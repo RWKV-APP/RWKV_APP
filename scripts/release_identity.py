@@ -21,7 +21,7 @@ IOS_INFO = 'ios/mlx-swift_Cmlx.bundle/Info.plist'
 
 
 def command(*args, cwd=None):
-    return subprocess.check_output(args, cwd=cwd, text=True).strip()
+    return subprocess.check_output(args, cwd=cwd, text=True, encoding='utf-8').strip()
 
 
 def load_release(root):
@@ -131,7 +131,8 @@ def check_apple_source(root, release):
         raise RuntimeError('The official integration branch is missing')
     for label, ancestor in (('integration branch', integration), ('published base', apple['baseCommit'])):
         # Remote comparison also works with a shallow local checkout, without fetching or changing refs.
-        comparison = json.loads(command('gh', 'api', f'repos/RWKV-APP/RWKV_APP/compare/{ancestor}...{head}'))
+        comparison = json.loads(command('gh', 'api', f'repos/RWKV-APP/RWKV_APP/compare/{ancestor}...{head}',
+                                        '--jq', '{status: .status, merge_base_commit: {sha: .merge_base_commit.sha}}'))
         if comparison.get('status') not in ('identical', 'ahead') or comparison.get('merge_base_commit', {}).get('sha') != ancestor:
             raise RuntimeError(f'The current remote {label} is not contained in Apple source HEAD')
     adapter = root.parent / 'rwkv_mobile_flutter'
