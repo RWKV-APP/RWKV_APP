@@ -59,33 +59,151 @@ Specification failures are blocking even though historical lightweight rule warn
 
 ## Apple continuation
 
-On the App checkout at the published release tag, run `fastlane apple` (or
-`fl apple` when `fl` is the local Fastlane alias). For 4.8.0 this preserves
-build 755 and appends the macOS DMG to the existing 4.8.0 GitHub Release and
-ModelScope dataset, then uploads the same iOS version/build to TestFlight.
-Hugging Face remains disabled by this release's `release.json`.
+Run this continuation on an Apple Silicon Mac from the App's
+`codex/apple-release-4.8.0` branch. It preserves version **4.8.0**, build **755**,
+and the existing public `4.8.0` tag. That older tag identifies the accepted
+non-Apple packages; it does not contain the Apple continuation fixes.
 
-The Mac needs Xcode, Flutter 3.44.8, Fastlane, Python 3.10+, an authenticated
-GitHub CLI, the exact sibling `rwkv_mobile_flutter` checkout, and existing Apple
-signing credentials. The lane checks the App tag and a clean source tree, then
-fetches and checks out the adapter commit in `release.json` if necessary. It
-refuses to discard local adapter changes and verifies the pinned iOS/macOS
-native libraries before building. The native macOS library targets Apple Silicon.
+| Input | Required identity |
+| --- | --- |
+| App origin | `https://github.com/RWKV-APP/RWKV_APP.git` |
+| App branch | `codex/apple-release-4.8.0`, clean and synchronized with origin |
+| Flutter / Dart | `3.44.8` / `3.12.2` |
+| Adapter sibling | `rwkv_mobile_flutter`, origin `RWKV-APP/rwkv_mobile_flutter` |
+| Adapter commit | `c87936afbcc40fa99d6d9bdaa18884d96193a825` |
+| Native release | `4.8.0-native.4`, commit `205d4848f2b769efe4a1df268e1cdf6548158b5d` |
+| Native platforms | `macos` and `ios`; the macOS native library requires Apple Silicon |
+| DMG destinations | Existing GitHub 4.8.0 Release, ModelScope `HaloWang1991/rwkv-chat`, Hugging Face `HaloWang/rwkv-chat` |
+| iOS destination | TestFlight for the canonical App, version 4.8.0 / build 755 |
 
-Set `MODELSCOPE_API_TOKEN`, `APPLE_ID_EMAIL`, `MACOS_APP_PASSWORD` and
-`MACOS_TEAM_ID` in the Mac's existing private release environment. A Developer ID
-Application certificate must be available in the keychain; `MACOS_SIGNING_IDENTITY`
-can select it explicitly. Existing `MACOS_CERTIFICATE_PATH` and
-`MACOS_CERTIFICATE_PWD` support importing a P12 for the run. Never commit these
-values. The existing Apple ID preauthentication gate runs first in the foreground;
-App Store Connect API-key authentication remains an explicit optional mode.
+**Get or update the source**
 
-Rerunning the same command downloads and verifies an already published DMG and
-continues its remaining uploads without rebuilding or replacing accepted bytes.
-ModelScope checks the remote size and SHA-256 anonymously. An existing TestFlight
-version/build resumes distribution without uploading another IPA. Apple processing
-or external beta review may remain pending and must be checked on App Store Connect.
-The command never increments the build number or resets the App worktree.
+For a new workspace, run these commands from the chosen parent directory. The
+App and adapter must remain exact-name siblings. `git clone` refuses an existing
+nonempty destination; use the update steps below for an existing App checkout.
+
+```sh
+git clone --branch codex/apple-release-4.8.0 https://github.com/RWKV-APP/RWKV_APP.git rwkv_app
+git clone https://github.com/RWKV-APP/rwkv_mobile_flutter.git rwkv_mobile_flutter
+cd rwkv_app
+```
+
+For an existing checkout, run this block from its `rwkv_app` directory. It stops
+on local changes or a wrong origin before switching branches. Preserve and resolve
+those changes explicitly; do not use a reset, forced checkout, or automatic stash.
+
+```sh
+set -e
+case "$(git remote get-url origin)" in
+  https://github.com/RWKV-APP/RWKV_APP.git|git@github.com:RWKV-APP/RWKV_APP.git) ;;
+  *) echo "Expected origin RWKV-APP/RWKV_APP" >&2; exit 1 ;;
+esac
+if [ -n "$(git status --porcelain)" ]; then
+  git status --short
+  echo "Preserve local changes before switching release branches" >&2
+  exit 1
+fi
+git fetch origin --tags
+if git show-ref --verify --quiet refs/heads/codex/apple-release-4.8.0; then
+  git switch codex/apple-release-4.8.0
+else
+  git switch --track -c codex/apple-release-4.8.0 origin/codex/apple-release-4.8.0
+fi
+git pull --ff-only origin codex/apple-release-4.8.0
+```
+
+The lane verifies the App source and repository identities, then prepares the
+adapter at the exact commit above. It refuses to discard adapter changes. Only
+the pinned `ios` and `macos` native libraries are fetched and verified against
+`native-libraries.json`; no local native-engine compilation is needed.
+
+**Prepare the Mac environment**
+
+Install and select full Xcode with its macOS/iOS SDKs and command-line tools,
+accept its license, and install CocoaPods 1.17.0 to match both committed Pod lockfiles.
+Use a managed Ruby 3.1+ with Bundler
+2.6.2, Python 3.10+ with venv support, and GitHub CLI. Put the exact Flutter
+3.44.8 SDK on `PATH`; the default Flutter installation may be another version.
+`create-dmg` is optional: the packaging action can use macOS `hdiutil`.
+
+From `rwkv_app`, prepare the Python and Ruby dependencies without adding them to
+tracked source:
+
+```sh
+python3 -m venv ../.venv-rwkv-apple-4.8.0
+source ../.venv-rwkv-apple-4.8.0/bin/activate
+python3 -m pip install huggingface_hub modelscope-hub
+gem install bundler -v 2.6.2
+gem install cocoapods -v 1.17.0
+export BUNDLE_PATH="$HOME/.bundle/rwkv-apple-4.8.0"
+export BUNDLE_FROZEN=true
+bundle install
+flutter --version
+xcodebuild -version
+pod --version
+gh auth status
+```
+
+Use an authenticated GitHub CLI account with write access to the App Release and
+read access to the adapter/native repositories. If it is not signed in, run
+`gh auth login` on that Mac. Restore the Mac's private release environment or
+Fastlane Dotenv configuration; do not commit credential values or signing files.
+
+| Credential or capability | Purpose |
+| --- | --- |
+| `HF_TOKEN` | Write to dataset `HaloWang/rwkv-chat`; `HF_DATASETS_ID` may explicitly name that dataset |
+| `MODELSCOPE_API_TOKEN` | Write to dataset `HaloWang1991/rwkv-chat`; `MODELSCOPE_REPO_ID` may explicitly name that dataset |
+| `APPLE_ID_EMAIL`, `MACOS_APP_PASSWORD`, `MACOS_TEAM_ID` | macOS notarization with an app-specific Apple password |
+| Developer ID Application certificate and private key | Sign the macOS app; optionally select with `MACOS_SIGNING_IDENTITY` |
+| `MACOS_CERTIFICATE_PATH`, `MACOS_CERTIFICATE_PWD` | Optional P12 import when the signing identity is not already available in the keychain |
+| iOS distribution signing identity and provisioning profile | Archive/export the canonical App for TestFlight under the configured team |
+| Apple ID with App Store Connect access and available two-factor authentication | Default fresh foreground TestFlight authentication; `FASTLANE_USER` can select the login account |
+
+Explicit API-key mode uses `RWKV_APPLE_AUTH_MODE=api_key` together with
+`APP_STORE_CONNECT_KEY_ID`, `APP_STORE_CONNECT_ISSUER_ID` and
+`APP_STORE_CONNECT_KEY_FILEPATH`. Keep the `.p8` file private; this mode still
+needs the macOS notarization credentials above and sufficient App Store Connect
+permissions for the requested beta distribution. `SENTRY_AUTH_TOKEN` is optional
+for symbol upload.
+
+**Check and run**
+
+These read-only checks can run separately before authentication. They check
+source/environment prerequisites; they do not authenticate Apple or prove that
+signing and provider credentials are usable.
+
+```sh
+python3 scripts/release_identity.py --check-apple-source &&
+python3 scripts/release_identity.py --check-apple-environment
+```
+
+Start the complete continuation in a visible foreground terminal:
+
+```sh
+bundle exec fastlane apple
+```
+
+The lane checks source, environment and required credentials, performs fresh
+Apple authentication, prepares the exact adapter/native inputs, then runs
+`flutter pub get --enforce-lockfile` and asset preparation. Each new platform
+build cleans its generated outputs, resolves the same lockfile, verifies the
+actual build inputs, builds with `--no-pub`, and checks the resolved plugin/Pods
+inputs again before subsequent distribution steps. It writes its local preparation identity
+to ignored `tools/output/apple-release-identity.json`.
+
+All three DMG channels are enabled by `release.json`. Rerunning the command can
+reuse a published DMG only when its bytes and `.provenance.json` receipt match
+the exact App commit, release manifest digest, adapter commit, native release and
+native file digests. The iOS receipt `rwkv_chat_4.8.0_755_ios.provenance.json`
+binds the uploaded IPA to those same inputs. An existing TestFlight version/build
+alone is insufficient: missing or mismatched provenance stops reuse. Matching
+builds may resume beta distribution; Apple processing or external beta review
+can remain pending and must be checked in App Store Connect.
+
+The continuation does not increment version/build, move the original 4.8.0 tag,
+or replace accepted non-Apple packages. Windows helper tests do not verify an
+Apple build: signing, notarization, TestFlight and actual Mac/iPhone/iPad behavior
+remain unverified until performed on the corresponding Apple environment.
 
 Offline release helper checks:
 
@@ -93,6 +211,7 @@ Offline release helper checks:
 python3 -m unittest discover -s scripts -p 'test_*.py'
 ruby tools/fastlane/frozen_release_test.rb
 ruby tools/fastlane/apple_auth_gate_test.rb
+ruby tools/fastlane/apple_build_test.rb
 ```
 
 ## Script index

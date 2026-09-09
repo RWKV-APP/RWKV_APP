@@ -24,12 +24,18 @@ module Fastlane
         UI.message("开始构建 macOS 版本: #{version_info}...")
 
         # 1. Flutter 构建
-        sh "cd #{project_root} && flutter clean"
-        sh "cd #{project_root} && flutter pub get"
-        sh "cd #{project_root} && flutter build macos --release " \
+        Dir.chdir(project_root) do
+          sh('flutter', 'clean')
+          sh(*(['flutter', 'pub', 'get'] + (params[:frozen_release] ? ['--enforce-lockfile'] : [])))
+          sh('python3', 'scripts/release_identity.py', '--verify-apple-build-inputs', '--platform', 'macos') if params[:frozen_release]
+        end
+        sh "cd #{Shellwords.escape(project_root)} && flutter build macos --release --no-pub " \
            "--split-debug-info=#{sentry_symbols_path} " \
            "--dart-define=SENTRY_RELEASE=#{sentry_release} " \
            "--dart-define=SENTRY_DIST=#{build_number}"
+        if params[:frozen_release]
+          sh('python3', File.join(project_root, 'scripts/release_identity.py'), '--verify-apple-build-inputs', '--platform', 'macos', '--require-pods')
+        end
         upload_sentry_symbols(project_root, sentry_symbols_path, sentry_release, build_number)
 
         app_folder_name = 'RWKV Chat.app'
@@ -92,6 +98,7 @@ module Fastlane
         [
           FastlaneCore::ConfigItem.new(key: :identity_id, optional: true, type: String),
           FastlaneCore::ConfigItem.new(key: :keychain_name, optional: true, type: String),
+          FastlaneCore::ConfigItem.new(key: :frozen_release, optional: true, type: Boolean, default_value: false),
         ]
       end
 

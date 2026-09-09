@@ -245,20 +245,42 @@ lane :apple do |params|
   project_root = File.expand_path('..', __dir__)
   release = JSON.parse(File.read(File.join(project_root, 'release.json')))
   UI.user_error!('ModelScope credentials are required by release.json') if release['channels']['modelscope'] && fastlane_env_value('MODELSCOPE_API_TOKEN').nil?
+  UI.user_error!('Hugging Face credentials are required by release.json') if release['channels']['huggingface'] && fastlane_env_value('HF_TOKEN').nil?
+  %w[APPLE_ID_EMAIL MACOS_APP_PASSWORD MACOS_TEAM_ID].each do |key|
+    UI.user_error!("#{key} is required for the Apple continuation") if fastlane_env_value(key).nil?
+  end
+  identity_script = File.join(project_root, 'scripts/release_identity.py')
+  sh('python3', identity_script, '--check-apple-source')
+  sh('python3', identity_script, '--check-apple-environment')
   ios_preflight_app_store_connect_auth(params)
+  generated_artwork = {}
+  identity = nil
   begin
-    sh('python3', File.join(project_root, 'scripts/release_identity.py'), '--prepare-apple')
-    build_assets()
+    sh('python3', identity_script, '--prepare-apple')
+    identity = JSON.parse(File.read(File.join(project_root, 'tools/output/apple-release-identity.json')))
+    Dir.chdir(project_root) { sh('flutter', 'pub', 'get', '--enforce-lockfile') }
+    begin
+      build_assets()
+    ensure
+      generated_artwork = RwkvReleaseGitStaging.snapshot_generated_artwork(project_root: project_root)
+    end
     macos_build_and_upload(
       frozen_release: true,
+      release_identity: identity,
       upload_to_github: release['channels']['github'],
       upload_to_modelscope: release['channels']['modelscope'],
       upload_to_huggingface: release['channels']['huggingface'],
       upload_retry_count: 3,
     )
-    ios_upload(groups: params[:groups] || ['External'], apple_auth_mode: params[:apple_auth_mode], frozen_release: release)
+    ios_upload(groups: params[:groups] || ['External'], apple_auth_mode: params[:apple_auth_mode], frozen_release: release, release_identity: identity)
   ensure
-    RwkvAppleAuthGate.finish_fresh_session_environment
+    begin
+      RwkvReleaseGitStaging.restore_generated_artwork(
+        project_root: project_root, source_commit: identity.fetch('sourceCommit'), snapshot: generated_artwork,
+      ) if identity && !generated_artwork.empty?
+    ensure
+      RwkvAppleAuthGate.finish_fresh_session_environment
+    end
   end
 end
 
@@ -430,7 +452,9 @@ lane :ios_upload do |params|
 
   begin
     frozen = params[:frozen_release]
+    identity = params[:release_identity]
     if frozen
+      UI.user_error!('Run fastlane apple to prepare the release identity') unless identity.is_a?(Hash)
       require 'spaceship'
       app = Spaceship::ConnectAPI::App.find('com.rwkv.chat.v7.100m')
       UI.user_error!('Canonical iOS app was not found in App Store Connect') if app.nil?
@@ -441,6 +465,7 @@ lane :ios_upload do |params|
         if existing_build.expired || %w[FAILED INVALID].include?(existing_build.processing_state)
           UI.user_error!("The frozen iOS build cannot be reused: #{existing_build.processing_state}, expired=#{existing_build.expired}")
         end
+        RwkvFrozenRelease.verify_ios_provenance(frozen['version'], frozen['build'], identity)
         UI.message("Resuming TestFlight distribution for #{frozen['version']} (#{frozen['build']}); existing state: #{existing_build.processing_state}")
         upload_to_testflight(
           ios_upload_to_testflight_options(params, app_store_connect_context[:api_key]).merge(
@@ -451,13 +476,14 @@ lane :ios_upload do |params|
         next
       end
     end
-    run_flutter_build_ipa()
+    run_flutter_build_ipa(frozen_release: !frozen.nil?)
     ipa_path = ios_built_ipa_path()
     upload_to_testflight(
       ios_upload_to_testflight_options(params, app_store_connect_context&.[](:api_key)).merge(
         ipa: ipa_path,
       ),
     )
+    RwkvFrozenRelease.publish_ios_provenance(frozen['version'], frozen['build'], ipa_path, identity) if frozen
   ensure
     ios_cleanup_app_store_connect_context(app_store_connect_context)
   end
@@ -537,9 +563,11 @@ lane :git_reset do
 end
 
 lane :build_assets do
-  sh 'cd ..;dart run tools/bin/tools.dart;cd fastlane'
-  sh 'cd ..;dart run flutter_native_splash:create --path=flutter_native_splash.yaml;cd fastlane'
-  sh 'cd ..;dart run icons_launcher:create;cd fastlane'
+  Dir.chdir(File.expand_path('..', __dir__)) do
+    sh('dart', 'run', 'tools/bin/tools.dart')
+    sh('dart', 'run', 'flutter_native_splash:create', '--path=flutter_native_splash.yaml')
+    sh('dart', 'run', 'icons_launcher:create')
+  end
 end
 
 lane :android_play_store do
@@ -592,7 +620,9 @@ lane :macos_build_and_upload do |params|
   # 关键修复：使用 -db 后缀，这是 macOS 的标准物理文件名后缀
   keychain_db_path = File.expand_path("~/Library/Keychains/#{keychain_name}-db")
   signing_identity = fastlane_env_value('MACOS_SIGNING_IDENTITY')
-  resumed_dmg = params[:frozen_release] ? RwkvFrozenRelease.resume_macos(project_root, version_number, build_number) : nil
+  identity = params[:release_identity]
+  UI.user_error!('Run fastlane apple to prepare the release identity') if params[:frozen_release] && !identity.is_a?(Hash)
+  resumed_dmg = params[:frozen_release] ? RwkvFrozenRelease.resume_macos(project_root, version_number, build_number, identity: identity) : nil
   created_keychain = false
 
   if resumed_dmg.nil? && p12_path && File.exist?(p12_path)
@@ -656,6 +686,7 @@ lane :macos_build_and_upload do |params|
       dmg_path = run_flutter_build_macos_dmg(
         identity_id: signing_identity,
         keychain_name: created_keychain ? keychain_db_path : nil,
+        frozen_release: params[:frozen_release] == true,
       )
 
       # 核心修复：确保 dmg_path 是绝对路径
@@ -687,7 +718,8 @@ lane :macos_build_and_upload do |params|
   end
 
   if upload_to_github && params[:frozen_release]
-    RwkvFrozenRelease.publish_macos(version_number, absolute_dmg_path)
+    sh('python3', File.join(project_root, 'scripts/release_identity.py'), '--verify-apple-build-inputs', '--platform', 'macos')
+    RwkvFrozenRelease.publish_macos(version_number, absolute_dmg_path, identity: identity)
   elsif upload_to_github
     github_release(
       repo: 'RWKV-APP/RWKV_APP',
@@ -704,13 +736,19 @@ lane :macos_build_and_upload do |params|
   if upload_to_huggingface && ENV['HF_TOKEN'] && !ENV['HF_TOKEN'].empty?
     dmg_filename = File.basename(dmg_path)
     UI.header '上传 DMG 到 Hugging Face'
-    huggingface(
-      repo_id: ENV['HF_DATASETS_ID'] || 'HaloWang/rwkv-chat',
-      file_path: absolute_dmg_path,
-      path_in_repo: "macos-universal/#{dmg_filename}",
-      commit_message: "Upload DMG #{dmg_filename} (v#{full_version})",
-      repo_type: 'dataset',
-    )
+    if params[:frozen_release]
+      sh('python3', File.join(project_root, 'scripts/upload_to_hf.py'),
+         '--repo-id', ENV['HF_DATASETS_ID'] || 'HaloWang/rwkv-chat',
+         '--file', absolute_dmg_path, '--path-in-repo', "macos-universal/#{dmg_filename}", '--verify-package')
+    else
+      huggingface(
+        repo_id: ENV['HF_DATASETS_ID'] || 'HaloWang/rwkv-chat',
+        file_path: absolute_dmg_path,
+        path_in_repo: "macos-universal/#{dmg_filename}",
+        commit_message: "Upload DMG #{dmg_filename} (v#{full_version})",
+        repo_type: 'dataset',
+      )
+    end
     UI.success '✅ DMG 已上传到 Hugging Face'
   else
     UI.important '跳过 Hugging Face 上传 (HF_TOKEN 未设置)'

@@ -58,16 +58,47 @@ complete, size- and SHA-256-verified files on the operator's local publication
 host. All GitHub and Hugging Face transfers for this delivery use that host.
 The accepted non-Apple packages retain their build-source identity and bundled
 catalog; the build-755 online model configuration is published separately.
-macOS, iOS and iPadOS package delivery and platform validation are explicitly
+macOS and iOS package delivery and platform validation are explicitly
 deferred to a separate Apple continuation and do not block this delivery.
+Apple application build targets are exactly `macos` and `ios`. iPhone and iPad
+use the same iOS build; iPadOS is never a separate lane or package target.
 
-The Apple-only Fastlane entrypoint continues the same release on a Mac. It
-checks the App tag, version/build, adapter commit and native library identity,
-then publishes a signed and notarized macOS DMG to the existing GitHub release
-and ModelScope dataset and uploads the matching iOS version/build to TestFlight.
+The Apple-only Fastlane entrypoint continues the same release on an Apple Silicon
+Mac. `release.json.apple` declares the continuation source branch, integration
+branch, and original published base tag/commit. The continuation may include
+subsequent catalog and Apple fixes without moving the original tag or changing
+the provenance of already published non-Apple packages. Before authentication,
+the lane checks the App fetch/push repository, clean worktree, exact branch and
+remote tip, integration ancestry, unchanged base tag, and fixed Flutter/tool
+prerequisites. The pinned adapter and native commits must still be the remote
+tips of their declared branches; newer commits require a reviewed pin update.
+The immutable native release tag must resolve to its declared commit.
+
+After authentication, it prepares the clean sibling adapter at the pinned
+commit and verifies each iOS/macOS native file's full size and SHA-256 against
+the pinned manifest. Unexpected files inside the native packaging scope block
+the build. Flutter package metadata and CocoaPods plugin links must resolve to
+that same sibling checkout. Every fresh platform build cleans prior outputs,
+enforces the committed dependency lockfile, and checks source and native inputs
+again before publication. Generated release artwork may differ; source code and
+the dependency lockfile may not. A run-local identity receipt survives build
+cleanup and records the App commit, manifest digest, dependency pins and native
+file digests without personal paths or credentials.
+On exit the lane restores only its own tracked generated artwork when the file
+still matches the captured generated digest; subsequent user changes and
+untracked files remain intact, and no whole-worktree reset is permitted.
+
+The lane publishes a signed and notarized macOS DMG to the existing GitHub
+release, ModelScope and Hugging Face, and uploads the matching iOS version/build
+to TestFlight. Every enabled provider requires credentials before work starts.
 It does not bump the version, run the all-platform lane, move an existing tag,
 or replace accepted packages from other platforms. Resume checks completed
-remote artifacts before skipping stages. Apple build, signing and TestFlight
+remote artifacts before skipping stages. Existing macOS and TestFlight builds
+also require immutable GitHub provenance receipts matching the exact run
+identity and artifact digest; a matching version/build alone is insufficient.
+The iOS receipt is published only after a successful IPA upload and does not
+publish the IPA to GitHub. Missing or conflicting provenance stops automatic
+reuse. Apple build, signing and TestFlight
 acceptance remain pending until actually performed on a capable Mac.
 
 ## SPEC-RWKV-APPLE-RELEASE-AUTH-GATE

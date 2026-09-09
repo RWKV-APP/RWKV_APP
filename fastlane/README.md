@@ -16,10 +16,26 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 ### apple
 
 ```sh
-[bundle exec] fastlane apple
+bundle exec fastlane apple
 ```
 
-Continue the published release on a Mac with the frozen version, build and native libraries. See [Apple continuation](../tools/README.md#apple-continuation) for prerequisites and resume behavior.
+Continue 4.8.0 / build 755 on an Apple Silicon Mac from the clean, synchronized
+`codex/apple-release-4.8.0` branch of `RWKV-APP/RWKV_APP`. Use Flutter 3.44.8 and
+the fixed adapter/native identities in `release.json`; do not check out the old
+4.8.0 tag for this continuation.
+
+The lane checks source and environment before fresh Apple authentication,
+prepares the pinned Apple native libraries, uses `flutter pub get
+--enforce-lockfile`, and verifies each platform's inputs before and after the
+build. The macOS DMG is published to GitHub, ModelScope and Hugging Face; the iOS
+IPA goes to TestFlight. Reuse requires an exact source/native/artifact provenance
+receipt, including for an existing TestFlight version/build.
+
+See [Apple continuation](../tools/README.md#apple-continuation) for safe clone or
+fetch/switch/pull commands, Mac dependencies, signing and provider credentials,
+read-only preflight commands, and resume boundaries. These instructions and
+helper tests do not constitute an Apple build, signing or device acceptance.
+
 
 ### all
 

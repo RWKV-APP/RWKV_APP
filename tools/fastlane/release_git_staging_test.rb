@@ -55,6 +55,109 @@ class RwkvReleaseGitStagingTest < Minitest::Test
     end
   end
 
+  def test_generated_artwork_restoration_leaves_a_clean_tree_for_another_run
+    Dir.mktmpdir do |directory|
+      initialize_repository(directory)
+      write_file(directory, 'assets/branding.png', 'original')
+      write_file(directory, 'macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json', '{}')
+      git!(directory, 'add', '--all')
+      git!(directory, 'commit', '-m', 'base')
+      source_commit = git!(directory, 'rev-parse', 'HEAD').strip
+
+      2.times do
+        write_file(directory, 'assets/branding.png', 'generated')
+        write_file(directory, 'macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json', '{"generated":true}')
+        snapshot = RwkvReleaseGitStaging.snapshot_generated_artwork(project_root: directory)
+        assert_equal 2, snapshot.size
+        assert_equal 2, RwkvReleaseGitStaging.restore_generated_artwork(
+          project_root: directory, source_commit: source_commit, snapshot: snapshot,
+        ).size
+        assert_equal '', git!(directory, 'status', '--porcelain')
+      end
+    end
+  end
+
+  def test_restoration_preserves_later_user_edits_source_and_untracked_files
+    Dir.mktmpdir do |directory|
+      initialize_repository(directory)
+      write_file(directory, 'lib/existing.dart', 'source')
+      write_file(directory, 'assets/[a].png', 'original literal path')
+      write_file(directory, 'assets/a.png', 'original artwork')
+      git!(directory, 'add', '--all')
+      git!(directory, 'commit', '-m', 'base')
+      source_commit = git!(directory, 'rev-parse', 'HEAD').strip
+
+      write_file(directory, 'assets/[a].png', 'generated literal path')
+      write_file(directory, 'assets/a.png', 'generated artwork')
+      write_file(directory, 'lib/existing.dart', 'user source')
+      write_file(directory, 'assets/untracked.png', 'untracked artwork')
+      snapshot = RwkvReleaseGitStaging.snapshot_generated_artwork(project_root: directory)
+      assert_equal ['assets/[a].png', 'assets/a.png'], snapshot.keys
+      write_file(directory, 'assets/a.png', 'later user artwork')
+
+      restored = RwkvReleaseGitStaging.restore_generated_artwork(
+        project_root: directory, source_commit: source_commit, snapshot: snapshot,
+      )
+
+      assert_equal ['assets/[a].png'], restored
+      assert_equal 'original literal path', File.binread(File.join(directory, 'assets/[a].png'))
+      assert_equal 'later user artwork', File.binread(File.join(directory, 'assets/a.png'))
+      assert_equal 'user source', File.binread(File.join(directory, 'lib/existing.dart'))
+      assert_equal 'untracked artwork', File.binread(File.join(directory, 'assets/untracked.png'))
+      assert_equal '', git!(directory, 'diff', '--cached', '--name-only')
+    end
+  end
+
+  def test_partial_generator_failure_restores_modified_and_deleted_artwork
+    Dir.mktmpdir do |directory|
+      initialize_repository(directory)
+      write_file(directory, 'assets/branding.png', 'original')
+      write_file(directory, 'windows/runner/resources/app_icon.ico', 'original icon')
+      git!(directory, 'add', '--all')
+      git!(directory, 'commit', '-m', 'base')
+      source_commit = git!(directory, 'rev-parse', 'HEAD').strip
+      snapshot = {}
+
+      assert_raises(RuntimeError) do
+        begin
+          begin
+            write_file(directory, 'assets/branding.png', 'partial output')
+            File.delete(File.join(directory, 'windows/runner/resources/app_icon.ico'))
+            raise 'generator failed'
+          ensure
+            snapshot = RwkvReleaseGitStaging.snapshot_generated_artwork(project_root: directory)
+          end
+        ensure
+          RwkvReleaseGitStaging.restore_generated_artwork(
+            project_root: directory, source_commit: source_commit, snapshot: snapshot,
+          )
+        end
+      end
+
+      assert_nil snapshot.fetch('windows/runner/resources/app_icon.ico')
+      assert_equal '', git!(directory, 'status', '--porcelain')
+    end
+  end
+
+  def test_cleanup_does_not_restore_into_a_different_source_commit
+    Dir.mktmpdir do |directory|
+      initialize_repository(directory)
+      write_file(directory, 'assets/branding.png', 'original')
+      git!(directory, 'add', '--all')
+      git!(directory, 'commit', '-m', 'base')
+      source_commit = git!(directory, 'rev-parse', 'HEAD').strip
+      write_file(directory, 'assets/branding.png', 'new committed artwork')
+      snapshot = RwkvReleaseGitStaging.snapshot_generated_artwork(project_root: directory)
+      git!(directory, 'add', '--all')
+      git!(directory, 'commit', '-m', 'user commit')
+
+      assert_empty RwkvReleaseGitStaging.restore_generated_artwork(
+        project_root: directory, source_commit: source_commit, snapshot: snapshot,
+      )
+      assert_equal '', git!(directory, 'status', '--porcelain')
+    end
+  end
+
   private
 
   def initialize_repository(directory)

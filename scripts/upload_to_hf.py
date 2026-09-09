@@ -9,6 +9,7 @@ import os
 import sys
 import argparse
 import logging
+import hashlib
 from huggingface_hub import HfApi
 from typing import Optional
 
@@ -45,7 +46,7 @@ class HFUploader:
         self.api = HfApi(endpoint=self.hf_endpoint, token=self.hf_token)
         logger.info(f"✅ Configured HuggingFace API client for {self.hf_endpoint}")
     
-    def upload_file(self, repo_id: str, local_path: str, path_in_repo: Optional[str] = None):
+    def upload_file(self, repo_id: str, local_path: str, path_in_repo: Optional[str] = None, verify_package: bool = False):
         """
         Upload a file to HuggingFace dataset repository
         
@@ -61,16 +62,37 @@ class HFUploader:
             path_in_repo = os.path.basename(local_path)
         
         file_size = os.path.getsize(local_path) / (1024 * 1024)  # MB
+        digest = hashlib.sha256()
+        with open(local_path, 'rb') as stream:
+            for chunk in iter(lambda: stream.read(8 * 1024 * 1024), b''):
+                digest.update(chunk)
+        expected = (os.path.getsize(local_path), digest.hexdigest())
+        anonymous = HfApi(endpoint=self.hf_endpoint, token=False)
+        def verify(revision='main'):
+            rows = anonymous.get_paths_info(repo_id, paths=[path_in_repo], repo_type='dataset', revision=revision, token=False)
+            if not rows:
+                return False
+            row = rows[0]
+            # Application packages use LFS; a missing digest is not proof of identity.
+            remote_digest = getattr(getattr(row, 'lfs', None), 'sha256', None)
+            if (row.size, remote_digest) != expected:
+                raise ValueError(f'Remote Hugging Face artifact differs or lacks a SHA-256: {path_in_repo}; refusing replacement')
+            return True
+        if verify_package and verify():
+            logger.info('Existing Hugging Face artifact anonymously verified; no replacement needed')
+            return True
         logger.info(f"📤 Uploading {os.path.basename(local_path)} ({file_size:.2f} MB) to {repo_id}/{path_in_repo}")
         
         try:
-            self.api.upload_file(
+            commit = self.api.upload_file(
                 path_or_fileobj=local_path,
                 repo_id=repo_id,
                 repo_type='dataset',
                 path_in_repo=path_in_repo,
                 token=self.hf_token
             )
+            if verify_package and not verify(commit.oid):
+                raise ValueError('Uploaded Hugging Face artifact is not anonymously visible')
             logger.info(f"✅ Successfully uploaded to {repo_id}/{path_in_repo}")
             return True
         except Exception as e:
@@ -113,6 +135,7 @@ def main():
     parser.add_argument('--path-in-repo', help='Path in repository (default: filename)')
     parser.add_argument('--hf-token', help='HuggingFace token (or use HF_TOKEN env var)')
     parser.add_argument('--hf-endpoint', help='HF endpoint URL (or use HF_ENDPOINT env var, default: https://huggingface.co)')
+    parser.add_argument('--verify-package', action='store_true', help='Require anonymous LFS size/SHA-256 identity and refuse replacement')
     
     args = parser.parse_args()
     
@@ -130,7 +153,8 @@ def main():
         uploader.upload_file(
             repo_id=args.repo_id,
             local_path=args.file,
-            path_in_repo=args.path_in_repo
+            path_in_repo=args.path_in_repo,
+            verify_package=args.verify_package,
         )
         logger.info("🎉 Upload completed successfully!")
     except Exception as e:

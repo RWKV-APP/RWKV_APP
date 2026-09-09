@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'digest'
 require 'open3'
 
 module RwkvReleaseGitStaging
@@ -47,6 +48,39 @@ module RwkvReleaseGitStaging
 
   def self.generated_artwork_path?(path)
     GENERATED_ARTWORK_PATTERNS.any? { |pattern| pattern.match?(path) }
+  end
+
+  def self.snapshot_generated_artwork(project_root:)
+    root = File.expand_path(project_root)
+    git_paths(root, 'ls-files', '--modified', '--deleted').each_with_object({}) do |path, snapshot|
+      next unless generated_artwork_path?(path)
+
+      file = File.join(root, path)
+      next if File.symlink?(file)
+
+      if File.file?(file)
+        snapshot[path] = Digest::SHA256.file(file).hexdigest
+      elsif !File.exist?(file)
+        snapshot[path] = nil # A generator may remove a tracked image before failing.
+      end
+    end
+  end
+
+  def self.restore_generated_artwork(project_root:, source_commit:, snapshot:)
+    root = File.expand_path(project_root)
+    return [] unless git!(root, 'rev-parse', 'HEAD').strip == source_commit
+
+    tracked = git_paths(root, 'ls-files')
+    paths = snapshot.filter_map do |path, digest|
+      next unless tracked.include?(path) && generated_artwork_path?(path)
+
+      file = File.join(root, path)
+      next if File.symlink?(file)
+      unchanged = digest.nil? ? !File.exist?(file) : File.file?(file) && Digest::SHA256.file(file).hexdigest == digest
+      path if unchanged
+    end
+    git!(root, '--literal-pathspecs', 'restore', "--source=#{source_commit}", '--worktree', '--', *paths) unless paths.empty?
+    paths
   end
 
   def self.git_paths(root, *arguments)

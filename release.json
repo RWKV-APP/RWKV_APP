@@ -3,12 +3,20 @@
   "version": "4.8.0",
   "build": 755,
   "flutterVersion": "3.44.8",
+  "apple": {
+    "sourceBranch": "codex/apple-release-4.8.0",
+    "integrationBranch": "dev",
+    "baseTag": "4.8.0",
+    "baseCommit": "b33cd4220f84de049f195633c4976772b3815ea5"
+  },
   "adapter": {
     "repository": "RWKV-APP/rwkv_mobile_flutter",
+    "branch": "dev",
     "commit": "c87936afbcc40fa99d6d9bdaa18884d96193a825"
   },
   "native": {
     "repository": "RWKV-APP/rwkv-mobile",
+    "branch": "codex/palm-release-4.8.0",
     "tag": "4.8.0-native.4",
     "commit": "205d4848f2b769efe4a1df268e1cdf6548158b5d"
   },

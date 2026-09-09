@@ -99,3 +99,5 @@ samples/
 /assets/model/**/*.gguf
 /assets/model/**/*.safetensors
 /assets/model/**/*.onnx
+# Widget Preview related
+.widget_preview/

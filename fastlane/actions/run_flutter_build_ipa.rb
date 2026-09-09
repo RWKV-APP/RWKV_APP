@@ -15,12 +15,23 @@ module Fastlane
         sentry_release = "rwkv-chat@#{version_number}+#{build_number}"
         sentry_symbols_path = 'build/sentry-symbols/ios'
 
-        sh "cd #{project_root} && flutter pub get"
-        sh "cd #{project_root} && flutter build ipa " \
+        Dir.chdir(project_root) do
+          sh('flutter', 'clean') if params[:frozen_release]
+          sh(*(['flutter', 'pub', 'get'] + (params[:frozen_release] ? ['--enforce-lockfile'] : [])))
+          sh('python3', 'scripts/release_identity.py', '--verify-apple-build-inputs', '--platform', 'ios') if params[:frozen_release]
+        end
+        sh "cd #{Shellwords.escape(project_root)} && flutter build ipa --no-pub " \
            "--split-debug-info=#{sentry_symbols_path} " \
            "--dart-define=SENTRY_RELEASE=#{sentry_release} " \
            "--dart-define=SENTRY_DIST=#{build_number}"
+        if params[:frozen_release]
+          sh('python3', File.join(project_root, 'scripts/release_identity.py'), '--verify-apple-build-inputs', '--platform', 'ios', '--require-pods')
+        end
         upload_sentry_symbols(project_root, sentry_symbols_path, sentry_release, build_number)
+      end
+
+      def self.available_options
+        [FastlaneCore::ConfigItem.new(key: :frozen_release, optional: true, type: Boolean, default_value: false)]
       end
 
       def self.is_supported?(platform)
