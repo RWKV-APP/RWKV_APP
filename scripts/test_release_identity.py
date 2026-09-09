@@ -12,17 +12,30 @@ from release_identity import (APPLE_IDENTITY, IOS_INFO, apple_identity, apple_na
 
 
 class ReleaseIdentityTest(unittest.TestCase):
+    def test_entire_upload_batch_rejects_metadata_before_any_remote_request(self):
+        with tempfile.TemporaryDirectory() as directory:
+            package = Path(directory) / 'rwkv_chat_4.8.0_755_windows-x64.zip'
+            package.write_bytes(b'package')
+            for name in ('rwkv_chat_4.8.0_755_ios.provenance.json', 'release.json', 'build.log', 'private.zip', 'rwkv_chat_4.8.0_756_windows-x64.zip'):
+                extra = Path(directory) / name
+                extra.write_text('{}')
+                with patch('release_identity.command') as read, patch('release_identity.subprocess.run') as mutate:
+                    with self.assertRaisesRegex(ValueError, 'Not an allowed public App package'):
+                        upload_github(dict(version='4.8.0', build=755), [package, extra])
+                    read.assert_not_called()
+                    mutate.assert_not_called()
+
     def test_github_resume_verifies_bytes_without_replacing_or_publishing(self):
         with tempfile.TemporaryDirectory() as directory:
-            file = Path(directory) / 'release.zip'
+            file = Path(directory) / 'rwkv_chat_4.8.0_755_windows-x64.zip'
             file.write_bytes(b'accepted release')
             asset = dict(name=file.name, size=file.stat().st_size, digest='sha256:' + hashlib.sha256(file.read_bytes()).hexdigest())
             with patch('release_identity.command', return_value=json.dumps(dict(tagName='4.8.0', assets=[asset]))), patch('release_identity.subprocess.run') as mutate:
-                upload_github(dict(version='4.8.0'), [file])
+                upload_github(dict(version='4.8.0', build=755), [file])
                 mutate.assert_not_called()
                 file.write_bytes(b'different release')
                 with self.assertRaisesRegex(ValueError, 'refusing replacement'):
-                    upload_github(dict(version='4.8.0'), [file])
+                    upload_github(dict(version='4.8.0', build=755), [file])
                 mutate.assert_not_called()
 
     def test_rejects_version_and_mutable_dependency_drift(self):

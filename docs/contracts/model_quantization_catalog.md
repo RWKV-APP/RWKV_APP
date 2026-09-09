@@ -21,6 +21,10 @@ remote configuration. `FileInfo` parsing and remote-store filtering then use
 the rows for model visibility, compatibility, local-file recognition, download
 identity, and integrity metadata.
 
+Every maintained `chat.model_config` row must declare at least one platform.
+When a platform update leaves `platforms: []`, remove the entire model row
+from the catalog instead of retaining an entry without a consumer.
+
 From build 755, a remote or cached configuration replaces the bundled catalog
 only when its integer `configBuild` equals the running App build number. An
 unversioned, older, or future-build response is ignored and the matching bundled
@@ -184,8 +188,10 @@ the full technical recipe. The 13.3B rows exclude iOS, and CoreML 7.2B remains
 macOS-only. Other existing G1i platform and SoC mappings provide the intended
 consumer scope; they do not transfer G1i runtime acceptance to G1J. Compatible
 SoC aliases may share one artifact without creating an additional quantization
-choice. Existing G1i rows and build-754 configuration remain available while
-G1J promotion and consumer verification are incomplete.
+choice. Existing G1i rows remain available outside the Windows, Android, and
+Linux supersession scopes below while G1J promotion and consumer verification
+are incomplete.
+Build-754 configuration retains its legacy G1i cohort.
 
 This is an explicitly scoped partial release. MTK NP9 7.2B and 13.3B are
 deferred, so those devices receive no G1J NP9 artifact for those sizes in this
@@ -218,6 +224,43 @@ Apple-format weight bytes may be distributed, but macOS, iOS and iPadOS
 platform validation is outside this publication. Catalog preparation and
 publication do not establish runtime acceptance of every artifact on every
 listed platform.
+
+### Windows G1J Supersession
+
+For build 755 and the current `latest.json`, G1J replaces every Windows G1i
+consumer slot with an available G1J counterpart of the same model size,
+backend, quantization, and supported SoC scope. This covers llama.cpp and
+WebRWKV at 1.5B, 2.9B, 7.2B, and 13.3B, plus QNN at 1.5B, 2.9B, and 7.2B
+for the Snapdragon X Elite and X2 Elite SoC groups.
+
+Remove `windows` from shared G1i platform lists and remove Windows-only G1i
+rows when no consumer remains. Preserve other platforms, G1J artifact
+identities, and build-754 or older compatibility catalogs. Publish both
+`latest.json` and `755.json` so build-specific configuration selection applies
+the same replacement. Remote weight artifacts retain their existing identities.
+This catalog visibility change does not assert new device acceptance.
+
+### Android G1i Removal
+
+Build 755 and the current `latest.json` omit every Android G1i chat consumer
+slot. Remove `android` from shared platform lists, and remove the entire chat
+row when its platform list becomes empty. This includes all Android G1i QNN
+and MediaTek rows and the Android scope of the shared llama.cpp rows.
+
+Keep the Windows G1J supersession in effect and preserve the remaining macOS
+and iOS consumers; Linux follows the removal rule below. Existing G1J rows retain their complete identities
+and platform scopes. Publish `latest.json` and `755.json` together; build 754
+and earlier compatibility catalogs retain their legacy cohorts.
+
+### Linux G1i Removal
+
+Build 755 and the current `latest.json` omit every Linux G1i chat consumer
+slot. Remove `linux` from the shared llama.cpp rows for 1.5B, 2.9B, 7.2B, and
+13.3B, preserving their supported Apple consumers. Remove the entire chat row
+if its platform list becomes empty. Keep the Windows and Android removals in
+effect, retain existing G1J identities and consumer scopes, and publish both
+current configuration files. Build 754 and earlier compatibility catalogs
+retain their legacy Linux G1i cohorts.
 
 ## SPEC-RWKV-QUANTIZATION-DELIVERY — Artifact Publication And App Acceptance
 
@@ -284,27 +327,28 @@ G1i row.
 The current G1i Apple catalog exposes the non-QNN llama.cpp, WebRWKV, and MLX
 rows for 1.5B, 2.9B, and 7.2B on both macOS and iOS. G1i 13.3B is intentionally
 unsupported on iPhone and iPad, so its non-QNN Apple catalog scope includes
-`macos` and excludes `ios`. Mobile Snapdragon QNN rows remain Android-only;
-Snapdragon X Elite and X2 Elite QNN rows use the released Windows consumer
-contract. Catalog visibility is the user-facing selection contract and is not a
+`macos` and excludes `ios`. Legacy G1i mobile Snapdragon QNN rows are
+Android-only, and legacy Snapdragon X Elite and X2 Elite QNN rows target
+Windows; both scopes are removed from build 755 and the current `latest.json`
+under the supersession rules above. Catalog visibility is the user-facing selection contract and is not a
 claim that every declared size or backend has passed runtime or performance
 acceptance on every Apple device. Those outcomes remain separately recorded and
 never justify inventing `macos_debug`, adding an unsupported iOS entry, or
 silently removing an approved platform.
 
-The current Android G1i QNN catalog exposes 1.5B for Snapdragon 8 Elite Gen5,
+The legacy Android G1i QNN catalog exposes 1.5B for Snapdragon 8 Elite Gen5,
 8 Gen 5, 8 Elite, 8 Gen 3, 8s Gen 3, 7+ Gen 3, 8 Gen 2, 8+ Gen 1, 888, and
 778. It exposes 2.9B for the same set except 778. Where an approved artifact
 has identical bytes for more than one compatible SoC, each SoC keeps its own
 catalog row and shares the immutable URL, size, and SHA-256 identity.
 
-The current Windows G1i QNN catalog exposes 1.5B and 2.9B for Snapdragon X
+The legacy Windows G1i QNN catalog exposes 1.5B and 2.9B for Snapdragon X
 Elite, X Plus, and X1 through the X Elite artifact, and for Snapdragon X2 Elite
 Extreme, X2 Elite, and X2 Plus through the X2 Elite artifact. These rows replace
 the equivalent G1h Windows QNN slots. Their formal artifact publication and
 catalog visibility do not claim exact-device runtime or performance acceptance.
 
-An unpromoted Windows G1i 7.2B QNN test cohort may be exposed to those same
+The earlier Windows G1i 7.2B QNN test cohort was exposed to those same
 Snapdragon X and X2 SoC groups through the online `latest.json` while its bytes
 remain in `HaloWang1991/rwkv-weights-tmp`. Each such row must use the exact
 anonymous HTTPS ModelScope resolve URL at a 40-hex immutable revision, stay
@@ -313,9 +357,10 @@ match the independently verified byte size and SHA-256. The direct absolute URL
 intentionally bypasses the user's selected mirror for this ModelScope-only test
 cohort. Catalog publication remains pre-release visibility, not formal artifact
 promotion or device runtime acceptance; formal promotion replaces the row with
-the byte-identical source-selectable dual-repository URL.
+the byte-identical source-selectable dual-repository URL. These legacy Windows
+G1i QNN slots are superseded by G1J in build 755 and the current `latest.json`.
 
-The current Android G1i MediaTek catalog exposes the 1.5B `W8` NP7 artifact
+The legacy Android G1i MediaTek catalog exposes the 1.5B `W8` NP7 artifact
 for Dimensity 9300 and the 1.5B `W8` plus 2.9B `W4` NP9 artifacts for
 Dimensity 9500. The Dimensity 9300 1.5B row replaces its equivalent G1h NP7
 slot. There is no formal Dimensity 9300 2.9B G1i catalog row in this cohort.
@@ -323,12 +368,14 @@ Formal artifact publication and catalog visibility remain separate from
 exact-device loading, generation, and performance acceptance.
 
 The G1i 1.5B `Q6_K` and the 2.9B, 7.2B, and 13.3B `Q4_K_M` llama.cpp artifacts
-retain those named catalog labels. They are Linux consumer artifacts. Each
-Linux scope replaces only the equivalent G1h size and technical quantization
+retain those named catalog labels. In legacy Linux catalogs, each G1i scope
+replaces only the equivalent G1h size and technical quantization
 slot after the exact G1i bytes have been discovered, loaded, and used for
 representative generation through the canonical Linux App UI. G1h rows for
 other backends, platforms, or SoCs remain available until an equivalent G1i
-consumer contract independently passes its acceptance boundary.
+consumer contract independently passes its acceptance boundary. The G1i Linux
+consumer scopes are removed from build 755 and the current `latest.json` under
+the Linux removal rule above.
 
 The explicit human rulings on 2026-08-22 authorize formal publication of the
 accepted G1i CoreML 1.5B and 2.9B artifacts for macOS and iOS, followed by a

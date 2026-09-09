@@ -29,7 +29,10 @@ prepares the pinned Apple native libraries, uses `flutter pub get
 --enforce-lockfile`, and verifies each platform's inputs before and after the
 build. The macOS DMG is published to GitHub, ModelScope and Hugging Face; the iOS
 IPA goes to TestFlight. Reuse requires an exact source/native/artifact provenance
-receipt, including for an existing TestFlight version/build.
+receipt, including for an existing TestFlight version/build. Receipts stay in
+ignored `tools/output/release-provenance/`; the lane never uploads them to
+GitHub. Only supported App package filenames may enter GitHub upload actions.
+When moving a release to another Mac, transfer its original receipts privately.
 
 See [Apple continuation](../tools/README.md#apple-continuation) for safe clone or
 fetch/switch/pull commands, Mac dependencies, signing and provider credentials,

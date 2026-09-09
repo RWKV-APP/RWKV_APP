@@ -39,6 +39,9 @@ migrate_working_dir/
 # Symbolication related
 app.*.symbols
 
+# Local release evidence; never source files or public release assets
+*.provenance.json
+
 # Obfuscation related
 app.*.map.json
 

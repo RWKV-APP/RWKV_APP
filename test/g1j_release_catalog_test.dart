@@ -20,6 +20,19 @@ void main() {
         .where((row) => (row['url'] as String).contains('-g1j-'))
         .toList();
     expect(buildRows, g1j);
+    for (final currentConfig in [config, buildConfig]) {
+      final currentRows = ((currentConfig['chat'] as Map<String, dynamic>)['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
+      expect(currentRows.where((row) => (row['platforms'] as List<dynamic>).isEmpty), isEmpty);
+      final windowsRows = currentRows.where((row) => (row['platforms'] as List<dynamic>).contains('windows'));
+      expect(windowsRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
+      expect(windowsRows.where((row) => (row['url'] as String).contains('-g1j-')), hasLength(16));
+      final androidRows = currentRows.where((row) => (row['platforms'] as List<dynamic>).contains('android'));
+      expect(androidRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
+      expect(androidRows.where((row) => (row['url'] as String).contains('-g1j-')), hasLength(30));
+      final linuxRows = currentRows.where((row) => (row['platforms'] as List<dynamic>).contains('linux'));
+      expect(linuxRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
+      expect(linuxRows.where((row) => (row['url'] as String).contains('-g1j-')), hasLength(6));
+    }
     final distributed = artifacts.where((artifact) => artifact['distribution'] != null).toList();
     final pending = artifacts.where((artifact) => artifact['distribution'] == null).toList();
     final frozenByHash = {for (final artifact in artifacts) artifact['sha256'] as String: artifact};

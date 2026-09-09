@@ -16,6 +16,15 @@ GitHub Actions owns Linux and Windows package publication. Fastlane owns Android
 APK and macOS DMG publication. Authentication tokens are supplied only through
 runtime secrets and must never be written to tracked files or command output.
 
+App publication authorizes the declared installer packages and channels. It does
+not authorize publishing build receipts, provenance JSON, logs, local paths or
+other internal evidence. Keep those records locally under Git-ignored paths;
+publishing additional material requires an explicit, separately scoped user
+request. GitHub package upload entrypoints accept only the supported RWKV Chat
+APK, macOS DMG, Linux x64 tar.gz/AppImage and Windows x64/ARM64 ZIP/installer
+filenames, and reject metadata before any release mutation. Wildcard batches
+must pass that check in full before uploading their first file.
+
 Before Fastlane creates and pushes a release tag, its release commit must include
 every changed or untracked source file needed by a clean checkout. Generated
 release artwork remains local and is excluded from that commit. A clean checkout
@@ -97,11 +106,15 @@ to TestFlight. Every enabled provider requires credentials before work starts.
 It does not bump the version, run the all-platform lane, move an existing tag,
 or replace accepted packages from other platforms. Resume checks completed
 remote artifacts before skipping stages. Existing macOS and TestFlight builds
-also require immutable GitHub provenance receipts matching the exact run
-identity and artifact digest; a matching version/build alone is insufficient.
-The iOS receipt is published only after a successful IPA upload and does not
-publish the IPA to GitHub. Missing or conflicting provenance stops automatic
-reuse. Apple build, signing and TestFlight
+also require local provenance receipts matching the exact run identity and
+artifact digest; a matching version/build alone is insufficient. Receipts live
+under ignored `tools/output/release-provenance/`, outside Flutter build cleanup,
+and never become GitHub assets. The macOS receipt is saved before package upload
+so an interrupted upload can resume by comparing the remote package digest.
+The iOS receipt is saved after a successful TestFlight upload. On another host,
+transfer the exact receipts privately with the release handoff; missing or
+conflicting evidence stops reuse with a local recovery instruction, without
+requesting or uploading a public receipt. Apple build, signing and TestFlight
 acceptance remain pending until actually performed on a capable Mac.
 
 ## SPEC-RWKV-APPLE-RELEASE-AUTH-GATE

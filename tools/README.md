@@ -212,11 +212,18 @@ inputs again before subsequent distribution steps. It writes its local preparati
 to ignored `tools/output/apple-release-identity.json`.
 
 All three DMG channels are enabled by `release.json`. Rerunning the command can
-reuse a published DMG only when its bytes and `.provenance.json` receipt match
+reuse a published DMG only when its bytes and local `.provenance.json` receipt match
 the exact App commit, release manifest digest, adapter commit, native release and
 native file digests. The iOS receipt `rwkv_chat_4.8.0_755_ios.provenance.json`
 binds the uploaded IPA to those same inputs. An existing TestFlight version/build
-alone is insufficient: missing or mismatched provenance stops reuse. Matching
+alone is insufficient: missing or mismatched provenance stops reuse. Receipts
+stay under ignored `tools/output/release-provenance/`, survive `flutter clean`,
+and are never uploaded as GitHub Release assets. The macOS receipt is saved
+before package upload; the iOS receipt is saved after TestFlight upload.
+Transfer original receipts privately when continuing on another host. Restore
+missing receipts from that private handoff; do not publish evidence to satisfy
+a resume check. GitHub upload entrypoints reject JSON, logs and other files
+outside the supported App package filenames before any release mutation. Matching
 builds may resume beta distribution; Apple processing or external beta review
 can remain pending and must be checked in App Store Connect.
 
@@ -229,8 +236,8 @@ Offline release helper checks:
 
 ```sh
 python3 -m unittest discover -s scripts -p 'test_*.py'
-ruby tools/fastlane/frozen_release_test.rb
-ruby tools/fastlane/apple_auth_gate_test.rb
+bundle exec ruby tools/fastlane/frozen_release_test.rb
+bundle exec ruby tools/fastlane/apple_auth_gate_test.rb
 ruby tools/fastlane/apple_build_test.rb
 ```
 

@@ -15,7 +15,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["778"],
-        "date": 1788632017,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -29,7 +29,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1788632022,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -43,7 +43,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite"],
-        "date": 1788632046,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -57,7 +57,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1788632051,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -71,7 +71,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1788632031,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -85,7 +85,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1788632041,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -99,7 +99,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1788632056,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -113,7 +113,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8+ Gen 1"],
-        "date": 1788632026,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -127,7 +127,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1788632036,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -141,7 +141,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1788632036,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -155,7 +155,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X2 Elite Extreme", "X2 Elite", "X2 Plus"],
-        "date": 1788632068,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -169,7 +169,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X Elite", "X Plus", "X1"],
-        "date": 1788632062,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -183,7 +183,7 @@
         "backends": ["mtk_np7"],
         "tags": ["reason", "npu"],
         "socLimitations": ["Dimensity 9300"],
-        "date": 1788605047,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -197,7 +197,7 @@
         "backends": ["mtk_np9"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["Dimensity 9500"],
-        "date": 1788617868,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -210,7 +210,7 @@
         "platforms": ["windows", "android", "macos", "ios", "linux"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1788631990,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -223,7 +223,7 @@
         "platforms": ["ios", "macos", "windows"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
-        "date": 1788631998,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -236,7 +236,7 @@
         "platforms": ["macos", "ios"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
-        "date": 1788632122,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -249,7 +249,7 @@
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu", "batch"],
-        "date": 1788632129,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -263,7 +263,7 @@
         "fileSize": 1669140548,
         "sha256": "309233828ec88b9ff406d66db2f4e1e37fa846330f96cb9f0639d2047fae57f5",
         "availableIn": ["modelscope", "huggingface"],
-        "date": 1788721037
+        "date": 1788889792
       },
       {
         "name": "RWKV7-G1j 2.9B (888)",
@@ -276,7 +276,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1788632072,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -290,7 +290,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite"],
-        "date": 1788632098,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -304,7 +304,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1788632103,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -318,7 +318,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1788632082,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -332,7 +332,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1788632082,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -346,7 +346,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1788632108,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -360,7 +360,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8+ Gen 1"],
-        "date": 1788632077,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -374,7 +374,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1788632088,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -388,7 +388,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1788632088,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -402,7 +402,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X2 Elite Extreme", "X2 Elite", "X2 Plus"],
-        "date": 1788632118,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -416,7 +416,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X Elite", "X Plus", "X1"],
-        "date": 1788632113,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -430,7 +430,7 @@
         "backends": ["mtk_np9"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["Dimensity 9500"],
-        "date": 1788670791,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -443,7 +443,7 @@
         "platforms": ["windows", "android", "macos", "ios", "linux"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1788631994,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -456,7 +456,7 @@
         "platforms": ["ios", "macos", "windows"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
-        "date": 1788632003,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -469,7 +469,7 @@
         "platforms": ["macos", "ios"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
-        "date": 1788632126,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -482,7 +482,7 @@
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu", "batch"],
-        "date": 1788632134,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -496,7 +496,7 @@
         "fileSize": 3126854084,
         "sha256": "4dac69c1edc3ed66bcbb8eae20cab11669af6f42dbd6f86ef0b6d3a5f0c84ba7",
         "availableIn": ["modelscope", "huggingface"],
-        "date": 1788721041
+        "date": 1788889792
       },
       {
         "name": "RWKV7-G1j 7.2B (8 Gen 3)",
@@ -509,7 +509,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -523,7 +523,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -537,7 +537,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X2 Elite Extreme", "X2 Elite", "X2 Plus"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -551,7 +551,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X Elite", "X Plus", "X1"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -564,7 +564,7 @@
         "platforms": ["windows", "android", "macos", "ios", "linux"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -577,7 +577,7 @@
         "platforms": ["macos", "ios", "windows"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -590,7 +590,7 @@
         "platforms": ["macos"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -603,7 +603,7 @@
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu", "batch"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -616,7 +616,7 @@
         "platforms": ["windows", "android", "macos", "linux"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -629,7 +629,7 @@
         "platforms": ["macos", "windows"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
       },
       {
@@ -642,138 +642,8 @@
         "platforms": ["macos"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu", "batch"],
-        "date": 1788660109,
+        "date": 1788889792,
         "availableIn": ["modelscope", "huggingface"]
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (8 Elite Gen5)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-8elitegen5-batch.rmpack",
-        "fileSize": 1800704000,
-        "sha256": "3f21c855d5da008475ee1fa18c2490426cec469733aad763100b4bdefa807a46",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite Gen5"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (8 Gen 5)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-8gen5-batch.rmpack",
-        "fileSize": 1782935552,
-        "sha256": "5d3f9902228f8bfded72a2dca2294eacb8ff1c9d0688a70c65b113799dd18a5e",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 5"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (8 Elite)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-8elite-batch.rmpack",
-        "fileSize": 1783119872,
-        "sha256": "043b9cb61882539f6ddb07b7e30519b0cd986ab4ec595fb687d230cc851fd391",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (8 Gen 3)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-8gen3-batch.rmpack",
-        "fileSize": 1788702720,
-        "sha256": "3b23b54e2180b142af60005eb3fa389c898c6f3bf84243d375edcf5ef318b84d",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 3"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (8s Gen 3)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-8sgen3-batch.rmpack",
-        "fileSize": 1787596800,
-        "sha256": "00dfafa5a3cef15c3c7888b1f61f9360e7be22f1e016e57e5be9126d3986c8c3",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8s Gen 3"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (7+ Gen 3)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-8sgen3-batch.rmpack",
-        "fileSize": 1787596800,
-        "sha256": "00dfafa5a3cef15c3c7888b1f61f9360e7be22f1e016e57e5be9126d3986c8c3",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["7+ Gen 3"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (8 Gen 2)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-8gen2-batch.rmpack",
-        "fileSize": 1738297344,
-        "sha256": "b2c63bebdbaf46b2a29709ad8b9e552039b5eba0bdaa83c9d8c61cb1d6b7213f",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 2"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (8+ Gen 1)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-8plusgen1.rmpack",
-        "fileSize": 1688215552,
-        "sha256": "f0ddc953e26e1387b2ed47e70942d074305aa7b140ec081c1f3693d0cbc1d8c9",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu"],
-        "socLimitations": ["8+ Gen 1"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (888)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-888.rmpack",
-        "fileSize": 1688367104,
-        "sha256": "a990af27c000a5c0e6898d897b8d2f3c032ff2bee6793d40b742673a76b0eb1f",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu"],
-        "socLimitations": ["888"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (778)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-6490.rmpack",
-        "fileSize": 1688641536,
-        "sha256": "5a2a93de3abeeb22bd301485110b665ba2760690e1fcfc4da586c430752e0d0e",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu"],
-        "socLimitations": ["778"],
-        "date": 1786298779
       },
       {
         "name": "RWKV7-G1i 1.5B",
@@ -782,7 +652,7 @@
         "fileSize": 1336082496,
         "sha256": "65ff6b972c74b1f2ec6860e43ec63d55a9488b49fe82e708a79849360f279c2f",
         "quantization": "Q6_K",
-        "platforms": ["windows", "android", "macos", "ios", "linux"],
+        "platforms": ["macos", "ios"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
         "date": 1786299898
@@ -838,156 +708,13 @@
         "date": 1787285805
       },
       {
-        "name": "RWKV7-G1i 2.9B (8 Elite Gen5)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-8elitegen5-batch.rmpack",
-        "fileSize": 2173165568,
-        "sha256": "823055fb3bd298277242dd5f12cf29cbbdecaaae75050002aeb58454065e2629",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite Gen5"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (8 Gen 5)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-8gen5-batch.rmpack",
-        "fileSize": 2178527232,
-        "sha256": "1bc1ab5116de801de8380f1d233de78b615cf5c27a7d73346aa0a11861d85d35",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 5"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (8 Elite)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-8elite-batch.rmpack",
-        "fileSize": 2178392064,
-        "sha256": "f3bbd1724578d34c34fd371fa3f04eeac45f793575829c80986ebb441bb82f37",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (8 Gen 3)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-8gen3-batch.rmpack",
-        "fileSize": 2174803968,
-        "sha256": "fae97ee0348ac281c6678cdca847b681df41ad32ed562a65144900705a04ba68",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 3"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (8s Gen 3)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-8sgen3-batch.rmpack",
-        "fileSize": 2174431232,
-        "sha256": "35968719da964845900f940668a8ee544226891f42abd656f20fb8ca18612674",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8s Gen 3"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (7+ Gen 3)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-8sgen3-batch.rmpack",
-        "fileSize": 2174431232,
-        "sha256": "35968719da964845900f940668a8ee544226891f42abd656f20fb8ca18612674",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["7+ Gen 3"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (8 Gen 2)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-8gen2-batch.rmpack",
-        "fileSize": 2123558912,
-        "sha256": "db0e5eeeab205422ab09b1bbac57fdfcbba914f5f3b4b811d8dcd458d2dc931f",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 2"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (8+ Gen 1)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-8plusgen1.rmpack",
-        "fileSize": 2079973376,
-        "sha256": "634e85e0d73db056e442eb6a4d0f539f41d7dfd507ba7c549912f5b68b764050",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu"],
-        "socLimitations": ["8+ Gen 1"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (888)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-888.rmpack",
-        "fileSize": 2083201024,
-        "sha256": "c5f66c9916666916e096839e54a6bf1bf95ca15514b2b499c4ee7ad37023a6ed",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu"],
-        "socLimitations": ["888"],
-        "date": 1786298779
-      },
-      {
-        "name": "RWKV7-G1i 7.2B (8 Gen 3)",
-        "modelSize": 7.2,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/7.2b/qnn/rwkv7-g1i-7.2b-20260805-ctx16384-a16w4-lpbq-b32-8gen3.rmpack",
-        "fileSize": 4790620160,
-        "sha256": "f8f7e981f9e51cd4b6e8064972ec6f190116cfe594e8a937fd0225a33c3d0f24",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu"],
-        "socLimitations": ["8 Gen 3"],
-        "date": 1786300340
-      },
-      {
-        "name": "RWKV7-G1i 7.2B (8s Gen 3)",
-        "modelSize": 7.2,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/7.2b/qnn/rwkv7-g1i-7.2b-20260805-ctx16384-a16w4-lpbq-b32-8sgen3.rmpack",
-        "fileSize": 4792025088,
-        "sha256": "95c1d5597a2d89329907edde56baba6696c6f7c03d717cc55917b95659492c67",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu"],
-        "socLimitations": ["8s Gen 3"],
-        "date": 1786613384
-      },
-      {
         "name": "RWKV7-G1i 1.5B (WebRWKV)",
         "modelSize": 1.5,
         "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/webrwkv/rwkv7-g1i-1.5b-20260805-ctx16384-nf4.prefab",
         "fileSize": 1281449945,
         "sha256": "f5a44907726107a9d6614efbf77371dab86eae64ab7bf857594a35e415dcc4f1",
         "quantization": "NF4",
-        "platforms": ["ios", "macos", "windows"],
+        "platforms": ["ios", "macos"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
         "date": 1786284785
@@ -999,7 +726,7 @@
         "fileSize": 1919047552,
         "sha256": "f1e240ec025d8522cacf7edd01a7514b694dc80dfefd8b3bfdd69ced5456cb0f",
         "quantization": "Q4_K_M",
-        "platforms": ["windows", "android", "macos", "ios", "linux"],
+        "platforms": ["macos", "ios"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
         "date": 1786299898
@@ -1011,7 +738,7 @@
         "fileSize": 2200282289,
         "sha256": "6306a188ff04e6aecd88b90f1771a4c4d0398b71efa12236956058674cb58e10",
         "quantization": "NF4",
-        "platforms": ["ios", "macos", "windows"],
+        "platforms": ["ios", "macos"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
         "date": 1786285477
@@ -1023,7 +750,7 @@
         "fileSize": 4579571584,
         "sha256": "4fcbee4a0442cecb99662daeb936e7cdb0a0f90b3f276f24b14a2465c33b759a",
         "quantization": "Q4_K_M",
-        "platforms": ["windows", "android", "macos", "ios", "linux"],
+        "platforms": ["macos", "ios"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
         "date": 1786299898
@@ -1035,7 +762,7 @@
         "fileSize": 4938093745,
         "sha256": "60ad7d818a7f4d31c169edc031a32d88428a675a5cdf35d5633cc4bf608643e6",
         "quantization": "NF4",
-        "platforms": ["macos", "ios", "windows"],
+        "platforms": ["macos", "ios"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
         "date": 1786291051
@@ -1047,7 +774,7 @@
         "fileSize": 8457371520,
         "sha256": "1f3fc76d83f6649b10df552526ab2c951d2ac7adec6d72bf8caef5291ad680d3",
         "quantization": "Q4_K_M",
-        "platforms": ["windows", "android", "macos", "linux"],
+        "platforms": ["macos"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
         "date": 1786299898
@@ -1059,7 +786,7 @@
         "fileSize": 8504144960,
         "sha256": "51b438150d3196d72c0b43a6fce27ebbee54323446cbe15edbc2e8a005c727eb",
         "quantization": "NF4",
-        "platforms": ["macos", "windows"],
+        "platforms": ["macos"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
         "date": 1786292327
@@ -1562,19 +1289,6 @@
         "date": 1770707306
       },
       {
-        "name": "RWKV7-G1i 1.5B (Dimensity 9300)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/mtk_np7/rwkv7-g1i-1.5b-20260805-ctx16384-mt6989-np7-sdk7.0.8-ncc7.3.15-a16w8-prefill32.rmpack",
-        "fileSize": 1676345344,
-        "sha256": "ddf7687ec5bea11ff3746e8e01390a5be97c80c3a02c0fe38c15c04d3861bf70",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["mtk_np7"],
-        "tags": ["reason", "npu"],
-        "socLimitations": ["Dimensity 9300"],
-        "date": 1786869671
-      },
-      {
         "name": "RWKV7-G1d 0.1B (Dimensity 9500)",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv7-g1d-0.1b-20260129-ctx8192-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
@@ -1597,32 +1311,6 @@
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["Dimensity 9500"],
         "date": 1783531621
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (Dimensity 9500)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/mtk_np9/rwkv7-g1i-1.5b-20260805-ctx16384-mt6993-np9-sdk9.0.10-a16w8-prefill16-batch.rmpack",
-        "fileSize": 1951162368,
-        "sha256": "64f43cae4392c04071ca062f7d4294cd8c514a755deed1ae623030c073d83e4c",
-        "quantization": "W8",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["Dimensity 9500"],
-        "date": 1786723448
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (Dimensity 9500)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/mtk_np9/rwkv7-g1i-2.9b-20260805-ctx16384-mt6993-np9-sdk9.0.10-a16w4-vsq32t8-prefill16-batch.rmpack",
-        "fileSize": 2567561216,
-        "sha256": "6973c4a8a34966b566b992dc91c9846800addcc073126d6cf142ae4f9ea66b86",
-        "quantization": "W4",
-        "platforms": ["android"],
-        "backends": ["mtk_np9"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["Dimensity 9500"],
-        "date": 1786723546
       },
       {
         "name": "RWKV7-G1d 0.1B (8 Elite)",
@@ -1998,84 +1686,6 @@
         "socLimitations": ["888"],
         "date": 1770703102,
         "isDebug": true
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (X Elite)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-xelite-nocustomop-batch-requant-20260814.rmpack",
-        "fileSize": 1907093504,
-        "sha256": "b49b91caca8b7003abed7165ad9057be29346c15e79eb591dc6776c682419919",
-        "quantization": "W8",
-        "platforms": ["windows"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["X Elite", "X Plus", "X1"],
-        "date": 1786673432
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (X2 Elite)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1i-1.5b-20260805-ctx16384-a16w8-x2elite-nocustomop-batch-requant-20260814.rmpack",
-        "fileSize": 1939804160,
-        "sha256": "6c921ece1d104c8fa0f2fd0660d1c7d0aae1b53744ba8573ce6ae58f0336b043",
-        "quantization": "W8",
-        "platforms": ["windows"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["X2 Elite Extreme", "X2 Elite", "X2 Plus"],
-        "date": 1786673442
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (X Elite)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-xelite-nocustomop-batch-requant-20260814.rmpack",
-        "fileSize": 2291609600,
-        "sha256": "b1beef361b4379b61604a13a6423d06998a0583c6cfc6610780de0cd92d47ec4",
-        "quantization": "W4",
-        "platforms": ["windows"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["X Elite", "X Plus", "X1"],
-        "date": 1786673454
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (X2 Elite)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/qnn/rwkv7-g1i-2.9b-20260805-ctx16384-a16w4-lpbq-b32-x2elite-nocustomop-batch-requant-20260814.rmpack",
-        "fileSize": 2308239360,
-        "sha256": "4850aa940bfd9292f07ebb4d140a56d542be546519f1e4a1ee33594335fd428f",
-        "quantization": "W4",
-        "platforms": ["windows"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["X2 Elite Extreme", "X2 Elite", "X2 Plus"],
-        "date": 1786673468
-      },
-      {
-        "name": "RWKV7-G1i 7.2B (X Elite)",
-        "modelSize": 7.2,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/7.2b/qnn/rwkv7-g1i-7.2b-20260805-ctx16384-a16w4-lpbq-b32-xelite-nocustomop.rmpack",
-        "fileSize": 4867481600,
-        "sha256": "9eb4d1e191bacb3a2998412ac4d4dbac4ec8199c15a4e9f4372635608ea95c0d",
-        "quantization": "W4",
-        "platforms": ["windows"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["X Elite", "X Plus", "X1"],
-        "date": 1787210263
-      },
-      {
-        "name": "RWKV7-G1i 7.2B (X2 Elite)",
-        "modelSize": 7.2,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/7.2b/qnn/rwkv7-g1i-7.2b-20260805-ctx16384-a16w4-lpbq-b32-x2elite-nocustomop.rmpack",
-        "fileSize": 4887171072,
-        "sha256": "9883f708d5c9675eb672de278a27ca588153ec61b39061ab2df88804f92f6549",
-        "quantization": "W4",
-        "platforms": ["windows"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["X2 Elite Extreme", "X2 Elite", "X2 Plus"],
-        "date": 1787215452
       },
       {
         "name": "RWKV7-G1g 7.2B (8 Elite Gen5)",

@@ -1,6 +1,7 @@
 require 'open3'
 require 'shellwords'
 require 'timeout'
+require_relative '../../tools/fastlane/frozen_release'
 
 module Fastlane
   module Actions
@@ -53,6 +54,7 @@ module Fastlane
 
         # Convert to absolute path
         file_path = File.expand_path(file_path)
+        RwkvFrozenRelease.validate_public_package!(file_path, version)
 
         # Check if gh CLI is installed and authenticated
         unless system("which gh > /dev/null 2>&1")
@@ -261,6 +263,7 @@ module Fastlane
       end
 
       def self.upload_asset_with_retry(repo:, version:, file_path:, upload_retry_count:, upload_timeout_seconds:)
+        RwkvFrozenRelease.validate_public_package!(file_path, version)
         file_name = File.basename(file_path)
         attempt = 1
 

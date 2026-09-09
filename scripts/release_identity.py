@@ -51,6 +51,14 @@ def load_release(root):
 def upload_github(release, files):
     repository = 'RWKV-APP/RWKV_APP'
     tag = release['version']
+    prefix = f"rwkv_chat_{tag}_{release['build']}"
+    suffixes = ('.apk', '_macos.dmg', '_linux-x64.tar.gz', '_linux-x64.AppImage',
+                '_windows-x64.zip', '_windows-arm64.zip',
+                '_windows-x64-setup.exe', '_windows-arm64-setup.exe')
+    allowed = {prefix + suffix for suffix in suffixes}
+    for file in files:
+        if file.name not in allowed or file.is_symlink() or not file.is_file() or file.stat().st_size == 0:
+            raise ValueError(f'Not an allowed public App package: {file.name}; keep release evidence local')
     for file in files:
         digest = hashlib.sha256()
         with file.open('rb') as stream:
@@ -304,11 +312,13 @@ def main():
     if args.verify_apple_build_inputs:
         verify_apple_build_inputs(root, release, args.platform, args.require_pods)
     if args.upload_github:
+        batch = []
         for pattern in args.upload_github:
             files = sorted(Path.cwd().glob(pattern))
             if not files or any(not file.is_file() for file in files):
                 raise ValueError(f'No release files match {pattern}')
-            upload_github(release, files)
+            batch.extend(files)
+        upload_github(release, list(dict.fromkeys(batch)))
     if args.github_output:
         with open(args.github_output, 'a', encoding='utf-8') as output:
             output.write(f"adapter_ref={release['adapter']['commit']}\n")

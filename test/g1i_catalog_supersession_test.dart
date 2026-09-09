@@ -20,7 +20,7 @@ void main() {
     final mobileAppleRows = appleRows.where((entry) => entry['modelSize'] != 13.3).toList();
     final macOnly13bRows = appleRows.where((entry) => entry['modelSize'] == 13.3).toList();
 
-    expect(g1iRows, hasLength(46));
+    expect(g1iRows, hasLength(16));
     expect(appleRows, hasLength(12));
     expect(mobileAppleRows, hasLength(9));
     expect(macOnly13bRows, hasLength(3));
@@ -98,8 +98,8 @@ void main() {
     }
   });
 
-  test('G1i replaces the equivalent G1g 7.2B Snapdragon QNN slots', () {
-    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+  test('legacy build 754 retains G1i replacements for G1g 7.2B Snapdragon QNN slots', () {
+    final json = jsonDecode(File('remote/754.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
@@ -143,8 +143,8 @@ void main() {
     }
   });
 
-  test('G1i replaces equivalent G1h QNN slots supported by the current Android engine', () {
-    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+  test('legacy build 754 retains G1i replacements for G1h Android QNN slots', () {
+    final json = jsonDecode(File('remote/754.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
@@ -183,8 +183,8 @@ void main() {
     }
   });
 
-  test('G1i replaces equivalent G1h Dimensity 9500 NP9 slots', () {
-    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+  test('legacy build 754 retains G1i replacements for G1h Dimensity 9500 NP9 slots', () {
+    final json = jsonDecode(File('remote/754.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
@@ -210,8 +210,8 @@ void main() {
     }
   });
 
-  test('G1i replaces the equivalent G1h Dimensity 9300 NP7 slot', () {
-    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+  test('legacy build 754 retains the G1i replacement for G1h Dimensity 9300 NP7', () {
+    final json = jsonDecode(File('remote/754.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
@@ -237,8 +237,8 @@ void main() {
     );
   });
 
-  test('accepted G1i llama.cpp rows replace the equivalent Linux G1h slots', () {
-    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+  test('legacy build 754 retains G1i llama.cpp replacements for Linux G1h slots', () {
+    final json = jsonDecode(File('remote/754.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
@@ -283,8 +283,8 @@ void main() {
     }
   });
 
-  test('G1i replaces equivalent G1h Snapdragon X Windows QNN slots', () {
-    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+  test('legacy build 754 retains G1i replacements for G1h Snapdragon X Windows QNN slots', () {
+    final json = jsonDecode(File('remote/754.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
@@ -328,8 +328,8 @@ void main() {
     }
   });
 
-  test('G1i 7.2B Snapdragon X rows use the formal dual-repository path', () {
-    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+  test('legacy build 754 retains formal G1i 7.2B Snapdragon X rows', () {
+    final json = jsonDecode(File('remote/754.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 

@@ -483,7 +483,7 @@ lane :ios_upload do |params|
         ipa: ipa_path,
       ),
     )
-    RwkvFrozenRelease.publish_ios_provenance(frozen['version'], frozen['build'], ipa_path, identity) if frozen
+    RwkvFrozenRelease.store_ios_provenance(frozen['version'], frozen['build'], ipa_path, identity) if frozen
   ensure
     ios_cleanup_app_store_connect_context(app_store_connect_context)
   end

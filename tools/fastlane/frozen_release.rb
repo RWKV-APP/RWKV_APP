@@ -3,12 +3,22 @@ require 'fileutils'
 require 'json'
 require 'open3'
 require 'tmpdir'
+require 'tempfile'
 require 'timeout'
 
 module RwkvFrozenRelease
   REPOSITORY = 'RWKV-APP/RWKV_APP'
 
+  def self.validate_public_package!(path, version)
+    name = File.basename(path)
+    pattern = /\Arwkv_chat_#{Regexp.escape(version)}_[1-9][0-9]*(?:\.apk|_macos\.dmg|_linux-x64\.(?:tar\.gz|AppImage)|_windows-(?:x64|arm64)(?:-setup\.exe|\.zip))\z/
+    raise "Not an allowed public App package: #{name}; keep release evidence local" unless name.match?(pattern)
+    raise 'Release package must be a nonempty regular file, not a symlink' unless File.file?(path) && !File.symlink?(path) && File.size(path).positive?
+    path
+  end
+
   def self.run!(*arguments)
+    validate_public_package!(arguments[4], arguments[3]) if arguments.first(3) == %w[gh release upload]
     output, error, status = Timeout.timeout(900) { Open3.capture3(*arguments) }
     raise "Release command failed: #{error}" unless status.success?
     output
@@ -49,6 +59,7 @@ module RwkvFrozenRelease
   end
 
   def self.publish_macos(version, path, identity: nil)
+    validate_public_package!(path, version)
     metadata = asset(version, File.basename(path))
     existing = !metadata.nil?
     proof_name = "#{File.basename(path)}.provenance.json"
@@ -57,6 +68,7 @@ module RwkvFrozenRelease
       expected_name = "rwkv_chat_#{version}_#{identity.fetch('build')}_macos.dmg"
       raise 'macOS artifact name does not match its release identity' unless File.basename(path) == expected_name
       verify_provenance(version, proof_name, identity, artifact_metadata(expected_name, metadata)) if existing
+      store_provenance(version, proof_name, identity, file_metadata(path)) unless existing
     end
     if metadata.nil?
       # No --clobber: a concurrent or different upload must fail instead of replacing bytes.
@@ -65,7 +77,6 @@ module RwkvFrozenRelease
     end
     raise 'Uploaded macOS asset is missing from the release' if metadata.nil?
     verify!(path, metadata)
-    publish_provenance(version, proof_name, identity, file_metadata(path)) if !identity.nil? && !existing
     path
   end
 
@@ -104,15 +115,21 @@ module RwkvFrozenRelease
     { 'name' => File.basename(path), 'size' => File.size(path), 'sha256' => Digest::SHA256.file(path).hexdigest }
   end
 
+  def self.provenance_directory
+    File.expand_path('../output/release-provenance', __dir__)
+  end
+
+  def self.provenance_path(name)
+    raise 'Invalid local receipt filename' unless name.match?(/\Arwkv_chat_[0-9]+\.[0-9]+\.[0-9]+_[1-9][0-9]*_(?:ios|macos\.dmg)\.provenance\.json\z/)
+    File.join(provenance_directory, name)
+  end
+
   def self.verify_provenance(version, name, identity, artifact = nil)
     identity = public_identity(identity, version)
-    metadata = asset(version, name)
-    raise "Release provenance is missing: #{name}; refusing to reuse an unproven build" if metadata.nil?
-    raise 'Release provenance exceeds the metadata size limit' unless metadata['size'].is_a?(Integer) && metadata['size'].between?(1, 1024 * 1024)
-    proof = Dir.mktmpdir('rwkv-provenance-') do |directory|
-      run!('gh', 'release', 'download', version, '--repo', REPOSITORY, '--pattern', name, '--dir', directory)
-      JSON.parse(File.read(verify!(File.join(directory, name), metadata)))
-    end
+    path = provenance_path(name)
+    raise "Local release provenance is missing: #{name}; restore the original receipt from the private release handoff, not GitHub" unless File.file?(path)
+    raise 'Local release provenance must be a regular file within the metadata size limit' if File.symlink?(path) || !File.size(path).between?(1, 1024 * 1024)
+    proof = JSON.parse(File.read(path))
     output = proof['artifact'] if proof.is_a?(Hash)
     unless proof.is_a?(Hash) && proof.keys.sort == %w[artifact identity schemaVersion] &&
            proof['schemaVersion'] == 1 && proof['identity'] == identity && output.is_a?(Hash) &&
@@ -125,16 +142,17 @@ module RwkvFrozenRelease
     proof
   end
 
-  def self.publish_provenance(version, name, identity, artifact)
+  def self.store_provenance(version, name, identity, artifact)
     identity = public_identity(identity, version)
-    return verify_provenance(version, name, identity, artifact) unless asset(version, name).nil?
-    Dir.mktmpdir('rwkv-provenance-') do |directory|
-      path = File.join(directory, name)
-      File.write(path, JSON.pretty_generate({ 'schemaVersion' => 1, 'identity' => identity, 'artifact' => artifact }) + "\n")
-      run!('gh', 'release', 'upload', version, path, '--repo', REPOSITORY)
-      metadata = asset(version, name)
-      raise "Uploaded release provenance is missing: #{name}" if metadata.nil?
-      verify!(path, metadata)
+    path = provenance_path(name)
+    return verify_provenance(version, name, identity, artifact) if File.exist?(path) || File.symlink?(path)
+    FileUtils.mkdir_p(provenance_directory, mode: 0700)
+    Tempfile.create('.receipt-', provenance_directory) do |temporary|
+      temporary.write(JSON.pretty_generate({ 'schemaVersion' => 1, 'identity' => identity, 'artifact' => artifact }) + "\n")
+      temporary.flush
+      temporary.fsync
+      # Publish a complete local file atomically, without replacing another run's receipt.
+      File.link(temporary.path, path)
     end
     verify_provenance(version, name, identity, artifact)
   end
@@ -146,9 +164,9 @@ module RwkvFrozenRelease
     proof
   end
 
-  def self.publish_ios_provenance(version, build, ipa_path, identity)
+  def self.store_ios_provenance(version, build, ipa_path, identity)
     identity = public_identity(identity, version, build)
     raise 'iOS provenance requires a nonempty IPA' unless File.extname(ipa_path) == '.ipa' && File.size(ipa_path).positive?
-    publish_provenance(version, "rwkv_chat_#{version}_#{build}_ios.provenance.json", identity, file_metadata(ipa_path))
+    store_provenance(version, "rwkv_chat_#{version}_#{build}_ios.provenance.json", identity, file_metadata(ipa_path))
   end
 end
