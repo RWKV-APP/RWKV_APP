@@ -121,8 +121,10 @@ the pinned `ios` and `macos` native libraries are fetched and verified against
 **Prepare the Mac environment**
 
 Install and select full Xcode with its macOS/iOS SDKs and command-line tools,
-accept its license, and install CocoaPods 1.17.0 to match both committed Pod lockfiles.
-Use a managed Ruby 3.1+ with Bundler
+accept its license. CocoaPods 1.17.0 is installed by the same bundle as Fastlane,
+matching both committed Pod lockfiles; a separate global installation is insufficient
+for subprocesses of `bundle exec fastlane`.
+Use a managed Ruby 3.2+ (including its development headers) with Bundler
 2.6.2, Python 3.10+ with venv support, and GitHub CLI. Put the exact Flutter
 3.44.8 SDK on `PATH`; the default Flutter installation may be another version.
 `create-dmg` is optional: the packaging action can use macOS `hdiutil`.
@@ -135,13 +137,12 @@ python3 -m venv ../.venv-rwkv-apple-4.8.0
 source ../.venv-rwkv-apple-4.8.0/bin/activate
 python3 -m pip install huggingface_hub modelscope-hub
 gem install bundler -v 2.6.2
-gem install cocoapods -v 1.17.0
 export BUNDLE_PATH="$HOME/.bundle/rwkv-apple-4.8.0"
 export BUNDLE_FROZEN=true
 bundle install
 flutter --version
 xcodebuild -version
-pod --version
+bundle exec pod --version
 gh auth status
 ```
 
@@ -175,7 +176,7 @@ signing and provider credentials are usable.
 
 ```sh
 python3 scripts/release_identity.py --check-apple-source &&
-python3 scripts/release_identity.py --check-apple-environment
+bundle exec python3 scripts/release_identity.py --check-apple-environment
 ```
 
 Start the complete continuation in a visible foreground terminal:
