@@ -68,7 +68,7 @@ non-Apple packages; it does not contain the Apple continuation fixes.
 | --- | --- |
 | App origin | `https://github.com/RWKV-APP/RWKV_APP.git` |
 | App branch | `codex/apple-release-4.8.0`, clean and synchronized with origin |
-| Flutter / Dart | `3.44.8` / `3.12.2` |
+| Flutter / Dart | `3.47.2` / `3.13.2` |
 | Adapter sibling | `rwkv_mobile_flutter`, origin `RWKV-APP/rwkv_mobile_flutter` |
 | Adapter commit | `c87936afbcc40fa99d6d9bdaa18884d96193a825` |
 | Native release | `4.8.0-native.4`, commit `205d4848f2b769efe4a1df268e1cdf6548158b5d` |
@@ -124,9 +124,11 @@ Install and select full Xcode with its macOS/iOS SDKs and command-line tools,
 accept its license. CocoaPods 1.17.0 is installed by the same bundle as Fastlane,
 matching both committed Pod lockfiles; a separate global installation is insufficient
 for subprocesses of `bundle exec fastlane`.
+The bundle also declares `abbrev` and `mutex_m`, required by Fastlane/HighLine
+and CocoaPods on Ruby 3.4+.
 Use a managed Ruby 3.2+ (including its development headers) with Bundler
 2.6.2, Python 3.10+ with venv support, and GitHub CLI. Put the exact Flutter
-3.44.8 SDK on `PATH`; the default Flutter installation may be another version.
+3.47.2 SDK on `PATH`; the default Flutter installation may be another version.
 `create-dmg` is optional: the packaging action can use macOS `hdiutil`.
 
 From `rwkv_app`, prepare the Python and Ruby dependencies without adding them to
@@ -167,6 +169,22 @@ Explicit API-key mode uses `RWKV_APPLE_AUTH_MODE=api_key` together with
 needs the macOS notarization credentials above and sufficient App Store Connect
 permissions for the requested beta distribution. `SENTRY_AUTH_TOKEN` is optional
 for symbol upload.
+
+**Check Apple login separately**
+
+Run `tools/apple_auth.command` in a visible terminal, or double-click it in
+Finder. It loads the existing Fastlane Dotenv configuration and starts a fresh
+Apple ID / App Store Connect login through `ios_auth_preflight`. Enter any
+password or verification code directly in that terminal. The script always
+selects Apple ID mode, accepts no release arguments, and exits after checking
+authentication. It uses the installed bundle pinned by `Gemfile.lock` without
+installing or updating dependencies.
+
+This check does not require a clean Git tree, Flutter, signing certificates, or
+provider-upload credentials. It does not build, sign, upload, or change Git
+state. Its temporary session is removed on exit, so a later `fastlane apple`
+run authenticates again. A successful login does not prove signing readiness
+or that a TestFlight build was uploaded.
 
 **Check and run**
 

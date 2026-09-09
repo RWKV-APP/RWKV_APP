@@ -20,7 +20,7 @@ bundle exec fastlane apple
 ```
 
 Continue 4.8.0 / build 755 on an Apple Silicon Mac from the clean, synchronized
-`codex/apple-release-4.8.0` branch of `RWKV-APP/RWKV_APP`. Use Flutter 3.44.8 and
+`codex/apple-release-4.8.0` branch of `RWKV-APP/RWKV_APP`. Use Flutter 3.47.2 and
 the fixed adapter/native identities in `release.json`; do not check out the old
 4.8.0 tag for this continuation.
 
@@ -68,6 +68,10 @@ Preauthenticate with Apple ID, then upload an existing IPA; API-key mode is opti
 ```
 
 Authenticate to App Store Connect without building or uploading an artifact
+
+For a standalone foreground Apple ID check, run `tools/apple_auth.command` from
+the repository root or double-click it in Finder. The temporary login session
+is removed on exit; a later release authenticates again.
 
 ### global_replace
 

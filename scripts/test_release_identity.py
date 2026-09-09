@@ -29,7 +29,7 @@ class ReleaseIdentityTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             root.joinpath('pubspec.yaml').write_text('version: 4.8.0+755\n')
-            release = dict(version='4.8.0', build=755, flutterVersion='3.44.8',
+            release = dict(version='4.8.0', build=755, flutterVersion='3.47.2',
                            adapter=dict(repository='RWKV-APP/rwkv_mobile_flutter', commit='a' * 40),
                            native=dict(repository='RWKV-APP/rwkv-mobile', commit='b' * 40, tag='v4.8.0-native.1'),
                            channels=dict(github=True, modelscope=True, huggingface=False))
@@ -67,7 +67,7 @@ class AppleReleaseGuardTest(unittest.TestCase):
         self.dirty = {}
         self.remotes = {}
         self.contained = True
-        self.flutter = '3.44.8'
+        self.flutter = '3.47.2'
         self.info_blob = b'pinned adapter bundle plist'
         self.release = dict(version='4.8.0', build=755, flutterVersion=self.flutter,
                             apple=dict(sourceBranch=self.branch, integrationBranch='dev', baseTag='4.8.0', baseCommit='b' * 40),
@@ -316,7 +316,7 @@ class AppleReleaseGuardTest(unittest.TestCase):
                 check_apple_environment(self.release)
             available.return_value = object()
             self.flutter = '3.44.7'
-            with self.assertRaisesRegex(RuntimeError, 'Use Flutter 3.44.8'):
+            with self.assertRaisesRegex(RuntimeError, 'Use Flutter 3.47.2'):
                 check_apple_environment(self.release)
             mutate.assert_not_called()
 

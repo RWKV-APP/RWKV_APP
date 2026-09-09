@@ -64,7 +64,10 @@ Apple application build targets are exactly `macos` and `ios`. iPhone and iPad
 use the same iOS build; iPadOS is never a separate lane or package target.
 
 The Apple-only Fastlane entrypoint continues the same release on an Apple Silicon
-Mac. `release.json.apple` declares the continuation source branch, integration
+Mac using Flutter 3.47.2 and its bundled Dart 3.13.2. The current
+`release.json.flutterVersion` is the build requirement for this continuation;
+already published packages retain their original toolchain provenance.
+`release.json.apple` declares the continuation source branch, integration
 branch, and original published base tag/commit. The continuation may include
 subsequent catalog and Apple fixes without moving the original tag or changing
 the provenance of already published non-Apple packages. Before authentication,
@@ -111,6 +114,14 @@ read an IPA, build an IPA, invoke an upload action, or send any artifact to App
 Store Connect. If Apple requires two-factor verification, the trusted-device
 code is therefore requested and entered before the long-running release work.
 Apple remains the authority on whether a fresh login actually requires a code.
+
+`tools/apple_auth.command` provides a standalone foreground Apple ID check via
+the existing `ios_auth_preflight` lane. It authenticates only, even when the
+environment selects API-key mode. It accepts no release arguments, requires
+the installed locked Ruby bundle, and performs no dependency installation,
+source synchronization, build, signing, or publication. It can run before local
+source changes are committed. The process removes its temporary session on
+exit; a later release performs fresh authentication in its own process.
 
 The default stage must run in a visible foreground TTY. It isolates the release
 from cached Spaceship cookies and `FASTLANE_SESSION`, disables automatic SMS
