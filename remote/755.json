@@ -652,7 +652,7 @@
         "fileSize": 1336082496,
         "sha256": "65ff6b972c74b1f2ec6860e43ec63d55a9488b49fe82e708a79849360f279c2f",
         "quantization": "Q6_K",
-        "platforms": ["macos", "ios"],
+        "platforms": ["ios"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
         "date": 1786299898
@@ -664,7 +664,7 @@
         "fileSize": 876776265,
         "sha256": "85430fbe7e56ce8d84c90d7b5c155bbcecbfe3b34e413c1c2c1b33f09facfcf5",
         "quantization": "W4",
-        "platforms": ["macos", "ios"],
+        "platforms": ["ios"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
         "date": 1787331324
@@ -676,36 +676,10 @@
         "fileSize": 1645775285,
         "sha256": "32ccb09d75a22c364ef20adc4d873260165cb9ab83515ca99f1a8598f422a522",
         "quantization": "W4",
-        "platforms": ["macos", "ios"],
+        "platforms": ["ios"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
         "date": 1787331736
-      },
-      {
-        "name": "RWKV7-G1i 7.2B (CoreML)",
-        "modelSize": 7.2,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1i-7.2b-20260805-ctx16384-c2-coreml-direct-int4lut6mix-attout-lut6-wkvstate-decode-cpugpu.zip",
-        "fileSize": 3167404517,
-        "sha256": "fa08a03ff2f0802dfb1443bb01e900b80867f814a383af755b8b138dd380b281",
-        "quantization": "W4",
-        "platforms": ["macos"],
-        "backends": ["coreml"],
-        "tags": ["reason", "coreml"],
-        "date": 1787363958
-      },
-      {
-        "name": "RWKV7-G1i 13.3B (CoreML Canary)",
-        "modelSize": 13.3,
-        "url": "https://modelscope.cn/models/HaloWang1991/rwkv-weights-tmp/resolve/52153e5cadc81ffb91044e01fd4583eca55454d9/artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1i-13.3b-20260805-ctx16384-coreml-int4-wkvstate.zip",
-        "fileSize": 7444106915,
-        "sha256": "e5780cb44e3896079392132caf2ed768d106b0e6506ef893039998870ca8b2eb",
-        "quantization": "W4",
-        "platforms": ["macos"],
-        "backends": ["coreml"],
-        "tags": ["reason", "coreml"],
-        "availableIn": ["modelscope"],
-        "isDebug": true,
-        "date": 1787285805
       },
       {
         "name": "RWKV7-G1i 1.5B (WebRWKV)",
@@ -714,7 +688,7 @@
         "fileSize": 1281449945,
         "sha256": "f5a44907726107a9d6614efbf77371dab86eae64ab7bf857594a35e415dcc4f1",
         "quantization": "NF4",
-        "platforms": ["ios", "macos"],
+        "platforms": ["ios"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
         "date": 1786284785
@@ -726,7 +700,7 @@
         "fileSize": 1919047552,
         "sha256": "f1e240ec025d8522cacf7edd01a7514b694dc80dfefd8b3bfdd69ced5456cb0f",
         "quantization": "Q4_K_M",
-        "platforms": ["macos", "ios"],
+        "platforms": ["ios"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
         "date": 1786299898
@@ -738,7 +712,7 @@
         "fileSize": 2200282289,
         "sha256": "6306a188ff04e6aecd88b90f1771a4c4d0398b71efa12236956058674cb58e10",
         "quantization": "NF4",
-        "platforms": ["ios", "macos"],
+        "platforms": ["ios"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
         "date": 1786285477
@@ -750,7 +724,7 @@
         "fileSize": 4579571584,
         "sha256": "4fcbee4a0442cecb99662daeb936e7cdb0a0f90b3f276f24b14a2465c33b759a",
         "quantization": "Q4_K_M",
-        "platforms": ["macos", "ios"],
+        "platforms": ["ios"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
         "date": 1786299898
@@ -762,34 +736,10 @@
         "fileSize": 4938093745,
         "sha256": "60ad7d818a7f4d31c169edc031a32d88428a675a5cdf35d5633cc4bf608643e6",
         "quantization": "NF4",
-        "platforms": ["macos", "ios"],
+        "platforms": ["ios"],
         "backends": ["webRwkv"],
         "tags": ["reason", "batch"],
         "date": 1786291051
-      },
-      {
-        "name": "RWKV7-G1i 13.3B",
-        "modelSize": 13.3,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/13.3b/llamacpp/rwkv7-g1i-13.3b-20260805-ctx16384-Q4_K_M.gguf",
-        "fileSize": 8457371520,
-        "sha256": "1f3fc76d83f6649b10df552526ab2c951d2ac7adec6d72bf8caef5291ad680d3",
-        "quantization": "Q4_K_M",
-        "platforms": ["macos"],
-        "backends": ["llamacpp"],
-        "tags": ["reason", "gpu", "batch"],
-        "date": 1786299898
-      },
-      {
-        "name": "RWKV7-G1i 13.3B (WebRWKV)",
-        "modelSize": 13.3,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/13.3b/webrwkv/rwkv7-g1i-13.3b-20260805-ctx16384-nf4.prefab",
-        "fileSize": 8504144960,
-        "sha256": "51b438150d3196d72c0b43a6fce27ebbee54323446cbe15edbc2e8a005c727eb",
-        "quantization": "NF4",
-        "platforms": ["macos"],
-        "backends": ["webRwkv"],
-        "tags": ["reason", "batch"],
-        "date": 1786292327
       },
       {
         "name": "RWKV7-G1d 0.1B",
@@ -926,7 +876,7 @@
         "fileSize": 1272937799,
         "sha256": "08e11f2e8c028bfbb84dc0cd7b3ad1d05c41c720080bc4fe7eaecc8ff98de1aa",
         "quantization": "W6",
-        "platforms": ["macos", "ios"],
+        "platforms": ["ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu", "batch"],
         "date": 1786284918
@@ -938,7 +888,7 @@
         "fileSize": 2453882686,
         "sha256": "3b7aaf2bcb15d1eb4e4bd608a1c9ee6d62a616046be3067205516a3e27857a00",
         "quantization": "W6",
-        "platforms": ["macos", "ios"],
+        "platforms": ["ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu", "batch"],
         "date": 1786286044
@@ -954,18 +904,6 @@
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu", "batch"],
         "date": 1786291598
-      },
-      {
-        "name": "RWKV7-G1i 13.3B (MLX)",
-        "modelSize": 13.3,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/13.3b/mlx/rwkv7-g1i-13.3b-20260805-ctx16384-mlx-int6.zip",
-        "fileSize": 11053611495,
-        "sha256": "b2d3d7184ba8469fd3442b57b2c674acac5521aedfe08e7ec717f55da1bb8da3",
-        "quantization": "W6",
-        "platforms": ["macos"],
-        "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu", "batch"],
-        "date": 1786293331
       },
       {
         "name": "RWKV7-G1d 0.1B (CoreML)",

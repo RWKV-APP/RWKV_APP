@@ -32,6 +32,15 @@ void main() {
       final linuxRows = currentRows.where((row) => (row['platforms'] as List<dynamic>).contains('linux'));
       expect(linuxRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
       expect(linuxRows.where((row) => (row['url'] as String).contains('-g1j-')), hasLength(6));
+      final macG1i = currentRows
+          .where((row) => (row['platforms'] as List<dynamic>).contains('macos') && (row['url'] as String).contains('-g1i-'))
+          .toList();
+      expect(macG1i, hasLength(1));
+      expect(macG1i.single['name'], 'RWKV7-G1i 7.2B (MLX)');
+      expect(macG1i.single['modelSize'], 7.2);
+      expect(macG1i.single['backends'], <String>['mlx']);
+      expect(macG1i.single['quantization'], 'W6');
+      expect(macG1i.single['platforms'], <String>['macos', 'ios']);
     }
     final distributed = artifacts.where((artifact) => artifact['distribution'] != null).toList();
     final pending = artifacts.where((artifact) => artifact['distribution'] == null).toList();

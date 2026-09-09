@@ -188,8 +188,8 @@ the full technical recipe. The 13.3B rows exclude iOS, and CoreML 7.2B remains
 macOS-only. Other existing G1i platform and SoC mappings provide the intended
 consumer scope; they do not transfer G1i runtime acceptance to G1J. Compatible
 SoC aliases may share one artifact without creating an additional quantization
-choice. Existing G1i rows remain available outside the Windows, Android, and
-Linux supersession scopes below while G1J promotion and consumer verification
+choice. Existing G1i rows remain available outside the Windows, Android, Linux,
+and macOS supersession scopes below while G1J promotion and consumer verification
 are incomplete.
 Build-754 configuration retains its legacy G1i cohort.
 
@@ -247,8 +247,8 @@ slot. Remove `android` from shared platform lists, and remove the entire chat
 row when its platform list becomes empty. This includes all Android G1i QNN
 and MediaTek rows and the Android scope of the shared llama.cpp rows.
 
-Keep the Windows G1J supersession in effect and preserve the remaining macOS
-and iOS consumers; Linux follows the removal rule below. Existing G1J rows retain their complete identities
+Keep the Windows G1J supersession in effect and preserve the remaining iOS
+consumers; Linux and macOS follow the removal rules below. Existing G1J rows retain their complete identities
 and platform scopes. Publish `latest.json` and `755.json` together; build 754
 and earlier compatibility catalogs retain their legacy cohorts.
 
@@ -256,11 +256,25 @@ and earlier compatibility catalogs retain their legacy cohorts.
 
 Build 755 and the current `latest.json` omit every Linux G1i chat consumer
 slot. Remove `linux` from the shared llama.cpp rows for 1.5B, 2.9B, 7.2B, and
-13.3B, preserving their supported Apple consumers. Remove the entire chat row
+13.3B, preserving their Apple consumers subject to the macOS rule below. Remove the entire chat row
 if its platform list becomes empty. Keep the Windows and Android removals in
 effect, retain existing G1J identities and consumer scopes, and publish both
 current configuration files. Build 754 and earlier compatibility catalogs
 retain their legacy Linux G1i cohorts.
+
+### macOS G1i Removal
+
+Build 755 and the current `latest.json` expose exactly one G1i chat row on
+macOS: `RWKV7-G1i 7.2B (MLX)`, with backend `mlx` and quantization `W6`.
+Preserve this row's complete artifact identity and its existing macOS and iOS
+platforms. Remove `macos` from every other G1i row, including Debug canaries,
+and delete the entire row whenever no platform remains.
+
+Preserve all existing iOS consumers without adding iOS to an unsupported size
+or backend. Keep the Windows, Android, and Linux removals in effect and retain
+all G1J artifact identities and platform scopes. Publish `latest.json` and
+`755.json` together. Build 754 and earlier compatibility catalogs retain their
+legacy cohorts; this visibility change does not delete remote weight bytes.
 
 ## SPEC-RWKV-QUANTIZATION-DELIVERY — Artifact Publication And App Acceptance
 
@@ -324,10 +338,12 @@ slots, so the duplicate G1g rows are removed. Other G1g rows remain available
 when they target a SoC or consumer slot not declared by an equivalent formal
 G1i row.
 
-The current G1i Apple catalog exposes the non-QNN llama.cpp, WebRWKV, and MLX
-rows for 1.5B, 2.9B, and 7.2B on both macOS and iOS. G1i 13.3B is intentionally
-unsupported on iPhone and iPad, so its non-QNN Apple catalog scope includes
-`macos` and excludes `ios`. Legacy G1i mobile Snapdragon QNN rows are
+The current G1i Apple catalog exposes llama.cpp, WebRWKV, and MLX rows for
+1.5B, 2.9B, and 7.2B on iOS, plus CoreML rows for 1.5B and 2.9B on iOS.
+Only the 7.2B MLX row also supports macOS. G1i 13.3B remains unsupported on
+iPhone and iPad; its former macOS-only rows and the macOS-only CoreML 7.2B
+row are absent from build 755 and the current `latest.json` because their
+platform lists would otherwise be empty. Legacy G1i mobile Snapdragon QNN rows are
 Android-only, and legacy Snapdragon X Elite and X2 Elite QNN rows target
 Windows; both scopes are removed from build 755 and the current `latest.json`
 under the supersession rules above. Catalog visibility is the user-facing selection contract and is not a
@@ -377,7 +393,7 @@ consumer contract independently passes its acceptance boundary. The G1i Linux
 consumer scopes are removed from build 755 and the current `latest.json` under
 the Linux removal rule above.
 
-The explicit human rulings on 2026-08-22 authorize formal publication of the
+The historical human rulings on 2026-08-22 authorized formal publication of the
 accepted G1i CoreML 1.5B and 2.9B artifacts for macOS and iOS, followed by a
 separate macOS-only formal partial release of the accepted 7.2B artifact. The
 formal G1i 1.5B and 2.9B rows fully replace the matching G1f CoreML consumer
@@ -390,7 +406,7 @@ formal ModelScope and then byte-identically to Hugging Face, verify both
 providers anonymously, and expose source-selectable formal URLs with size and
 SHA-256 identity in the bundled `latest.json` plus the production `latest.json`
 and `752.json`. These formal rows do not use Debug lifecycle metadata. Build
-752 and the latest fallback must both return the rows so RWKV Chat 4.7.0 and
+752 and the then-current latest fallback returned the rows so RWKV Chat 4.7.0 and
 4.7.1 can discover and download them. The 7.2B row declares only `macos` and
 must not acquire iOS availability through the shared Apple weight lineage.
 
@@ -405,8 +421,11 @@ and 4.7.1 config parser because unknown YAML keys are ignored, but those native
 runtimes still load Decode and Prefill with CPU and Neural Engine. Catalog
 publication to those versions therefore does not deliver the separately
 measured CPU-and-GPU Decode speedup; that execution placement requires a later
-App/runtime release. The 13.3B CoreML row remains a local Debug canary outside
-formal or online publication and remains excluded from iOS.
+App/runtime release. The 13.3B CoreML artifact remains outside formal
+publication and excluded from iOS. Its former Debug canary row, along with
+the other superseded macOS consumers, is removed from build 755 and the
+current `latest.json` under the macOS rule above. Historical publication does
+not require those current catalogs to retain the earlier macOS visibility.
 
 This supersession changes catalog selection, not artifact identity or remote
 distribution state. Every promoted G1i row must retain a source-selectable
