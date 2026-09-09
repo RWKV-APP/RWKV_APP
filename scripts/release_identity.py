@@ -315,7 +315,13 @@ def main():
             output.write(f"flutter_version={release['flutterVersion']}\n")
             for key in ('modelscope', 'huggingface'):
                 output.write(f"upload_{key}={str(release['channels'][key]).lower()}\n")
-    print(json.dumps(release))
+    if args.check_apple_source or args.check_apple_environment or args.prepare_apple or args.verify_apple_build_inputs:
+        print(json.dumps(dict(status='passed', version=release['version'], build=release['build'],
+                              sourceBranch=release['apple']['sourceBranch'],
+                              sourceCommit=command('git', 'rev-parse', 'HEAD', cwd=root),
+                              nativeTag=release['native']['tag'])))
+    else:
+        print(json.dumps(release))
 
 
 if __name__ == '__main__':

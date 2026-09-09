@@ -103,6 +103,7 @@ if [ -n "$(git status --porcelain)" ]; then
   echo "Preserve local changes before switching release branches" >&2
   exit 1
 fi
+git remote set-branches --add origin codex/apple-release-4.8.0
 git fetch origin --tags
 if git show-ref --verify --quiet refs/heads/codex/apple-release-4.8.0; then
   git switch codex/apple-release-4.8.0
