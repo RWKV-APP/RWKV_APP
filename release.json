@@ -38,13 +38,25 @@
         "provider": "modelscope",
         "repository": "HaloWang1991/rwkv-weights",
         "revision": "c4116860488eb985578fe1513690bba075c607a8",
-        "artifactCount": 45
+        "artifactCount": 43
+      },
+      {
+        "provider": "modelscope",
+        "repository": "HaloWang1991/rwkv-weights",
+        "revision": "7c3ed701efdf6e62763fe51d794ab045560a100e",
+        "artifactCount": 2
       },
       {
         "provider": "huggingface",
         "repository": "HaloWang/rwkv-weights",
         "revision": "cc902d3e52abd5406016b24c6f1bbe64300b1409",
-        "artifactCount": 45
+        "artifactCount": 43
+      },
+      {
+        "provider": "huggingface",
+        "repository": "HaloWang/rwkv-weights",
+        "revision": "05c6ebcc2ff7e96dd9b4c93f231f7acc1a31f89f",
+        "artifactCount": 2
       }
     ],
     "includedSizes": ["1.5B", "2.9B", "7.2B", "13.3B"],
@@ -509,25 +521,33 @@
       {
         "modelSize": 1.5,
         "backend": "palm",
-        "filename": "rwkv7-g1j-1.5b-20260831-ctx16384-w8pc-ctx256.mollm",
-        "fileSize": 1669140548,
-        "sha256": "309233828ec88b9ff406d66db2f4e1e37fa846330f96cb9f0639d2047fae57f5",
-        "quantization": "W8",
-        "quantizationRecipe": "W8 per-channel ctx256",
-        "platforms": ["android", "windows", "linux", "macos", "ios"],
+        "filename": "rwkv7-g1j-1.5b-20260831-ctx16384-w4mixg128-bg128-r20260910-ctx256.mollm",
+        "fileSize": 1106001924,
+        "sha256": "5f5098e57ac18004d449c93b086d72559292d533e98308b86fb769308e898939",
+        "quantization": "W4",
+        "quantizationRecipe": "W4MixG128 calibrated clipping, BG128, ctx256; graph and bit widths preserved",
+        "platforms": [
+          "android",
+          "windows",
+          "linux",
+          "macos",
+          "ios"
+        ],
         "socLimitations": [],
-        "catalogNames": ["RWKV7-G1j 1.5B (Palm CPU, W8)"],
+        "catalogNames": [
+          "RWKV7-G1j 1.5B (Palm CPU, W4)"
+        ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "c4116860488eb985578fe1513690bba075c607a8",
-          "path": "artifacts/rwkv7/chat/1.5b/palm/rwkv7-g1j-1.5b-20260831-ctx16384-w8pc-ctx256.mollm",
+          "revision": "7c3ed701efdf6e62763fe51d794ab045560a100e",
+          "path": "artifacts/rwkv7/chat/1.5b/palm/rwkv7-g1j-1.5b-20260831-ctx16384-w4mixg128-bg128-r20260910-ctx256.mollm",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "cc902d3e52abd5406016b24c6f1bbe64300b1409",
-            "path": "artifacts/rwkv7/chat/1.5b/palm/rwkv7-g1j-1.5b-20260831-ctx16384-w8pc-ctx256.mollm",
+            "revision": "05c6ebcc2ff7e96dd9b4c93f231f7acc1a31f89f",
+            "path": "artifacts/rwkv7/chat/1.5b/palm/rwkv7-g1j-1.5b-20260831-ctx16384-w4mixg128-bg128-r20260910-ctx256.mollm",
             "stage": "formal"
           }
         }
@@ -925,25 +945,33 @@
       {
         "modelSize": 2.9,
         "backend": "palm",
-        "filename": "rwkv7-g1j-2.9b-20260831-ctx16384-w8pc-ctx256.mollm",
-        "fileSize": 3126854084,
-        "sha256": "4dac69c1edc3ed66bcbb8eae20cab11669af6f42dbd6f86ef0b6d3a5f0c84ba7",
-        "quantization": "W8",
-        "quantizationRecipe": "W8 per-channel ctx256",
-        "platforms": ["android", "windows", "linux", "macos", "ios"],
+        "filename": "rwkv7-g1j-2.9b-20260831-ctx16384-w4mixg128-bg128-r20260910-ctx256.mollm",
+        "fileSize": 1951288900,
+        "sha256": "2d6b7e07ca9339d4433581ab7cd7d12eb9c3a70c54de1219add7e15ab928ebb7",
+        "quantization": "W4",
+        "quantizationRecipe": "W4MixG128 calibrated clipping, BG128, ctx256; graph and bit widths preserved",
+        "platforms": [
+          "android",
+          "windows",
+          "linux",
+          "macos",
+          "ios"
+        ],
         "socLimitations": [],
-        "catalogNames": ["RWKV7-G1j 2.9B (Palm CPU, W8)"],
+        "catalogNames": [
+          "RWKV7-G1j 2.9B (Palm CPU, W4)"
+        ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "c4116860488eb985578fe1513690bba075c607a8",
-          "path": "artifacts/rwkv7/chat/2.9b/palm/rwkv7-g1j-2.9b-20260831-ctx16384-w8pc-ctx256.mollm",
+          "revision": "7c3ed701efdf6e62763fe51d794ab045560a100e",
+          "path": "artifacts/rwkv7/chat/2.9b/palm/rwkv7-g1j-2.9b-20260831-ctx16384-w4mixg128-bg128-r20260910-ctx256.mollm",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "cc902d3e52abd5406016b24c6f1bbe64300b1409",
-            "path": "artifacts/rwkv7/chat/2.9b/palm/rwkv7-g1j-2.9b-20260831-ctx16384-w8pc-ctx256.mollm",
+            "revision": "05c6ebcc2ff7e96dd9b4c93f231f7acc1a31f89f",
+            "path": "artifacts/rwkv7/chat/2.9b/palm/rwkv7-g1j-2.9b-20260831-ctx16384-w4mixg128-bg128-r20260910-ctx256.mollm",
             "stage": "formal"
           }
         }

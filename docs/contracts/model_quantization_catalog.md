@@ -178,7 +178,7 @@ are fixed per generation, model size, backend and compatible SoC target:
 | WebRWKV | NF4 | NF4 | NF4 | NF4 |
 | MLX | INT6 | INT6 | INT6 | INT6 |
 | CoreML | INT4/LUT6 mixed, 1 chunk | INT4/LUT6 mixed, 2 chunks | INT4/LUT6 mixed, 2 chunks, CPU/GPU Decode | Deferred |
-| Palm CPU | W8 per-channel, ctx256 | W8 per-channel, ctx256 | Excluded | Excluded |
+| Palm CPU | W4MixG128, calibrated clipping, ctx256 | W4MixG128, calibrated clipping, ctx256 | Excluded | Excluded |
 | QNN | A16W8, 11 artifacts | A16W4 LPBQ b32, 10 artifacts | A16W4 LPBQ b32, 4 artifacts | Excluded |
 | MTK NP7 / MT6989 | A16W8 | Excluded | Excluded | Excluded |
 | MTK NP9 / MT6993 | A16W8 | A16W4 VSQ32T8 | Deferred | Deferred |
@@ -196,9 +196,21 @@ Build-754 configuration retains its legacy G1i cohort.
 This is an explicitly scoped partial release. MTK NP9 7.2B and 13.3B are
 deferred, so those devices receive no G1J NP9 artifact for those sizes in this
 cohort. Existing 1.5B NP7/NP9 and 2.9B NP9 targets remain included. CoreML 13.3B,
-larger Palm variants, and QNN 13.3B are not added. Palm W4, the damaged G1J
-2.9B / 8 Gen 3 W4 file, its W8 experiment, and G1J 2.9B Q8_0 are not selected.
+larger Palm variants, and QNN 13.3B are not added. The original Palm W4,
+Palm W8, the damaged G1J 2.9B / 8 Gen 3 W4 file, its W8 experiment, and
+G1J 2.9B Q8_0 are not selected.
 The selected 8 Gen 3 repair retains the W4 recipe.
+
+The repaired Palm 1.5B and 2.9B weights replace all Palm W8 rows in build 755
+and `latest.json`. Their public names and quantization labels use `W4`;
+calibrated clipping remains technical recipe metadata. The repair preserves
+the W4MixG128 graph and bit-width allocation and uses new `r20260910` artifact
+basenames so cached original W4 files cannot satisfy the new catalog entries.
+The existing 4.8.0 runtime loads these external weights without an App update.
+Windows chat-page acceptance covers readable responses without prompt echo or
+gibberish; it does not evaluate semantic accuracy or establish acceptance on
+other platforms. Both formal providers must contain the exact verified bytes
+before either current catalog exposes the replacement.
 
 `release.json.weights.artifacts` records all 45 target identities and their
 intended catalog mappings. `weights.artifactCount` counts selected artifacts,
@@ -224,6 +236,18 @@ Apple-format weight bytes may be distributed, but macOS, iOS and iPadOS
 platform validation is outside this publication. Catalog preparation and
 publication do not establish runtime acceptance of every artifact on every
 listed platform.
+
+### Additional PALM G1J Prerelease Weights
+
+The later PALM G1J W4 cohort adds 7.2B and 13.3B to `latest.json` through
+verified immutable ModelScope TMP URLs. The 7.2B row supports Android, Windows,
+Linux and macOS; the 13.3B row supports Windows, Linux and macOS. Neither row
+declares iOS, and 13.3B does not declare Android. These entries use the same
+W4MixG128 calibrated-clipping precision allocation as the smaller PALM models.
+They remain separate from the frozen 45-artifact formal 4.8.0 cohort and its
+build-755 catalog. Their TMP availability does not establish formal promotion
+or platform runtime acceptance. Adding these entries does not require changing
+the build-755 snapshot or the original release manifest.
 
 ### Windows G1J Supersession
 

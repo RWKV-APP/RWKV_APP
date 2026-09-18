@@ -253,17 +253,31 @@
         "availableIn": ["modelscope", "huggingface"]
       },
       {
-        "name": "RWKV7-G1j 1.5B (Palm CPU, W8)",
+        "name": "RWKV7-G1j 1.5B (Palm CPU, W4)",
         "modelSize": 1.5,
-        "quantization": "W8",
-        "platforms": ["android", "windows", "linux", "macos", "ios"],
-        "backends": ["palm"],
-        "tags": ["reason", "cpu"],
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/palm/rwkv7-g1j-1.5b-20260831-ctx16384-w8pc-ctx256.mollm",
-        "fileSize": 1669140548,
-        "sha256": "309233828ec88b9ff406d66db2f4e1e37fa846330f96cb9f0639d2047fae57f5",
-        "availableIn": ["modelscope", "huggingface"],
-        "date": 1788889792
+        "quantization": "W4",
+        "platforms": [
+          "android",
+          "windows",
+          "linux",
+          "macos",
+          "ios"
+        ],
+        "backends": [
+          "palm"
+        ],
+        "tags": [
+          "reason",
+          "cpu"
+        ],
+        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/palm/rwkv7-g1j-1.5b-20260831-ctx16384-w4mixg128-bg128-r20260910-ctx256.mollm",
+        "fileSize": 1106001924,
+        "sha256": "5f5098e57ac18004d449c93b086d72559292d533e98308b86fb769308e898939",
+        "availableIn": [
+          "modelscope",
+          "huggingface"
+        ],
+        "date": 1789011501
       },
       {
         "name": "RWKV7-G1j 2.9B (888)",
@@ -486,17 +500,31 @@
         "availableIn": ["modelscope", "huggingface"]
       },
       {
-        "name": "RWKV7-G1j 2.9B (Palm CPU, W8)",
+        "name": "RWKV7-G1j 2.9B (Palm CPU, W4)",
         "modelSize": 2.9,
-        "quantization": "W8",
-        "platforms": ["android", "windows", "linux", "macos", "ios"],
-        "backends": ["palm"],
-        "tags": ["reason", "cpu"],
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/palm/rwkv7-g1j-2.9b-20260831-ctx16384-w8pc-ctx256.mollm",
-        "fileSize": 3126854084,
-        "sha256": "4dac69c1edc3ed66bcbb8eae20cab11669af6f42dbd6f86ef0b6d3a5f0c84ba7",
-        "availableIn": ["modelscope", "huggingface"],
-        "date": 1788889792
+        "quantization": "W4",
+        "platforms": [
+          "android",
+          "windows",
+          "linux",
+          "macos",
+          "ios"
+        ],
+        "backends": [
+          "palm"
+        ],
+        "tags": [
+          "reason",
+          "cpu"
+        ],
+        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/palm/rwkv7-g1j-2.9b-20260831-ctx16384-w4mixg128-bg128-r20260910-ctx256.mollm",
+        "fileSize": 1951288900,
+        "sha256": "2d6b7e07ca9339d4433581ab7cd7d12eb9c3a70c54de1219add7e15ab928ebb7",
+        "availableIn": [
+          "modelscope",
+          "huggingface"
+        ],
+        "date": 1789011718
       },
       {
         "name": "RWKV7-G1j 7.2B (8 Gen 3)",
