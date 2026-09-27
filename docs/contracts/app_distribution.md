@@ -22,6 +22,9 @@ acceptance. Preserve previously published release identities.
 
 Version 4.8.2 uses build 758 and Flutter 3.47.5. Android, iOS, macOS, Windows
 and Linux use the same reviewed App commit and pinned adapter/native libraries.
+Android retains the 16 KB-aligned MTK libraries shipped in the preceding Play
+release, with their own immutable archive pinned in the adapter manifest.
+Other platform native files retain their existing digests.
 Core AI experiments are excluded. Public release notes are “性能优化” and their
 translations. Earlier release and Fastlane sections below are historical.
 

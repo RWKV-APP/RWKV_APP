@@ -6,7 +6,7 @@
   "adapter": {
     "repository": "RWKV-APP/rwkv_mobile_flutter",
     "branch": "dev",
-    "commit": "c87936afbcc40fa99d6d9bdaa18884d96193a825"
+    "commit": "be3f0c4c3050f6a140ba9698a5b046fb7b3599c8"
   },
   "native": {
     "repository": "RWKV-APP/rwkv-mobile",
