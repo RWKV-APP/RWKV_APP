@@ -13,6 +13,19 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
+subprojects {
+    if (project.name == "mp_audio_stream") {
+        project.plugins.withId("com.android.library") {
+            project.androidComponents.finalizeDsl { android ->
+                // Use the app's NDK for 16 KB-aligned LOAD and RELRO segments.
+                android.ndkVersion = rootProject.project(":app").android.ndkVersion
+                android.defaultConfig.minSdk = rootProject.project(":app").android.defaultConfig.minSdk
+                android.defaultConfig.externalNativeBuild.cmake.arguments.add("-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-z,common-page-size=16384")
+            }
+        }
+    }
+}
+
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

@@ -6,14 +6,23 @@ inputs:
     description: 'X-API-KEY value from secrets'
     required: true
 
+  web_demo_build_json:
+    description: 'Private Web Demo build configuration JSON'
+    required: true
+
 runs:
   using: 'composite'
   steps:
     - name: 📝 Create .env file
       shell: pwsh
+      env:
+        X_API_KEY: ${{ inputs.x_api_key }}
+        WEB_DEMO_BUILD_JSON: ${{ inputs.web_demo_build_json }}
       run: |
         Write-Host "::group::📝 Creating .env file"
-        "x-api-key=${{ inputs.x_api_key }}" | Out-File -FilePath .env -Encoding utf8 -NoNewline
+        "x-api-key=$env:X_API_KEY" | Out-File -FilePath .env -Encoding utf8 -NoNewline
+        if (-not $env:WEB_DEMO_BUILD_JSON) { throw "Missing Web Demo build configuration" }
+        $env:WEB_DEMO_BUILD_JSON | Out-File -FilePath .env.web-demo.json -Encoding utf8 -NoNewline
         Write-Host "✅ .env created"
         Write-Host "::endgroup::"
 

@@ -61,6 +61,7 @@ jobs:
         uses: ./.github/actions/create-env
         with:
           x_api_key: ""
+          web_demo_build_json: '{}' # Tests do not bundle cloud credentials
 
       - name: Create placeholder sensitive assets
         uses: ./.github/actions/decrypt-assets

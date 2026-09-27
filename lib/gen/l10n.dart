@@ -2256,11 +2256,6 @@ class S {
     return Intl.message('超大 (140%)', name: 'ultra_large', desc: '', args: []);
   }
 
-  /// `反馈问题`
-  String get feedback {
-    return Intl.message('反馈问题', name: 'feedback', desc: '', args: []);
-  }
-
   /// `开源许可证`
   String get license {
     return Intl.message('开源许可证', name: 'license', desc: '', args: []);

@@ -52,3 +52,25 @@ Do not hide model/runtime output in export code unless the product requirement s
 Do not add new generated files by hand under `lib/gen` or `lib/gen/intl`
 
 Keep `albatross` and `flutter_roleplay` changes minimal unless the task targets them directly
+
+## Shared development SDK
+
+`.flutter-version` pins Flutter 3.47.5 with its bundled Dart 3.13.4 for current
+Mac and Windows development. Keep the initialized SDK beside this repository
+as `../flutter-3.47.5`; VS Code selects that relative location automatically.
+Use `node tools/flutter.mjs <arguments>` for command-line Flutter operations,
+and `node tools/check_flutter_toolchain.mjs` to check IDE/CLI agreement.
+Use `node tools/flutter.mjs --dart <arguments>` for the same SDK's Dart tools.
+Resolve dependencies with `node tools/flutter.mjs pub get --enforce-lockfile`.
+Keep the SDK and generated build caches local to each computer.
+
+This development pin does not rewrite existing release provenance. A new
+release must freeze its validated toolchain, App source, dependency lock,
+adapter revision and native artifacts together in `release.json`.
+
+`flutter_roleplay` resolves from `RWKV-APP/flutter_roleplay` at the immutable
+commit in `pubspec.yaml` and `pubspec.lock`. Its Dart 3.13 compatibility fix is
+maintained on `fix/dart-3.13-controller-capture`. Run
+`node tools/flutter.mjs test test/roleplay_sdk_compatibility_test.dart` to compile
+the actual service with the selected SDK. Do not patch the Pub cache or retain a
+local path override as a shared dependency.

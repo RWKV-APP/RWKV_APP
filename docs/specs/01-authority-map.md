@@ -36,6 +36,10 @@ This map assigns one canonical owner and one lifecycle to each topic. Stable `SP
 | VL model update, display mapping, and selector ordering | `SPEC-RWKV-VL-MODEL-UPDATE` | active | `docs/architecture/vl-model-update-guide.md` | `remote/latest.json`, `lib/model/file_info.dart`, `lib/model/model_weight_sort.dart`, `lib/model/world_type.dart`, `lib/store/remote.dart`, `lib/widgets/model_selector.dart`, `test/model_weight_sort_test.dart`, `test/world_type_test.dart` |
 | Catalog-declared configurable thinking for VL models | `SPEC-RWKV-VL-THINKING-CAPABILITY` | active | `docs/architecture/vl-model-update-guide.md` | `docs/contracts/model_quantization_catalog.md`, `remote/latest.json`, `lib/model/file_info.dart`, `lib/func/thinking_prefix.dart`, `lib/store/rwkv_params.dart`, `lib/page/see.dart`, `lib/widgets/input_interactions.dart`, `lib/widgets/see/floating_suggestions.dart`, `lib/widgets/suggestion_chips.dart`, `lib/widgets/chat/thinking_mode_button.dart`, `lib/widgets/world_group_item.dart`, `lib/widgets/model_tag.dart`, `test/vl_thinking_capability_test.dart` |
 
+| Settings About section and feedback entry removal | `SPEC-RWKV-SETTINGS-ABOUT` | active | `docs/specification.md` | `lib/widgets/settings.dart`, `lib/l10n` |
+
+| Cloud Web Demo API and ready-to-use build configuration | `SPEC-RWKV-WEB-DEMO-CLOUD-TRANSPORT` | active | `docs/specification.md` | `AGENTS.md`, `lib/args.dart`, `lib/store/web_demo.dart`, `lib/func/web_demo_cloud.dart` |
+
 ## Truth Resolution
 
 1. Find the topic and stable assertion ID in this table

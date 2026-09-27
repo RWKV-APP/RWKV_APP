@@ -1,5 +1,30 @@
 # App Binary Distribution Contract
 
+## Release 4.8.2
+
+
+RWKV Chat 4.8.2 delivery uses the same reviewed App source, dependency
+lock and development toolchain, with platform builds on their respective hosts.
+Use `.flutter-version`, `node tools/check_flutter_toolchain.mjs` and
+`node tools/flutter.mjs` for that toolchain. Windows can be operated from the
+coordinating client; a separate planning Agent is not a build requirement.
+
+Fastlane is retired for this current release workflow. The Fastlane descriptions
+below retain historical release provenance; they are not the entrypoint for a
+new release. Use Flutter's native build commands, the platform packager
+and the existing provider upload scripts. Before any new release effect, freeze
+the new version/build and toolchain in `release.json`, pin the reviewed adapter
+and native artifacts, and verify the exact source snapshot on both hosts.
+Keep host credentials, signing state and build caches local. Publish only after
+the selected platform packages and distribution channels have been verified;
+development synchronization and successful Debug launches alone are not release
+acceptance. Preserve previously published release identities.
+
+Version 4.8.2 uses build 758 and Flutter 3.47.5. Android, iOS, macOS, Windows
+and Linux use the same reviewed App commit and pinned adapter/native libraries.
+Core AI experiments are excluded. Public release notes are “性能优化” and their
+translations. Earlier release and Fastlane sections below are historical.
+
 ## SPEC-RWKV-APP-BINARY-DISTRIBUTION
 
 RWKV App release automation publishes each supported direct-download package to

@@ -180,11 +180,11 @@ dart pub global run intl_utils:generate
 
 ### 4.13 Web Demo 云端配置
 
-- Web Demo 云端 7.2B 默认配置应直接内置在仓库代码中，默认地址使用 `http://47.115.88.183:1801/v1/chat/completions`
-- 认证沿用 RWKV Lightning V1 的 request-body `password` 字段，与 `rwkv_eval` 的 `RWKV_LIGHTNING_PASSWORD` / `RWKV_LIGHTNING_7B_PASSWORD` 路径一致
+- Web Demo 云端遵循 `SPEC-RWKV-WEB-DEMO-CLOUD-TRANSPORT`，7.2B / 13.3B 分别使用 `https://api-7b.rwkvos.com/v1` / `https://api-13b.rwkvos.com/v1`
+- 通过 `/models` 查询实际模型，每个预览栏独立发送 OpenAI 流式请求；授权的 Windows x64 4.8.1 build 757 在构建时通过私有 `--dart-define-from-file` 注入 Cloudflare 配置，安装后默认可用，凭据值不得进入 Git 或日志
 - 当用户询问 Web Demo 云端、并发网页生成、`Cloud key missing` 或 7.2B API 相关问题时，严禁要求用户通过 `--dart-define` 或复制一长串 `flutter run` 参数来启动 App
-- 遇到云端 key 缺失，应先检查当前代码默认值、`../rwkv_eval/tools/run_rwkv_lightning_chat_eval.py`、`~/.zshrc` 中的 RWKV Lightning 密码来源，并直接修复仓库配置
-- 不要向用户索要已经存在于本机或关联仓库配置中的 RWKV Lightning 密码
+- 完整的本机 `web-demo-cloudflare.json` 可覆盖内置配置；缺失或无效的本机配置不得禁用有效内置配置；只向上述两个 HTTPS 服务发送认证头，禁止携带凭据跟随重定向
+- 不要向用户索要已经提供的凭据，或要求最终用户配置密钥才能使用已授权的默认云端功能；打包验证必须覆盖无本机配置的实际生成
 
 ## 5. 按范围规则
 

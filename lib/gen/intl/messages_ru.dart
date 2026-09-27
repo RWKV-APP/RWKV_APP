@@ -1177,7 +1177,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
       "UI benchmark batch inference",
     ),
-    "feedback": MessageLookupByLibrary.simpleMessage("Обратная связь"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage(
       "Файл уже существует",
     ),

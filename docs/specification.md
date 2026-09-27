@@ -37,6 +37,12 @@ The Windows Debug App includes ordinary-chat real local Agent file actions gover
 
 Desktop UI redesign is authorized by `SPEC-RWKV-DESKTOP-UI-REDESIGN-AUTHORIZATION` in `docs/contracts/desktop_ui_redesign.md`. Detailed Chat-first layout, Projects, Agent UI expansion, reference-product comparisons, and visual acceptance proposals remain private intake until explicit rulings promote a normalized project contract.
 
+## SPEC-RWKV-SETTINGS-ABOUT — Settings About Section
+
+Settings omits the obsolete community feedback entry and its external URL.
+The About section begins with Check for updates, followed by the GitHub
+repository, GitHub issue reporting, and licenses.
+
 ## SPEC-RWKV-REPOSITORY-BOUNDARIES — Repository Ownership
 
 This repository owns the Flutter application, routes, Riverpod state, local persistence, model selection, local API UI, user-facing workflows, app packaging, and repository-level release automation.
@@ -58,6 +64,28 @@ Local inference does not imply that every app feature is offline. Model download
 The current checked-in public policy says the app does not collect device information or track usage. Until an explicit approved decision supersedes that policy, telemetry must not transmit installation, device, model, usage, or performance data.
 
 The current telemetry implementation does not comply with that active contract. The mismatch is recorded as `OBS-20260723-TELEMETRY-PRIVACY-DRIFT`; implementation state does not silently redefine the product rule. Correcting runtime behavior or approving a different collection and disclosure contract is outside this Specification-infrastructure migration and requires a separately reviewed product change.
+
+## SPEC-RWKV-WEB-DEMO-CLOUD-TRANSPORT — Cloud Web Demo API
+
+Desktop Web Demo uses `https://api-7b.rwkvos.com/v1` for the 7.2B entry and
+`https://api-13b.rwkvos.com/v1` for the 13.3B entry. Discover the current model
+through `/models` and use streaming OpenAI-compatible `/chat/completions`.
+Each preview slot sends its own request because these services do not implement
+multi-choice `n`. Preserve the existing preview count, prompt and local backends.
+
+The authorized Windows x64 4.8.1 build 757 includes working Cloudflare service
+configuration at build time so a fresh install can use both cloud entries
+without creating a credential file or supplying launch arguments. Inject
+`CF-Access-Client-Id` and `CF-Access-Client-Secret` through a private
+`--dart-define-from-file` input; never commit their values or print them in logs.
+Bundled client credentials can be extracted from distributed binaries; they are
+not protected by compilation. A complete optional `web-demo-cloudflare.json`
+in the current user's application support directory overrides the bundled
+configuration. Missing or invalid local configuration must not disable valid
+bundled defaults. Source builds without either configuration remain unconfigured.
+Send authentication headers only to the two exact HTTPS origins above, with
+redirects disabled. This transport change does not resolve the separate
+disclosure conflict below.
 
 ## SPEC-RWKV-WEB-DEMO-DATA-FLOW — Cloud Web Demo Data-Flow Contract
 

@@ -6,14 +6,23 @@ inputs:
     description: 'X-API-KEY value from secrets'
     required: true
 
+  web_demo_build_json:
+    description: 'Private Web Demo build configuration JSON'
+    required: true
+
 runs:
   using: 'composite'
   steps:
     - name: 📝 Create .env file
       shell: bash
+      env:
+        X_API_KEY: ${{ inputs.x_api_key }}
+        WEB_DEMO_BUILD_JSON: ${{ inputs.web_demo_build_json }}
       run: |
         echo "::group::📝 Creating .env file"
-        echo "x-api-key=${{ inputs.x_api_key }}" > .env
+        printf 'x-api-key=%s\n' "$X_API_KEY" > .env
+        test -n "$WEB_DEMO_BUILD_JSON"
+        printf '%s' "$WEB_DEMO_BUILD_JSON" > .env.web-demo.json
         echo "✅ .env created"
         echo "::endgroup::"
 

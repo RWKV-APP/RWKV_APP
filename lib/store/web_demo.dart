@@ -3,8 +3,8 @@ part of 'p.dart';
 const int _webDemoCloudTimeoutSeconds = 120;
 const String _webDemoProtocolRwkvLightningV1 = "rwkv_lightning_v1";
 const String _webDemoProtocolOpenAi = "openai";
-const String _webDemoDefault7BBaseUrl = "http://47.115.88.183:1801/v1/chat/completions";
-const String _webDemoDefault13BBaseUrl = "http://47.115.88.183:1800/v1/chat/completions";
+const String _webDemoDefault7BBaseUrl = webDemo7BEndpoint;
+const String _webDemoDefault13BBaseUrl = webDemo13BEndpoint;
 const int _webDemoLightningMaxTokensCap = 4096;
 const int _webDemoDefaultBatchSize = 30;
 const int _webDemoMaxBatchSize = 30;
@@ -140,6 +140,7 @@ class _WebDemo {
   StreamSubscription<from_rwkv.ResponseBatchBufferContent>? _localSubscription;
   StreamSubscription<IsGenerating>? _localGeneratingSubscription;
   http.Client? _cloudClient;
+  Map<String, String> _cloudflareHeaders = bundledWebDemoCloudflareHeaders;
   String _activeContent = "";
   List<String> _activeOutputs = const <String>[];
   int? _activeReceiveId;
@@ -154,9 +155,11 @@ class _WebDemo {
 
   late final promptInput = qs("");
   late final backendMode = qs(
-    Config.webDemoOfficialApiKey.trim().isNotEmpty ? WebDemoBackendMode.cloud7b : WebDemoBackendMode.localRwkvMobile,
+    _cloudflareHeaders.isNotEmpty || Config.webDemoOfficialApiKey.trim().isNotEmpty
+        ? WebDemoBackendMode.cloud7b
+        : WebDemoBackendMode.localRwkvMobile,
   );
-  late final useOfficialCloud = qs(Config.webDemoOfficialApiKey.trim().isNotEmpty);
+  late final useOfficialCloud = qs(_cloudflareHeaders.isNotEmpty || Config.webDemoOfficialApiKey.trim().isNotEmpty);
   late final promptTemplate = qs(webDemoDefaultPromptTemplate);
   late final pendingHtmlContext = qs<String?>(null);
   late final lastSavedHtmlPath = qs<String?>(null);
@@ -186,6 +189,15 @@ class _WebDemo {
 
 extension $WebDemo on _WebDemo {
   Future<void> _init() async {
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      try {
+        final directory = await getApplicationSupportDirectory();
+        _cloudflareHeaders = await readWebDemoCloudflareHeaders(File(join(directory.path, webDemoCloudflareConfigName)));
+        if (_cloudflareHeaders.isNotEmpty) setBackendMode(WebDemoBackendMode.cloud7b);
+      } catch (_) {
+        qqw("Web Demo local credential configuration could not be loaded");
+      }
+    }
     final savedBatchSize = await P.preference.loadWebDemoBatchSize();
     if (savedBatchSize == null) return;
     final next = _normalizePreferredBatchSize(savedBatchSize);
@@ -194,7 +206,9 @@ extension $WebDemo on _WebDemo {
     await P.preference.saveWebDemoBatchSize(next);
   }
 
-  bool get officialCloudConfigured => Config.webDemoOfficialApiKey.trim().isNotEmpty;
+  bool get officialCloudConfigured => _usesCloudflare ? _cloudflareHeaders.isNotEmpty : Config.webDemoOfficialApiKey.trim().isNotEmpty;
+
+  bool get _usesCloudflare => isWebDemoCloudflareEndpoint(_officialChatCompletionsUri());
 
   bool get officialCloudActive => P.app.pageKey.q == .webDemo && webDemoBackendIsCloud(backendMode.q) && officialCloudConfigured;
 
@@ -700,11 +714,49 @@ extension $WebDemo on _WebDemo {
     required int batchSize,
     required int receiveId,
   }) async {
+    if (_usesCloudflare) {
+      await _runCloudflareCloud(prompt: prompt, batchSize: batchSize, receiveId: receiveId);
+      return;
+    }
     if (_officialCloudProtocol == _webDemoProtocolRwkvLightningV1) {
       await _runRwkvLightningCloud(prompt: prompt, batchSize: batchSize, receiveId: receiveId);
       return;
     }
     await _runOpenAiCloud(prompt: prompt, batchSize: batchSize, receiveId: receiveId);
+  }
+
+  Future<void> _runCloudflareCloud({required String prompt, required int batchSize, required int receiveId}) async {
+    final client = _createDirectCloudClient();
+    _cloudClient = client;
+    final outputs = List<String>.filled(batchSize, "");
+    try {
+      await generateWebDemoCloudBatch(
+        client: client,
+        endpoint: _officialChatCompletionsUri(),
+        headers: _cloudflareHeaders,
+        prompt: prompt,
+        batchSize: batchSize,
+        decodeParams: _decodeParamsForCloud(),
+        onDelta: (index, delta) {
+          if (_cloudClient != client || _activeReceiveId != receiveId) return;
+          outputs[index] += delta;
+          _setActiveOutputs(outputs: outputs, receiveId: receiveId);
+        },
+      );
+      if (_cloudClient != client || _activeReceiveId != receiveId) return;
+      _finishCurrentMessage(receiveId: receiveId, content: _activeContent, callingFunction: "webDemoCloudflareDone");
+    } catch (error) {
+      if (_cloudClient != client || _activeReceiveId != receiveId) return;
+      _finishCurrentMessage(
+        receiveId: receiveId,
+        content: _activeContent,
+        callingFunction: "webDemoCloudflareError",
+        error: _stopRequested ? null : error.toString(),
+      );
+    } finally {
+      client.close();
+      if (_cloudClient == client) _cloudClient = null;
+    }
   }
 
   Future<void> _runRwkvLightningCloud({
@@ -955,6 +1007,9 @@ extension $WebDemo on _WebDemo {
 
   String get _effectiveOfficialBaseUrl {
     final configured = Config.webDemoOfficialBaseUrl.trim();
+    if (configured == _webDemoDefault7BBaseUrl || configured == _webDemoDefault13BBaseUrl) {
+      return backendMode.q == WebDemoBackendMode.cloud13b ? _webDemoDefault13BBaseUrl : _webDemoDefault7BBaseUrl;
+    }
     if (_officialCloudProtocol == _webDemoProtocolRwkvLightningV1 && backendMode.q == WebDemoBackendMode.cloud13b) {
       return _webDemoDefault13BBaseUrl;
     }
@@ -995,7 +1050,7 @@ extension $WebDemo on _WebDemo {
   int get _maxTokensForCloud {
     final maxTokens = arguments(Argument.maxLength).q.round();
     final resolved = maxTokens <= 0 ? Argument.maxLength.defaults.round() : maxTokens;
-    if (_officialCloudProtocol != _webDemoProtocolRwkvLightningV1) return resolved;
+    if (_officialCloudProtocol != _webDemoProtocolRwkvLightningV1 && !_usesCloudflare) return resolved;
     if (resolved <= _webDemoLightningMaxTokensCap) return resolved;
     return _webDemoLightningMaxTokensCap;
   }

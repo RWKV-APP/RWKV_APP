@@ -148,6 +148,7 @@ jobs:
         uses: ./.github/actions/create-env
         with:
           x_api_key: ${{ secrets.X_API_KEY }}
+          web_demo_build_json: ${{ secrets.WEB_DEMO_BUILD_JSON }}
 
       - name: Decrypt sensitive assets
         uses: ./.github/actions/decrypt-assets
@@ -167,6 +168,7 @@ jobs:
           --target-platform linux-x64
           --split-debug-info=build/sentry-symbols/linux-x64
           --dart-define=SENTRY_RELEASE=rwkv-chat@${{ needs.setup.outputs.version }}+${{ needs.setup.outputs.build_number }}
+          --dart-define-from-file=.env.web-demo.json
           --dart-define=SENTRY_DIST=${{ needs.setup.outputs.build_number }}
 
       - name: Ensure crashpad handler is executable
