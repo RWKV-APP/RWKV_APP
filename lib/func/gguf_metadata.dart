@@ -101,6 +101,7 @@ class GgufMetadataReader {
       if (magic != "GGUF") return null;
 
       final version = await reader.readUint32();
+      if (version != 2 && version != 3) return null;
       final tensorCount = await reader.readUint64();
       final metadataCount = await reader.readUint64();
 
@@ -288,11 +289,13 @@ class _GgufBinaryReader {
   Future<void> _skip(int length) async {
     if (length < 0) throw const FormatException("Invalid GGUF skip length");
     final position = await file.position();
+    if (length > await file.length() - position) throw const FormatException("Unexpected end of GGUF file");
     await file.setPosition(position + length);
   }
 
   Future<List<int>> _readExact(int length) async {
     if (length < 0) throw const FormatException("Invalid GGUF read length");
+    if (length > await file.length() - await file.position()) throw const FormatException("Unexpected end of GGUF file");
     final bytes = await file.read(length);
     if (bytes.length != length) {
       throw const FormatException("Unexpected end of GGUF file");

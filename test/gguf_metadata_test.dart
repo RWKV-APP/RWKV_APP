@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 // Flutter imports:
 import 'package:flutter_test/flutter_test.dart';
+import 'package:path/path.dart' as p;
 
 // Project imports:
 import 'package:zone/func/gguf_metadata.dart';
@@ -13,6 +14,26 @@ import 'package:zone/func/local_model_discovery.dart';
 import 'package:zone/model/file_info.dart';
 
 void main() {
+  test('imported paths are hidden from desktop folders without hiding other local files', () {
+    final file = _localGgufFile('model.gguf');
+    expect(
+      shouldShowLocalChatModelFile(
+        fileInfo: file,
+        excludedConfigFileNames: {},
+        importedPaths: {p.normalize(p.absolute(file.raw))},
+      ),
+      isFalse,
+    );
+    expect(
+      shouldShowLocalChatModelFile(
+        fileInfo: file,
+        excludedConfigFileNames: {},
+        importedPaths: {p.join(p.dirname(file.raw), 'another-folder', file.fileName)},
+      ),
+      isTrue,
+    );
+  });
+
   group('GgufMetadataReader', () {
     test('reads RWKV architecture metadata', () async {
       final tempDir = await Directory.systemTemp.createTemp('gguf_metadata_test_');

@@ -981,5 +981,11 @@
   "agent_local_final_answer": "Agent 결과",
   "agent_local_chat_running": "요청한 로컬 파일 작업을 처리하고 있습니다…",
   "agent_local_chat_cancelled": "로컬 파일 작업이 취소되었습니다.",
-  "agent_local_chat_failed": "로컬 파일 작업에 실패했습니다."
+  "agent_local_chat_failed": "로컬 파일 작업에 실패했습니다.",
+  "force_import_model_title": "미등록 모델을 강제로 가져올까요?",
+  "force_import_model_message": "이 파일은 RWKV GGUF로 인식되었지만 앱 카탈로그에 등록되어 있지 않습니다. 강제로 가져온 후 로드되지 않거나 정상적으로 실행되지 않을 수 있으며, 앱은 작동을 보장하지 않습니다. 계속할까요?",
+  "force_import": "강제로 가져오기",
+  "local_models_unverified": "로컬 모델(미검증)",
+  "model_configuration_not_loaded": "모델 설정이 아직 로드되지 않았습니다. 잠시 후 다시 시도하세요.",
+  "model_import_size_mismatch": "파일 크기가 카탈로그와 일치하지 않아 가져오지 않았습니다."
 }

@@ -18,7 +18,7 @@ import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/alert.dart';
 
-/// 权重管理页面, 管理通过 latest.json 配置的文件
+/// 权重管理页面，管理配置单权重和已导入的本地模型。
 class PageWeightManager extends ConsumerWidget {
   const PageWeightManager({super.key});
 
@@ -88,7 +88,6 @@ class _BottomBar extends ConsumerWidget {
             child: TextButton.icon(
               onPressed: () {
                 P.remote.pickAndImportWeightFiles(context: context);
-                500.msLater.then((_) => P.remote.sync());
               },
               icon: const Icon(Icons.add),
               label: Text(s.import_weight_file),
@@ -113,6 +112,7 @@ class _Body extends ConsumerWidget {
     final seeWeights = ref.watch(P.remote.seeWeights);
     final sudokuWeights = ref.watch(P.remote.sudokuWeights);
     final othelloWeights = ref.watch(P.remote.othelloWeights);
+    final localGgufWeights = ref.watch(P.remote.localGgufWeights);
     final qb = ref.watch(P.app.qb);
 
     final unrecognizedFiles = ref.watch(P.remote.unrecognizedFiles);
@@ -125,6 +125,7 @@ class _Body extends ConsumerWidget {
       ...seeWeights,
       ...sudokuWeights,
       ...othelloWeights,
+      ...localGgufWeights,
     ];
 
     // Check if there are any downloaded files
@@ -150,6 +151,7 @@ class _Body extends ConsumerWidget {
       if (ttsWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: s.tts, weights: ttsWeights),
       if (sudokuWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: "Sudoku", weights: sudokuWeights),
       if (othelloWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: s.rwkv_othello, weights: othelloWeights),
+      if (localGgufWeights.isNotEmpty) _WeightSection(title: s.local_models_unverified, weights: localGgufWeights),
       if (mlxCacheDirectories.isNotEmpty) const _MlxCacheSection(),
       if (unrecognizedFiles.isNotEmpty) _OtherFilesSection(),
     ];

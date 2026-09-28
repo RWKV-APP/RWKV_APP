@@ -45,7 +45,9 @@ bool _supportsPlatform(Map<dynamic, dynamic> entry, String currentPlatform) {
 bool shouldShowLocalChatModelFile({
   required FileInfo fileInfo,
   required Set<String> excludedConfigFileNames,
+  Set<String> importedPaths = const {},
 }) {
+  if (importedPaths.contains(p.normalize(p.absolute(fileInfo.raw)))) return false;
   if (!fileInfo.fromLocalGgufFile) return true;
   return !excludedConfigFileNames.contains(fileInfo.fileName);
 }

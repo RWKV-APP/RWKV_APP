@@ -5,6 +5,48 @@ how a source checkpoint becomes an artifact that the application can discover,
 download, select, and run. Exact live model rows remain in
 `remote/latest.json`; this document does not duplicate that mutable matrix.
 
+## SPEC-RWKV-UNCATALOGUED-GGUF-IMPORT — Confirmed Local Import
+
+The native “Import weight file” picker preserves catalogued-file admission.
+When configuration has not loaded, import reports that condition separately
+from a missing catalog entry. An uncatalogued `.gguf` must first pass the
+existing GGUF metadata reader and RWKV architecture recognition rule;
+unreadable, malformed and non-RWKV headers are rejected.
+
+Each eligible uncatalogued file requires its own localized confirmation,
+showing the complete filename. Simplified Chinese copy is:
+
+- Title: `强制导入未收录模型？`
+- Message: `此文件已识别为 RWKV GGUF，但未收录在应用配置单中。强制导入后可能无法加载或正常运行，应用不保证其可用性。是否继续？`
+- Actions: `取消`, `强制导入`
+
+Cancellation skips only that file, continues the batch and is not a failure.
+Replacing an existing filename requires separate overwrite confirmation;
+force-import consent never authorizes overwrite. The shared importer defaults
+`allowUncataloguedGguf` to false and revalidates unknown files when enabled.
+Both path-backed and bytes-only selections are supported. Temporary files are
+cleaned on cancellation, success and failure. Replacement bytes are written
+and validated before replacing the original; a failed write preserves it.
+
+The current model directory remains the source of truth. Import adds no
+catalog row, database or remote endpoint. Rescanning after import and startup
+recovers uncatalogued RWKV GGUF files as `本地模型（未验证）` in weight management
+and the chat selector, with existing export, delete and local GGUF load paths.
+Desktop listings deduplicate by path. Catalog platform exclusions remain in
+effect. Import success means only that the file was saved; it does not promise
+runtime compatibility. A failed engine load displays an error and terminates
+loading state. Desktop drag/drop, folder addition and ZIP extraction retain
+their existing interactions.
+
+Validation covers catalogued and uncatalogued files, invalid headers,
+bytes-only input, per-file confirmation/cancellation, mixed batches, separate
+overwrite cancellation, failed replacement, rescan/restart, deduplication and
+deletion. Android acceptance uses the canonical visible `debug (halo)` App
+flow from file selection through chat-page generation and restart recovery;
+macOS checks the same import entry and desktop deduplication. Preserve the
+screenshot sequence, complete output and actual loaded file identity. These
+checks neither judge answer accuracy nor accept other platforms.
+
 ## SPEC-RWKV-QUANTIZATION-CATALOG-CONTROL — Catalog-Driven Quantization
 
 For an RWKV App quantization request, inspect the live

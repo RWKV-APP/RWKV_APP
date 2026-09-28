@@ -430,7 +430,8 @@ extension $RWKVModel on _RWKVModel {
     try {
       await P.rwkvGeneration.clearStates();
       P.rwkvParams.supportedBatchSizes.q = [];
-      await loadChat(fileInfo: fileInfo);
+      final (_, modelID) = await loadChat(fileInfo: fileInfo);
+      if (modelID == null) return;
     } catch (e) {
       Alert.error(e.toString());
       return;

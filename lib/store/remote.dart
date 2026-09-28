@@ -37,6 +37,7 @@ class _Remote {
 
   /// 本地文件路径
   late final _paths = qsff<FileInfo, String>((ref, key) {
+    if (key.fromLocalModelFile) return key.raw;
     final effectiveModelsDir = ref.watch(P.remote.effectiveModelsDir);
     final effectiveDocumentsDir = ref.watch(P.app.effectiveDocumentsDir);
     final isDesktop = ref.watch(P.app.isDesktop);
@@ -75,6 +76,9 @@ class _Remote {
   /// Unrecognized files found in the models directory
   late final unrecognizedFiles = qs<List<UnrecognizedFile>>([]);
 
+  /// Reconstructed from the model directory; never inserted into the catalog.
+  late final localGgufWeights = qs<Set<FileInfo>>({});
+
   /// MLX/CoreML unzip cache directories found in the models directory
   late final mlxCacheDirectories = qs<List<MlxCacheDirectory>>([]);
 
@@ -93,6 +97,7 @@ class _Remote {
       ref.watch(seeWeights),
       ref.watch(sudokuWeights),
       ref.watch(othelloWeights),
+      ref.watch(localGgufWeights),
     ];
     final result = <FileInfo>{};
     for (final group in groups) {
@@ -615,6 +620,9 @@ extension $Remote on _Remote {
   }
 
   Future<void> deleteFile({required FileInfo fileInfo}) async {
+    if (fileInfo.fromLocalGgufFile) {
+      await P.rwkvModel._releaseLoadedModelByFileInfoIfNeeded(fileInfo);
+    }
     final state = locals(fileInfo);
     final value = state.q;
 
@@ -632,6 +640,12 @@ extension $Remote on _Remote {
     }
     await _deleteDownloadArtifacts(fileInfo: fileInfo, path: path);
     state.q = value.copyWith(hasFile: false, state: TaskState.idle, progress: 0);
+    if (fileInfo.fromLocalGgufFile) {
+      for (final folder in P.pth.folders.q) {
+        if (!folder.files.any((file) => equals(normalize(file.raw), normalize(path)))) continue;
+        await P.pth.refreshFolder(folder);
+      }
+    }
 
     await sync();
   }
@@ -796,187 +810,73 @@ extension $Remote on _Remote {
     return allFileNames;
   }
 
-  /// Check if a file would already exist at the target location
-  /// Returns the FileInfo if file is in config, null otherwise
-  /// Throws exception if file is not in configuration
-  Future<FileInfo?> checkFileExistsInConfig(String fileName) async {
+  /// Null means uncatalogued; unavailable configuration is a distinct failure.
+  FileInfo? _catalogFile(String fileName) {
     final config = P.app._config.q;
-    if (config == null) {
-      throw Exception("Configuration not loaded");
-    }
-
-    final allFileInfos = <FileInfo>{};
-
-    // Extract from all demo types
+    if (config == null) throw WeightImportFailure.configurationNotLoaded;
     for (final demoType in _remoteModelConfigDemoTypes) {
       final demoConfig = config[demoType];
-      if (demoConfig is Map && demoConfig['model_config'] is List) {
-        final modelConfigs = castJsonList(demoConfig['model_config']);
-        for (final modelConfig in modelConfigs) {
-          try {
-            final fileInfo = FileInfo.fromJSON(modelConfig);
-            allFileInfos.add(fileInfo);
-          } catch (e) {
-            qqe("Failed to parse file info from config: $e");
-          }
+      if (demoConfig is! Map || demoConfig['model_config'] is! List) continue;
+      for (final row in castJsonList(demoConfig['model_config'])) {
+        try {
+          final info = FileInfo.fromJSON(row);
+          if (info.fileName == fileName) return info;
+        } catch (error) {
+          qqe("Failed to parse file info from config: $error");
         }
       }
     }
-
-    // Find matching file info by fileName
-    try {
-      final matchingFileInfo = allFileInfos.firstWhere(
-        (info) => info.fileName == fileName,
-      );
-
-      // Check if target file already exists
-      final targetPath = _paths(matchingFileInfo).q;
-      if (targetPath.isEmpty) {
-        return null;
-      }
-      final targetFile = File(targetPath);
-      if (await targetFile.exists()) {
-        return matchingFileInfo;
-      }
-      return null; // File is in config but doesn't exist yet
-    } catch (e) {
-      throw Exception("File not found in configuration");
-    }
+    return null;
   }
 
-  /// Import a weight file from external source
-  /// Returns true if import was successful, false otherwise
-  /// [overwrite] if true, will overwrite existing file; if false, will throw exception if file exists
-  /// [sourceFile] the source file (used when path is available, e.g., Android, desktop)
-  /// [fileBytes] the file bytes (used when path is null, e.g., iOS iCloud Drive)
-  /// [fileName] the file name (required when using fileBytes)
+  String _importError(Object error) => switch (error) {
+    WeightImportFailure.configurationNotLoaded => S.current.model_configuration_not_loaded,
+    WeightImportFailure.unsupported => S.current.file_not_supported,
+    WeightImportFailure.fileExists => S.current.file_already_exists,
+    WeightImportFailure.invalidName => S.current.file_not_supported,
+    WeightImportFailure.noData => S.current.file_path_not_found,
+    WeightImportFailure.sizeMismatch => S.current.model_import_size_mismatch,
+    _ => error.toString(),
+  };
+
   Future<bool> importWeightFile({
     File? sourceFile,
     Uint8List? fileBytes,
     String? fileName,
     bool overwrite = false,
+    bool allowUncataloguedGguf = false,
   }) async {
-    qq;
-
-    // Get the file name
-    final actualFileName = fileName ?? (sourceFile != null ? basename(sourceFile.path) : throw Exception("File name is required"));
-
-    // Validate that we have either sourceFile or fileBytes
-    if (sourceFile == null && fileBytes == null) {
-      throw Exception("Either sourceFile or fileBytes must be provided");
-    }
-
-    // Check if the file exists in the configuration
-    // Get all file infos from config (not just available ones)
-    final config = P.app._config.q;
-    if (config == null) {
-      throw Exception("Configuration not loaded");
-    }
-
-    final allFileInfos = <FileInfo>{};
-
-    // Extract from all demo types
-    for (final demoType in _remoteModelConfigDemoTypes) {
-      final demoConfig = config[demoType];
-      if (demoConfig is Map && demoConfig['model_config'] is List) {
-        final modelConfigs = castJsonList(demoConfig['model_config']);
-        for (final modelConfig in modelConfigs) {
-          try {
-            final fileInfo = FileInfo.fromJSON(modelConfig);
-            allFileInfos.add(fileInfo);
-          } catch (e) {
-            qqe("Failed to parse file info from config: $e");
-          }
-        }
-      }
-    }
-
-    // Find matching file info by fileName
-    FileInfo? matchingFileInfo;
+    final name = fileName ?? (sourceFile == null ? '' : basename(sourceFile.path));
+    final catalogFile = _catalogFile(name);
+    final prepared = await PreparedWeightFile.prepare(sourceFile: sourceFile, fileBytes: fileBytes, fileName: name);
     try {
-      matchingFileInfo = allFileInfos.firstWhere(
-        (info) => info.fileName == actualFileName,
-      );
-    } catch (e) {
-      throw Exception("File not found in configuration");
-    }
-
-    // Get the target path
-    final targetPath = _paths(matchingFileInfo).q;
-    if (targetPath.isEmpty) {
-      throw Exception(_modelsDirNotReadyMessage);
-    }
-    final targetFile = File(targetPath);
-
-    // Check if target file already exists
-    if (await targetFile.exists()) {
-      if (!overwrite) {
-        qqw("Target file already exists: $targetPath");
-        throw Exception("File already exists");
-      } else {
-        // Delete existing file if overwrite is true
-        try {
-          await targetFile.delete();
-          qqq("Deleted existing file for overwrite: $targetPath");
-        } catch (e) {
-          qqe("Failed to delete existing file: $e");
-          throw Exception("Failed to delete existing file");
-        }
-      }
-    }
-
-    // Ensure target directory exists
-    final targetDir = Directory(dirname(targetPath));
-    if (!await targetDir.exists()) {
-      await targetDir.create(recursive: true);
-    }
-
-    // Copy the file
-    try {
-      if (sourceFile != null) {
-        // Use file copy (faster for large files when path is available)
-        await sourceFile.copy(targetPath);
-      } else if (fileBytes != null) {
-        // Write bytes directly (for iOS when path is null)
-        await File(targetPath).writeAsBytes(fileBytes);
-      } else {
-        throw Exception("No file data available");
-      }
-      qqq("Successfully imported file: $actualFileName to $targetPath");
-
-      // Verify file size if available
-      if (matchingFileInfo.fileSize > 0) {
-        final copiedFileSize = await targetFile.length();
-        if (copiedFileSize != matchingFileInfo.fileSize) {
-          qqw("File size mismatch: expected ${matchingFileInfo.fileSize}, got $copiedFileSize");
-          // In non-debug mode, delete the file if size doesn't match
-          if (!kDebugMode) {
-            await targetFile.delete();
-            throw Exception("File size mismatch");
+      final directory = await _getModelsDirPathForScan();
+      if (directory == null) throw Exception(_modelsDirNotReadyMessage);
+      final targetPath = join(directory, name);
+      await prepared.save(
+        targetPath: targetPath,
+        catalogued: catalogFile != null,
+        allowUncataloguedGguf: allowUncataloguedGguf,
+        overwrite: overwrite,
+        expectedSize: kDebugMode ? null : catalogFile?.fileSize,
+        beforeReplace: () async {
+          for (final loaded in P.rwkvModel.allLoaded.q.keys.toList()) {
+            if (!equals(normalize(_paths(loaded).q), normalize(targetPath))) continue;
+            await P.rwkvModel._releaseLoadedModelByFileInfoIfNeeded(loaded);
+            if (P.rwkvModel.allLoaded.q.containsKey(loaded)) {
+              throw FileSystemException('Unable to release the model before replacement', targetPath);
+            }
           }
-        }
-      }
-
-      // Update local file status for this specific file only (much faster than checkLocal)
-      final state = locals(matchingFileInfo);
-      state.q = state.q.copyWith(
-        hasFile: true,
-        state: TaskState.completed,
-        progress: 1.0,
+        },
       );
-
+      if (catalogFile != null) {
+        final state = locals(catalogFile);
+        state.q = state.q.copyWith(hasFile: true, state: TaskState.completed, progress: 1.0);
+      }
+      await refreshLocalGgufFiles();
       return true;
-    } catch (e) {
-      qqe("Failed to import file: $e");
-      // Clean up if file was partially copied
-      if (await targetFile.exists()) {
-        try {
-          await targetFile.delete();
-        } catch (deleteError) {
-          qqe("Failed to delete partially copied file: $deleteError");
-        }
-      }
-      rethrow;
+    } finally {
+      await prepared.dispose();
     }
   }
 
@@ -1320,6 +1220,7 @@ extension $Remote on _Remote {
       ...seeWeights.q,
       ...sudokuWeights.q,
       ...othelloWeights.q,
+      ...localGgufWeights.q,
     ];
 
     final filesToExport = <FileInfo>[];
@@ -1472,162 +1373,55 @@ extension $Remote on _Remote {
       return (0, 0, <String>[]);
     }
 
-    final pickedFiles = result.files;
-    final totalFiles = pickedFiles.length;
-
-    // First, validate all files and check for existing files
-    final List<_FileImportInfo> fileInfos = [];
-    bool hasExistingFiles = false;
-
-    for (final pickedFile in pickedFiles) {
-      final sourcePath = pickedFile.path;
-      final fileName = pickedFile.name;
-
-      File? sourceFile;
-      Uint8List? fileBytes;
-
-      if (sourcePath != null) {
-        sourceFile = File(sourcePath);
-        if (!await sourceFile.exists()) {
-          fileInfos.add(
-            _FileImportInfo(
-              pickedFile: pickedFile,
-              sourceFile: null,
-              fileBytes: null,
-              existingFileInfo: null,
-              error: S.current.file_not_found,
-            ),
-          );
-          continue;
-        }
-      } else {
-        if (pickedFile.bytes == null) {
-          fileInfos.add(
-            _FileImportInfo(
-              pickedFile: pickedFile,
-              sourceFile: null,
-              fileBytes: null,
-              existingFileInfo: null,
-              error: S.current.file_path_not_found,
-            ),
-          );
-          continue;
-        }
-        fileBytes = pickedFile.bytes;
-      }
-
-      FileInfo? existingFileInfo;
-      try {
-        final fileNameToCheck = fileName.isNotEmpty ? fileName : (sourceFile != null ? basename(sourceFile.path) : "unknown");
-        existingFileInfo = await checkFileExistsInConfig(fileNameToCheck);
-        if (existingFileInfo != null) {
-          hasExistingFiles = true;
-        }
-      } catch (e) {
-        final errorMessage = e.toString();
-        if (errorMessage.contains("not found in configuration")) {
-          fileInfos.add(
-            _FileImportInfo(
-              pickedFile: pickedFile,
-              sourceFile: sourceFile,
-              fileBytes: fileBytes,
-              existingFileInfo: null,
-              error: S.current.file_not_supported,
-            ),
-          );
-          continue;
-        } else {
-          fileInfos.add(
-            _FileImportInfo(
-              pickedFile: pickedFile,
-              sourceFile: sourceFile,
-              fileBytes: fileBytes,
-              existingFileInfo: null,
-              error: e.toString(),
-            ),
-          );
-          continue;
-        }
-      }
-
-      fileInfos.add(
-        _FileImportInfo(
-          pickedFile: pickedFile,
-          sourceFile: sourceFile,
-          fileBytes: fileBytes,
-          existingFileInfo: existingFileInfo,
-          error: null,
-        ),
-      );
-    }
-
-    // If there are existing files, ask user for confirmation
-    bool shouldOverwrite = false;
-    if (hasExistingFiles) {
-      if (!context.mounted) {
-        return (0, 0, <String>[]);
-      }
-      final s = S.current;
-      final existingCount = fileInfos.where((info) => info.existingFileInfo != null && info.error == null).length;
-      final message = existingCount == 1
-          ? s.overwrite_file_confirmation
-          : "${s.overwrite_file_confirmation}\n\n($existingCount ${S.current.files})";
-
-      final confirmResult = await showOkCancelAlertDialog(
-        context: context,
-        title: s.file_already_exists,
-        message: message,
-        okLabel: s.overwrite,
-        cancelLabel: s.cancel,
-        isDestructiveAction: true,
-      );
-
-      if (confirmResult != OkCancelResult.ok) {
-        return (0, 0, <String>[]); // User cancelled
-      }
-      shouldOverwrite = true;
-    }
-
+    final totalFiles = result.files.length;
     int successCount = 0;
     int failCount = 0;
-    final List<String> failedFiles = [];
-
-    // Process each file
-    for (final fileInfo in fileInfos) {
-      final pickedFile = fileInfo.pickedFile;
-      final fileName = pickedFile.name;
-
-      // Skip files with errors
-      if (fileInfo.error != null) {
-        failCount++;
-        failedFiles.add("$fileName: ${fileInfo.error}");
-        continue;
-      }
-
-      // Import the file
+    final failedFiles = <String>[];
+    for (final pickedFile in result.files) {
+      PreparedWeightFile? prepared;
       try {
-        final fileNameToUse = pickedFile.name.isNotEmpty
-            ? pickedFile.name
-            : (fileInfo.sourceFile != null ? basename(fileInfo.sourceFile!.path) : "unknown");
-
-        final success = await importWeightFile(
-          sourceFile: fileInfo.sourceFile,
-          fileBytes: fileInfo.fileBytes,
-          fileName: fileNameToUse,
-          overwrite: shouldOverwrite && fileInfo.existingFileInfo != null,
+        final catalogFile = _catalogFile(pickedFile.name);
+        prepared = await PreparedWeightFile.prepare(
+          sourceFile: pickedFile.path == null ? null : File(pickedFile.path!),
+          fileBytes: pickedFile.bytes,
+          fileName: pickedFile.name,
         );
-
-        if (success) {
-          successCount++;
-        } else {
-          failCount++;
-          failedFiles.add("$fileName: ${S.current.import_failed}");
+        final uncatalogued = catalogFile == null;
+        if (uncatalogued) {
+          if (!await prepared.isRwkvGguf) throw WeightImportFailure.unsupported;
+          if (!context.mounted) break;
+          if (!await showForceImportModelDialog(context, prepared.name)) continue;
         }
-      } catch (e) {
+        final directory = await _getModelsDirPathForScan();
+        if (directory == null) throw Exception(_modelsDirNotReadyMessage);
+        final exists = await File(join(directory, prepared.name)).exists();
+        if (exists) {
+          if (!context.mounted) break;
+          final confirmation = await showOkCancelAlertDialog(
+            context: context,
+            title: S.current.file_already_exists,
+            message: "${prepared.name}\n\n${S.current.overwrite_file_confirmation}",
+            okLabel: S.current.overwrite,
+            cancelLabel: S.current.cancel,
+            isDestructiveAction: true,
+          );
+          if (confirmation != OkCancelResult.ok) continue;
+        }
+        await importWeightFile(
+          sourceFile: prepared.file,
+          fileName: prepared.name,
+          overwrite: exists,
+          allowUncataloguedGguf: uncatalogued,
+        );
+        successCount++;
+      } catch (error) {
         failCount++;
-        failedFiles.add("$fileName: ${e.toString()}");
+        failedFiles.add("${pickedFile.name}: ${_importError(error)}");
+      } finally {
+        await prepared?.dispose();
       }
     }
+    await sync();
 
     // Show result summary
     if (successCount > 0 && failCount == 0) {
@@ -1659,6 +1453,7 @@ extension $Remote on _Remote {
       ...seeWeights.q,
       ...sudokuWeights.q,
       ...othelloWeights.q,
+      ...localGgufWeights.q,
     ];
 
     final filesToExport = allWeights.where((fileInfo) {
@@ -1748,6 +1543,7 @@ extension $Remote on _Remote {
       ...seeWeights.q,
       ...sudokuWeights.q,
       ...othelloWeights.q,
+      ...localGgufWeights.q,
     ];
 
     return allWeights.where((fileInfo) {
@@ -1989,11 +1785,29 @@ extension $Remote on _Remote {
     return fileInfo;
   }
 
+  Future<void> refreshLocalGgufFiles() async {
+    if (P.app._config.q == null) return;
+    final directory = await _getModelsDirPathForScan();
+    if (directory == null) return;
+    final discovered = await discoverLocalModelFiles(directory);
+    final excluded = getAllConfigFileNames();
+    final files = discovered.files
+        .where((file) => file.kind == LocalModelFileKind.rwkvGguf && !excluded.contains(file.fileName))
+        .map(_fileInfoFromLocalModelFile)
+        .toSet();
+    for (final file in files) {
+      final state = locals(file);
+      state.q = state.q.copyWith(hasFile: true, state: TaskState.completed, progress: 1.0);
+    }
+    localGgufWeights.q = files;
+  }
+
   Future<void> sync() async {
     syncingLocalFiles.q = true;
     await Future.wait([
       400.msLater,
       checkLocal(),
+      refreshLocalGgufFiles(),
       refreshUnrecognizedFiles(),
       refreshMlxCacheDirectories(),
     ]);
@@ -2075,6 +1889,7 @@ extension _$Remote on _Remote {
     hasActiveDownload.l(_onHasActiveDownloadChanged, fireImmediately: true);
 
     await _transferAllFilesFromOldModelsDirToNewModelsDirIfNeeded();
+    await refreshLocalGgufFiles();
 
     initDownloader();
   }
@@ -2338,22 +2153,5 @@ class UnrecognizedFile {
     required this.filePath,
     required this.fileSize,
     this.isDirectory = false,
-  });
-}
-
-/// Internal class for tracking file import information
-class _FileImportInfo {
-  final file_picker.PlatformFile pickedFile;
-  final File? sourceFile;
-  final Uint8List? fileBytes;
-  final FileInfo? existingFileInfo;
-  final String? error;
-
-  const _FileImportInfo({
-    required this.pickedFile,
-    required this.sourceFile,
-    required this.fileBytes,
-    required this.existingFileInfo,
-    required this.error,
   });
 }

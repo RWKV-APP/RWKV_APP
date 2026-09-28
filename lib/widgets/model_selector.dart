@@ -67,7 +67,8 @@ class ModelSelector extends ConsumerWidget {
         P.remote.checkLocal();
         await P.app.syncConfig();
         await P.remote.syncAvailableModels();
-        P.remote.checkLocal();
+        await P.remote.checkLocal();
+        await P.remote.refreshLocalGgufFiles();
       })();
 
       if (P.app.pageKey.q == .talk) _preferredDemoType = .tts;
@@ -110,6 +111,7 @@ class ModelSelector extends ConsumerWidget {
 
     final items = [
       const _SelectionHint(),
+      if (canUsePth) const _ImportedLocalModels(),
       if (!isMobile && canUsePth) const _LocalPthDropZone(),
       if (!isMobile && canUsePth) ...[
         const SizedBox(height: 4),
@@ -668,6 +670,31 @@ String? _runtimeBatchTag({
   return "Batch x$maxBatchSize";
 }
 
+class _ImportedLocalModels extends ConsumerWidget {
+  const _ImportedLocalModels();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final files = ref.watch(P.remote.localGgufWeights);
+    if (files.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const .symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          Text(S.of(context).local_models_unverified, style: theme.textTheme.titleSmall),
+          for (final file in files)
+            Padding(
+              padding: const .symmetric(vertical: 8),
+              child: _LocalPthFileItem(file, onStartToChat: () => P.pth.onStartLocalModelFileForChat(file)),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _LocalPthFileItem extends ConsumerWidget {
   final FileInfo fileInfo;
   final VoidCallback? onStartToChat;
@@ -973,6 +1000,7 @@ class _LocalPthFolder extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
     final excludedConfigFileNames = ref.watch(P.remote.localChatExcludedConfigFileNames);
+    final importedPaths = ref.watch(P.remote.localGgufWeights).map((file) => path.normalize(path.absolute(file.raw))).toSet();
     final folderName = path.basename(folder.path);
     final state = folder.state;
     final folderPath = folder.path;
@@ -982,6 +1010,7 @@ class _LocalPthFolder extends ConsumerWidget {
           (file) => shouldShowLocalChatModelFile(
             fileInfo: file,
             excludedConfigFileNames: excludedConfigFileNames,
+            importedPaths: importedPaths,
           ),
         )
         .toList();

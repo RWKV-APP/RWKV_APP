@@ -981,5 +981,11 @@
   "agent_local_final_answer": "Agent result",
   "agent_local_chat_running": "Working on the requested local file action…",
   "agent_local_chat_cancelled": "The local file action was cancelled.",
-  "agent_local_chat_failed": "The local file action failed."
+  "agent_local_chat_failed": "The local file action failed.",
+  "force_import_model_title": "Force import uncatalogued model?",
+  "force_import_model_message": "This file is recognized as RWKV GGUF but is not listed in the app catalog. It may fail to load or run after import. The app does not guarantee that it will work. Continue?",
+  "force_import": "Force import",
+  "local_models_unverified": "Local models (unverified)",
+  "model_configuration_not_loaded": "Model configuration has not loaded. Please try again later.",
+  "model_import_size_mismatch": "The file size does not match the catalog. The file was not imported."
 }

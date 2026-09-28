@@ -981,5 +981,11 @@
   "agent_local_final_answer": "Agent の結果",
   "agent_local_chat_running": "要求されたローカルファイル操作を処理しています…",
   "agent_local_chat_cancelled": "ローカルファイル操作はキャンセルされました。",
-  "agent_local_chat_failed": "ローカルファイル操作に失敗しました。"
+  "agent_local_chat_failed": "ローカルファイル操作に失敗しました。",
+  "force_import_model_title": "未登録モデルを強制インポートしますか？",
+  "force_import_model_message": "このファイルは RWKV GGUF と認識されましたが、アプリのカタログには登録されていません。強制インポート後に読み込めない、または正常に動作しない可能性があり、アプリは動作を保証しません。続行しますか？",
+  "force_import": "強制インポート",
+  "local_models_unverified": "ローカルモデル（未検証）",
+  "model_configuration_not_loaded": "モデル設定がまだ読み込まれていません。しばらくしてから再試行してください。",
+  "model_import_size_mismatch": "ファイルサイズがカタログと一致しないため、インポートしませんでした。"
 }

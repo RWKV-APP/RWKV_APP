@@ -981,5 +981,11 @@
   "agent_local_final_answer": "Agent 結果",
   "agent_local_chat_running": "正在處理你要求的本機檔案操作…",
   "agent_local_chat_cancelled": "本機檔案操作已取消。",
-  "agent_local_chat_failed": "本機檔案操作失敗。"
+  "agent_local_chat_failed": "本機檔案操作失敗。",
+  "force_import_model_title": "強制匯入未收錄模型？",
+  "force_import_model_message": "此檔案已識別為 RWKV GGUF，但未收錄在應用程式設定清單中。強制匯入後可能無法載入或正常執行，應用程式不保證其可用性。是否繼續？",
+  "force_import": "強制匯入",
+  "local_models_unverified": "本機模型（未驗證）",
+  "model_configuration_not_loaded": "模型設定尚未載入，請稍後重試。",
+  "model_import_size_mismatch": "檔案大小與設定清單不一致，未匯入。"
 }
