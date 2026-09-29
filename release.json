@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "version": "4.8.2",
-  "build": 758,
+  "version": "4.8.3",
+  "build": 759,
   "flutterVersion": "3.47.5",
   "adapter": {
     "repository": "RWKV-APP/rwkv_mobile_flutter",
     "branch": "dev",
-    "commit": "be3f0c4c3050f6a140ba9698a5b046fb7b3599c8"
+    "commit": "ade4b446b5449d644ca49e881b66c799ae2c9b80"
   },
   "native": {
     "repository": "RWKV-APP/rwkv-mobile",

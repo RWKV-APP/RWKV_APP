@@ -159,6 +159,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Install localization generator
+        run: dart pub global activate intl_utils 2.8.14
+
+      - name: Generate localizations
+        run: dart pub global run intl_utils:generate
+
       - name: Verify Flutter setup
         run: flutter doctor -v
 

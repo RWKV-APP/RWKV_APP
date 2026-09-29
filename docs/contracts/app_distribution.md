@@ -1,5 +1,25 @@
 # App Binary Distribution Contract
 
+## Release 4.8.3
+
+Version 4.8.3 uses build 759 and Flutter 3.47.5, retaining the existing
+Android, iOS, macOS, Windows and Linux package and distribution matrix.
+The release includes confirmed import of uncatalogued RWKV GGUF models,
+Dimensity 9500 generation performance improvements and iOS startup compatibility.
+The Android native archive carries the reviewed NP9 optimization on the
+release-compatible engine baseline; other platforms retain their existing
+native bytes. Freeze the exact Android archive identity in the adapter manifest.
+Core AI and new model-weight publication remain outside this release.
+
+Use native Flutter/platform build and provider tools; Fastlane remains retired.
+Generate localization from the committed ARB files before every platform build
+with pinned `intl_utils` 2.8.14 and `dart pub global run intl_utils:generate`
+after dependency resolution. Generated files
+remain local build inputs. Preserve the approved 4.8.2, 4.8.1 and 4.8.0 sections
+in all six locales of the cumulative 4.8.3 notes. Packaging, signing and channel
+verification remain required. New device/model acceptance is explicitly waived
+for this release; do not describe the waiver as a passed acceptance result.
+
 ## Release 4.8.2
 
 
