@@ -103,8 +103,8 @@ jobs:
           path: rwkv_mobile_flutter
           fetch-depth: 1
 
-      - name: Verify pinned native libraries
-        run: python rwkv_mobile_flutter/tools/fetch_native_libraries.py --verify-only --platform linux-x64
+      - name: Restore and verify pinned native libraries
+        run: python rwkv_mobile_flutter/tools/fetch_native_libraries.py --platform linux-x64
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2

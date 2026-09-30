@@ -1,5 +1,29 @@
 # App Binary Distribution Contract
 
+## Release 4.8.4
+
+Version 4.8.4 uses build 760 and Flutter 3.47.5, retaining the complete
+Android, iOS, macOS, Windows and Linux package and distribution matrix.
+It fixes Android roleplay GGUF model-loading crashes by using ggml's pthread
+pool, improves desktop CPU inference defaults, and improves WebRWKV GPU
+compatibility and generation on supported Adreno and Mali devices.
+Pin the affected Android, Windows and Linux native archives to the reviewed
+release-compatible engine source and verified archive and file hashes.
+Apple builds retain their existing native archive identities.
+Core AI and new model-weight publication remain outside this release.
+
+Use native Flutter/platform build and provider tools; Fastlane remains retired.
+Generate localization from committed ARB files with pinned `intl_utils` 2.8.14
+before platform builds. Verify the changed runtime paths in the canonical
+visible App's chat page, using the exact VS Code `debug (halo)` launch for
+physical-device Debug sessions. Native benchmarks and package checks remain
+engineering evidence and do not replace App acceptance.
+Prepend the approved three-item 4.8.4 section in all six locales while preserving
+the complete 4.8.3, 4.8.2, 4.8.1 and 4.8.0 history. Freeze `release.json`,
+adapter revision and native hashes before packaging, signing and publication.
+Verify direct downloads, review submissions and public store availability
+separately; pending review is not public availability.
+
 ## Release 4.8.3
 
 Version 4.8.3 uses build 759 and Flutter 3.47.5, retaining the existing
