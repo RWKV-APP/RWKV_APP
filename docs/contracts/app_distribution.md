@@ -2,7 +2,7 @@
 
 ## Release 4.8.4
 
-Version 4.8.4 uses build 760 and Flutter 3.47.5, retaining the complete
+Version 4.8.4 uses build 761 and Flutter 3.47.5, retaining the complete
 Android, iOS, macOS, Windows and Linux package and distribution matrix.
 It fixes Android roleplay GGUF model-loading crashes by using ggml's pthread
 pool, improves desktop CPU inference defaults, and improves WebRWKV GPU
@@ -87,6 +87,12 @@ environment variable without changing the artifact mapping contract.
 GitHub Actions owns Linux and Windows package publication. Fastlane owns Android
 APK and macOS DMG publication. Authentication tokens are supplied only through
 runtime secrets and must never be written to tracked files or command output.
+
+The bundled `.env` contains only the runtime `x-api-key`. Keep signing,
+provider-upload and server credentials outside App resources. The shared
+`node tools/flutter.mjs` entrypoint rejects other `.env` entries without
+printing their values. Inspect the packaged environment asset before any
+distribution; a source configuration check alone is insufficient.
 
 App publication authorizes the declared installer packages and channels. It does
 not authorize publishing build receipts, provenance JSON, logs, local paths or

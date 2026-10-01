@@ -2,9 +2,12 @@ import { readFileSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { checkRuntimeEnv } from './check_runtime_env.mjs';
 
 // Use the same sibling SDK as VS Code, independently of the host's PATH.
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const runtimeEnv = path.join(root, '.env');
+if (existsSync(runtimeEnv)) checkRuntimeEnv(readFileSync(runtimeEnv, 'utf8'));
 const version = readFileSync(path.join(root, '.flutter-version'), 'utf8').trim();
 if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error('Invalid .flutter-version');
 const sdk = path.resolve(root, '..', `flutter-${version}`);
