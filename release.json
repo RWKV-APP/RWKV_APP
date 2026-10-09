@@ -24,41 +24,41 @@
     "sourceDate": "20260930",
     "contextLength": 25600,
     "releaseMode": "partial_release",
-    "artifactCount": 2,
-    "catalogArtifactCount": 2,
-    "catalogRowCount": 2,
+    "artifactCount": 14,
+    "catalogArtifactCount": 14,
+    "catalogRowCount": 14,
     "includedSizes": [
-      "1.5B"
+      "1.5B",
+      "2.9B",
+      "7.2B",
+      "13.3B"
     ],
     "artifacts": [
       {
         "modelSize": 1.5,
-        "backend": "qnn",
-        "filename": "rwkv7-g1k-1.5b-20260930-ctx25600-a16w8-8gen3-batch.rmpack",
-        "fileSize": 1788809216,
-        "sha256": "94ef56cdd38b54829ea3059040747f93a613da3963df0366b31fac21c8db611a",
-        "quantization": "W8",
-        "quantizationRecipe": "A16W8",
+        "backend": "coreml",
+        "filename": "rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
+        "fileSize": 876773160,
+        "sha256": "635269f998d3fd9b684ebdd34473b06545c915ca6015866105533184baf450f2",
+        "quantization": "W4",
+        "quantizationRecipe": "CoreML int4 CPU/GPU; prefill/decode chunks 1",
         "platforms": [
-          "android"
-        ],
-        "socLimitations": [
-          "8 Gen 3"
+          "macos"
         ],
         "catalogNames": [
-          "RWKV7-G1k 1.5B (8 Gen 3)"
+          "RWKV7-G1k 1.5B (CoreML)"
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "2f82116809f54953d9fae87a784d339ca20e4bf9",
-          "path": "artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1k-1.5b-20260930-ctx25600-a16w8-8gen3-batch.rmpack",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "333054fc908067e59c0b01a9d802ff12b5468654",
-            "path": "artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1k-1.5b-20260930-ctx25600-a16w8-8gen3-batch.rmpack",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
             "stage": "formal"
           }
         }
@@ -74,23 +74,394 @@
         "platforms": [
           "android"
         ],
-        "socLimitations": [
-          "Dimensity 9500"
-        ],
         "catalogNames": [
           "RWKV7-G1k 1.5B (Dimensity 9500)"
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "0034d6b9eb1cbbbe36dacd7fd78083de90518898",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
           "path": "artifacts/rwkv7/chat/1.5b/mtk_np9/rwkv7-g1k-1.5b-20260930-ctx25600-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "1eb10af8a6263e36b5e68db8914cc920c4dfe4ea",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
             "path": "artifacts/rwkv7/chat/1.5b/mtk_np9/rwkv7-g1k-1.5b-20260930-ctx25600-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
+            "stage": "formal"
+          }
+        },
+        "socLimitations": [
+          "Dimensity 9500"
+        ]
+      },
+      {
+        "modelSize": 1.5,
+        "backend": "palm",
+        "filename": "rwkv7-g1k-1.5b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+        "fileSize": 1106001924,
+        "sha256": "9ccdaf432baa99364915afdb88085effd6cb60ec13b17c99518979a6e4388e1d",
+        "quantization": "W4",
+        "quantizationRecipe": "W4 mixed group128",
+        "platforms": [
+          "android",
+          "windows",
+          "linux",
+          "macos",
+          "ios"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 1.5B (Palm CPU, W4)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/1.5b/palm/rwkv7-g1k-1.5b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/1.5b/palm/rwkv7-g1k-1.5b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 1.5,
+        "backend": "qnn",
+        "filename": "rwkv7-g1k-1.5b-20260930-ctx25600-a16w8-8gen3-batch.rmpack",
+        "fileSize": 1788809216,
+        "sha256": "94ef56cdd38b54829ea3059040747f93a613da3963df0366b31fac21c8db611a",
+        "quantization": "W8",
+        "quantizationRecipe": "A16W8",
+        "platforms": [
+          "android"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 1.5B (8 Gen 3)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1k-1.5b-20260930-ctx25600-a16w8-8gen3-batch.rmpack",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1k-1.5b-20260930-ctx25600-a16w8-8gen3-batch.rmpack",
+            "stage": "formal"
+          }
+        },
+        "socLimitations": [
+          "8 Gen 3"
+        ]
+      },
+      {
+        "modelSize": 1.5,
+        "backend": "webrwkv",
+        "filename": "rwkv7-g1k-1.5b-20260930-ctx25600-nf4.prefab",
+        "fileSize": 1281449945,
+        "sha256": "5e86963c4f2e629bfe9113f25d84fd3a9899f924b82cc9fe7b87d25de32ed2a6",
+        "quantization": "NF4",
+        "quantizationRecipe": "NF4",
+        "platforms": [
+          "ios",
+          "macos",
+          "windows"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 1.5B (WebRWKV)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/1.5b/webrwkv/rwkv7-g1k-1.5b-20260930-ctx25600-nf4.prefab",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/1.5b/webrwkv/rwkv7-g1k-1.5b-20260930-ctx25600-nf4.prefab",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 13.3,
+        "backend": "coreml",
+        "filename": "rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-wkvstate-compiled-xcode27-cpugpu-control.zip",
+        "fileSize": 7444090932,
+        "sha256": "6da7cf5e997573481a2cbbca01a158f2d0f5a93b7f94548a43708d93dccf1443",
+        "quantization": "W4",
+        "quantizationRecipe": "CoreML int4 CPU/GPU; prefill/decode chunks 8",
+        "platforms": [
+          "macos"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 13.3B (CoreML)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-wkvstate-compiled-xcode27-cpugpu-control.zip",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-wkvstate-compiled-xcode27-cpugpu-control.zip",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 13.3,
+        "backend": "palm",
+        "filename": "rwkv7-g1k-13.3b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+        "fileSize": 7821527428,
+        "sha256": "e8280da18e99dc71727818c1db49c6c26f083375dad1ed2e02e3d1913b4ea97b",
+        "quantization": "W4",
+        "quantizationRecipe": "W4 mixed group128",
+        "platforms": [
+          "windows",
+          "linux",
+          "macos"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 13.3B (Palm CPU, W4)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/13.3b/palm/rwkv7-g1k-13.3b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/13.3b/palm/rwkv7-g1k-13.3b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 13.3,
+        "backend": "webrwkv",
+        "filename": "rwkv7-g1k-13.3b-20260930-ctx25600-nf4.prefab",
+        "fileSize": 8504144960,
+        "sha256": "47ac2327dda30320a2756434bbd1a873865778027524b3bda83a6f63d24cad1b",
+        "quantization": "NF4",
+        "quantizationRecipe": "NF4",
+        "platforms": [
+          "macos",
+          "windows"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 13.3B (WebRWKV)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/13.3b/webrwkv/rwkv7-g1k-13.3b-20260930-ctx25600-nf4.prefab",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/13.3b/webrwkv/rwkv7-g1k-13.3b-20260930-ctx25600-nf4.prefab",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 2.9,
+        "backend": "coreml",
+        "filename": "rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
+        "fileSize": 1645769529,
+        "sha256": "5a17314b927ce8cedc8993d1243ec09e0637ac9bb83e66ab1334d45502723b9e",
+        "quantization": "W4",
+        "quantizationRecipe": "CoreML int4 CPU/GPU; prefill/decode chunks 2",
+        "platforms": [
+          "macos"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 2.9B (CoreML)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 2.9,
+        "backend": "palm",
+        "filename": "rwkv7-g1k-2.9b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+        "fileSize": 1951288900,
+        "sha256": "3544c178ff5c2832101393c9c02a4083999f37265dd1fd8b7531f9322ce9c19f",
+        "quantization": "W4",
+        "quantizationRecipe": "W4 mixed group128",
+        "platforms": [
+          "android",
+          "windows",
+          "linux",
+          "macos",
+          "ios"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 2.9B (Palm CPU, W4)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/2.9b/palm/rwkv7-g1k-2.9b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/2.9b/palm/rwkv7-g1k-2.9b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 2.9,
+        "backend": "webrwkv",
+        "filename": "rwkv7-g1k-2.9b-20260930-ctx25600-nf4.prefab",
+        "fileSize": 2200282289,
+        "sha256": "db96140bac8d470ceeb6d3f12b0f14ca5b158aaa7d63e107041e8d32946eae68",
+        "quantization": "NF4",
+        "quantizationRecipe": "NF4",
+        "platforms": [
+          "ios",
+          "macos",
+          "windows"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 2.9B (WebRWKV)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/2.9b/webrwkv/rwkv7-g1k-2.9b-20260930-ctx25600-nf4.prefab",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/2.9b/webrwkv/rwkv7-g1k-2.9b-20260930-ctx25600-nf4.prefab",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 7.2,
+        "backend": "coreml",
+        "filename": "rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-decode-cpugpu-compiled-xcode27-cpugpu-control.zip",
+        "fileSize": 3938626036,
+        "sha256": "69be02f754c10a527b868c38ffb0da459e18050ad5c0ec447a7f174c14c3c5a5",
+        "quantization": "W4",
+        "quantizationRecipe": "CoreML int4 CPU/GPU; prefill/decode chunks 2",
+        "platforms": [
+          "macos"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 7.2B (CoreML)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-decode-cpugpu-compiled-xcode27-cpugpu-control.zip",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-decode-cpugpu-compiled-xcode27-cpugpu-control.zip",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 7.2,
+        "backend": "palm",
+        "filename": "rwkv7-g1k-7.2b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+        "fileSize": 4472681412,
+        "sha256": "7ec49156ec542850d87ed173046da684b6f76bee72a3869e75fbda186042c558",
+        "quantization": "W4",
+        "quantizationRecipe": "W4 mixed group128",
+        "platforms": [
+          "windows",
+          "linux",
+          "macos",
+          "android"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 7.2B (Palm CPU, W4)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/7.2b/palm/rwkv7-g1k-7.2b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/7.2b/palm/rwkv7-g1k-7.2b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 7.2,
+        "backend": "webrwkv",
+        "filename": "rwkv7-g1k-7.2b-20260930-ctx25600-nf4.prefab",
+        "fileSize": 4938093745,
+        "sha256": "9d16990e7cadba35deaf107ce4fe4cf37a40893a33bf4fe11098791ef357b7cb",
+        "quantization": "NF4",
+        "quantizationRecipe": "NF4",
+        "platforms": [
+          "macos",
+          "ios",
+          "windows"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 7.2B (WebRWKV)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "path": "artifacts/rwkv7/chat/7.2b/webrwkv/rwkv7-g1k-7.2b-20260930-ctx25600-nf4.prefab",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "path": "artifacts/rwkv7/chat/7.2b/webrwkv/rwkv7-g1k-7.2b-20260930-ctx25600-nf4.prefab",
             "stage": "formal"
           }
         }
