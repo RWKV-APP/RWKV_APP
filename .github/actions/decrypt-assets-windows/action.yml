@@ -6,6 +6,10 @@ inputs:
     description: 'Password for decrypting filter.txt.gpg'
     required: false
 
+  require_complete:
+    description: 'Require the frozen complete dictionary for package builds'
+    default: 'false'
+
 runs:
   using: 'composite'
   steps:
@@ -36,6 +40,10 @@ runs:
         } else {
           Write-Host "⚠️ Secret not found. Creating placeholder..."
           "" | Out-File -FilePath assets/filter.txt -Encoding utf8
+        }
+        if ("${{ inputs.require_complete }}" -eq "true") {
+          python scripts/check_release_resources.py
+          if ($LASTEXITCODE -ne 0) { throw "Release resource verification failed" }
         }
         Write-Host "::endgroup::"
 

@@ -152,6 +152,7 @@ jobs:
         uses: ./.github/actions/decrypt-assets-windows
         with:
           filter_decrypt_pass: ${{ secrets.FILTER_DECRYPT_PASS }}
+          require_complete: true
 
       - name: Enable QNN Windows assets (arm64)
         shell: pwsh
@@ -190,6 +191,9 @@ jobs:
           --dart-define=SENTRY_RELEASE=rwkv-chat@${{ needs.setup.outputs.version }}+${{ needs.setup.outputs.build_number }}
           --dart-define-from-file=.env.web-demo.json
           --dart-define=SENTRY_DIST=${{ needs.setup.outputs.build_number }}
+
+      - name: Verify packaged release resources
+        run: python scripts/check_release_resources.py --asset-root build/windows/arm64/runner/Release/data/flutter_assets
 
       - name: Verify QNN Windows assets in build output
         shell: pwsh

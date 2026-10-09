@@ -1,0 +1,89 @@
+name: Android release packages
+
+on:
+  push:
+    tags:
+      - "[0-9]*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate frozen release
+        id: frozen
+        run: |
+          python3 scripts/release_identity.py --github-output "$GITHUB_OUTPUT"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          release = json.loads(Path('release.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f"version={release['version']}\nbuild={release['build']}\n")
+          PY
+      - name: Checkout pinned adapter
+        uses: actions/checkout@v4
+        with:
+          repository: RWKV-APP/rwkv_mobile_flutter
+          ref: ${{ steps.frozen.outputs.adapter_ref }}
+          path: rwkv_mobile_flutter
+      - name: Restore pinned native libraries
+        run: python3 rwkv_mobile_flutter/tools/fetch_native_libraries.py --platform android
+      - uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: '21'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.frozen.outputs.flutter_version }}
+          channel: stable
+          cache: true
+      - name: Override adapter path
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path('pubspec.yaml').read_text()
+          overrides = source.split('dependency_overrides:\n', 1)[1].split('\ndev_dependencies:', 1)[0]
+          Path('pubspec_overrides.yaml').write_text('dependency_overrides:\n' + overrides.replace('path: ../rwkv_mobile_flutter', 'path: ./rwkv_mobile_flutter'))
+          PY
+      - name: Create runtime environment
+        uses: ./.github/actions/create-env
+        with:
+          x_api_key: ${{ secrets.X_API_KEY }}
+          web_demo_build_json: ${{ secrets.WEB_DEMO_BUILD_JSON }}
+      - name: Restore complete dictionary
+        uses: ./.github/actions/decrypt-assets
+        with:
+          filter_decrypt_pass: ${{ secrets.FILTER_DECRYPT_PASS }}
+          require_complete: true
+      - name: Resolve dependencies and generate localizations
+        run: |
+          flutter pub get
+          dart pub global activate intl_utils 2.8.14
+          dart pub global run intl_utils:generate
+      - name: Build arm64 release APK and AAB
+        run: |
+          flutter build apk --release --no-pub --target-platform android-arm64 --split-debug-info=build/sentry-symbols/android --dart-define=SENTRY_RELEASE=rwkv-chat@${{ steps.frozen.outputs.version }}+${{ steps.frozen.outputs.build }} --dart-define=SENTRY_DIST=${{ steps.frozen.outputs.build }} --dart-define-from-file=.env.web-demo.json
+          flutter build appbundle --release --no-pub --target-platform android-arm64 --split-debug-info=build/sentry-symbols/android --dart-define=SENTRY_RELEASE=rwkv-chat@${{ steps.frozen.outputs.version }}+${{ steps.frozen.outputs.build }} --dart-define=SENTRY_DIST=${{ steps.frozen.outputs.build }} --dart-define-from-file=.env.web-demo.json
+      - name: Verify packaged release resources
+        run: |
+          python3 scripts/check_release_resources.py --package build/app/outputs/flutter-apk/app-release.apk
+          python3 scripts/check_release_resources.py --package build/app/outputs/bundle/release/app-release.aab
+      - name: Upload intermediate packages for existing-key signing
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-intermediate
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
+            build/sentry-symbols/android
+          if-no-files-found: error
+          retention-days: 7

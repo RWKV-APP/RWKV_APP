@@ -1,5 +1,19 @@
 # App Binary Distribution Contract
 
+## Release 4.8.5
+
+Version 4.8.5 uses build 762 and Flutter 3.47.5, retaining the complete Android, iOS, macOS, Windows and Linux
+package and distribution matrix. The shared parser repair and unchanged complete
+dictionary must enter every platform package. Freeze dictionary size and SHA-256
+in `release.json.resources.filter`; release CI must reject missing decryption,
+empty placeholders and packaged resource mismatches. Public notes describe the
+normal-conversation interruption fix without exposing internal rule changes.
+G1k replaces corresponding existing consumer slots through formal ModelScope
+and byte-identical Hugging Face. Preserve unsupported and untouched old slots
+and immutable historical catalogs. Upload App Store and public TestFlight builds
+and submit Google Play production for review; store review completion remains
+independent of those submissions.
+
 ## Release 4.8.4
 
 Version 4.8.4 uses build 761 and Flutter 3.47.5, retaining the complete
@@ -197,34 +211,22 @@ acceptance remain pending until actually performed on a capable Mac.
 
 ## SPEC-RWKV-APPLE-RELEASE-AUTH-GATE
 
-TestFlight release automation defaults to a foreground Apple ID
-preauthentication stage. Before changing a version, building an application,
-or uploading any release artifact, the lane starts a fresh, process-local
-Spaceship session and performs App Store Connect login. The stage does not
-read an IPA, build an IPA, invoke an upload action, or send any artifact to App
-Store Connect. If Apple requires two-factor verification, the trusted-device
-code is therefore requested and entered before the long-running release work.
-Apple remains the authority on whether a fresh login actually requires a code.
+TestFlight release automation starts with fresh, artifact-free native Apple ID
+preauthentication through `xcrun altool --list-providers`, using the existing
+application-specific password from private environment or Keychain storage.
+`tools/apple_auth.command` accepts no arguments and requires a foreground TTY;
+it does not build, sign or upload. Credentials remain outside App resources,
+Git, process arguments and public logs. Failure stops dependent release effects.
+A valid local App Store Connect web-session cache supports later metadata and
+review operations, but does not replace the fresh native check.
 
-`tools/apple_auth.command` provides a standalone foreground Apple ID check via
-the existing `ios_auth_preflight` lane. It authenticates only, even when the
-environment selects API-key mode. It accepts no release arguments, requires
-the installed locked Ruby bundle, and performs no dependency installation,
-source synchronization, build, signing, or publication. It can run before local
-source changes are committed. The process removes its temporary session on
-exit; a later release performs fresh authentication in its own process.
+The Agent completes an authorized routine login, trusted-device confirmation,
+verification-code retrieval and input, SMS selection and retry through the
+actual visible authorized Mac interfaces. It does not inspect unrelated
+messages, disable two-factor authentication or disclose codes. Routine login
+and verification are not default human prerequisites. Respect actual tool
+refusals, record the blocked action and continue independent release work.
 
-The default stage must run in a visible foreground TTY. It isolates the release
-from cached Spaceship cookies and `FASTLANE_SESSION`, disables automatic SMS
-selection, and retains the newly verified cookie only for the current Fastlane
-process. Later TestFlight work in that process reuses the verified session.
-The temporary cookie directory is private, is never printed, and is removed
-after the upload or when the process exits. Authentication failure stops the
-lane before any version, build, commit, push, or upload effect.
-
-App Store Connect API-key authentication remains an optional explicit mode for
-non-interactive operation. It is selected with `apple_auth_mode:api_key` or
-`RWKV_APPLE_AUTH_MODE=api_key`; only that mode requires the key ID, issuer ID,
-and private-key path or content. The private key remains outside Git and logs.
-Merely having API-key variables in the environment does not override the
-default Apple ID preauthentication path.
+App Store Connect API-key authentication remains an optional explicitly
+selected mode; it is not required by an Apple ID release. Keep complete key
+configuration in private runtime storage and validate it before release effects.

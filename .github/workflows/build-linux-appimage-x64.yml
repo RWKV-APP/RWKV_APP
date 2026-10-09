@@ -155,6 +155,7 @@ jobs:
         uses: ./.github/actions/decrypt-assets
         with:
           filter_decrypt_pass: ${{ secrets.FILTER_DECRYPT_PASS }}
+          require_complete: true
 
       - name: Install dependencies
         run: flutter pub get
@@ -177,6 +178,9 @@ jobs:
           --dart-define=SENTRY_RELEASE=rwkv-chat@${{ needs.setup.outputs.version }}+${{ needs.setup.outputs.build_number }}
           --dart-define-from-file=.env.web-demo.json
           --dart-define=SENTRY_DIST=${{ needs.setup.outputs.build_number }}
+
+      - name: Verify packaged release resources
+        run: python scripts/check_release_resources.py --asset-root build/linux/x64/release/bundle/data/flutter_assets
 
       - name: Ensure crashpad handler is executable
         run: |

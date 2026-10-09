@@ -37,6 +37,13 @@ The Windows Debug App includes ordinary-chat real local Agent file actions gover
 
 Desktop UI redesign is authorized by `SPEC-RWKV-DESKTOP-UI-REDESIGN-AUTHORIZATION` in `docs/contracts/desktop_ui_redesign.md`. Detailed Chat-first layout, Projects, Agent UI expansion, reference-product comparisons, and visual acceptance proposals remain private intake until explicit rulings promote a normalized project contract.
 
+## SPEC-RWKV-SENSITIVE-FILTER-RETIRED-COMPOUNDS — Retired Sensitive Filter Compounds
+
+Sensitive filter compilation excludes the compound rules `亡|共` and `共|铲`,
+including equivalent whitespace-normalized forms in bundled dictionaries.
+The plain entries `亡共` and `共铲` remain active. Other filter rules retain
+their existing matching behavior.
+
 ## SPEC-RWKV-SETTINGS-ABOUT — Settings About Section
 
 Settings omits the obsolete community feedback entry and its external URL.

@@ -6,6 +6,10 @@ inputs:
     description: 'Password for decrypting filter.txt.gpg'
     required: false
 
+  require_complete:
+    description: 'Require the frozen complete dictionary for package builds'
+    default: 'false'
+
 runs:
   using: 'composite'
   steps:
@@ -21,8 +25,10 @@ runs:
           FILE_SIZE=$(ls -lh assets/filter.txt | awk '{print $5}')
           echo "✅ Decryption success. File size: $FILE_SIZE"
         else
+          if [ "${{ inputs.require_complete }}" = "true" ]; then echo "Release dictionary decryption secret is required" >&2; exit 1; fi
           echo "⚠️ Secret not found (Forked repo?). Creating placeholder..."
           echo "" > assets/filter.txt
         fi
+        if [ "${{ inputs.require_complete }}" = "true" ]; then python3 scripts/check_release_resources.py; fi
         echo "::endgroup::"
 

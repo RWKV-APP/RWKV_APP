@@ -41,6 +41,8 @@ This map assigns one canonical owner and one lifecycle to each topic. Stable `SP
 
 | Cloud Web Demo API and ready-to-use build configuration | `SPEC-RWKV-WEB-DEMO-CLOUD-TRANSPORT` | active | `docs/specification.md` | `AGENTS.md`, `lib/args.dart`, `lib/store/web_demo.dart`, `lib/func/web_demo_cloud.dart` |
 
+| Retired sensitive filter compounds and retained plain entries | `SPEC-RWKV-SENSITIVE-FILTER-RETIRED-COMPOUNDS` | active | `docs/specification.md` | `lib/func/sensitive_filter.dart`, `test/sensitive_filter_test.dart`, `assets/filter.txt.gpg` |
+
 ## Truth Resolution
 
 1. Find the topic and stable assertion ID in this table

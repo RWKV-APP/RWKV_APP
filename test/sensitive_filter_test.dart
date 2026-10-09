@@ -36,6 +36,16 @@ A|A
       expect(rules.compoundRules, isEmpty);
     });
 
+    test('excludes retired compounds while retaining their plain words', () {
+      final rules = parseSensitiveFilterRules('亡共\n共铲\n亡|共\n共|铲\n亡 | 共\nAlpha|Beta');
+
+      expect(rules.plainWords, containsAll(<String>['亡共', '共铲']));
+      expect(rules.compoundRules, <List<String>>[
+        <String>['Alpha', 'Beta'],
+      ]);
+      expect(rules.orderedCompoundRules, isEmpty);
+    });
+
     test('deduplicates equivalent compound rules', () {
       const filter = '''
 Alpha|Beta
@@ -133,6 +143,39 @@ Alpha | Beta
   });
 
   group('findSensitiveFilterMatchInWindows', () {
+    test('retired compounds do not combine unrelated words in a wide window', () {
+      final filter = <String>[
+        '亡共',
+        '共铲',
+        '亡|共',
+        '共|铲',
+        'Alpha|Beta',
+        List<String>.filled(49, 'x').join(),
+      ].join('\n');
+      final rules = parseSensitiveFilterRules(filter);
+      final cases = <String, String?>{
+        '伤亡人数已经确认，大家共同完成报告。': null,
+        '仓库一共有十把铁铲。': null,
+        '亡 共': null,
+        '亡-共': null,
+        '共 铲': null,
+        '亡共': '亡共',
+        '灭亡共产党': '亡共',
+        '共铲': '共铲',
+        'Beta and Alpha': 'Alpha|Beta',
+      };
+
+      for (final entry in cases.entries) {
+        final match = findSensitiveFilterMatchInWindows((
+          index: rules.index,
+          maxLength: rules.maxLength,
+          text: entry.key,
+        ));
+
+        expect(match, entry.value, reason: entry.key);
+      }
+    });
+
     test('matches a plain word before the tail of a long text', () {
       final rules = parseSensitiveFilterRules('blocked\nAlpha|Beta\n0123456789');
       final text = 'blocked ${List<String>.filled(80, 'x').join()}';

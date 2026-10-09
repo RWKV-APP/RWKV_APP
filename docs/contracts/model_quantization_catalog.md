@@ -55,6 +55,23 @@ backend, output format, or working node. The file is the core application model
 catalog and the initial worklist for quantized artifacts, not incidental release
 metadata.
 
+### G1k Release And Equivalent Consumer Replacement
+
+Build 762 initially bundles the two formally verified G1k 1.5B Android NPU
+artifacts for Snapdragon 8 Gen 3 and Dimensity 9500. Its fallback catalog and
+build-specific snapshot carry `configBuild: 762`. Additional completed G1k
+cohorts use the existing remote-configuration update path; they do not require
+rebuilding or replacing an already signed App package.
+
+For every additional cohort, verify complete publisher bytes, then identical
+formal ModelScope and Hugging Face identities before exposing its rows. Replace
+only equivalent model-size, backend, quantization and compatible SoC consumers.
+Remove the replaced platform from earlier G1j or G1i rows; preserve every
+unmatched platform and remove a row only when no platform remains. Historical
+build snapshots remain unchanged. Existing backend/platform support is retained;
+publication does not claim new device, ANE or answer-quality acceptance. The
+accepted CoreML CPU/GPU cohort is macOS-only; existing iOS CoreML rows remain.
+
 Its `model_config` rows declare the current artifact matrix through fields such
 as model size, quantization, application backend, supported platforms, SoC
 limits, URL, file size, digest, tags, date, and debug visibility. The app bundles
