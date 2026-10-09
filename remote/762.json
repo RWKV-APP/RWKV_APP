@@ -257,6 +257,34 @@
         ]
       },
       {
+        "name": "RWKV7-G1k 2.9B",
+        "modelSize": 2.9,
+        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/llamacpp/rwkv7-g1k-2.9b-20260930-ctx25600-Q4_K_M.gguf",
+        "fileSize": 1919047552,
+        "sha256": "558af5432e4bc8cb494b89f8dae98531137b222307de4b4ccd43d0ac45d0fa52",
+        "quantization": "Q4_K_M",
+        "platforms": [
+          "windows",
+          "android",
+          "macos",
+          "ios",
+          "linux"
+        ],
+        "backends": [
+          "llamacpp"
+        ],
+        "tags": [
+          "reason",
+          "gpu",
+          "batch"
+        ],
+        "date": 1791570349,
+        "availableIn": [
+          "modelscope",
+          "huggingface"
+        ]
+      },
+      {
         "name": "RWKV7-G1k 2.9B (Palm CPU, W4)",
         "modelSize": 2.9,
         "quantization": "W4",
@@ -1082,34 +1110,6 @@
         ]
       },
       {
-        "name": "RWKV7-G1j 2.9B",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/llamacpp/rwkv7-g1j-2.9b-20260831-ctx16384-Q4_K_M.gguf",
-        "fileSize": 1919047552,
-        "sha256": "59a9888822d6691caaaaf174faaf9884ca88ee56db42d18e5300ed93dc0e8e8d",
-        "quantization": "Q4_K_M",
-        "platforms": [
-          "windows",
-          "android",
-          "macos",
-          "ios",
-          "linux"
-        ],
-        "backends": [
-          "llamacpp"
-        ],
-        "tags": [
-          "reason",
-          "gpu",
-          "batch"
-        ],
-        "date": 1788889792,
-        "availableIn": [
-          "modelscope",
-          "huggingface"
-        ]
-      },
-      {
         "name": "RWKV7-G1j 2.9B (CoreML)",
         "modelSize": 2.9,
         "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1j-2.9b-20260831-ctx16384-c2-coreml-direct-int4lut6mix-attout-lut6-wkvstate.zip",
@@ -1411,27 +1411,6 @@
           "coreml"
         ],
         "date": 1787331736
-      },
-      {
-        "name": "RWKV7-G1i 2.9B",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/llamacpp/rwkv7-g1i-2.9b-20260805-ctx16384-Q4_K_M.gguf",
-        "fileSize": 1919047552,
-        "sha256": "f1e240ec025d8522cacf7edd01a7514b694dc80dfefd8b3bfdd69ced5456cb0f",
-        "quantization": "Q4_K_M",
-        "platforms": [
-          "macos",
-          "ios"
-        ],
-        "backends": [
-          "llamacpp"
-        ],
-        "tags": [
-          "reason",
-          "gpu",
-          "batch"
-        ],
-        "date": 1786299898
       },
       {
         "name": "RWKV7-G1i 7.2B",
