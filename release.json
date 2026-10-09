@@ -24,9 +24,9 @@
     "sourceDate": "20260930",
     "contextLength": 25600,
     "releaseMode": "partial_release",
-    "artifactCount": 14,
-    "catalogArtifactCount": 14,
-    "catalogRowCount": 14,
+    "artifactCount": 15,
+    "catalogArtifactCount": 15,
+    "catalogRowCount": 15,
     "includedSizes": [
       "1.5B",
       "2.9B",
@@ -50,15 +50,48 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 1.5,
+        "backend": "llamacpp",
+        "filename": "rwkv7-g1k-1.5b-20260930-ctx25600-Q6_K.gguf",
+        "fileSize": 1336082528,
+        "sha256": "96e468e014dbc45c6e8ccd9f2d86134dbf94aa83c84d3d701b059f9bbbd0d572",
+        "quantization": "Q6_K",
+        "quantizationRecipe": "Q6_K",
+        "platforms": [
+          "windows",
+          "android",
+          "macos",
+          "ios",
+          "linux"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 1.5B"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
+          "path": "artifacts/rwkv7/chat/1.5b/llamacpp/rwkv7-g1k-1.5b-20260930-ctx25600-Q6_K.gguf",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
+            "path": "artifacts/rwkv7/chat/1.5b/llamacpp/rwkv7-g1k-1.5b-20260930-ctx25600-Q6_K.gguf",
             "stage": "formal"
           }
         }
@@ -79,14 +112,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/1.5b/mtk_np9/rwkv7-g1k-1.5b-20260930-ctx25600-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/1.5b/mtk_np9/rwkv7-g1k-1.5b-20260930-ctx25600-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
             "stage": "formal"
           }
@@ -115,14 +148,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/1.5b/palm/rwkv7-g1k-1.5b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/1.5b/palm/rwkv7-g1k-1.5b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
             "stage": "formal"
           }
@@ -144,14 +177,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1k-1.5b-20260930-ctx25600-a16w8-8gen3-batch.rmpack",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/1.5b/qnn/rwkv7-g1k-1.5b-20260930-ctx25600-a16w8-8gen3-batch.rmpack",
             "stage": "formal"
           }
@@ -178,14 +211,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/1.5b/webrwkv/rwkv7-g1k-1.5b-20260930-ctx25600-nf4.prefab",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/1.5b/webrwkv/rwkv7-g1k-1.5b-20260930-ctx25600-nf4.prefab",
             "stage": "formal"
           }
@@ -207,14 +240,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-wkvstate-compiled-xcode27-cpugpu-control.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-wkvstate-compiled-xcode27-cpugpu-control.zip",
             "stage": "formal"
           }
@@ -238,14 +271,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/13.3b/palm/rwkv7-g1k-13.3b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/13.3b/palm/rwkv7-g1k-13.3b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
             "stage": "formal"
           }
@@ -268,14 +301,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/13.3b/webrwkv/rwkv7-g1k-13.3b-20260930-ctx25600-nf4.prefab",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/13.3b/webrwkv/rwkv7-g1k-13.3b-20260930-ctx25600-nf4.prefab",
             "stage": "formal"
           }
@@ -297,14 +330,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
             "stage": "formal"
           }
@@ -330,14 +363,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/2.9b/palm/rwkv7-g1k-2.9b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/2.9b/palm/rwkv7-g1k-2.9b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
             "stage": "formal"
           }
@@ -361,14 +394,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/2.9b/webrwkv/rwkv7-g1k-2.9b-20260930-ctx25600-nf4.prefab",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/2.9b/webrwkv/rwkv7-g1k-2.9b-20260930-ctx25600-nf4.prefab",
             "stage": "formal"
           }
@@ -390,14 +423,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-decode-cpugpu-compiled-xcode27-cpugpu-control.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-decode-cpugpu-compiled-xcode27-cpugpu-control.zip",
             "stage": "formal"
           }
@@ -422,14 +455,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/7.2b/palm/rwkv7-g1k-7.2b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/7.2b/palm/rwkv7-g1k-7.2b-20260930-ctx25600-w4mixg128-bg128-r20260930-ctx256.mollm",
             "stage": "formal"
           }
@@ -453,14 +486,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "ce11edadc180cd1b7e83164f318511e5b3cf547a",
+          "revision": "22223027c5217154b1819d804067e5cd28364982",
           "path": "artifacts/rwkv7/chat/7.2b/webrwkv/rwkv7-g1k-7.2b-20260930-ctx25600-nf4.prefab",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "513b0716fe992ee5db169d89f3963b1d6998f864",
+            "revision": "b7f8be4ac1a33f06bc29e4f0e13a30794d1fa123",
             "path": "artifacts/rwkv7/chat/7.2b/webrwkv/rwkv7-g1k-7.2b-20260930-ctx25600-nf4.prefab",
             "stage": "formal"
           }
