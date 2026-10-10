@@ -72,6 +72,16 @@ build snapshots remain unchanged. Existing backend/platform support is retained;
 publication does not claim new device, ANE or answer-quality acceptance. The
 accepted CoreML CPU/GPU cohort is macOS-only; existing iOS CoreML rows remain.
 
+The complete G1k build-762 catalog includes the published W6 MLX packages for
+1.5B, 2.9B, 7.2B and 13.3B. The first three retain their macOS and iOS consumer
+scopes; 13.3B remains macOS-only. Each published size replaces both G1j and G1i
+MLX rows in the current catalog. Complete-release verification checks this
+required backend coverage and the absence of replaced rows, rather than only
+counting artifacts already listed in the release manifest. A publication in
+progress exposes only independently verified formal packages and records its
+remaining required coverage. Catalog removal preserves historical build
+snapshots and archived provider payloads.
+
 Its `model_config` rows declare the current artifact matrix through fields such
 as model size, quantization, application backend, supported platforms, SoC
 limits, URL, file size, digest, tags, date, and debug visibility. The app bundles
