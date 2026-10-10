@@ -83,6 +83,31 @@
         ]
       },
       {
+        "name": "RWKV7-G1k 13.3B (MLX)",
+        "modelSize": 13.3,
+        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/13.3b/mlx/rwkv7-g1k-13.3b-20260930-ctx25600-mlx-int6-swift-configfix.zip",
+        "fileSize": 10911560760,
+        "sha256": "990ab2d9f7f416400a633c5bf70dfa8243ff7bd29c4c4651ae7cd69d6ec64f8f",
+        "quantization": "W6",
+        "platforms": [
+          "macos"
+        ],
+        "backends": [
+          "mlx"
+        ],
+        "tags": [
+          "reason",
+          "mlx",
+          "gpu",
+          "batch"
+        ],
+        "date": 1791632929,
+        "availableIn": [
+          "modelscope",
+          "huggingface"
+        ]
+      },
+      {
         "name": "RWKV7-G1k 1.5B (CoreML)",
         "modelSize": 1.5,
         "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
@@ -1454,31 +1479,6 @@
         ]
       },
       {
-        "name": "RWKV7-G1j 13.3B (MLX)",
-        "modelSize": 13.3,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/13.3b/mlx/rwkv7-g1j-13.3b-20260831-ctx16384-mlx-int6.zip",
-        "fileSize": 10911470145,
-        "sha256": "82ac3fecaa2cefd8c53ea812d46b8d1a06564323285f4b1cc34c31ba2b6a7a20",
-        "quantization": "W6",
-        "platforms": [
-          "macos"
-        ],
-        "backends": [
-          "mlx"
-        ],
-        "tags": [
-          "reason",
-          "mlx",
-          "gpu",
-          "batch"
-        ],
-        "date": 1788889792,
-        "availableIn": [
-          "modelscope",
-          "huggingface"
-        ]
-      },
-      {
         "name": "RWKV7-G1i 1.5B (CoreML)",
         "modelSize": 1.5,
         "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1i-1.5b-20260805-ctx16384-c1-coreml-direct-int4lut6mix-attout-lut6-wkvstate.zip",
@@ -1756,27 +1756,6 @@
           "batch"
         ],
         "date": 1770801692
-      },
-      {
-        "name": "RWKV7-G1i 13.3B (MLX)",
-        "modelSize": 13.3,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/13.3b/mlx/rwkv7-g1i-13.3b-20260805-ctx16384-mlx-int6.zip",
-        "fileSize": 11053611495,
-        "sha256": "b2d3d7184ba8469fd3442b57b2c674acac5521aedfe08e7ec717f55da1bb8da3",
-        "quantization": "W6",
-        "platforms": [
-          "macos"
-        ],
-        "backends": [
-          "mlx"
-        ],
-        "tags": [
-          "reason",
-          "mlx",
-          "gpu",
-          "batch"
-        ],
-        "date": 1786293331
       },
       {
         "name": "RWKV7-G1d 0.1B (CoreML)",

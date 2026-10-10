@@ -23,10 +23,10 @@
     "generation": "g1k",
     "sourceDate": "20260930",
     "contextLength": 25600,
-    "releaseMode": "publication_in_progress",
-    "artifactCount": 39,
-    "catalogArtifactCount": 39,
-    "catalogRowCount": 41,
+    "releaseMode": "complete_release",
+    "artifactCount": 40,
+    "catalogArtifactCount": 40,
+    "catalogRowCount": 42,
     "includedSizes": [
       "1.5B",
       "2.9B",
@@ -1202,14 +1202,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "c15b559faf6566cbd1dee2276298a25ec437b625",
+          "revision": "11603e87da31cb80ad9d03986a515d82f3563517",
           "path": "artifacts/rwkv7/chat/1.5b/mlx/rwkv7-g1k-1.5b-20260930-ctx25600-mlx-int6-swift-configfix.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "d023e368749d10d84502ccba8ba8950e2fd3b0d8",
+            "revision": "2966df38b3336a1ac6d4bb47da6d3ed2f8f72a05",
             "path": "artifacts/rwkv7/chat/1.5b/mlx/rwkv7-g1k-1.5b-20260930-ctx25600-mlx-int6-swift-configfix.zip",
             "stage": "formal"
           }
@@ -1232,14 +1232,14 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "c15b559faf6566cbd1dee2276298a25ec437b625",
+          "revision": "11603e87da31cb80ad9d03986a515d82f3563517",
           "path": "artifacts/rwkv7/chat/2.9b/mlx/rwkv7-g1k-2.9b-20260930-ctx25600-mlx-int6-swift-configfix.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "d023e368749d10d84502ccba8ba8950e2fd3b0d8",
+            "revision": "2966df38b3336a1ac6d4bb47da6d3ed2f8f72a05",
             "path": "artifacts/rwkv7/chat/2.9b/mlx/rwkv7-g1k-2.9b-20260930-ctx25600-mlx-int6-swift-configfix.zip",
             "stage": "formal"
           }
@@ -1262,15 +1262,44 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "c15b559faf6566cbd1dee2276298a25ec437b625",
+          "revision": "11603e87da31cb80ad9d03986a515d82f3563517",
           "path": "artifacts/rwkv7/chat/7.2b/mlx/rwkv7-g1k-7.2b-20260930-ctx25600-mlx-int6-swift-configfix.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "d023e368749d10d84502ccba8ba8950e2fd3b0d8",
+            "revision": "2966df38b3336a1ac6d4bb47da6d3ed2f8f72a05",
             "path": "artifacts/rwkv7/chat/7.2b/mlx/rwkv7-g1k-7.2b-20260930-ctx25600-mlx-int6-swift-configfix.zip",
+            "stage": "formal"
+          }
+        }
+      },
+      {
+        "modelSize": 13.3,
+        "backend": "mlx",
+        "filename": "rwkv7-g1k-13.3b-20260930-ctx25600-mlx-int6-swift-configfix.zip",
+        "fileSize": 10911560760,
+        "sha256": "990ab2d9f7f416400a633c5bf70dfa8243ff7bd29c4c4651ae7cd69d6ec64f8f",
+        "quantization": "W6",
+        "quantizationRecipe": "MLX int6 group64 with compatible Swift configuration",
+        "platforms": [
+          "macos"
+        ],
+        "catalogNames": [
+          "RWKV7-G1k 13.3B (MLX)"
+        ],
+        "distribution": {
+          "repository": "HaloWang1991/rwkv-weights",
+          "revision": "11603e87da31cb80ad9d03986a515d82f3563517",
+          "path": "artifacts/rwkv7/chat/13.3b/mlx/rwkv7-g1k-13.3b-20260930-ctx25600-mlx-int6-swift-configfix.zip",
+          "stage": "formal"
+        },
+        "mirrors": {
+          "huggingface": {
+            "repository": "HaloWang/rwkv-weights",
+            "revision": "2966df38b3336a1ac6d4bb47da6d3ed2f8f72a05",
+            "path": "artifacts/rwkv7/chat/13.3b/mlx/rwkv7-g1k-13.3b-20260930-ctx25600-mlx-int6-swift-configfix.zip",
             "stage": "formal"
           }
         }
@@ -1278,14 +1307,7 @@
     ],
     "catalogUpdatePolicy": "Additional verified G1k backend cohorts are distributed through build-matched remote configuration without changing App binary identity.",
     "requiredArtifactCount": 40,
-    "pendingArtifacts": [
-      {
-        "backend": "mlx",
-        "modelSize": 13.3,
-        "fileSize": 10911560760,
-        "sha256": "990ab2d9f7f416400a633c5bf70dfa8243ff7bd29c4c4651ae7cd69d6ec64f8f"
-      }
-    ]
+    "pendingArtifacts": []
   },
   "resources": {
     "filter": {
