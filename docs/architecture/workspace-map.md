@@ -31,7 +31,7 @@ Use it to choose the right edit location before changing code
 | Real local Agent file action, workspace authorization, ordinary-chat routing, or approval | `docs/contracts/local_agent_file_actions.md`, `lib/func/agent_local_file_host.dart`, `lib/func/agent_local_file_intent.dart`, `lib/store/agent.dart`, `lib/store/chat_input_send.dart`, `lib/store/chat_local_agent.dart`, `lib/widgets/chat/agent_local_file_approval_card.dart` | Route clear natural-language file requests from ordinary chat while keeping the real-file host separate from the deterministic evaluation sandbox and restricting every path to the selected workspace |
 | OpenAI-compatible local API | `lib/store/api_server.dart`, `assets/api_server/dashboard.html` | Keep HTTP behavior testable without the app UI where possible |
 | iOS or macOS build issue | `pubspec.yaml`, `ios/Podfile`, `macos/Podfile`, Xcode project files | This repo currently disables Flutter project-level SPM |
-| Release or upload issue | `fastlane/Fastfile`, `fastlane/actions`, `.github/workflows`, `scripts` | Resume from the smallest successful artifact boundary |
+| Release or upload issue | `docs/contracts/app_distribution.md`, `release.json`, `tools/README.md`, `.github/workflows`, `scripts` | Use native build/provider tools and resume from the smallest verified artifact boundary |
 
 ## Coding Agent Flow
 

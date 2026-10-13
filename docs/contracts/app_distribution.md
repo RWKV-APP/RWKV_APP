@@ -53,9 +53,8 @@ Use `.flutter-version`, `node tools/check_flutter_toolchain.mjs` and
 `node tools/flutter.mjs` for that toolchain. Windows can be operated from the
 coordinating client; a separate planning Agent is not a build requirement.
 
-Fastlane is retired for this current release workflow. The Fastlane descriptions
-below retain historical release provenance; they are not the entrypoint for a
-new release. Use Flutter's native build commands, the platform packager
+Fastlane is retired and its implementation has been removed. Use Flutter's
+native build commands, the platform packager
 and the existing provider upload scripts. Before any new release effect, freeze
 the new version/build and toolchain in `release.json`, pin the reviewed adapter
 and native artifacts, and verify the exact source snapshot on both hosts.
@@ -70,7 +69,7 @@ Android retains the 16 KB-aligned MTK libraries shipped in the preceding Play
 release, with their own immutable archive pinned in the adapter manifest.
 Other platform native files retain their existing digests.
 Core AI experiments are excluded. Public release notes are “性能优化” and their
-translations. Earlier release and Fastlane sections below are historical.
+translations. Earlier release identities below retain historical provenance.
 
 ## SPEC-RWKV-APP-BINARY-DISTRIBUTION
 
@@ -84,9 +83,11 @@ The default ModelScope dataset is `HaloWang1991/rwkv-chat` on the `master`
 branch. Deployments may override the endpoint, repository ID, or revision by
 environment variable without changing the artifact mapping contract.
 
-GitHub Actions owns Linux and Windows package publication. Fastlane owns Android
-APK and macOS DMG publication. Authentication tokens are supplied only through
-runtime secrets and must never be written to tracked files or command output.
+GitHub Actions provides Linux and Windows package workflows. Android and Apple
+builds use native Flutter/platform tools; publication uses the existing provider
+scripts and official platform tools. Fastlane is not a build or upload dependency.
+Authentication tokens are supplied only through private runtime configuration
+and must never be written to tracked files or command output.
 
 The bundled `.env` contains only the runtime `x-api-key`. Keep signing,
 provider-upload and server credentials outside App resources. The shared
@@ -103,7 +104,7 @@ APK, macOS DMG, Linux x64 tar.gz/AppImage and Windows x64/ARM64 ZIP/installer
 filenames, and reject metadata before any release mutation. Wildcard batches
 must pass that check in full before uploading their first file.
 
-Before Fastlane creates and pushes a release tag, its release commit must include
+Before an authorized release tag is created and pushed, its source commit must include
 every changed or untracked source file needed by a clean checkout. Generated
 release artwork remains local and is excluded from that commit. A clean checkout
 of the tag must therefore contain every imported source file before GitHub
@@ -150,81 +151,46 @@ deferred to a separate Apple continuation and do not block this delivery.
 Apple application build targets are exactly `macos` and `ios`. iPhone and iPad
 use the same iOS build; iPadOS is never a separate lane or package target.
 
-The Apple-only Fastlane entrypoint continues the same release on an Apple Silicon
-Mac using Flutter 3.47.2 and its bundled Dart 3.13.2. The current
-`release.json.flutterVersion` is the build requirement for this continuation;
-already published packages retain their original toolchain provenance.
-`release.json.apple` declares the continuation source branch, integration
-branch, and original published base tag/commit. The continuation may include
-subsequent catalog and Apple fixes without moving the original tag or changing
-the provenance of already published non-Apple packages. Before authentication,
-the lane checks the App fetch/push repository, clean worktree, exact branch and
-remote tip, integration ancestry, unchanged base tag, and fixed Flutter/tool
-prerequisites. The pinned adapter and native commits must still be the remote
-tips of their declared branches; newer commits require a reviewed pin update.
-The immutable native release tag must resolve to its declared commit.
+Current Apple builds use the frozen source and toolchain through native Flutter,
+Xcode, CocoaPods, signing and notarization tools. Verify source, dependency and
+native-library identities before packaging; preserve unrelated changes and
+previously published tags and bytes. The 4.8.0 identity above is historical,
+not a current branch or toolchain selection.
 
-After authentication, it prepares the clean sibling adapter at the pinned
-commit and verifies each iOS/macOS native file's full size and SHA-256 against
-the pinned manifest. Unexpected files inside the native packaging scope block
-the build. Flutter package metadata and CocoaPods plugin links must resolve to
-that same sibling checkout. Every fresh platform build cleans prior outputs,
-enforces the committed dependency lockfile, and checks source and native inputs
-again before publication. Generated release artwork may differ; source code and
-the dependency lockfile may not. A run-local identity receipt survives build
-cleanup and records the App commit, manifest digest, dependency pins and native
-file digests without personal paths or credentials.
-On exit the lane restores only its own tracked generated artwork when the file
-still matches the captured generated digest; subsequent user changes and
-untracked files remain intact, and no whole-worktree reset is permitted.
-
-The lane publishes a signed and notarized macOS DMG to the existing GitHub
-release, ModelScope and Hugging Face, and uploads the matching iOS version/build
-to TestFlight. Every enabled provider requires credentials before work starts.
-It does not bump the version, run the all-platform lane, move an existing tag,
-or replace accepted packages from other platforms. Resume checks completed
-remote artifacts before skipping stages. Existing macOS and TestFlight builds
-also require local provenance receipts matching the exact run identity and
-artifact digest; a matching version/build alone is insufficient. Receipts live
-under ignored `tools/output/release-provenance/`, outside Flutter build cleanup,
-and never become GitHub assets. The macOS receipt is saved before package upload
-so an interrupted upload can resume by comparing the remote package digest.
-The iOS receipt is saved after a successful TestFlight upload. On another host,
-transfer the exact receipts privately with the release handoff; missing or
-conflicting evidence stops reuse with a local recovery instruction, without
-requesting or uploading a public receipt. Apple build, signing and TestFlight
-acceptance remain pending until actually performed on a capable Mac.
+For an authorized release, build with the committed dependency lock and the
+pinned adapter/native inputs. Sign and notarize the macOS DMG with native Apple
+tools, then use the existing GitHub, ModelScope and Hugging Face upload scripts.
+Upload iOS through Apple's native provider tools and verify processing,
+TestFlight distribution and App Store review independently. Existing package
+or build-number presence alone does not establish provenance or completion.
+Keep identity receipts and full artifact digests in ignored local output or
+the private release handoff. Never publish those receipts as package assets.
 
 ## SPEC-RWKV-APPLE-RELEASE-AUTH-GATE
 
-TestFlight release automation defaults to a foreground Apple ID
-preauthentication stage. Before changing a version, building an application,
-or uploading any release artifact, the lane starts a fresh, process-local
-Spaceship session and performs App Store Connect login. The stage does not
-read an IPA, build an IPA, invoke an upload action, or send any artifact to App
-Store Connect. If Apple requires two-factor verification, the trusted-device
-code is therefore requested and entered before the long-running release work.
-Apple remains the authority on whether a fresh login actually requires a code.
+Apple authentication remains a release prerequisite. Before version changes,
+builds or uploads for a TestFlight release, perform fresh, artifact-free
+provider authentication in a visible foreground terminal. The default native
+Apple ID mode uses an application-specific password from private runtime
+configuration or Keychain. Pass a password by environment/Keychain reference,
+never as a literal process argument, tracked file or log value.
 
-`tools/apple_auth.command` provides a standalone foreground Apple ID check via
-the existing `ios_auth_preflight` lane. It authenticates only, even when the
-environment selects API-key mode. It accepts no release arguments, requires
-the installed locked Ruby bundle, and performs no dependency installation,
-source synchronization, build, signing, or publication. It can run before local
-source changes are committed. The process removes its temporary session on
-exit; a later release performs fresh authentication in its own process.
+After loading the existing private release environment, run
+`tools/apple_auth.command` in that terminal. It accepts no arguments and invokes
+`xcrun altool --list-providers` with `APPLE_ID_EMAIL` and an environment reference
+to `MACOS_APP_PASSWORD`. It does not read an IPA, prepare source, install
+dependencies, build, sign, upload or change Git state. Missing configuration,
+a redirected launch or native authentication failure stops this check.
+A successful standalone check does not prove signing or publication and does
+not waive a fresh authentication check before a later release.
 
-The default stage must run in a visible foreground TTY. It isolates the release
-from cached Spaceship cookies and `FASTLANE_SESSION`, disables automatic SMS
-selection, and retains the newly verified cookie only for the current Fastlane
-process. Later TestFlight work in that process reuses the verified session.
-The temporary cookie directory is private, is never printed, and is removed
-after the upload or when the process exits. Authentication failure stops the
-lane before any version, build, commit, push, or upload effect.
+The release must retain its explicitly selected authentication mode and private
+credential references. No cached web session substitutes for the native
+preflight. If Apple's interactive flow requests a verification code or SMS
+choice, the operator enters or selects it; automation must not do so or retry
+that login automatically. Authentication failure stops before release effects.
 
-App Store Connect API-key authentication remains an optional explicit mode for
-non-interactive operation. It is selected with `apple_auth_mode:api_key` or
-`RWKV_APPLE_AUTH_MODE=api_key`; only that mode requires the key ID, issuer ID,
-and private-key path or content. The private key remains outside Git and logs.
-Merely having API-key variables in the environment does not override the
-default Apple ID preauthentication path.
+App Store Connect API-key authentication remains an optional, explicitly
+selected non-interactive mode. Validate the complete key ID, issuer and private
+key configuration before effects; keep key material outside Git and logs.
+Presence of API-key environment variables alone does not select that mode.
