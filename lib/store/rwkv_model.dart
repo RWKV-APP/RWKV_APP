@@ -127,6 +127,10 @@ extension $RWKVModel on _RWKVModel {
       throw Exception("Backend is null");
     }
 
+    if (backend == Backend.coreai && (!fileInfo.fromLocalCoreAI || !fileInfo.available)) {
+      throw Exception('Core AI requires a supported macOS Debug runtime and a local model directory');
+    }
+
     final enableReasoning = fileInfo.isReasoning;
 
     if (backend == Backend.mlx || backend == Backend.coreml) {

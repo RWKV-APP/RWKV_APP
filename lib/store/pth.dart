@@ -15,6 +15,7 @@ FileInfo _fileInfoFromLocalModelFile(LocalModelFile file) {
   final backend = switch (file.kind) {
     LocalModelFileKind.pth => Backend.webRwkv,
     LocalModelFileKind.rwkvGguf => Backend.llamacpp,
+    LocalModelFileKind.coreai => Backend.coreai,
   };
   final modelSize = _modelSizeFromSizeLabel(file.ggufSizeLabel);
   return FileInfo(
@@ -23,16 +24,18 @@ FileInfo _fileInfoFromLocalModelFile(LocalModelFile file) {
     fileSize: file.fileSize,
     fileType: FileType.weights,
     raw: file.path,
-    isDebug: false,
+    isDebug: file.kind == LocalModelFileKind.coreai,
+    supportedPlatforms: file.kind == LocalModelFileKind.coreai ? const ['macos'] : const [],
     backend: backend,
     sha256: null,
     modelSize: modelSize,
-    quantization: file.ggufQuantization,
+    quantization: file.coreAIPrecision ?? file.ggufQuantization,
     updatedAt: null,
     timestamp: null,
     date: null,
     fromPthFile: file.kind == LocalModelFileKind.pth,
     fromLocalGgufFile: file.kind == LocalModelFileKind.rwkvGguf,
+    fromLocalCoreAI: file.kind == LocalModelFileKind.coreai,
     ggufArchitecture: file.ggufArchitecture,
     ggufFileType: file.ggufFileType,
     ggufSizeLabel: file.ggufSizeLabel,
@@ -256,9 +259,10 @@ extension $Pth on _Pth {
       return;
     }
 
-    final computeFuture = compute<String, LocalModelDiscoveryResult>(
-      discoverLocalModelFiles,
-      folder.path,
+    final includeCoreAI = kDebugMode && Platform.isMacOS && P.rwkvBackend.availableBackendNames.q.contains('coreai');
+    final computeFuture = compute<(String, bool), LocalModelDiscoveryResult>(
+      (request) => discoverLocalModelFiles(request.$1, includeCoreAI: request.$2),
+      (folder.path, includeCoreAI),
       debugLabel: 'refreshFolder',
     );
 

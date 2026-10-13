@@ -244,9 +244,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_eval_mode_assisted": MessageLookupByLibrary.simpleMessage(
       "Assisted",
     ),
-    "agent_eval_mode_assisted_description": MessageLookupByLibrary.simpleMessage(
-      "Allows audited host repairs for diagnosis. Reports both strict and assisted scores.",
-    ),
+    "agent_eval_mode_assisted_description":
+        MessageLookupByLibrary.simpleMessage(
+          "Allows audited host repairs for diagnosis. Reports both strict and assisted scores.",
+        ),
     "agent_eval_mode_strict": MessageLookupByLibrary.simpleMessage("Strict"),
     "agent_eval_mode_strict_description": MessageLookupByLibrary.simpleMessage(
       "Scores raw model behavior. Any host repair, coercion, truncation, or forced tool call fails strict scoring.",
@@ -804,9 +805,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear_application_cache": MessageLookupByLibrary.simpleMessage(
       "Clear Cache",
     ),
-    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
-      "Clear cached app preferences and local config? Chat history, exported files, and weight files will not be deleted. Custom model folders will remain linked.",
-    ),
+    "clear_application_cache_confirmation":
+        MessageLookupByLibrary.simpleMessage(
+          "Clear cached app preferences and local config? Chat history, exported files, and weight files will not be deleted. Custom model folders will remain linked.",
+        ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage(
       "Clear Memory Cache",
     ),
@@ -902,9 +904,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "This folder has no local models for Chat",
     ),
     "current_model": m26,
-    "current_model_from_latest_json_not_pth": MessageLookupByLibrary.simpleMessage(
-      "The current model is from latest.json config, with no local model file loaded",
-    ),
+    "current_model_from_latest_json_not_pth":
+        MessageLookupByLibrary.simpleMessage(
+          "The current model is from latest.json config, with no local model file loaded",
+        ),
     "current_progress": m27,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
       "Current task Tab ID",
@@ -972,9 +975,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "Decode Params for Each Message",
     ),
-    "decode_params_for_each_message_detail": MessageLookupByLibrary.simpleMessage(
-      "The decode parameters for each message in the batch. Click to edit the decode parameters for each message in batch inference.",
-    ),
+    "decode_params_for_each_message_detail":
+        MessageLookupByLibrary.simpleMessage(
+          "The decode parameters for each message in the batch. Click to edit the decode parameters for each message in batch inference.",
+        ),
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "Decode Speed (tokens per second)",
     ),
@@ -1124,7 +1128,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
       "Fake batch inference benchmark",
     ),
-    "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage(
       "File already exists",
     ),

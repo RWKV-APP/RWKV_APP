@@ -694,9 +694,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "clear": MessageLookupByLibrary.simpleMessage("지우기"),
     "clear_application_cache": MessageLookupByLibrary.simpleMessage("캐시 지우기"),
-    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
-      "앱 설정과 로컬 구성 캐시를 지우시겠습니까? 채팅 기록, 내보낸 파일, 가중치 파일은 삭제되지 않습니다. 사용자 지정 모델 폴더 연결은 유지됩니다.",
-    ),
+    "clear_application_cache_confirmation":
+        MessageLookupByLibrary.simpleMessage(
+          "앱 설정과 로컬 구성 캐시를 지우시겠습니까? 채팅 기록, 내보낸 파일, 가중치 파일은 삭제되지 않습니다. 사용자 지정 모델 폴더 연결은 유지됩니다.",
+        ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage("메모리 캐시 지우기"),
     "clear_text": MessageLookupByLibrary.simpleMessage("텍스트 지우기"),
     "click_here_to_select_a_new_model": MessageLookupByLibrary.simpleMessage(
@@ -972,7 +973,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
       "병렬 추론 UI Benchmark",
     ),
-    "feedback": MessageLookupByLibrary.simpleMessage("문제 보고"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("파일이 이미 존재합니다"),
     "file_not_found": MessageLookupByLibrary.simpleMessage("파일을 찾을 수 없습니다"),
     "file_not_supported": MessageLookupByLibrary.simpleMessage(

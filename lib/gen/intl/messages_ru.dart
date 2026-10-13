@@ -247,9 +247,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_eval_mode_assisted": MessageLookupByLibrary.simpleMessage(
       "С поддержкой",
     ),
-    "agent_eval_mode_assisted_description": MessageLookupByLibrary.simpleMessage(
-      "Разрешает регистрируемые исправления среды для диагностики и показывает строгий и вспомогательный результаты.",
-    ),
+    "agent_eval_mode_assisted_description":
+        MessageLookupByLibrary.simpleMessage(
+          "Разрешает регистрируемые исправления среды для диагностики и показывает строгий и вспомогательный результаты.",
+        ),
     "agent_eval_mode_strict": MessageLookupByLibrary.simpleMessage("Строгий"),
     "agent_eval_mode_strict_description": MessageLookupByLibrary.simpleMessage(
       "Оценивает исходное поведение модели. Исправления, преобразования типов, усечение или принудительный вызов инструмента приводят к провалу строгой оценки.",
@@ -837,9 +838,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear_application_cache": MessageLookupByLibrary.simpleMessage(
       "Очистить кэш",
     ),
-    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
-      "Очистить кэш настроек приложения и локальной конфигурации? История чатов, экспортированные файлы и файлы весов не будут удалены. Пользовательские папки моделей останутся подключенными.",
-    ),
+    "clear_application_cache_confirmation":
+        MessageLookupByLibrary.simpleMessage(
+          "Очистить кэш настроек приложения и локальной конфигурации? История чатов, экспортированные файлы и файлы весов не будут удалены. Пользовательские папки моделей останутся подключенными.",
+        ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage(
       "Очистить кэш в памяти",
     ),
@@ -937,9 +939,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "В этой папке нет локальных моделей для Chat",
     ),
     "current_model": m26,
-    "current_model_from_latest_json_not_pth": MessageLookupByLibrary.simpleMessage(
-      "Текущая модель загружена из конфигурации latest.json, локальный файл модели не загружен",
-    ),
+    "current_model_from_latest_json_not_pth":
+        MessageLookupByLibrary.simpleMessage(
+          "Текущая модель загружена из конфигурации latest.json, локальный файл модели не загружен",
+        ),
     "current_progress": m27,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
       "ID вкладки текущей задачи",
@@ -1013,9 +1016,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "Параметры декодирования для каждого сообщения",
     ),
-    "decode_params_for_each_message_detail": MessageLookupByLibrary.simpleMessage(
-      "Параметры декодирования для каждого сообщения в пакете. Нажмите, чтобы изменить параметры для каждого сообщения при пакетном выводе.",
-    ),
+    "decode_params_for_each_message_detail":
+        MessageLookupByLibrary.simpleMessage(
+          "Параметры декодирования для каждого сообщения в пакете. Нажмите, чтобы изменить параметры для каждого сообщения при пакетном выводе.",
+        ),
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "Скорость декодирования (токенов в секунду)",
     ),
@@ -1177,7 +1181,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
       "UI benchmark batch inference",
     ),
-    "feedback": MessageLookupByLibrary.simpleMessage("Обратная связь"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage(
       "Файл уже существует",
     ),

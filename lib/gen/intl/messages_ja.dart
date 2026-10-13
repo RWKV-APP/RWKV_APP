@@ -697,9 +697,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear_application_cache": MessageLookupByLibrary.simpleMessage(
       "キャッシュをクリア",
     ),
-    "clear_application_cache_confirmation": MessageLookupByLibrary.simpleMessage(
-      "アプリ設定とローカル設定キャッシュをクリアしますか？チャット履歴、エクスポートファイル、重みファイルは削除されません。カスタムモデルフォルダのリンクは保持されます。",
-    ),
+    "clear_application_cache_confirmation":
+        MessageLookupByLibrary.simpleMessage(
+          "アプリ設定とローカル設定キャッシュをクリアしますか？チャット履歴、エクスポートファイル、重みファイルは削除されません。カスタムモデルフォルダのリンクは保持されます。",
+        ),
     "clear_memory_cache": MessageLookupByLibrary.simpleMessage("メモリキャッシュをクリア"),
     "clear_text": MessageLookupByLibrary.simpleMessage("テキストを消去"),
     "click_here_to_select_a_new_model": MessageLookupByLibrary.simpleMessage(
@@ -981,7 +982,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
       "並列推論 UI Benchmark",
     ),
-    "feedback": MessageLookupByLibrary.simpleMessage("フィードバック"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("ファイルは既に存在します"),
     "file_not_found": MessageLookupByLibrary.simpleMessage("ファイルが見つかりません"),
     "file_not_supported": MessageLookupByLibrary.simpleMessage(
