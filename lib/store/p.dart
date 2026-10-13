@@ -98,6 +98,7 @@ import 'package:zone/func/transfer_all_files_in_dir.dart';
 import 'package:zone/func/unzip.dart';
 import 'package:zone/func/vision_system_prompt.dart';
 import 'package:zone/func/web_demo.dart';
+import 'package:zone/func/web_demo_cloud.dart';
 import 'package:zone/func/web_search_prompt.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/io.dart';

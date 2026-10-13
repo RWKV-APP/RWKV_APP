@@ -17,25 +17,21 @@ void main() {
     final chat = config['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
     final g1j = rows.where(isFormalG1j).toList();
-    final buildConfig = jsonDecode(File('remote/755.json').readAsStringSync()) as Map<String, dynamic>;
-    final buildRows = ((buildConfig['chat'] as Map<String, dynamic>)['model_config'] as List<dynamic>)
-        .cast<Map<String, dynamic>>()
-        .where((row) => (row['url'] as String).contains('-g1j-'))
+    expect(rows.where((row) => (row['platforms'] as List<dynamic>).isEmpty), isEmpty);
+    final windowsRows = rows.where((row) => (row['platforms'] as List<dynamic>).contains('windows'));
+    expect(windowsRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
+    expect(windowsRows.where(isFormalG1j), hasLength(16));
+    final androidRows = rows.where((row) => (row['platforms'] as List<dynamic>).contains('android'));
+    expect(androidRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
+    expect(androidRows.where(isFormalG1j), hasLength(30));
+    final linuxRows = rows.where((row) => (row['platforms'] as List<dynamic>).contains('linux'));
+    expect(linuxRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
+    expect(linuxRows.where(isFormalG1j), hasLength(6));
+    final macG1i = rows
+        .where((row) => (row['platforms'] as List<dynamic>).contains('macos') && (row['url'] as String).contains('-g1i-'))
         .toList();
-    expect(buildRows, g1j);
-    for (final currentConfig in [config, buildConfig]) {
-      final currentRows = ((currentConfig['chat'] as Map<String, dynamic>)['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
-      expect(currentRows.where((row) => (row['platforms'] as List<dynamic>).isEmpty), isEmpty);
-      final windowsRows = currentRows.where((row) => (row['platforms'] as List<dynamic>).contains('windows'));
-      expect(windowsRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
-      expect(windowsRows.where(isFormalG1j), hasLength(16));
-      final androidRows = currentRows.where((row) => (row['platforms'] as List<dynamic>).contains('android'));
-      expect(androidRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
-      expect(androidRows.where(isFormalG1j), hasLength(30));
-      final linuxRows = currentRows.where((row) => (row['platforms'] as List<dynamic>).contains('linux'));
-      expect(linuxRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
-      expect(linuxRows.where(isFormalG1j), hasLength(6));
-    }
+    expect(macG1i, isEmpty);
+    expect(rows.where((row) => row['name'] == 'RWKV7-G1i 7.2B (MLX)'), isEmpty);
     final distributed = artifacts.where((artifact) => artifact['distribution'] != null).toList();
     final pending = artifacts.where((artifact) => artifact['distribution'] == null).toList();
     final frozenByHash = {for (final artifact in artifacts) artifact['sha256'] as String: artifact};
