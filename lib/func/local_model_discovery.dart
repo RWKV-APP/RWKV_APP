@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:convert';
 import 'dart:io';
 
 // Package imports:
@@ -10,6 +11,7 @@ import 'package:zone/func/gguf_metadata.dart';
 enum LocalModelFileKind {
   pth,
   rwkvGguf,
+  coreai,
 }
 
 class LocalModelFile {
@@ -29,6 +31,7 @@ class LocalModelFile {
   final int? ggufBlockCount;
   final int? ggufEmbeddingLength;
   final int? ggufFeedForwardLength;
+  final String? coreAIPrecision;
 
   const LocalModelFile({
     required this.path,
@@ -47,6 +50,7 @@ class LocalModelFile {
     required this.ggufBlockCount,
     required this.ggufEmbeddingLength,
     required this.ggufFeedForwardLength,
+    this.coreAIPrecision,
   });
 }
 
@@ -67,8 +71,12 @@ bool isLocalModelFileExtension(String filePath) {
   return false;
 }
 
-Future<LocalModelDiscoveryResult> discoverLocalModelFiles(String folderPath) async {
+Future<LocalModelDiscoveryResult> discoverLocalModelFiles(String folderPath, {bool includeCoreAI = false}) async {
   final directory = Directory(folderPath);
+  if (includeCoreAI) {
+    final model = await _createCoreAIModelFile(directory);
+    if (model != null) return LocalModelDiscoveryResult(files: [model], hasError: false);
+  }
   late final List<FileSystemEntity> entities;
   try {
     entities = directory.listSync();
@@ -78,6 +86,11 @@ Future<LocalModelDiscoveryResult> discoverLocalModelFiles(String folderPath) asy
 
   final files = <LocalModelFile>[];
   for (final entity in entities) {
+    if (includeCoreAI && entity is Directory) {
+      final model = await _createCoreAIModelFile(entity);
+      if (model != null) files.add(model);
+      continue;
+    }
     if (entity is! File) continue;
 
     final extension = p.extension(entity.path).toLowerCase();
@@ -95,6 +108,95 @@ Future<LocalModelDiscoveryResult> discoverLocalModelFiles(String folderPath) asy
 
   files.sort((a, b) => b.fileSize.compareTo(a.fileSize));
   return LocalModelDiscoveryResult(files: files, hasError: false);
+}
+
+Future<LocalModelFile?> _createCoreAIModelFile(Directory directory) async {
+  try {
+    final configFile = File(p.join(directory.path, 'config.json'));
+    if (!await configFile.exists() || await configFile.length() > 65536) return null;
+    final config = jsonDecode(await configFile.readAsString());
+    if (config is! Map<String, dynamic>) return null;
+    if (config['format_version'] != 1 || config['backend'] != 'coreai' || config['model_version'] != 7) return null;
+    if (!['float16', 'float32'].contains(config['precision']) || config['model_file'] != 'rwkv.aimodel') return null;
+    final quantization = config['quantization'] ?? 'none';
+    if (!['none', 'w4', 'w8', 'w4-w8', 'lut6', 'lut6-w8'].contains(quantization)) return null;
+    final precision = config['precision'] == 'float16' ? 'FP16' : 'FP32';
+    String precisionLabel = precision;
+    if (quantization != 'none') {
+      final groupSize = config['quantization_group_size'];
+      final activation = config['activation_precision'];
+      if (config['precision'] != 'float32' ||
+          !['float32', 'mixed_float16_float32'].contains(activation) ||
+          config['state_precision'] != 'float32') {
+        return null;
+      }
+      if (activation == 'mixed_float16_float32' && config['matmul_precision'] != 'float16') return null;
+      if (groupSize is! int || ![16, 32, 64, 128].contains(groupSize)) return null;
+      final isLut = ['lut6', 'lut6-w8'].contains(quantization);
+      if (isLut) {
+        if (config['quantization_scheme'] != 'kmeans_lut' || config['quantization_granularity'] != 'per_grouped_channel') return null;
+      } else if (config['quantization_scheme'] != 'symmetric' || ![null, 'per_block'].contains(config['quantization_granularity'])) {
+        return null;
+      }
+      final activationLabel = activation == 'float32' ? 'A32' : 'A16/32';
+      precisionLabel = '${quantization.toString().toUpperCase()}$activationLabel / S32 / ${isLut ? 'cg' : 'g'}$groupSize';
+      if (quantization == 'lut6-w8') {
+        final fallback = config['integer_fallback'];
+        final threshold = config['lut_weight_num_threshold'];
+        final prepassThreshold = config['integer_prepass_weight_num_threshold'];
+        if (fallback is! Map<String, dynamic> ||
+            fallback['bits'] != 8 ||
+            fallback['scheme'] != 'symmetric' ||
+            fallback['group_size'] != 32 ||
+            threshold is! int ||
+            threshold < 1024 ||
+            (prepassThreshold != null && (prepassThreshold is! int || prepassThreshold <= threshold))) {
+          return null;
+        }
+        precisionLabel = 'LUT6+W8$activationLabel / S32 / cg$groupSize,g32';
+      }
+      if (quantization == 'w4-w8') {
+        final fallback = config['integer_fallback'];
+        if (fallback is! Map<String, dynamic> ||
+            fallback['bits'] != 8 ||
+            fallback['scheme'] != 'symmetric' ||
+            fallback['group_size'] != 32 ||
+            config['w4_weight_num_threshold'] != 8388608 ||
+            config['integer_prepass_weight_num_threshold'] != 67108864) {
+          return null;
+        }
+        precisionLabel = 'W4+W8$activationLabel / S32 / g$groupSize,g32';
+      }
+    }
+    final asset = File(p.join(directory.path, 'rwkv.aimodel', 'main.mlirb'));
+    if (await FileSystemEntity.type(asset.path, followLinks: false) != FileSystemEntityType.file) return null;
+    final size = await asset.length();
+    if (size == 0) return null;
+    final name = p.basename(directory.path);
+    return LocalModelFile(
+      path: directory.path,
+      fileName: name,
+      displayName: name,
+      fileSize: size,
+      kind: LocalModelFileKind.coreai,
+      coreAIPrecision: precisionLabel,
+      ggufArchitecture: null,
+      ggufName: null,
+      ggufFileType: null,
+      ggufSizeLabel: null,
+      ggufQuantization: null,
+      ggufQuantizationVersion: null,
+      ggufArchitectureVersion: null,
+      ggufContextLength: null,
+      ggufBlockCount: null,
+      ggufEmbeddingLength: null,
+      ggufFeedForwardLength: null,
+    );
+  } on FileSystemException {
+    return null;
+  } on FormatException {
+    return null;
+  }
 }
 
 Future<LocalModelFile?> discoverLocalModelFile(String filePath) async {

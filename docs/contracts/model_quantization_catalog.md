@@ -25,13 +25,23 @@ Every maintained `chat.model_config` row must declare at least one platform.
 When a platform update leaves `platforms: []`, remove the entire model row
 from the catalog instead of retaining an entry without a consumer.
 
+MLX 7.2B models are excluded from iOS in every application configuration,
+including `remote/latest.json`, all retained build catalogs, and
+`release.json.weights.artifacts`. Remove only `ios` from those platform lists,
+preserving remaining consumers and artifact identities. This size/backend
+restriction also applies to legacy cohorts whose other platform scopes remain
+retained.
+
 From build 755, a remote or cached configuration replaces the bundled catalog
 only when its integer `configBuild` equals the running App build number. An
 unversioned, older, or future-build response is ignored and the matching bundled
-catalog remains usable. This prevents a server's older `latest.json` fallback
-from removing the current release's models. Publishing build-755 configuration
-requires the same marker in `755.json` and `latest.json`; preserve the previously
-published catalog as `754.json` before changing the server's latest fallback.
+catalog remains usable. This existing client acceptance check is separate
+from server-side catalog selection. The last numbered compatibility boundary
+is `754.json`; `755.json` is removed locally and from the online configuration
+store. Requests above that boundary select `latest.json` unless a new
+compatibility boundary is explicitly authorized. Keep the current latest
+configuration compatible with build 755; removing the numbered file does not
+change the client acceptance check.
 
 The catalog `quantization` field is a user-facing weight label, but named
 technical formats remain distinguishable from generic weight-width aliases.
@@ -143,6 +153,13 @@ real-device acceptance remain separate evidence states.
 
 ## SPEC-RWKV-PALM-RUNTIME — Palm As An Optional Bundled Backend
 
+The rolling `latest.json` catalog displays Palm models by model family and
+size, with `CPU++` in `tags` and the weight format in `quantization`. Display
+names omit Palm branding. The technical `backends: ["palm"]` value and
+artifact identities remain unchanged. Retained build catalogs may preserve
+their earlier display names; release metadata keeps the applicable name
+aliases for the same artifact.
+
 Palm is an optional CPU inference backend selected by the catalog value `palm`.
 It is compiled into the ordinary RWKV Chat native runtime artifacts for
 Android, iOS, macOS, Windows, and Linux. Palm remains independently selectable;
@@ -184,13 +201,12 @@ are fixed per generation, model size, backend and compatible SoC target:
 | MTK NP9 / MT6993 | A16W8 | A16W4 VSQ32T8 | Deferred | Deferred |
 
 Generic catalog labels remain `W4`, `W6` and `W8`; artifact identities retain
-the full technical recipe. The 13.3B rows exclude iOS, and CoreML 7.2B remains
+the full technical recipe. The 13.3B rows exclude iOS, and CoreML and MLX 7.2B remain
 macOS-only. Other existing G1i platform and SoC mappings provide the intended
 consumer scope; they do not transfer G1i runtime acceptance to G1J. Compatible
 SoC aliases may share one artifact without creating an additional quantization
-choice. Existing G1i rows remain available outside the Windows, Android, and
-Linux supersession scopes below while G1J promotion and consumer verification
-are incomplete.
+choice. Existing G1i rows remain available only outside the Windows, Android,
+Linux, macOS, shared 7.2B MLX, and equivalent iOS successor scopes below.
 Build-754 configuration retains its legacy G1i cohort.
 
 This is an explicitly scoped partial release. MTK NP9 7.2B and 13.3B are
@@ -259,9 +275,9 @@ for the Snapdragon X Elite and X2 Elite SoC groups.
 
 Remove `windows` from shared G1i platform lists and remove Windows-only G1i
 rows when no consumer remains. Preserve other platforms, G1J artifact
-identities, and build-754 or older compatibility catalogs. Publish both
-`latest.json` and `755.json` so build-specific configuration selection applies
-the same replacement. Remote weight artifacts retain their existing identities.
+identities, and build-754 or older compatibility catalogs. Publish
+`latest.json` so build 755 receives the replacement through the latest
+fallback. Remote weight artifacts retain their existing identities.
 This catalog visibility change does not assert new device acceptance.
 
 ### Android G1i Removal
@@ -271,20 +287,53 @@ slot. Remove `android` from shared platform lists, and remove the entire chat
 row when its platform list becomes empty. This includes all Android G1i QNN
 and MediaTek rows and the Android scope of the shared llama.cpp rows.
 
-Keep the Windows G1J supersession in effect and preserve the remaining macOS
-and iOS consumers; Linux follows the removal rule below. Existing G1J rows retain their complete identities
-and platform scopes. Publish `latest.json` and `755.json` together; build 754
+Keep the Windows G1J supersession in effect; remaining iOS, Linux, and macOS
+consumers follow the rules below. Existing G1J rows retain their complete identities
+and platform scopes. Publish `latest.json`; build 754
 and earlier compatibility catalogs retain their legacy cohorts.
 
 ### Linux G1i Removal
 
 Build 755 and the current `latest.json` omit every Linux G1i chat consumer
 slot. Remove `linux` from the shared llama.cpp rows for 1.5B, 2.9B, 7.2B, and
-13.3B, preserving their supported Apple consumers. Remove the entire chat row
+13.3B, preserving their Apple consumers subject to the macOS rule below. Remove the entire chat row
 if its platform list becomes empty. Keep the Windows and Android removals in
-effect, retain existing G1J identities and consumer scopes, and publish both
-current configuration files. Build 754 and earlier compatibility catalogs
+effect, retain existing G1J identities and consumer scopes, and publish
+`latest.json`. Build 754 and earlier compatibility catalogs
 retain their legacy Linux G1i cohorts.
+
+### macOS G1i And Shared 7.2B MLX Removal
+
+Build 755 and the current `latest.json` omit every macOS G1i chat consumer.
+Remove the entire `RWKV7-G1i 7.2B (MLX)` row, including its shared macOS and
+iOS consumers. Remove `macos` from every other G1i row, including Debug
+canaries, and delete the entire row whenever no platform remains.
+
+Remaining iOS consumers follow the successor rule below without adding iOS to
+an unsupported size or backend. Keep the Windows, Android, and Linux removals in effect and retain
+all G1J artifact identities and platform scopes. Publish `latest.json`. Build 754 and earlier compatibility catalogs retain their
+legacy cohorts; this visibility change does not delete remote weight bytes.
+
+### iOS G1i Supersession By Available G1j Or Later Models
+
+For App build 755 and later, remove the iOS consumer of a G1i model only when
+an available G1j or later-generation iOS artifact covers the same model size,
+backend, quantization, and SoC scope. Remove the entire G1i row when no platform
+remains; preserve any unmatched consumers.
+
+Apply this policy to `latest.json`.
+Build 754 and earlier compatibility catalogs retain their G1i cohorts. Future
+release catalogs inherit this policy with their own matching `configBuild`;
+the current build-755 marker does not authorize a different App build to accept
+that remote response.
+
+The current equivalent successors cover llama.cpp, WebRWKV, MLX, and CoreML at
+1.5B and 2.9B, plus llama.cpp and WebRWKV at 7.2B. These ten G1i rows are
+iOS-only after the platform removals above, so `latest.json`
+contains no G1i chat rows. G1j artifact identities and platform scopes remain
+unchanged. Configuration publication and remote weight deletion remain
+separately authorized effects; this catalog change claims neither device nor
+runtime acceptance.
 
 ## SPEC-RWKV-QUANTIZATION-DELIVERY — Artifact Publication And App Acceptance
 
@@ -348,10 +397,15 @@ slots, so the duplicate G1g rows are removed. Other G1g rows remain available
 when they target a SoC or consumer slot not declared by an equivalent formal
 G1i row.
 
-The current G1i Apple catalog exposes the non-QNN llama.cpp, WebRWKV, and MLX
-rows for 1.5B, 2.9B, and 7.2B on both macOS and iOS. G1i 13.3B is intentionally
-unsupported on iPhone and iPad, so its non-QNN Apple catalog scope includes
-`macos` and excludes `ios`. Legacy G1i mobile Snapdragon QNN rows are
+The retained build-754 G1i Apple catalog exposes llama.cpp and WebRWKV rows for
+1.5B, 2.9B, and 7.2B on iOS, plus MLX and CoreML rows for 1.5B and 2.9B on
+iOS. MLX 7.2B excludes iOS in every catalog. Those ten iOS consumers are
+superseded by their equivalent G1j rows in `latest.json`, which
+now contains no G1i chat rows.
+G1i 13.3B remains unsupported on
+iPhone and iPad; its former macOS-only rows and the macOS-only CoreML 7.2B
+row are absent from build 755 and the current `latest.json` because their
+platform lists would otherwise be empty. Legacy G1i mobile Snapdragon QNN rows are
 Android-only, and legacy Snapdragon X Elite and X2 Elite QNN rows target
 Windows; both scopes are removed from build 755 and the current `latest.json`
 under the supersession rules above. Catalog visibility is the user-facing selection contract and is not a
@@ -401,7 +455,7 @@ consumer contract independently passes its acceptance boundary. The G1i Linux
 consumer scopes are removed from build 755 and the current `latest.json` under
 the Linux removal rule above.
 
-The explicit human rulings on 2026-08-22 authorize formal publication of the
+The historical human rulings on 2026-08-22 authorized formal publication of the
 accepted G1i CoreML 1.5B and 2.9B artifacts for macOS and iOS, followed by a
 separate macOS-only formal partial release of the accepted 7.2B artifact. The
 formal G1i 1.5B and 2.9B rows fully replace the matching G1f CoreML consumer
@@ -414,7 +468,7 @@ formal ModelScope and then byte-identically to Hugging Face, verify both
 providers anonymously, and expose source-selectable formal URLs with size and
 SHA-256 identity in the bundled `latest.json` plus the production `latest.json`
 and `752.json`. These formal rows do not use Debug lifecycle metadata. Build
-752 and the latest fallback must both return the rows so RWKV Chat 4.7.0 and
+752 and the then-current latest fallback returned the rows so RWKV Chat 4.7.0 and
 4.7.1 can discover and download them. The 7.2B row declares only `macos` and
 must not acquire iOS availability through the shared Apple weight lineage.
 
@@ -429,8 +483,11 @@ and 4.7.1 config parser because unknown YAML keys are ignored, but those native
 runtimes still load Decode and Prefill with CPU and Neural Engine. Catalog
 publication to those versions therefore does not deliver the separately
 measured CPU-and-GPU Decode speedup; that execution placement requires a later
-App/runtime release. The 13.3B CoreML row remains a local Debug canary outside
-formal or online publication and remains excluded from iOS.
+App/runtime release. The 13.3B CoreML artifact remains outside formal
+publication and excluded from iOS. Its former Debug canary row, along with
+the other superseded macOS consumers, is removed from build 755 and the
+current `latest.json` under the macOS rule above. Historical publication does
+not require those current catalogs to retain the earlier macOS visibility.
 
 This supersession changes catalog selection, not artifact identity or remote
 distribution state. Every promoted G1i row must retain a source-selectable

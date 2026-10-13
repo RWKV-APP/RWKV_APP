@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -2256,11 +2257,6 @@ class S {
     return Intl.message('超大 (140%)', name: 'ultra_large', desc: '', args: []);
   }
 
-  /// `反馈问题`
-  String get feedback {
-    return Intl.message('反馈问题', name: 'feedback', desc: '', args: []);
-  }
-
   /// `开源许可证`
   String get license {
     return Intl.message('开源许可证', name: 'license', desc: '', args: []);
@@ -2371,8 +2367,7 @@ class S {
   get in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2 {
     return Intl.message(
       '当搜索深度和宽度都大于 2 时，将激活上下文搜索',
-      name:
-          'in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2',
+      name: 'in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2',
       desc: '',
       args: [],
     );
@@ -4989,8 +4984,7 @@ class S {
   ) {
     return Intl.message(
       '请选择要为第 $index 条消息设置的采样和惩罚参数',
-      name:
-          'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
+      name: 'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
       desc: '',
       args: [index],
     );
@@ -5001,8 +4995,7 @@ class S {
   get please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages {
     return Intl.message(
       '请选择要为所有消息设置的采样和惩罚参数',
-      name:
-          'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
+      name: 'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
       desc: '',
       args: [],
     );

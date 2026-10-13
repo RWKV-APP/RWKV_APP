@@ -1,5 +1,24 @@
 # App Binary Distribution Contract
 
+## Desktop preparation for 4.8.2
+
+Future macOS and Windows delivery uses the same reviewed App source, dependency
+lock and development toolchain, with platform builds on their respective hosts.
+Use `.flutter-version`, `node tools/check_flutter_toolchain.mjs` and
+`node tools/flutter.mjs` for that toolchain. Windows can be operated from the
+coordinating client; a separate planning Agent is not a build requirement.
+
+Fastlane is retired for this future desktop workflow. The Fastlane descriptions
+below retain historical release provenance; they are not the entrypoint for a
+new desktop release. Use Flutter's native build commands, the platform packager
+and the existing provider upload scripts. Before any new release effect, freeze
+the new version/build and toolchain in `release.json`, pin the reviewed adapter
+and native artifacts, and verify the exact source snapshot on both hosts.
+Keep host credentials, signing state and build caches local. Publish only after
+the selected platform packages and distribution channels have been verified;
+development synchronization and successful Debug launches alone are not release
+acceptance. Preserve previously published release identities.
+
 ## SPEC-RWKV-APP-BINARY-DISTRIBUTION
 
 RWKV App release automation publishes each supported direct-download package to
@@ -60,6 +79,18 @@ its draft or published state. A repeated upload must match the existing size
 and SHA-256; a different file with the same name is rejected. Publication is a
 separate step after the enabled package matrix and acceptance checks complete.
 
+The corrected Windows x64 4.8.1 package uses build 757 and Flutter 3.47.4.
+It updates Web Demo cloud transport while retaining the adapter, native and
+weight pins. Building this candidate does not authorize any distribution
+channel, tag or upload. The separately authorized Windows x64 distribution
+contains the matching installer and ZIP on ModelScope and Hugging Face;
+other platforms retain their existing releases. Build 757 includes the
+explicitly authorized Cloudflare configuration through private build inputs;
+both remote Web Demo entries work without per-user setup. Credential values
+must never enter source control or build logs. A complete local credential
+file remains an optional override. Preserve build 756 as release history;
+publish build 757 under new filenames and select it as the latest 4.8.1 build.
+
 RWKV Chat 4.8.0 uses build 755. Its first delivery includes Windows x64 and
 ARM64 installers and ZIPs, Linux x64 tar.gz and AppImage, and the Android arm64
 APK. GitHub, ModelScope and Hugging Face are enabled. Provider uploads use
@@ -74,7 +105,7 @@ use the same iOS build; iPadOS is never a separate lane or package target.
 
 The Apple-only Fastlane entrypoint continues the same release on an Apple Silicon
 Mac using Flutter 3.47.2 and its bundled Dart 3.13.2. The current
-`release.json.flutterVersion` is the build requirement for this continuation;
+4.8.0 manifest's `flutterVersion` is the build requirement for this continuation;
 already published packages retain their original toolchain provenance.
 `release.json.apple` declares the continuation source branch, integration
 branch, and original published base tag/commit. The continuation may include

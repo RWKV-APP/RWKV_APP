@@ -95,6 +95,7 @@ class FileInfo extends Equatable {
   final bool fromPthFile;
 
   final bool fromLocalGgufFile;
+  final bool fromLocalCoreAI;
 
   final String? ggufArchitecture;
 
@@ -136,6 +137,7 @@ class FileInfo extends Equatable {
     this.state = const [],
     this.fromPthFile = false,
     this.fromLocalGgufFile = false,
+    this.fromLocalCoreAI = false,
     this.ggufArchitecture,
     this.ggufFileType,
     this.ggufSizeLabel,
@@ -197,6 +199,9 @@ class FileInfo extends Equatable {
   }
 
   bool get available {
+    if (backend == Backend.coreai && (!kDebugMode || !Platform.isMacOS || !P.rwkvBackend.availableBackendNames.q.contains('coreai'))) {
+      return false;
+    }
     if (backend == Backend.palm && !P.rwkvBackend.availableBackendNames.q.contains('palm')) return false;
     if (isDebug) return kDebugMode && platformSupported;
     if (fileType == FileType.downloadTest) return kDebugMode;
@@ -266,7 +271,7 @@ class FileInfo extends Equatable {
 
   bool get isReasoning => tags.contains(Config.reasonTag);
 
-  bool get fromLocalModelFile => fromPthFile || fromLocalGgufFile;
+  bool get fromLocalModelFile => fromPthFile || fromLocalGgufFile || fromLocalCoreAI;
 
   String? get ggufArchitectureDisplayTag {
     if (!fromLocalGgufFile) return null;
@@ -294,6 +299,7 @@ class FileInfo extends Equatable {
   }
 
   List<String> get localModelStaticTags {
+    if (fromLocalCoreAI) return ['Core AI', 'Experimental', ?quantization];
     if (fromPthFile) return const ["PTH"];
     if (!fromLocalGgufFile) return const [];
 
