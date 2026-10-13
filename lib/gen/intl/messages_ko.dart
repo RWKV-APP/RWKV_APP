@@ -1012,6 +1012,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage("강제 다크 모드"),
+    "force_import": MessageLookupByLibrary.simpleMessage("강제로 가져오기"),
+    "force_import_model_message": MessageLookupByLibrary.simpleMessage(
+      "이 파일은 RWKV GGUF로 인식되었지만 앱 카탈로그에 등록되어 있지 않습니다. 강제로 가져온 후 로드되지 않거나 정상적으로 실행되지 않을 수 있으며, 앱은 작동을 보장하지 않습니다. 계속할까요?",
+    ),
+    "force_import_model_title": MessageLookupByLibrary.simpleMessage(
+      "미등록 모델을 강제로 가져올까요?",
+    ),
     "forget_location_success": MessageLookupByLibrary.simpleMessage(
       "위치를 잊었습니다",
     ),
@@ -1125,6 +1132,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading": MessageLookupByLibrary.simpleMessage("로드 중..."),
     "loading_progress_percent": m39,
     "local_folder_name": m40,
+    "local_models_unverified": MessageLookupByLibrary.simpleMessage(
+      "로컬 모델(미검증)",
+    ),
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
       "로컬 모델 파일",
     ),
@@ -1153,6 +1163,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "mode": MessageLookupByLibrary.simpleMessage("모드"),
     "model": MessageLookupByLibrary.simpleMessage("모델"),
+    "model_configuration_not_loaded": MessageLookupByLibrary.simpleMessage(
+      "모델 설정이 아직 로드되지 않았습니다. 잠시 후 다시 시도하세요.",
+    ),
+    "model_import_size_mismatch": MessageLookupByLibrary.simpleMessage(
+      "파일 크기가 카탈로그와 일치하지 않아 가져오지 않았습니다.",
+    ),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(
       "iOS 18+로 업그레이드하면 이 가중치를 사용할 수 있으며, 더 빠르고 절전됩니다",
     ),
