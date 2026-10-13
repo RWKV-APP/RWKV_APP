@@ -4,54 +4,40 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('current G1i Apple rows retain iOS and only 7.2B MLX on macOS', () {
-    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
-    final chat = json['chat'] as Map<String, dynamic>;
-    final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
-
-    Map<String, dynamic> row(String name) => rows.singleWhere((entry) => entry['name'] == name);
-
-    final g1iRows = rows.where((entry) => (entry['name'] as String).contains('RWKV7-G1i')).toList();
-    const appleBackends = <String>{'llamacpp', 'webRwkv', 'mlx'};
-    final appleRows = g1iRows.where((entry) => appleBackends.contains((entry['backends'] as List<dynamic>).single)).toList();
-    final coreMlRows = g1iRows.where((entry) => (entry['backends'] as List<dynamic>).contains('coreml')).toList();
-    final formalCoreMlRows = coreMlRows.where((entry) => entry['isDebug'] != true).toList();
-    final coreMlCanaries = coreMlRows.where((entry) => entry['isDebug'] == true).toList();
-    expect(g1iRows, hasLength(11));
-    expect(appleRows, hasLength(9));
-    expect(g1iRows.where((entry) => entry['modelSize'] == 13.3), isEmpty);
-    expect(formalCoreMlRows.map((entry) => entry['modelSize']), <dynamic>[1.5, 2.9]);
-    expect(coreMlCanaries, isEmpty);
-    for (final formal in formalCoreMlRows) {
-      expect(formal['platforms'], <String>['ios']);
-      expect(formal['availableIn'], isNull);
-      expect(formal['isDebug'], isNull);
-      expect(formal['url'], startsWith('HaloWang/rwkv-weights/resolve/main/'));
-      expect(formal['url'], contains('/coreml/'));
-      expect(formal['sha256'], isNotEmpty);
-    }
-    for (final g1i in g1iRows) {
-      expect(g1i['platforms'], g1i['name'] == 'RWKV7-G1i 7.2B (MLX)' ? <String>['macos', 'ios'] : <String>['ios']);
-    }
-    for (final g1i in appleRows) {
-      expect(g1i['platforms'], isNot(contains('macos_debug')));
-      expect(g1i['isDebug'], isNull);
-      expect(g1i['url'], startsWith('HaloWang/rwkv-weights/resolve/main/'));
-      expect(g1i['url'], isNot(startsWith('http://')));
-      expect(g1i['url'], isNot(startsWith('https://')));
-      expect(g1i['url'], contains('-g1i-'));
-      expect(g1i['sha256'], isNotEmpty);
-    }
-
-    expect(row('RWKV7-G1h 1.5B (WebRWKV)')['platforms'], <String>['web']);
-    expect(row('RWKV7-G1h 2.9B (WebRWKV)')['platforms'], <String>['web']);
-
-    final g1fCoreMlRows = rows.where((entry) {
-      final name = entry['name'] as String;
-      final backends = (entry['backends'] as List<dynamic>?) ?? const <dynamic>[];
-      return name.contains('RWKV7-G1f') && backends.contains('coreml');
+  test('current catalog replaces legacy iOS G1i slots with equivalent G1j models', () {
+    final legacy = jsonDecode(File('remote/754.json').readAsStringSync()) as Map<String, dynamic>;
+    final legacyRows = (legacy['chat']['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
+    final legacyIosG1i = legacyRows.where((entry) {
+      return (entry['name'] as String).contains('RWKV7-G1i') && (entry['platforms'] as List<dynamic>).contains('ios');
     }).toList();
-    expect(g1fCoreMlRows, isEmpty);
+    expect(legacyIosG1i, hasLength(10));
+
+    const path = 'remote/latest.json';
+    final config = jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
+    final rows = (config['chat']['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
+    final release = jsonDecode(File('release.json').readAsStringSync()) as Map<String, dynamic>;
+    expect(config['configBuild'], release['build']);
+    expect(rows.where((entry) => (entry['name'] as String).contains('RWKV7-G1i')), isEmpty, reason: path);
+    for (final old in legacyIosG1i) {
+      final successorName = (old['name'] as String).replaceFirst('G1i', 'G1j');
+      final successor = rows.singleWhere(
+        (entry) =>
+            entry['name'] == successorName && (entry['backends'] as List<dynamic>).single == (old['backends'] as List<dynamic>).single,
+      );
+      expect(successor['platforms'], contains('ios'), reason: '$path: $successorName');
+      expect(successor['modelSize'], old['modelSize']);
+      expect(successor['backends'], old['backends']);
+      expect(successor['quantization'], old['quantization']);
+      expect(successor['socLimitations'] ?? <dynamic>[], old['socLimitations'] ?? <dynamic>[]);
+    }
+
+    for (final size in [1.5, 2.9]) {
+      expect(rows.singleWhere((entry) => entry['name'] == 'RWKV7-G1h ${size}B (WebRWKV)')['platforms'], <String>['web']);
+    }
+    expect(
+      rows.where((entry) => (entry['name'] as String).contains('RWKV7-G1f') && (entry['backends'] as List<dynamic>).contains('coreml')),
+      isEmpty,
+    );
   });
 
   test('build 752 exposes the three formal G1i CoreML rows', () {
@@ -105,18 +91,18 @@ void main() {
     }
   });
 
-  test('G1i replaces G1g MLX on iOS and retains only 7.2B on macOS', () {
-    final json = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+  test('legacy build 754 retains 1.5B and 2.9B G1i MLX replacements on iOS', () {
+    final json = jsonDecode(File('remote/754.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = json['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 
-    for (final modelSize in <double>[1.5, 2.9, 7.2]) {
+    for (final modelSize in <double>[1.5, 2.9]) {
       final sizeLabel = modelSize.toStringAsFixed(1);
       final g1i = rows.singleWhere((entry) => entry['name'] == 'RWKV7-G1i ${sizeLabel}B (MLX)');
       expect(g1i['modelSize'], modelSize);
       expect(g1i['quantization'], 'W6');
       expect(g1i['backends'], <String>['mlx']);
-      expect(g1i['platforms'], modelSize == 7.2 ? <String>['macos', 'ios'] : <String>['ios']);
+      expect(g1i['platforms'], <String>['macos', 'ios']);
       expect(g1i['url'], startsWith('HaloWang/rwkv-weights/resolve/main/'));
       expect(g1i['sha256'], isNotEmpty);
 

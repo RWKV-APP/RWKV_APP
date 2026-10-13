@@ -908,7 +908,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
       "并行推理 UI Benchmark",
     ),
-    "feedback": MessageLookupByLibrary.simpleMessage("反馈问题"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("文件已存在"),
     "file_not_found": MessageLookupByLibrary.simpleMessage("文件未找到"),
     "file_not_supported": MessageLookupByLibrary.simpleMessage(

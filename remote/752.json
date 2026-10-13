@@ -567,7 +567,7 @@
         "fileSize": 5982485620,
         "sha256": "c02f394764a7affddafea7c341c7913f709a75ebc7ee05952e728c079cd2148e",
         "quantization": "W6",
-        "platforms": ["macos", "ios"],
+        "platforms": ["macos"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu", "batch"],
         "date": 1786291598
