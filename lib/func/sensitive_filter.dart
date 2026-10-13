@@ -144,6 +144,8 @@ SensitiveFilterRules parseSensitiveFilterRules(String filter) {
     }
 
     final key = uniqueParts.join(sensitiveFilterCompoundSeparator);
+    // Bundled dictionaries may still contain these retired compounds.
+    if (key == '亡|共' || key == '共|铲') continue;
     if (!compoundRuleKeys.add(key)) continue;
     final rule = List<String>.unmodifiable(uniqueParts);
     compoundRules.add(rule);
