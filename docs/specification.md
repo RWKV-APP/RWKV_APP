@@ -33,11 +33,17 @@ RWKV App quantization is governed by `SPEC-RWKV-QUANTIZATION-CATALOG-CONTROL` an
 
 The explicit human rulings on 2026-08-22 authorize formal G1i CoreML publication for 1.5B and 2.9B on macOS and iOS, followed by a separate macOS-only formal partial release of the accepted 7.2B artifact. Promote each exact accepted cohort through immutable TMP identity to formal ModelScope and byte-identical Hugging Face, verify both providers anonymously, then expose source-selectable formal rows in the bundled and production `latest.json` plus production `752.json` so RWKV Chat 4.7.0 and 4.7.1 can discover and download them. The formal G1i 1.5B and 2.9B rows fully replace the matching G1f CoreML consumer slots, so current bundled and production 4.7.0/4.7.1 catalogs omit those superseded G1f rows while historical build-743/build-750 snapshots and legacy provider bytes remain unchanged. This is a backend-scoped partial release: retained macOS runtime and performance evidence supports the artifact selection, while exact-device iOS load, generation, cache, memory, and performance acceptance remains unverified and cannot be inferred from catalog availability. Existing required G1i MediaTek rows retain their independent runtime status, so the delivery is not a standard complete Chat weight release. The 7.2B row declares only `macos`; it remains absent from iOS. Its package is backward-compatible with the released 4.7.0 and 4.7.1 CoreML config parser, but those released native runtimes ignore the new Decode and Prefill compute-unit hints and continue to load both functions with CPU and Neural Engine. The measured 7.2B CPU-and-GPU Decode improvement therefore requires a later App/runtime release and must not be claimed for 4.7.0 or 4.7.1 merely because their catalogs can download the formal artifact. G1i CoreML 13.3B remains a local Debug canary outside formal and online publication and remains excluded from iOS.
 
-The preceding G1i publication scope is historical. For build 755 and the current `latest.json`, `SPEC-RWKV-QUANTIZATION-CATALOG-CONTROL` now removes every Windows, Android, and Linux G1i consumer and every macOS G1i consumer except 7.2B MLX. Existing iOS consumers remain supported; empty-platform chat rows, including the former macOS-only CoreML rows, are removed entirely. Earlier compatibility catalogs and provider artifacts retain their existing identities.
+The preceding G1i publication scope is historical. For build 755 and the current `latest.json`, `SPEC-RWKV-QUANTIZATION-CATALOG-CONTROL` removes every Windows, Android, Linux, and macOS G1i consumer. The shared G1i 7.2B MLX row is removed entirely, including its iOS consumer. For build 755 and later, iOS G1i consumers are removed only when an available G1j or later artifact matches their size, backend, quantization, and SoC scope. All ten remaining iOS G1i rows have matching G1j successors, so `latest.json` now contains no G1i chat rows. The independent `755.json` configuration is removed; build 755 uses the latest fallback after the retained build-754 compatibility boundary. Build 754 and earlier retain their G1i cohorts; future release catalogs inherit the policy with their own matching build marker. Empty-platform chat rows are removed entirely, and provider artifacts retain their existing identities. MLX 7.2B is excluded from iOS across all generations and configuration files, including retained build catalogs and `release.json` artifact mappings; remaining platforms and artifact metadata are preserved.
 
 The Windows Debug App includes ordinary-chat real local Agent file actions governed by `SPEC-RWKV-LOCAL-AGENT-FILE-ACTIONS`. A clear natural-language file request can trigger workspace authorization, in-chat review of every mutation, and a verified assistant result. This workflow remains separate from deterministic Agentic Evaluation scoring.
 
 Desktop UI redesign is authorized by `SPEC-RWKV-DESKTOP-UI-REDESIGN-AUTHORIZATION` in `docs/contracts/desktop_ui_redesign.md`. Detailed Chat-first layout, Projects, Agent UI expansion, reference-product comparisons, and visual acceptance proposals remain private intake until explicit rulings promote a normalized project contract.
+
+## SPEC-RWKV-SETTINGS-ABOUT — Settings About Section
+
+Settings omits the obsolete community feedback entry and its external URL.
+The About section begins with Check for updates, followed by the GitHub
+repository, GitHub issue reporting, and licenses.
 
 ## SPEC-RWKV-REPOSITORY-BOUNDARIES — Repository Ownership
 
@@ -60,6 +66,28 @@ Local inference does not imply that every app feature is offline. Model download
 The current checked-in public policy says the app does not collect device information or track usage. Until an explicit approved decision supersedes that policy, telemetry must not transmit installation, device, model, usage, or performance data.
 
 The current telemetry implementation does not comply with that active contract. The mismatch is recorded as `OBS-20260723-TELEMETRY-PRIVACY-DRIFT`; implementation state does not silently redefine the product rule. Correcting runtime behavior or approving a different collection and disclosure contract is outside this Specification-infrastructure migration and requires a separately reviewed product change.
+
+## SPEC-RWKV-WEB-DEMO-CLOUD-TRANSPORT — Cloud Web Demo API
+
+Desktop Web Demo uses `https://api-7b.rwkvos.com/v1` for the 7.2B entry and
+`https://api-13b.rwkvos.com/v1` for the 13.3B entry. Discover the current model
+through `/models` and use streaming OpenAI-compatible `/chat/completions`.
+Each preview slot sends its own request because these services do not implement
+multi-choice `n`. Preserve the existing preview count, prompt and local backends.
+
+The authorized Windows x64 4.8.1 build 757 includes working Cloudflare service
+configuration at build time so a fresh install can use both cloud entries
+without creating a credential file or supplying launch arguments. Inject
+`CF-Access-Client-Id` and `CF-Access-Client-Secret` through a private
+`--dart-define-from-file` input; never commit their values or print them in logs.
+Bundled client credentials can be extracted from distributed binaries; they are
+not protected by compilation. A complete optional `web-demo-cloudflare.json`
+in the current user's application support directory overrides the bundled
+configuration. Missing or invalid local configuration must not disable valid
+bundled defaults. Source builds without either configuration remain unconfigured.
+Send authentication headers only to the two exact HTTPS origins above, with
+redirects disabled. This transport change does not resolve the separate
+disclosure conflict below.
 
 ## SPEC-RWKV-WEB-DEMO-DATA-FLOW — Cloud Web Demo Data-Flow Contract
 
