@@ -1023,6 +1023,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage("強制ダークモード"),
+    "force_import": MessageLookupByLibrary.simpleMessage("強制インポート"),
+    "force_import_model_message": MessageLookupByLibrary.simpleMessage(
+      "このファイルは RWKV GGUF と認識されましたが、アプリのカタログには登録されていません。強制インポート後に読み込めない、または正常に動作しない可能性があり、アプリは動作を保証しません。続行しますか？",
+    ),
+    "force_import_model_title": MessageLookupByLibrary.simpleMessage(
+      "未登録モデルを強制インポートしますか？",
+    ),
     "forget_location_success": MessageLookupByLibrary.simpleMessage("場所を忘れました"),
     "forget_this_location": MessageLookupByLibrary.simpleMessage("この場所を忘れる"),
     "found_new_version_available": MessageLookupByLibrary.simpleMessage(
@@ -1134,6 +1141,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading": MessageLookupByLibrary.simpleMessage("ロード中..."),
     "loading_progress_percent": m39,
     "local_folder_name": m40,
+    "local_models_unverified": MessageLookupByLibrary.simpleMessage(
+      "ローカルモデル（未検証）",
+    ),
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
       "ローカルモデルファイル",
     ),
@@ -1162,6 +1172,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "mode": MessageLookupByLibrary.simpleMessage("モード"),
     "model": MessageLookupByLibrary.simpleMessage("モデル"),
+    "model_configuration_not_loaded": MessageLookupByLibrary.simpleMessage(
+      "モデル設定がまだ読み込まれていません。しばらくしてから再試行してください。",
+    ),
+    "model_import_size_mismatch": MessageLookupByLibrary.simpleMessage(
+      "ファイルサイズがカタログと一致しないため、インポートしませんでした。",
+    ),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(
       "iOS 18以降にアップグレードすると、このウェイトが使え、より速く省電力になります",
     ),

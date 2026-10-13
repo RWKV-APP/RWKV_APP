@@ -1,0 +1,17 @@
+{
+  "description": "Public RWKV routing and runtime version hint. Review this definition in native Codex Hooks UI.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"import(require('node:url').pathToFileURL(require('node:path').join(require('node:child_process').execFileSync('git', ['rev-parse','--show-toplevel'], {encoding:'utf8'}).trim(), 'tools/rwkv-bootstrap.mjs')).href)\"",
+            "timeout": 30,
+            "additionalContextLimit": 2500
+          }
+        ]
+      }
+    ]
+  }
+}
