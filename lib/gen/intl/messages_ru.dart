@@ -1227,6 +1227,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "force_dark_mode": MessageLookupByLibrary.simpleMessage(
       "Принудительный тёмный режим",
     ),
+    "force_import": MessageLookupByLibrary.simpleMessage(
+      "Импортировать принудительно",
+    ),
+    "force_import_model_message": MessageLookupByLibrary.simpleMessage(
+      "Файл распознан как RWKV GGUF, но отсутствует в каталоге приложения. После импорта он может не загрузиться или работать некорректно. Приложение не гарантирует его работоспособность. Продолжить?",
+    ),
+    "force_import_model_title": MessageLookupByLibrary.simpleMessage(
+      "Принудительно импортировать модель вне каталога?",
+    ),
     "forget_location_success": MessageLookupByLibrary.simpleMessage(
       "Расположение забыто",
     ),
@@ -1372,6 +1381,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading": MessageLookupByLibrary.simpleMessage("Загрузка..."),
     "loading_progress_percent": m39,
     "local_folder_name": m40,
+    "local_models_unverified": MessageLookupByLibrary.simpleMessage(
+      "Локальные модели (не проверены)",
+    ),
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
       "Локальные файлы моделей",
     ),
@@ -1406,6 +1418,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "mode": MessageLookupByLibrary.simpleMessage("Режим"),
     "model": MessageLookupByLibrary.simpleMessage("Модель"),
+    "model_configuration_not_loaded": MessageLookupByLibrary.simpleMessage(
+      "Конфигурация моделей ещё не загружена. Повторите попытку позже.",
+    ),
+    "model_import_size_mismatch": MessageLookupByLibrary.simpleMessage(
+      "Размер файла не соответствует каталогу. Файл не импортирован.",
+    ),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(
       "Обновитесь до iOS 18+, чтобы использовать этот вес — быстрее и экономичнее",
     ),

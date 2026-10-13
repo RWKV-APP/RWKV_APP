@@ -528,9 +528,9 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: ee0ba83637085448569aad8c2d0e24532169b0ea
-      resolved-ref: ee0ba83637085448569aad8c2d0e24532169b0ea
-      url: "https://github.com/chenqi2013/flutter_roleplay"
+      ref: "77177d33967212fe3445a04bc72f5181d76a42ef"
+      resolved-ref: "77177d33967212fe3445a04bc72f5181d76a42ef"
+      url: "https://github.com/RWKV-APP/flutter_roleplay.git"
     source: git
     version: "0.0.1"
   flutter_staggered_grid_view:
@@ -1880,7 +1880,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "4.8.0+755"
+    version: "4.8.4+761"
 sdks:
   dart: ">=3.12.0 <4.0.0"
   flutter: ">=3.44.0"
