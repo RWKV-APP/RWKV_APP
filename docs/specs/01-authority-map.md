@@ -56,3 +56,26 @@ Lifecycle meanings:
 - `historical`: retained context that does not govern new implementation
 - `deferred`: intentionally out of active delivery scope
 - `conflicted`: no business side may be selected until the linked current conflict is resolved
+| Experimental Core AI local directory import in macOS Debug builds | `SPEC-RWKV-COREAI-EXPERIMENT` | active | `docs/specification.md` | `lib/func/local_model_discovery.dart`, `lib/store/pth.dart`, `lib/model/file_info.dart`, `lib/store/rwkv_model.dart`, `rwkv_mobile_flutter:lib/types.dart`, `rwkv_mobile_flutter:lib/rwkv_mobile_flutter.dart` |
+
+The Core AI row tracks the App and bridge integration. Its native backend is an
+optional experimental build, not a directory required in the active engine
+checkout or the pinned release. Keep native availability conditional as defined
+by `SPEC-RWKV-COREAI-EXPERIMENT`; verify the experiment separately before enabling it.
+
+## Truth Resolution
+
+1. Find the topic and stable assertion ID in this table
+2. Check `docs/spec-process/conflicts/current/` for an applicable blocking scope
+3. Read the exact assertion in the canonical owner
+4. Use private Root records and historical target decisions for provenance and explicit supersession
+5. Compare required drift surfaces with the canonical assertion
+6. Synchronize unambiguous drift; record a semantic conflict when traceable competing rulings leave intent genuinely ambiguous
+
+Lifecycle meanings:
+
+- `active`: current implementation contract
+- `proposal`: approved or recorded plan that is not delivered behavior
+- `historical`: retained context that does not govern new implementation
+- `deferred`: intentionally out of active delivery scope
+- `conflicted`: no business side may be selected until the linked current conflict is resolved

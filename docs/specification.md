@@ -53,6 +53,38 @@ App binary publication across GitHub Release, Hugging Face, ModelScope, and the
 public download website is governed by `SPEC-RWKV-APP-BINARY-DISTRIBUTION` in
 `docs/contracts/app_distribution.md`.
 
+## SPEC-RWKV-COREAI-EXPERIMENT — Local Core AI Experiment
+
+macOS Debug builds may discover an experimental RWKV Core AI model through the
+existing user-selected local folder workflow when the native runtime reports
+`coreai` availability. Discovery recognizes a model directory containing
+`config.json` and `rwkv.aimodel`; a selected directory may itself be the model
+or contain model directories. The configuration must declare the supported
+Core AI format, RWKV version, and precision. Malformed or incomplete packages
+are ignored. Core AI packages are labeled experimental and retain their actual
+precision label. Weight-only INT8 and INT4 packages declare their quantization
+and group size separately from activation and recurrent-state precision. The
+local model label must distinguish these fields instead of presenting a
+quantized package as an uncompressed FP32 model. Unsupported or inconsistent
+quantization metadata is ignored during discovery.
+
+Six-bit codebook packages use the explicit `LUT6` label and declare scalar
+K-means palettization with output-channel grouping. They must not be labeled
+as linear INT6 or implied to use the same recipe as MLX W6. Grouped-channel
+LUT metadata is validated separately from integer per-block metadata.
+Mixed `LUT6+W8` packages also declare their symmetric INT8 fallback group size
+and the matrix-size threshold used to select LUT6. Their labels retain both
+weight formats and both grouping conventions.
+Mixed `W4+W8` packages similarly retain both labels and declare the size policy
+and INT8 grouping separately; the loader does not infer a recipe from a name.
+
+This path requires Apple Silicon, macOS 27, and a native library built with the
+optional Core AI backend. It introduces no online catalog rows, automatic
+backend replacement, or release availability. Existing MLX and Core ML model
+selection remains available. Numerical conversion checks are engineering
+evidence; App acceptance and speed comparisons require the real chat page.
+
+
 ## SPEC-RWKV-INFERENCE-BOUNDARY — Local And Connected Execution
 
 Loaded local model inference runs on the user's device through CPU, GPU, or NPU backends and uses device memory or unified memory.
