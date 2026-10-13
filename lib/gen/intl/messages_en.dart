@@ -1170,6 +1170,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage("Force Dark Mode"),
+    "force_import": MessageLookupByLibrary.simpleMessage("Force import"),
+    "force_import_model_message": MessageLookupByLibrary.simpleMessage(
+      "This file is recognized as RWKV GGUF but is not listed in the app catalog. It may fail to load or run after import. The app does not guarantee that it will work. Continue?",
+    ),
+    "force_import_model_title": MessageLookupByLibrary.simpleMessage(
+      "Force import uncatalogued model?",
+    ),
     "forget_location_success": MessageLookupByLibrary.simpleMessage(
       "Location forgotten",
     ),
@@ -1303,6 +1310,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "loading_progress_percent": m39,
     "local_folder_name": m40,
+    "local_models_unverified": MessageLookupByLibrary.simpleMessage(
+      "Local models (unverified)",
+    ),
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
       "Local model files",
     ),
@@ -1335,6 +1345,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "mode": MessageLookupByLibrary.simpleMessage("Mode"),
     "model": MessageLookupByLibrary.simpleMessage("Model"),
+    "model_configuration_not_loaded": MessageLookupByLibrary.simpleMessage(
+      "Model configuration has not loaded. Please try again later.",
+    ),
+    "model_import_size_mismatch": MessageLookupByLibrary.simpleMessage(
+      "The file size does not match the catalog. The file was not imported.",
+    ),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(
       "Upgrade to iOS 18+ to use this weight, faster and more power-efficient",
     ),
