@@ -1,6 +1,4 @@
 abstract class Args {
-  static const _webDemoOfficialApiKeyDefault = "rwkv7b13b-fyrik-7b";
-
   static const autoShowTranslator = bool.fromEnvironment("autoShowTranslator", defaultValue: false);
   static const batchCount = int.fromEnvironment("batchCount", defaultValue: 2);
   static const batchVW = int.fromEnvironment("batchVW", defaultValue: -1);
@@ -24,9 +22,9 @@ abstract class Args {
   static const domain = String.fromEnvironment("domain", defaultValue: "https://api.rwkv.halowang.cloud");
   static const webDemoOfficialBaseUrl = String.fromEnvironment(
     "webDemoOfficialBaseUrl",
-    defaultValue: "http://47.115.88.183:1801/v1/chat/completions",
+    defaultValue: "https://api-7b.rwkvos.com/v1/chat/completions",
   );
-  static const webDemoOfficialProtocol = String.fromEnvironment("webDemoOfficialProtocol", defaultValue: "rwkv_lightning_v1");
+  static const webDemoOfficialProtocol = String.fromEnvironment("webDemoOfficialProtocol", defaultValue: "openai");
   static const webDemoOfficialModel = String.fromEnvironment("webDemoOfficialModel", defaultValue: "7b");
-  static const webDemoOfficialApiKey = String.fromEnvironment("webDemoOfficialApiKey", defaultValue: _webDemoOfficialApiKeyDefault);
+  static const webDemoOfficialApiKey = String.fromEnvironment("webDemoOfficialApiKey", defaultValue: "");
 }

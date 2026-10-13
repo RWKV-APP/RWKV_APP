@@ -300,11 +300,6 @@ class Settings extends ConsumerWidget {
                     SizedBox(height: appTheme.settingsSectionTitleTopSpace),
                     FormItem(
                       isSectionStart: true,
-                      title: s.feedback,
-                      icon: Icon(Icons.feedback_outlined, color: qb.withValues(alpha: .667), size: 16),
-                      onTap: _openFeedback,
-                    ),
-                    FormItem(
                       title: S.current.check_for_updates,
                       trailing: Row(
                         children: [
@@ -389,10 +384,6 @@ class Settings extends ConsumerWidget {
 
   void _openTwitter() {
     launchUrlString("https://x.com/BlinkDL_AI?mx=2", mode: LaunchMode.externalApplication);
-  }
-
-  void _openFeedback() {
-    launchUrlString("https://community.rwkv.cn/", mode: LaunchMode.externalApplication);
   }
 
   void _openRWKVMobileCommit(String commitId) {

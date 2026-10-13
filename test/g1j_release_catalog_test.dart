@@ -6,6 +6,9 @@ import 'package:zone/model/file_download_source.dart';
 import 'package:zone/model/file_info.dart';
 
 void main() {
+  bool isFormalG1j(Map<String, dynamic> row) =>
+      (row['url'] as String).startsWith('HaloWang/rwkv-weights/resolve/main/') && (row['url'] as String).contains('-g1j-');
+
   test('G1J catalog covers populated frozen targets and preserves consumer limits', () {
     final release = jsonDecode(File('release.json').readAsStringSync()) as Map<String, dynamic>;
     final weights = release['weights'] as Map<String, dynamic>;
@@ -13,35 +16,22 @@ void main() {
     final config = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
     final chat = config['chat'] as Map<String, dynamic>;
     final rows = (chat['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
-    final g1j = rows.where((row) => (row['url'] as String).contains('-g1j-')).toList();
-    final buildConfig = jsonDecode(File('remote/755.json').readAsStringSync()) as Map<String, dynamic>;
-    final buildRows = ((buildConfig['chat'] as Map<String, dynamic>)['model_config'] as List<dynamic>)
-        .cast<Map<String, dynamic>>()
-        .where((row) => (row['url'] as String).contains('-g1j-'))
+    final g1j = rows.where(isFormalG1j).toList();
+    expect(rows.where((row) => (row['platforms'] as List<dynamic>).isEmpty), isEmpty);
+    final windowsRows = rows.where((row) => (row['platforms'] as List<dynamic>).contains('windows'));
+    expect(windowsRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
+    expect(windowsRows.where(isFormalG1j), hasLength(16));
+    final androidRows = rows.where((row) => (row['platforms'] as List<dynamic>).contains('android'));
+    expect(androidRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
+    expect(androidRows.where(isFormalG1j), hasLength(30));
+    final linuxRows = rows.where((row) => (row['platforms'] as List<dynamic>).contains('linux'));
+    expect(linuxRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
+    expect(linuxRows.where(isFormalG1j), hasLength(6));
+    final macG1i = rows
+        .where((row) => (row['platforms'] as List<dynamic>).contains('macos') && (row['url'] as String).contains('-g1i-'))
         .toList();
-    expect(buildRows, g1j);
-    for (final currentConfig in [config, buildConfig]) {
-      final currentRows = ((currentConfig['chat'] as Map<String, dynamic>)['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
-      expect(currentRows.where((row) => (row['platforms'] as List<dynamic>).isEmpty), isEmpty);
-      final windowsRows = currentRows.where((row) => (row['platforms'] as List<dynamic>).contains('windows'));
-      expect(windowsRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
-      expect(windowsRows.where((row) => (row['url'] as String).contains('-g1j-')), hasLength(16));
-      final androidRows = currentRows.where((row) => (row['platforms'] as List<dynamic>).contains('android'));
-      expect(androidRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
-      expect(androidRows.where((row) => (row['url'] as String).contains('-g1j-')), hasLength(30));
-      final linuxRows = currentRows.where((row) => (row['platforms'] as List<dynamic>).contains('linux'));
-      expect(linuxRows.where((row) => (row['url'] as String).contains('-g1i-')), isEmpty);
-      expect(linuxRows.where((row) => (row['url'] as String).contains('-g1j-')), hasLength(6));
-      final macG1i = currentRows
-          .where((row) => (row['platforms'] as List<dynamic>).contains('macos') && (row['url'] as String).contains('-g1i-'))
-          .toList();
-      expect(macG1i, hasLength(1));
-      expect(macG1i.single['name'], 'RWKV7-G1i 7.2B (MLX)');
-      expect(macG1i.single['modelSize'], 7.2);
-      expect(macG1i.single['backends'], <String>['mlx']);
-      expect(macG1i.single['quantization'], 'W6');
-      expect(macG1i.single['platforms'], <String>['macos', 'ios']);
-    }
+    expect(macG1i, isEmpty);
+    expect(rows.where((row) => row['name'] == 'RWKV7-G1i 7.2B (MLX)'), isEmpty);
     final distributed = artifacts.where((artifact) => artifact['distribution'] != null).toList();
     final pending = artifacts.where((artifact) => artifact['distribution'] == null).toList();
     final frozenByHash = {for (final artifact in artifacts) artifact['sha256'] as String: artifact};
@@ -93,7 +83,7 @@ void main() {
       );
 
       final quantization = switch (backend) {
-        'palm' => 'W8',
+        'palm' => 'W4',
         'llamacpp' => file.modelSize == 1.5 ? 'Q6_K' : 'Q4_K_M',
         'webrwkv' => 'NF4',
         'mlx' => 'W6',

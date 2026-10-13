@@ -21,7 +21,7 @@ void main() {
     expect(find.byIcon(Icons.arrow_back_rounded), findsOneWidget);
     expect(find.text("Generate HTML Grid"), findsOneWidget);
     expect(find.text("Concurrency"), findsOneWidget);
-    expect(find.text("Cloud"), findsOneWidget);
+    expect(find.text("No key"), P.webDemo.officialCloudConfigured ? findsNothing : findsOneWidget);
     expect(find.text("Albatross"), findsOneWidget);
     expect(find.text("RWKV Mobile"), findsOneWidget);
     expect(find.text("7.2B"), findsOneWidget);
@@ -63,11 +63,14 @@ void main() {
     await tester.pump();
     expect(P.webDemo.backendMode.q, WebDemoBackendMode.localRwkvMobile);
 
-    await tester.tap(find.text("Cloud"));
-    await tester.pump();
-    await tester.tap(find.text("13.3B"));
-    await tester.pump();
-    expect(P.webDemo.backendMode.q, WebDemoBackendMode.cloud13b);
+    final selector = tester.widget<SegmentedButton>(
+      find.ancestor(
+        of: find.text(P.webDemo.officialCloudConfigured ? "Cloud" : "No key"),
+        matching: find.byWidgetPredicate((widget) => widget is SegmentedButton),
+      ),
+    );
+    expect(selector.segments.first.enabled, P.webDemo.officialCloudConfigured);
+    expect(P.webDemo.backendMode.q, WebDemoBackendMode.localRwkvMobile);
   });
 
   testWidgets('Web Demo generate and stop buttons reflect prompt and active state', (tester) async {
@@ -218,7 +221,7 @@ void main() {
 
     expect(find.text('生成 HTML 网格'), findsOneWidget);
     expect(find.text('并发数'), findsOneWidget);
-    expect(find.text('云端'), findsOneWidget);
+    expect(find.text(P.webDemo.officialCloudConfigured ? '云端' : '未配置密钥'), findsOneWidget);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 1));
   });

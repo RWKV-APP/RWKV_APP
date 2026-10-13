@@ -1009,8 +1009,7 @@
         "sha256": "c02f394764a7affddafea7c341c7913f709a75ebc7ee05952e728c079cd2148e",
         "quantization": "W6",
         "platforms": [
-          "macos",
-          "ios"
+          "macos"
         ],
         "backends": [
           "mlx"
