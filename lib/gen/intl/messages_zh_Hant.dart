@@ -942,6 +942,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "font_size_follow_system": MessageLookupByLibrary.simpleMessage("字體大小跟隨系統"),
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage("強制使用深色模式"),
+    "force_import": MessageLookupByLibrary.simpleMessage("強制匯入"),
+    "force_import_model_message": MessageLookupByLibrary.simpleMessage(
+      "此檔案已識別為 RWKV GGUF，但未收錄在應用程式設定清單中。強制匯入後可能無法載入或正常執行，應用程式不保證其可用性。是否繼續？",
+    ),
+    "force_import_model_title": MessageLookupByLibrary.simpleMessage(
+      "強制匯入未收錄模型？",
+    ),
     "forget_location_success": MessageLookupByLibrary.simpleMessage("已忘記該位置"),
     "forget_this_location": MessageLookupByLibrary.simpleMessage("忘記該位置"),
     "found_new_version_available": MessageLookupByLibrary.simpleMessage(
@@ -1039,6 +1046,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading": MessageLookupByLibrary.simpleMessage("載入中..."),
     "loading_progress_percent": m39,
     "local_folder_name": m40,
+    "local_models_unverified": MessageLookupByLibrary.simpleMessage(
+      "本機模型（未驗證）",
+    ),
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
       "本機模型檔案",
     ),
@@ -1069,6 +1079,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "mode": MessageLookupByLibrary.simpleMessage("模式"),
     "model": MessageLookupByLibrary.simpleMessage("模型"),
+    "model_configuration_not_loaded": MessageLookupByLibrary.simpleMessage(
+      "模型設定尚未載入，請稍後重試。",
+    ),
+    "model_import_size_mismatch": MessageLookupByLibrary.simpleMessage(
+      "檔案大小與設定清單不一致，未匯入。",
+    ),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(
       "升級 iOS 18+ 可使用這款權重，更快更省電",
     ),
