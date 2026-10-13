@@ -1,8 +1,0 @@
-app_identifier('com.rwkv.chat.v7.100m') # The bundle identifier of your app
-apple_id('halowang1991@gmail.com') # Your Apple Developer Portal username
-
-itc_team_id('127523260') # App Store Connect Team ID
-team_id('3FTQ9PH6TL') # Developer Portal Team ID
-
-# For more information about the Appfile, see:
-#     https://docs.fastlane.tools/advanced/#appfile

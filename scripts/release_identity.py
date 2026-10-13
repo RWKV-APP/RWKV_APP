@@ -92,7 +92,7 @@ def require_clean(root, allow_artwork=False):
     paths.update(command('git', 'diff', '--cached', '--name-only', '-z', cwd=root).split('\0'))
     paths.discard('')
     if allow_artwork:
-        # Keep the same generated-artwork boundary as release_git_staging.rb.
+        # Allow only generated artwork while preserving all source changes.
         paths = {p for p in paths if not re.search(r'\.(?:ico|png)$', p, re.I)
                  and not re.fullmatch(r'(?:ios|macos)/Runner/Assets\.xcassets/.+/Contents\.json', p)}
     if paths:
