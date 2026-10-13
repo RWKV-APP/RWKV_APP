@@ -8101,6 +8101,61 @@ class S {
       args: [],
     );
   }
+
+  /// `强制导入未收录模型？`
+  String get force_import_model_title {
+    return Intl.message(
+      '强制导入未收录模型？',
+      name: 'force_import_model_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `此文件已识别为 RWKV GGUF，但未收录在应用配置单中。强制导入后可能无法加载或正常运行，应用不保证其可用性。是否继续？`
+  String get force_import_model_message {
+    return Intl.message(
+      '此文件已识别为 RWKV GGUF，但未收录在应用配置单中。强制导入后可能无法加载或正常运行，应用不保证其可用性。是否继续？',
+      name: 'force_import_model_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `强制导入`
+  String get force_import {
+    return Intl.message('强制导入', name: 'force_import', desc: '', args: []);
+  }
+
+  /// `本地模型（未验证）`
+  String get local_models_unverified {
+    return Intl.message(
+      '本地模型（未验证）',
+      name: 'local_models_unverified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `模型配置尚未加载，请稍后重试。`
+  String get model_configuration_not_loaded {
+    return Intl.message(
+      '模型配置尚未加载，请稍后重试。',
+      name: 'model_configuration_not_loaded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件大小与配置单不一致，未导入。`
+  String get model_import_size_mismatch {
+    return Intl.message(
+      '文件大小与配置单不一致，未导入。',
+      name: 'model_import_size_mismatch',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
