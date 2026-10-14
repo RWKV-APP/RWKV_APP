@@ -6,13 +6,13 @@
   "adapter": {
     "repository": "RWKV-APP/rwkv_mobile_flutter",
     "branch": "dev",
-    "commit": "8d052a1a848c94f705b53f284d1e3fd9266daa1e"
+    "commit": "adb63a6b20ea09be4238c26703b355c3a3eaccde"
   },
   "native": {
     "repository": "RWKV-APP/rwkv-mobile",
-    "branch": "codex/mlx-compile-reuse-20261014",
-    "tag": "4.8.5-native.mlx.1",
-    "commit": "64c2cad0fa7f550d3ef6f76499f3a304f4fd9bdb"
+    "branch": "codex/cpu-threads-apple-20261014",
+    "tag": "4.8.5-native.cpu-macos.1",
+    "commit": "5e4a2f1e9e89eab21b595e65c591f18d0b1a9967"
   },
   "channels": {
     "github": true,
