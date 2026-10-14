@@ -6,13 +6,13 @@
   "adapter": {
     "repository": "RWKV-APP/rwkv_mobile_flutter",
     "branch": "dev",
-    "commit": "2343c81cd35b71fb9457a017d420e1b88926289c"
+    "commit": "8d052a1a848c94f705b53f284d1e3fd9266daa1e"
   },
   "native": {
     "repository": "RWKV-APP/rwkv-mobile",
-    "branch": "codex/palm-release-4.8.0",
-    "tag": "4.8.0-native.4",
-    "commit": "205d4848f2b769efe4a1df268e1cdf6548158b5d"
+    "branch": "codex/mlx-compile-reuse-20261014",
+    "tag": "4.8.5-native.mlx.1",
+    "commit": "64c2cad0fa7f550d3ef6f76499f3a304f4fd9bdb"
   },
   "channels": {
     "github": true,
