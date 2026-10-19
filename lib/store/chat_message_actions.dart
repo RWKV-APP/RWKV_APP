@@ -260,6 +260,7 @@ extension $ChatMessageActions on _Chat {
   }
 
   Future<void> startNewChat() async {
+    if (!P.rwkvGeneration.generating.q && _showGeneratingSendBlockedAlert()) return;
     if (P.rwkvGeneration.generating.q) await onStopButtonPressed();
     await 100.msLater;
     // Alert.success(S.current.new_chat_started);

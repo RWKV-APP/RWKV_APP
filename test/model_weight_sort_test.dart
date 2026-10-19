@@ -17,7 +17,7 @@ void main() {
       _fileInfo(name: 'Core ML', tags: const ['coreml'], modelSize: 0.1),
     ]..sort(compareModelWeights);
 
-    expect(models.map((model) => model.name), ['Core ML', 'MLX', 'NPU', 'GPU', 'WebRWKV', 'CPU']);
+    expect(models.map((model) => model.name), ['MLX', 'Core ML', 'NPU', 'GPU', 'WebRWKV', 'CPU']);
   });
 
   test('orders weights by descending size within the same acceleration tier', () {

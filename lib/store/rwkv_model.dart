@@ -2,6 +2,7 @@ part of 'p.dart';
 
 class _RWKVModel {
   Timer? _ttsPerformanceTimer;
+  late final _chatLoadsInProgress = qs(0);
 
   /// 已经加载到内存中的模型，key 为 FuncType，value 为模型 ID
   late final allLoaded = qs<Map<FileInfo, int>>({});
@@ -107,6 +108,22 @@ extension $RWKVModel on _RWKVModel {
     required FileInfo fileInfo,
     bool Function()? shouldKeepLoadedModel,
   }) async {
+    _chatLoadsInProgress.q++;
+    try {
+      return await _loadChat(
+        fileInfo: fileInfo,
+        shouldKeepLoadedModel: shouldKeepLoadedModel,
+      );
+    } finally {
+      _chatLoadsInProgress.q--;
+      assert(_chatLoadsInProgress.q >= 0);
+    }
+  }
+
+  Future<(SendPort?, int?)> _loadChat({
+    required FileInfo fileInfo,
+    bool Function()? shouldKeepLoadedModel,
+  }) async {
     qq;
     P.rwkvGeneration.prefillSpeed.q = 0;
     P.rwkvGeneration.decodeSpeed.q = 0;
@@ -131,8 +148,11 @@ extension $RWKVModel on _RWKVModel {
 
     if (backend == Backend.mlx || backend == Backend.coreml) {
       unzippingStatus(fileInfo).q = true;
-      modelPath = await unzipInPlace(modelPath);
-      unzippingStatus(fileInfo).q = false;
+      try {
+        modelPath = await unzipInPlace(modelPath);
+      } finally {
+        unzippingStatus(fileInfo).q = false;
+      }
     }
 
     await P.rwkvBackend._ensureQNNCopied();

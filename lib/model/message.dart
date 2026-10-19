@@ -338,9 +338,10 @@ extension MessageX on Message {
     final endIndex = content.indexOf("</think>");
     final thinkingContent = content.substring(thinkContentStartIndex, endIndex);
 
-    String result = "";
-    if (endIndex + 9 < content.length) {
-      result = content.substring(endIndex + 9);
+    const thinkEndTag = "</think>";
+    String result = content.substring(endIndex + thinkEndTag.length);
+    if (result.startsWith("\n")) {
+      result = result.substring(1);
     }
 
     if (appendThinkTagInThinkingTagIsEmpty && content.contains("<think>\n</think>")) {

@@ -79,6 +79,7 @@ import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
 import 'package:zone/func/get_batch_info.dart';
+import 'package:zone/func/generation_response.dart';
 import 'package:zone/func/g1h_agent_protocol.dart';
 import 'package:zone/func/is_chinese.dart';
 import 'package:zone/func/json_cast.dart';

@@ -13,6 +13,10 @@ import 'package:zone/func/debug_trace.dart';
 
 /// 在 zip 文件所在的位置解压缩
 Future<String> unzipInPlace(String modelPath) async {
+  final extractedPath = p.withoutExtension(modelPath);
+  if (await Directory(extractedPath).exists() || await File(extractedPath).exists()) {
+    return extractedPath;
+  }
   return await compute(_unzipInPlaceIsolate, modelPath);
 }
 

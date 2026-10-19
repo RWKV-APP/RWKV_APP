@@ -41,6 +41,7 @@ class _Chat {
   Map<int, int> _fakeBatchInferenceBenchmarkFixedTargetsBySlot = const <int, int>{};
   String _latestVisibleReceivedTokens = "";
   int? _pauseFinalizingMessageId;
+  ({int requestId, int messageId})? _completionRead;
   bool _sensitiveCheckRunning = false;
   String? _pendingSensitiveContent;
   int? _pendingSensitiveReceiveId;

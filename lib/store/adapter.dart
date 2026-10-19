@@ -6,6 +6,15 @@ class _Adapter {
   // ===========================================================================
 
   late final _channel = const MethodChannel("channel");
+  bool? _inferenceActivityApplied;
+  bool _inferenceActivitySyncing = false;
+
+  late final _inferenceActive = qp((ref) {
+    final generating = ref.watch(P.rwkvGeneration.generating);
+    final loading = ref.watch(P.rwkvModel.loading);
+    final preparingChat = ref.watch(P.rwkvModel._chatLoadsInProgress) > 0;
+    return generating || loading || preparingChat;
+  });
 
   final Map<FromNative, List<void Function(dynamic arguments)>> _registry = {};
 }
@@ -92,5 +101,25 @@ extension $Adapter on _Adapter {
 extension _$Adapter on _Adapter {
   Future<void> _init() async {
     _channel.setMethodCallHandler(_onCall);
+    if (Platform.isMacOS) {
+      _inferenceActive.lv(_syncInferenceActivity, fireImmediately: true);
+    }
+  }
+
+  Future<void> _syncInferenceActivity() async {
+    if (_inferenceActivitySyncing) return;
+    _inferenceActivitySyncing = true;
+    try {
+      while (true) {
+        final active = _inferenceActive.q;
+        if (_inferenceActivityApplied == active) return;
+        await _channel.invokeMethod<void>(ToNative.setInferenceActive.name, active);
+        _inferenceActivityApplied = active;
+      }
+    } catch (e) {
+      qqw("Failed to update macOS inference activity: $e");
+    } finally {
+      _inferenceActivitySyncing = false;
+    }
   }
 }

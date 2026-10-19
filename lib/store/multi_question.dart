@@ -109,6 +109,7 @@ extension $MultiQuestion on _MultiQuestion {
   }
 
   Future<void> sendAll() async {
+    if (P.chat._showGeneratingSendBlockedAlert()) return;
     final questionList = questions.q;
     final List<String> effectiveQuestions = [
       for (final q in questionList)

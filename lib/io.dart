@@ -3,6 +3,7 @@ enum FromNative {
 }
 
 enum ToNative {
+  setInferenceActive,
   checkMemory,
   startAccessingSecurityScopedResource,
   stopAccessingSecurityScopedResource,

@@ -25,6 +25,7 @@ class _RWKVBridge {
 
   /// 我们等着这个的主要目的是等着 rwkv_mobile_flutter isolate 把 sendPort 发过来, 我们好用 sendport 来让 rwkv_mobile_flutter isolate 加载模型, 并执行后继操作
   Completer<void>? _createRWKVIsolateCompleter;
+  from_rwkv.IsGenerating? _lastGenerationStatus;
 
   @Deprecated("Use broadcastStream instead")
   Stream<LLMEvent> get oldBroadcastStream {
@@ -147,6 +148,9 @@ extension _$RWKVBridge on _RWKVBridge {
     }
 
     if (message["isGenerating"] != null) {
+      if (!isCurrentGenerationResponse(_lastGenerationStatus?.req?.requestId, P.rwkvGeneration._latestGenerationRequest?.requestId)) return;
+      final modelID = P.rwkvGeneration._generationModelID;
+      if (modelID != null && _lastGenerationStatus?.modelID != modelID) return;
       final isGenerating = message["isGenerating"];
       emitOldEvent(
         LLMEvent(
@@ -198,6 +202,23 @@ extension _$RWKVBridge on _RWKVBridge {
   }
 
   void _handleFromRWKV(from_rwkv.FromRWKV message) {
+    final generation = P.rwkvGeneration._latestGenerationRequest;
+    if (message is from_rwkv.IsGenerating) {
+      _lastGenerationStatus = message;
+      if (!isCurrentGenerationResponse(message.req?.requestId, generation?.requestId)) return;
+      final modelID = P.rwkvGeneration._generationModelID;
+      if (modelID != null && message.modelID != modelID) {
+        emitFromRWKV(message);
+        return;
+      }
+    }
+    if ((message is from_rwkv.GenerateStart || message is from_rwkv.GenerateStop) &&
+        !isCurrentGenerationResponse(message.req?.requestId, generation?.requestId))
+      return;
+    if (message is from_rwkv.Speed && !isCurrentGenerationResponse(message.req?.requestId, generation?.requestId)) return;
+    if (message is from_rwkv.GenerateStop && message.error != null && message.req?.requestId == generation?.requestId) {
+      P.rwkvGeneration._failedGenerationRequestId = generation?.requestId;
+    }
     emitFromRWKV(message);
     switch (message) {
       case from_rwkv.LoadModelSteps res:

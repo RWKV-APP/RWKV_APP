@@ -1,7 +1,7 @@
 part of 'p.dart';
 
 extension $ChatGenerationCompletion on _Chat {
-  void _fullyReceived({String? callingFunction}) {
+  Future<void> _fullyReceived({String? callingFunction, bool readFinalBuffer = true}) async {
     final pageKey = P.app.pageKey.q;
     if (pageKey == .translator || pageKey == .ocr || pageKey == .benchmark || pageKey == .completion) return;
     qqq("callingFunction: $callingFunction");
@@ -25,6 +25,69 @@ extension $ChatGenerationCompletion on _Chat {
     if (!currentMessage.changing) {
       qqq("skip fullyReceived for non-changing message: $id");
       return;
+    }
+
+    final request = P.rwkvGeneration._latestGenerationRequest;
+    final modelID = switch (request) {
+      to_rwkv.ChatAsync req => req.modelID,
+      to_rwkv.ChatBatchAsync req => req.modelID,
+      _ => null,
+    };
+    if (readFinalBuffer &&
+        !_responseStyleSequentialActive &&
+        !P.albatrossRuntime.enabled.q &&
+        modelID != null &&
+        request != null &&
+        P.rwkvGeneration._failedGenerationRequestId != request.requestId) {
+      if (_completionRead?.requestId == request.requestId) return;
+      _completionRead = (requestId: request.requestId, messageId: id);
+      final snapshot = _PausedGenerationSnapshot(
+        messageId: id,
+        modelID: modelID,
+        isSensitive: currentMessage.isSensitive,
+        lastContent: this.receivedTokens.q,
+        prefillSpeed: currentMessage.prefillSpeed,
+        decodeSpeed: currentMessage.decodeSpeed,
+        peakDecodeSpeed: P.telemetry._peakDecodeSpeed.q,
+        isBatchInference: request is to_rwkv.ChatBatchAsync,
+        isResponseStyleSequential: false,
+        responseStyleCompletedOutputs: const <String>[],
+        responseStyleTotalCount: 0,
+      );
+      bool stillCurrent() =>
+          P.rwkvGeneration._latestGenerationRequest?.requestId == request.requestId &&
+          receiveId.q == id &&
+          _pauseFinalizingMessageId == null &&
+          P.msg.pool.q[id]?.changing == true;
+      final finalContent = await _readPausedFinalContent(snapshot);
+      if (stillCurrent()) {
+        _setReceivedTokens(finalContent, immediateUi: true);
+        final speedRequest = to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID);
+        final speedResponse = P.rwkvBridge.broadcastStream
+            .whereType<from_rwkv.Speed>()
+            .where((event) => event.req?.requestId == speedRequest.requestId)
+            .first
+            .timeout(_pauseFinalBufferTimeout);
+        P.rwkvBridge.send(speedRequest);
+        try {
+          await speedResponse;
+        } catch (_) {
+          qqw("Final generation metrics timed out");
+        }
+      }
+      if (!stillCurrent()) {
+        if (_pauseFinalizingMessageId != id && P.msg.pool.q[id]?.changing == true) {
+          _updateMessageById(
+            id: id,
+            content: finalContent,
+            changing: false,
+            prefillSpeed: snapshot.prefillSpeed,
+            decodeSpeed: snapshot.decodeSpeed,
+            callingFunction: callingFunction,
+          );
+        }
+        return;
+      }
     }
 
     final receivedTokens = this.receivedTokens.q;
@@ -61,8 +124,6 @@ extension $ChatGenerationCompletion on _Chat {
     );
   }
 
-  static final _thinkTagRegex = RegExp(r'<think>[\s\S]*?</think>');
-
   void _prefillAfterReply() {
     final pageKey = P.app.pageKey.q;
     if (pageKey != .chat) return;
@@ -80,8 +141,7 @@ extension $ChatGenerationCompletion on _Chat {
       history.add(userMsg.getContentForHistoryWithRef(botMsg?.reference));
 
       if (botMsg != null) {
-        final content = botMsg.content.replaceAll(_thinkTagRegex, '').trim();
-        history.add(content);
+        history.add(botMsg.getHistoryContent());
       }
     }
 

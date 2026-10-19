@@ -723,7 +723,7 @@ extension $ChatResponseStyle on _Chat {
     final int nextRouteIndex = _responseStyleSequentialCurrentRouteIndex + 1;
     if (nextRouteIndex >= _responseStyleSequentialRoutes.length) {
       _clearResponseStyleSequentialState();
-      _fullyReceived(callingFunction: "_advanceResponseStyleSequentialGenerationAfterStop");
+      unawaited(_fullyReceived(callingFunction: "_advanceResponseStyleSequentialGenerationAfterStop", readFinalBuffer: false));
       return;
     }
 

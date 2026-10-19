@@ -17,6 +17,16 @@ class _RWKVGeneration {
   late final prefillProgress = qs<double>(.0);
 
   Timer? _getTokensTimer;
+  to_rwkv.ToRWKV? _latestGenerationRequest;
+  int? _failedGenerationRequestId;
+
+  int? get _generationModelID => switch (_latestGenerationRequest) {
+    to_rwkv.ChatAsync req => req.modelID,
+    to_rwkv.ChatBatchAsync req => req.modelID,
+    to_rwkv.GenerateAsync req => req.modelID,
+    to_rwkv.SudokuOthelloGenerate req => req.modelID,
+    _ => null,
+  };
 }
 
 extension $RWKVGeneration on _RWKVGeneration {
@@ -140,6 +150,8 @@ extension $RWKVGeneration on _RWKVGeneration {
         forceLang: resolvedForceLang,
       );
     }
+    _latestGenerationRequest = request;
+    _failedGenerationRequestId = null;
     P.rwkvBridge.send(request);
 
     generatingId.q = request.requestId;
@@ -198,6 +210,8 @@ extension $RWKVGeneration on _RWKVGeneration {
       stopToken: stopToken,
       disableCache: disableCache,
     );
+    _latestGenerationRequest = request;
+    _failedGenerationRequestId = null;
     P.rwkvBridge.send(request);
     _cancelTokensTimer();
 
@@ -238,7 +252,10 @@ extension $RWKVGeneration on _RWKVGeneration {
       return;
     }
 
-    P.rwkvBridge.send(to_rwkv.SudokuOthelloGenerate(prompt, modelID: modelID));
+    final request = to_rwkv.SudokuOthelloGenerate(prompt, modelID: modelID);
+    _latestGenerationRequest = request;
+    _failedGenerationRequestId = null;
+    P.rwkvBridge.send(request);
 
     _cancelTokensTimer();
 

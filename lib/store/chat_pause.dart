@@ -55,6 +55,7 @@ extension $ChatPause on _Chat {
   }
 
   Future<void> resumeMessageById({required int id, bool withHaptic = true}) async {
+    if (P.app.isDesktop.q && _showGeneratingSendBlockedAlert()) return;
     qq;
     if (withHaptic) P.app.hapticLight();
     _clearResponseStyleSequentialState();

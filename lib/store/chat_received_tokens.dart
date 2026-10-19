@@ -6,7 +6,16 @@ extension $ChatReceivedTokens on _Chat {
   void _setReceivedTokens(String value, {bool immediateUi = false}) {
     receivedTokens.q = value;
     _latestVisibleReceivedTokens = value;
-    if (immediateUi) {
+    final visible = visibleReceivedTokens.q.trim();
+    final waitingForContent =
+        visible.isEmpty ||
+        visible == thinking_mode.ThinkingMode.free.header ||
+        visible == thinking_mode.ThinkingMode.fast.header ||
+        visible == visionThinkingEnabledPrefix ||
+        visible == compactFastThinkingPrefix ||
+        visible == '<think></think>' ||
+        visible == visionThinkingDisabledPrefix;
+    if (immediateUi || waitingForContent) {
       _flushVisibleReceivedTokens();
       return;
     }

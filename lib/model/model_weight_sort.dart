@@ -8,13 +8,13 @@ typedef WorldModelSelection = ({WorldType worldType, (String, String) socPair});
 /// Accelerated backends are preferred first, then larger models within the
 /// same backend tier.
 int compareModelWeights(FileInfo a, FileInfo b) {
-  final aHasCoreML = a.hasEffectiveTag('coreml');
-  final bHasCoreML = b.hasEffectiveTag('coreml');
-  if (aHasCoreML != bHasCoreML) return aHasCoreML ? -1 : 1;
-
   final aHasMLX = a.hasEffectiveTag('mlx');
   final bHasMLX = b.hasEffectiveTag('mlx');
   if (aHasMLX != bHasMLX) return aHasMLX ? -1 : 1;
+
+  final aHasCoreML = a.hasEffectiveTag('coreml');
+  final bHasCoreML = b.hasEffectiveTag('coreml');
+  if (aHasCoreML != bHasCoreML) return aHasCoreML ? -1 : 1;
 
   final aHasNpu = a.hasEffectiveTag('npu');
   final bHasNpu = b.hasEffectiveTag('npu');

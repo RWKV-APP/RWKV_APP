@@ -1167,7 +1167,7 @@ extension $AlbatrossRuntime on _AlbatrossRuntime {
   }
 
   void debugMetricRenderLog(String message) {
-    if (!kDebugMode) return;
+    if (!kDebugMode || !enabled.q) return;
 
     final line = "[AlbatrossMetrics] $message";
     if (_lastMetricsDebugLine == line) return;

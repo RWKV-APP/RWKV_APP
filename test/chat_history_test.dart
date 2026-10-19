@@ -61,5 +61,73 @@ void main() {
 
       expect(history, const <String>['describe this']);
     });
+
+    test('keeps the first answer character after a closed thinking tag', () {
+      final answer = '# ' + List<String>.filled(201, 'a').join();
+      for (final separator in <String>['', '\n']) {
+        final message = Message(
+          id: 2,
+          content: '<think>reasoning</think>$separator$answer',
+          isMine: false,
+          paused: false,
+        );
+
+        expect(message.getHistoryContent(), answer);
+      }
+    });
+
+    test('preserves the existing short-answer thinking threshold', () {
+      for (final length in <int>[0, 1, 200, 201]) {
+        final answer = List<String>.filled(length, 'a').join();
+        final content = '<think>reasoning</think>$answer';
+        final message = Message(id: 2, content: content, isMine: false, paused: false);
+
+        expect(message.getHistoryContent(), length <= 200 ? content : answer);
+      }
+    });
+
+    test('preserves paused, incomplete and empty-thinking history policy', () {
+      final answer = List<String>.filled(201, 'a').join();
+      final paused = Message(
+        id: 2,
+        content: '<think>reasoning</think>$answer',
+        isMine: false,
+        paused: true,
+      );
+      final incomplete = Message(id: 4, content: '<think>$answer', isMine: false, paused: false);
+      final emptyThinking = Message(
+        id: 6,
+        content: '<think>\n</think>$answer',
+        isMine: false,
+        paused: false,
+      );
+
+      for (final message in <Message>[paused, incomplete, emptyThinking]) {
+        expect(message.getHistoryContent(), message.content);
+      }
+    });
+
+    test('uses the same complete assistant history before the next user turn', () {
+      final answer = '# ' + List<String>.filled(201, 'a').join() + ' \n';
+      final messages = <Message>[
+        Message(id: 1, content: _storedUserContent('first question'), isMine: true, paused: false),
+        Message(id: 2, content: '<think></think>$answer', isMine: false, paused: false),
+      ];
+
+      final completedHistory = buildChatHistory(messages: messages, newChatTemplate: '');
+      final nextHistory = buildChatHistory(
+        messages: <Message>[
+          ...messages,
+          Message(id: 3, content: _storedUserContent('follow-up'), isMine: true, paused: false),
+          const Message(id: 4, content: '', isMine: false, paused: false),
+        ],
+        newChatTemplate: '',
+        excludedMessageId: 4,
+      );
+
+      expect(completedHistory, <String>['first question', answer]);
+      expect(nextHistory, <String>['first question', answer, 'follow-up']);
+      expect(nextHistory.take(completedHistory.length), completedHistory);
+    });
   });
 }

@@ -24,6 +24,22 @@ List<int> _encodeUnixArchive(Archive archive) {
 }
 
 void main() {
+  for (final directory in [false, true]) {
+    test('reuses an existing extracted ${directory ? 'directory' : 'file'} without an archive', () async {
+      final temporary = Directory.systemTemp.createTempSync('rwkv-unzip-test-');
+      addTearDown(() => temporary.deleteSync(recursive: true));
+      final extractedPath = p.join(temporary.path, 'model');
+      if (directory) {
+        Directory(extractedPath).createSync();
+      } else {
+        File(extractedPath).writeAsStringSync('existing model');
+      }
+
+      expect(await unzipInPlace('$extractedPath.zip'), extractedPath);
+      expect(temporary.listSync().map((entry) => entry.path), [extractedPath]);
+    });
+  }
+
   for (final (wrapped, config) in [(true, 'config.yaml'), (false, 'config.yaml'), (false, 'config.json')]) {
     test('loads ${wrapped ? 'wrapped' : 'flat'} model archive with $config', () async {
       final temporary = Directory.systemTemp.createTempSync('rwkv-unzip-test-');

@@ -10,6 +10,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 // Project imports:
@@ -98,6 +99,10 @@ Future<void> _postFirstFrameInit() async {
 }
 
 FutureOr<void> _configureSentry(SentryFlutterOptions options) {
+  if (defaultTargetPlatform == TargetPlatform.windows) {
+    final directory = P.app.effectiveDocumentsDir.q;
+    if (directory != null) options.nativeDatabasePath = join(directory.path, '.sentry-native');
+  }
   options.dsn = 'https://320015d75031601a48829d02f17a8394@o4506895545597952.ingest.us.sentry.io/4508996340482048';
   if (_sentryRelease.isNotEmpty) options.release = _sentryRelease;
   if (_sentryDist.isNotEmpty) options.dist = _sentryDist;

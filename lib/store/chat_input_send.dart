@@ -222,7 +222,9 @@ extension $ChatInputSend on _Chat {
   }
 
   bool _showGeneratingSendBlockedAlert() {
-    if (!P.rwkvGeneration.generating.q && !P.agent.localRunning.q) {
+    final completion = _completionRead;
+    final finalizing = _pauseFinalizingMessageId != null || (completion != null && P.msg.pool.q[completion.messageId]?.changing == true);
+    if (!P.rwkvGeneration.generating.q && !P.agent.localRunning.q && !finalizing) {
       return false;
     }
     Alert.info(S.current.please_wait_for_the_model_to_finish_generating);

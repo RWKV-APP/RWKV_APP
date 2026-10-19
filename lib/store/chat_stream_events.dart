@@ -9,7 +9,7 @@ extension $ChatStreamEvents on _Chat {
         final isGenerating = event.content == "true";
         P.rwkvGeneration.generating.q = isGenerating;
         if (!isGenerating && _pauseFinalizingMessageId != null) break;
-        if (!isGenerating && !completionMode.q) _fullyReceived(callingFunction: "_onStreamEvent:isGenerating");
+        if (!isGenerating && !completionMode.q) unawaited(_fullyReceived(callingFunction: "_onStreamEvent:isGenerating"));
         break;
 
       case _RWKVMessageType.streamResponse:
@@ -26,6 +26,13 @@ extension $ChatStreamEvents on _Chat {
     final pageKey = P.app.pageKey.q;
     if (pageKey == .translator) return;
     if (P.askQuestion.interceptingEvents.q) return;
+    if ((event is from_rwkv.ResponseBufferContent || event is from_rwkv.ResponseBatchBufferContent) && event.req != null) {
+      final generation = P.rwkvGeneration._latestGenerationRequest;
+      if (!isCurrentGenerationResponse(event.req?.requestId, generation?.requestId)) return;
+      if (generation != null && P.rwkvGeneration._failedGenerationRequestId == generation.requestId) return;
+      final completion = _completionRead;
+      if (completion != null && completion.requestId == generation?.requestId && completion.messageId != receiveId.q) return;
+    }
     if (_handleResponseStyleSequentialEvent(event)) return;
 
     switch (event) {
