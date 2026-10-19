@@ -1,5 +1,26 @@
 # App Binary Distribution Contract
 
+## Release 4.8.6
+
+Version 4.8.6 uses build 763 and Flutter 3.47.5, retaining the Android, iOS,
+macOS, Windows x64/ARM64 and Linux x64 package and distribution matrix.
+It includes generation-response synchronization, final-response persistence,
+thinking-boundary history fixes, and model-loading and preparation improvements.
+The reviewed native source includes platform CPU scheduling and copy-path
+improvements, MLX execution improvements and optional CUDA optimizations.
+Public performance claims require the corresponding packaged App path to be
+accepted; native benchmarks alone do not establish an App speedup. Standard
+desktop packages retain their declared GPU backends.
+
+Preserve the existing complete 40-artifact G1k catalog and its 42 consumer rows;
+this release does not introduce another model-weight cohort. Keep all published
+4.8.x sections in all six release-note locales. Freeze the exact adapter commit,
+immutable native release and archive/member digests before package builds.
+Verify packaged resources, signatures, provider parity, visible App behavior,
+website download and changelog surfaces separately. Submit the matching iOS
+build to App Store review and public TestFlight, and the matching AAB to Google
+Play production review; submission is distinct from public store availability.
+
 ## Release 4.8.5
 
 Version 4.8.5 uses build 762 and Flutter 3.47.5, retaining the complete Android, iOS, macOS, Windows and Linux

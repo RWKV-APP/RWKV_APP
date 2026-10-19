@@ -172,19 +172,16 @@ for symbol upload.
 
 **Check Apple login separately**
 
-Run `tools/apple_auth.command` in a visible terminal, or double-click it in
-Finder. It loads the existing Fastlane Dotenv configuration and starts a fresh
-Apple ID / App Store Connect login through `ios_auth_preflight`. Enter any
-password or verification code directly in that terminal. The script always
-selects Apple ID mode, accepts no release arguments, and exits after checking
-authentication. It uses the installed bundle pinned by `Gemfile.lock` without
-installing or updating dependencies.
-
-This check does not require a clean Git tree, Flutter, signing certificates, or
-provider-upload credentials. It does not build, sign, upload, or change Git
-state. Its temporary session is removed on exit, so a later `fastlane apple`
-run authenticates again. A successful login does not prove signing readiness
-or that a TestFlight build was uploaded.
+Run `tools/apple_auth.command` in a visible foreground terminal with
+`APPLE_ID_EMAIL` and `MACOS_APP_PASSWORD` supplied by private environment storage.
+The launcher requires Python 3, verifies the foreground terminal process group,
+accepts no arguments and runs only the native
+`xcrun altool --list-providers` check. It passes an environment reference rather
+than the literal application-specific password. It does not use Fastlane,
+inspect an IPA, build, sign, upload or change Git state. Missing credentials or
+a redirected terminal fail before contacting Apple. Authentication is required
+again at the start of a subsequent release; success does not prove signing or
+publication readiness.
 
 **Check and run**
 
