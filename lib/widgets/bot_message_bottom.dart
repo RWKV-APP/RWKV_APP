@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:async';
 import 'dart:math' as math;
 
 // Flutter imports:
@@ -468,17 +467,19 @@ class BotMessageBottom extends ConsumerWidget {
                 child: Row(
                   mainAxisSize: .min,
                   children: [
-                    TweenAnimationBuilder(
-                      tween: Tween(begin: .0, end: 1.0),
-                      duration: const Duration(milliseconds: 1000000000),
-                      builder: (context, value, child) => Transform.rotate(
-                        angle: value * 2 * math.pi * 1000000,
-                        child: child,
-                      ),
-                      child: Icon(
-                        Symbols.hourglass_top,
-                        color: primaryColor,
-                        size: 20,
+                    RepaintBoundary(
+                      child: TweenAnimationBuilder(
+                        tween: Tween(begin: .0, end: 1.0),
+                        duration: const Duration(milliseconds: 1000000000),
+                        builder: (context, value, child) => Transform.rotate(
+                          angle: value * 2 * math.pi * 1000000,
+                          child: child,
+                        ),
+                        child: Icon(
+                          Symbols.hourglass_top,
+                          color: primaryColor,
+                          size: 20,
+                        ),
                       ),
                     ),
                     if (!detailsExpanded) ...[
@@ -646,29 +647,24 @@ class BotMessageBottom extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: .start,
         children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              // qqq("constraints.maxWidth: $constraints.maxWidth");
-              final maxWidth = constraints.maxWidth;
-
-              Timer(const Duration(milliseconds: 30), () {
-                P.ui.maxWidthAllowedForLayout.q = maxWidth;
-              });
-
-              if (shouldUseWrapRatherThanRow) {
-                return Wrap(
-                  alignment: WrapAlignment.start,
-                  crossAxisAlignment: .center,
-                  runSpacing: 8,
-                  children: children,
-                );
-              }
-
-              return Row(
-                mainAxisAlignment: .start,
-                children: children,
-              );
-            },
+          SizedBox(
+            width: double.infinity,
+            child: MeasureSize(
+              onChange: (size) {
+                P.ui.maxWidthAllowedForLayout.q = size.width;
+              },
+              child: shouldUseWrapRatherThanRow
+                  ? Wrap(
+                      alignment: WrapAlignment.start,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      runSpacing: 8,
+                      children: children,
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: children,
+                    ),
+            ),
           ),
           _AnimatedBottomDetailsSection(
             visible: detailsExpanded,
