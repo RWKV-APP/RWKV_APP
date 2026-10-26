@@ -1,0 +1,41 @@
+name: Release signing inventory
+on:
+  push:
+    branches: [codex/release-490-signing-inventory]
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect existing signing identity without exporting secrets
+        env:
+          RELEASE_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          RELEASE_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+        run: |
+          python3 - <<'PY'
+          import base64,hashlib,json,os,re,subprocess,tempfile
+          with tempfile.TemporaryDirectory() as temporary:
+              path=temporary+'/certificate.p12'
+              try:
+                  data=base64.b64decode(''.join(os.environ['RELEASE_CERTIFICATE'].split()),validate=True)
+              except Exception:
+                  raise SystemExit('Configured signing asset is not valid base64; no secret values logged')
+              with open(path,'wb') as stream:stream.write(data)
+              os.chmod(path,0o600)
+              command=['openssl','pkcs12','-in',path,'-passin','env:RELEASE_CERTIFICATE_PASSWORD','-nokeys','-info']
+              result=subprocess.run(command,capture_output=True)
+              if result.returncode:
+                  result=subprocess.run(command+['-legacy'],capture_output=True)
+              if result.returncode:raise SystemExit('Configured P12 could not be inspected; no secret values logged')
+              certificates=re.findall(rb'-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----',result.stdout,re.S)
+              output={'certificateCount':len(certificates),'privateKeyBags':len(re.findall(rb'(?:Shrouded Keybag|Key bag)',result.stderr)),'expectedTeamIdentities':[]}
+              for certificate in certificates:
+                  subject=subprocess.check_output(['openssl','x509','-noout','-subject'],input=certificate).decode().strip()
+                  if '3FTQ9PH6TL' not in subject:continue
+                  der=subprocess.check_output(['openssl','x509','-outform','DER'],input=certificate)
+                  public=subprocess.check_output(['openssl','x509','-pubkey','-noout'],input=certificate)
+                  spki=subprocess.check_output(['openssl','pkey','-pubin','-outform','DER'],input=public)
+                  output['expectedTeamIdentities'].append({'subject':subject,'certificateSha1':hashlib.sha1(der).hexdigest(),'spkiSha256':hashlib.sha256(spki).hexdigest()})
+              print('RELEASE_SIGNING_INVENTORY',json.dumps(output))
+          PY
