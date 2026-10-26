@@ -17,10 +17,13 @@
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "debug",
+      "deviceId": "windows",
+      "env": {"RWKV_LLAMACPP_THREADS": "12"},
       "args": [
         //
         // "--dart-define=autoShowTranslator=true",
         "--dart-define=disableRemoteConfig=true",
+        "--dart-define=forceLlamaCppCpu=true",
         // "--dart-define=logLevel=3",
         // "--dart-define=enableBatchInference=true",
         // "--dart-define=batchCount=8",

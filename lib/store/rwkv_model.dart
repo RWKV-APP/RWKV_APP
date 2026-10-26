@@ -577,6 +577,9 @@ extension $RWKVModel on _RWKVModel {
     if (backend != Backend.llamacpp) {
       return false;
     }
+    if (kDebugMode && const bool.fromEnvironment('forceLlamaCppCpu')) {
+      return true;
+    }
     if (!Platform.isWindows) {
       return false;
     }
