@@ -5,7 +5,6 @@ import hashlib
 import tempfile
 import unittest
 from pathlib import Path
-from types import SimpleNamespace
 
 
 SCRIPT_PATH = Path(__file__).with_name("upload_to_modelscope.py")
@@ -20,14 +19,20 @@ class FakeApi:
         self.init_kwargs = kwargs
         self.calls = []
         self.files = []
+        self.legacy = self
+        self.queries = []
 
     def list_repo_files(self, *args, **kwargs):
+        raise AssertionError("The incomplete high-level listing must never be used")
+
+    def list_dataset_files_paginated(self, *args, **kwargs):
+        self.queries.append((args, kwargs))
         return self.files
 
     def upload_file(self, *args, **kwargs):
         self.calls.append((args, kwargs))
         data = Path(args[2]).read_bytes()
-        self.files = [SimpleNamespace(path=args[3], size=len(data), sha256=hashlib.sha256(data).hexdigest())]
+        self.files = [{"Path": args[3], "Size": len(data), "Sha256": hashlib.sha256(data).hexdigest()}]
         return {"commit": "test"}
 
 
@@ -80,6 +85,58 @@ class ModelScopeUploaderTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'overwrite different'):
                 uploader.upload_file(**options)
             self.assertEqual(len(api.calls), 1)
+
+    def test_late_page_target_is_checked_before_upload(self):
+        api = FakeApi()
+        uploader = MODULE.ModelScopeUploader(token='test-token', api_factory=lambda **_: api)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'release.zip'
+            path.write_bytes(b'accepted artifact')
+            target = dict(Path='windows-x64/nested/release.zip', Size=path.stat().st_size,
+                          Sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+            api.files = [dict(Path=f'windows-x64/nested/old-{i}.zip', Size=1, Sha256='0' * 64) for i in range(101)] + [target]
+            options = dict(repo_id='HaloWang1991/rwkv-chat', local_path=str(path),
+                           path_in_repo=target['Path'], revision='frozen-revision')
+            self.assertTrue(uploader.upload_file(**options)['skipped'])
+            target['Sha256'] = '1' * 64
+            with self.assertRaisesRegex(ValueError, 'overwrite different'):
+                uploader.upload_file(**options)
+            self.assertEqual(api.calls, [])
+            self.assertTrue(api.queries)
+            for args, kwargs in api.queries:
+                self.assertEqual(args, ('HaloWang1991/rwkv-chat',))
+                self.assertEqual(kwargs, dict(revision='frozen-revision', root_path='windows-x64/nested', page_size=100))
+
+    def test_anonymous_metadata_must_match_after_upload(self):
+        for observed in (None, dict(Path='release.zip', Size=99, Sha256=hashlib.sha256(b'release').hexdigest()),
+                         dict(Path='release.zip', Size=7, Sha256='1' * 64)):
+            with self.subTest(observed=observed), tempfile.TemporaryDirectory() as directory:
+                authenticated, anonymous = FakeApi(), FakeApi()
+                anonymous.files = [] if observed is None else [observed]
+                uploader = MODULE.ModelScopeUploader(token='test-token', api_factory=lambda token, **_: authenticated if token else anonymous)
+                path = Path(directory) / 'release.zip'
+                path.write_bytes(b'release')
+                with self.assertRaisesRegex(RuntimeError, 'checksum verification failed'):
+                    uploader.upload_file('HaloWang1991/rwkv-chat', str(path), 'release.zip')
+                self.assertEqual(len(authenticated.calls), 1)
+                self.assertEqual(anonymous.queries[0][1], dict(revision='master', root_path='/', page_size=100))
+
+    def test_missing_or_failed_pagination_blocks_upload(self):
+        for failure in ('missing', 'query_error'):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as directory:
+                api = FakeApi()
+                if failure == 'missing':
+                    api.legacy = None
+                else:
+                    def fail(*args, **kwargs):
+                        raise RuntimeError('query failed')
+                    api.list_dataset_files_paginated = fail
+                uploader = MODULE.ModelScopeUploader(token='test-token', api_factory=lambda **_: api)
+                path = Path(directory) / 'release.zip'
+                path.write_bytes(b'release')
+                with self.assertRaises(RuntimeError):
+                    uploader.upload_file('HaloWang1991/rwkv-chat', str(path), 'release.zip')
+                self.assertEqual(api.calls, [])
 
     def test_download_url_uses_dataset_resolve_route(self):
         self.assertEqual(

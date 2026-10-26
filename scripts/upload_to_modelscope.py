@@ -45,6 +45,17 @@ def build_download_url(endpoint: str, repo_id: str, revision: str, path_in_repo:
     )
 
 
+def _remote_checksum(api: Any, repo_id: str, revision: str, path_in_repo: str):
+    list_files = getattr(getattr(api, "legacy", None), "list_dataset_files_paginated", None)
+    if not callable(list_files):
+        raise RuntimeError("ModelScope SDK requires dataset pagination; upgrade modelscope-hub before publication")
+    parent = path_in_repo.rpartition("/")[0] or "/"
+    for item in list_files(repo_id, revision=revision, root_path=parent, page_size=100):
+        if (item.get("Path") or item.get("path")) == path_in_repo:
+            return (int(item.get("Size") or item.get("size") or 0), item.get("Sha256") or item.get("sha256"))
+    return None
+
+
 class ModelScopeUploader:
     """Small adapter around the official ``modelscope-hub`` client."""
 
@@ -97,10 +108,9 @@ class ModelScopeUploader:
             for chunk in iter(lambda: stream.read(8 * 1024 * 1024), b''):
                 digest.update(chunk)
         expected = (artifact.stat().st_size, digest.hexdigest())
-        existing = next((item for item in self.api.list_repo_files(normalized_repo_id, 'dataset', revision=revision)
-                         if item.path == normalized_path), None)
+        existing = _remote_checksum(self.api, normalized_repo_id, revision, normalized_path)
         if existing is not None:
-            if (existing.size, existing.sha256) != expected:
+            if existing != expected:
                 raise ValueError(f'Refusing to overwrite different release bytes: {normalized_path}')
             result = {'skipped': True, 'sha256': expected[1]}
         else:
@@ -113,9 +123,8 @@ class ModelScopeUploader:
                 commit_message=message,
                 disable_tqdm=True,
             )
-        published = next((item for item in self.anonymous_api.list_repo_files(normalized_repo_id, 'dataset', revision=revision)
-                          if item.path == normalized_path), None)
-        if published is None or (published.size, published.sha256) != expected:
+        published = _remote_checksum(self.anonymous_api, normalized_repo_id, revision, normalized_path)
+        if published != expected:
             raise RuntimeError(f'Anonymous ModelScope release checksum verification failed: {normalized_path}')
         logger.info(
             "ModelScope upload completed: %s",
