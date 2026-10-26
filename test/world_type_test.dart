@@ -13,8 +13,11 @@ void main() {
   final config = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
   final world = config['world'] as Map<String, dynamic>;
   final modelConfigs = (world['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
+  final historicalConfig = jsonDecode(File('remote/750.json').readAsStringSync()) as Map<String, dynamic>;
+  final historicalModels = ((historicalConfig['world'] as Map<String, dynamic>)['model_config'] as List<dynamic>)
+      .cast<Map<String, dynamic>>();
 
-  test('keeps both RWKV-VL generations in the latest JSON', () {
+  test('keeps 0.4B and only the latest 1.5B RWKV-VL generation', () {
     final legacyFiles = modelConfigs.where((entry) {
       final url = entry['url'];
       return url is String && url.contains('rwkv-vl-0.4B-260625');
@@ -25,10 +28,8 @@ void main() {
     });
 
     expect(legacyFiles, hasLength(13));
-    expect(fineVisionMaxFiles, hasLength(13));
-    for (final modelConfig in fineVisionMaxFiles) {
-      expect(FileInfo.fromJSON(modelConfig).worldType, WorldType.fineVisionMax);
-    }
+    expect(fineVisionMaxFiles, isEmpty);
+    expect(modelConfigs.where((entry) => (entry['url'] as String).contains('thinking-preview-260815')), hasLength(13));
   });
 
   test('publishes Thinking Preview with the RWKV-VL 260625 support matrix', () {
@@ -159,13 +160,13 @@ void main() {
     });
     final fineVisionMaxConfig = modelConfigs.singleWhere((entry) {
       final url = entry['url'];
-      return url is String && url.endsWith('rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen5.rmpack');
+      return url is String && url.endsWith('rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-rwkv-a16w8-8gen5.rmpack');
     });
     final legacyFileInfo = FileInfo.fromJSON(legacyConfig);
     final fineVisionMaxFileInfo = FileInfo.fromJSON(fineVisionMaxConfig);
 
     expect(WorldType.modrwkvV3.socPairs, contains(('8 Gen 5', legacyFileInfo.fileName)));
-    expect(WorldType.fineVisionMax.socPairs, contains(('8 Gen 5', fineVisionMaxFileInfo.fileName)));
+    expect(WorldType.fineVisionMaxThinkingPreview.socPairs, contains(('8 Gen 5', fineVisionMaxFileInfo.fileName)));
   });
 
   test('keeps RWKV-VL dependency groups separate', () {
@@ -173,7 +174,6 @@ void main() {
 
     for (final worldType in [
       WorldType.modrwkvV3,
-      WorldType.fineVisionMax,
       WorldType.fineVisionMaxThinkingPreview,
     ]) {
       final group = fileInfos.where((fileInfo) => fileInfo.worldType == worldType);
@@ -183,11 +183,11 @@ void main() {
   });
 
   test('enables the flower template only for FineVisionMax core weights', () {
-    final coreConfig = modelConfigs.singleWhere((entry) {
+    final coreConfig = historicalModels.singleWhere((entry) {
       final url = entry['url'];
       return url is String && url.endsWith('rwkv-vl-1.5v100m-finevisionmax-Q8_0.gguf');
     });
-    final encoderConfig = modelConfigs.singleWhere((entry) {
+    final encoderConfig = historicalModels.singleWhere((entry) {
       final url = entry['url'];
       final tags = entry['tags'];
       return url is String &&

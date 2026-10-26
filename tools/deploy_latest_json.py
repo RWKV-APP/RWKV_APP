@@ -5,6 +5,7 @@ import sys
 import argparse
 import tempfile
 import difflib
+import subprocess
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -68,7 +69,19 @@ def deploy():
         try:
             with open(path, "r", encoding="utf-8") as f:
                 content = f.read()
-            json.loads(content)
+            config = json.loads(content)
+            with tempfile.TemporaryDirectory() as temporary:
+                normalized_path = os.path.join(temporary, name)
+                subprocess.run(
+                    ["dart", os.path.join(project_root, "tools/bin/model_catalog_generations.dart"), path, normalized_path],
+                    cwd=project_root,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                with open(normalized_path, encoding="utf-8") as normalized:
+                    if json.load(normalized) != config:
+                        raise ValueError("Superseded model generations remain. Normalize this catalog with tools/bin/model_catalog_generations.dart before deploying.")
         except Exception as e:
             has_error = True
             print(f"    ❌ Invalid JSON: {e}")
