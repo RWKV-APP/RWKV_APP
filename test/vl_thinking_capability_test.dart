@@ -206,8 +206,8 @@ Widget _worldTagsApp(FileInfo fileInfo) {
   );
 }
 
-List<Map<String, dynamic>> _worldModelConfigs() {
-  final config = jsonDecode(File('remote/latest.json').readAsStringSync()) as Map<String, dynamic>;
+List<Map<String, dynamic>> _worldModelConfigs({String catalog = 'latest'}) {
+  final config = jsonDecode(File('remote/$catalog.json').readAsStringSync()) as Map<String, dynamic>;
   final world = config['world'] as Map<String, dynamic>;
   return (world['model_config'] as List<dynamic>).cast<Map<String, dynamic>>();
 }
@@ -221,7 +221,7 @@ FileInfo _thinkingPreviewCore() {
 }
 
 FileInfo _earlierFineVisionMaxCore() {
-  final entry = _worldModelConfigs().singleWhere((entry) {
+  final entry = _worldModelConfigs(catalog: '750').singleWhere((entry) {
     final url = entry['url'] as String;
     return url.endsWith('rwkv-vl-1.5v100m-finevisionmax-Q8_0.gguf');
   });

@@ -2,7 +2,7 @@
 
 ## Release 4.9.0
 
-Version 4.9.0 uses build 764 and Flutter 3.47.5, retaining the complete
+Version 4.9.0 uses build 765 and Flutter 3.47.5, retaining the complete
 Android, iOS, macOS, Windows x64/ARM64 and Linux x64 package and distribution
 matrix. The App consumes adapter 22dd913d014a7b5fbdfbfaf273ca91b81a80e3fa
 and its independently pinned platform archives. Android advances to
@@ -16,6 +16,12 @@ resource cleanup, scoped generation repaint, and visible/native sampler
 parameter consistency. It does not enable the unadopted iPhone experiments or
 promise a general model-loading speedup. Native benchmark results do not
 establish packaged App performance percentages.
+
+The immutable App tag is `4.9.0+765`; package names retain semantic version
+`4.9.0` and build `765`. The optional release manifest `tag` defaults to
+`version` for historical releases and must equal either `version` or
+`version+build`. Release checks reject a bundled or build-specific catalog
+whose `configBuild` differs from the App build.
 
 Keep the existing compatible model catalog and immutable weight artifacts;
 this App release does not publish a new weight cohort. Publish the eight

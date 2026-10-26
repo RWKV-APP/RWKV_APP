@@ -64,13 +64,37 @@ cohorts use the existing remote-configuration update path; they do not require
 rebuilding or replacing an already signed App package.
 
 For every additional cohort, verify complete publisher bytes, then identical
-formal ModelScope and Hugging Face identities before exposing its rows. Replace
-only equivalent model-size, backend, quantization and compatible SoC consumers.
-Remove the replaced platform from earlier G1j or G1i rows; preserve every
-unmatched platform and remove a row only when no platform remains. Historical
-build snapshots remain unchanged. Existing backend/platform support is retained;
+formal ModelScope and Hugging Face identities before exposing its rows. Within
+each model family and task, a supported platform/SoC consumer shows only the
+newest generation for the same model size and inference backend. Quantization
+labels do not create an exception for older generations. Order G revisions by
+their numeric series and alphabetical suffix, and explicitly dated revisions
+by their model revision date, never their upload date. Translation, Neko,
+Roleplay and vision components retain their distinct model identities.
+Apply this rule to every model section, backend and device. Trim superseded
+platform/SoC slots; remove a row when no supported consumer remains. A newer
+chip-specific package replaces only devices it actually supports. Debug-only
+artifacts do not retire a released consumer. If remaining compatibility cannot
+be expressed without overlapping generations, reject publication and require
+explicit remaining platform/SoC consumers. The App applies the same newest-
+generation selection after device eligibility filtering. Normalize publication
+inputs with `tools/bin/model_catalog_generations.dart`; `tools/deploy_latest_json.py`
+rejects catalogs that still contain superseded consumers before connecting.
+Both use the shared App policy. Apply cleanup to every
+currently published build catalog as well as the local fallback catalogs;
+archived release versions and weight bytes remain available for provenance.
+Existing backend/platform support is retained;
 publication does not claim new device, ANE or answer-quality acceptance. The
-accepted CoreML CPU/GPU cohort is macOS-only; existing iOS CoreML rows remain.
+published G1k tensor-state CoreML CPU/GPU cohort exposes 1.5B and 2.9B
+on macOS and iOS 18 or newer, using the same artifact bytes and digests.
+Its 7.2B and 13.3B packages remain macOS-only. Every CoreML 7.2B model is
+excluded from iOS catalog visibility across all generations and model sections.
+Every 13.3B model is excluded from iOS
+catalog visibility across all generations, backends and model sections.
+Remove `ios` from each such row and remove the row if no supported platform remains.
+New G1k CoreML consumers replace matching older G1j and G1i consumers. Catalog visibility
+does not establish iPhone runtime, memory, performance or Neural Engine acceptance;
+the large models remain subject to each device's available memory.
 
 The complete G1k build-762 catalog includes the published W6 MLX packages for
 1.5B, 2.9B, 7.2B and 13.3B. The first three retain their macOS and iOS consumer
@@ -149,6 +173,13 @@ not a valid product platform and must not appear in current or retained catalog
 JSON or in platform-filtering code. Debug or experimental state, when genuinely
 needed, uses separate lifecycle metadata and never creates a synthetic
 operating-system name.
+
+Build 765 carries the already published build-763 model matrix forward, with
+`configBuild: 765` in its bundled fallback and build snapshot. It retains all
+217 model rows and the 40 formal G1k artifacts, including the accepted CoreML
+1.5B and 2.9B macOS/iOS artifacts and macOS-only 7.2B and 13.3B artifacts.
+Earlier-generation and retired VL rows already removed from the current
+catalog remain removed. This is catalog continuity, not new model acceptance.
 
 ### Verified Weight Discovery, Download, And Load Flow
 

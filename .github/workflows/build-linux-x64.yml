@@ -48,6 +48,7 @@ jobs:
             pubspec.yaml
             release.json
             scripts/release_identity.py
+            remote/
           sparse-checkout-cone-mode: false
 
       - name: Validate frozen release
@@ -251,6 +252,7 @@ jobs:
             pubspec.yaml
             release.json
             scripts/release_identity.py
+            remote/
           sparse-checkout-cone-mode: false
 
       - name: Download artifact

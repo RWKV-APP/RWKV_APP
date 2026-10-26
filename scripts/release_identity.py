@@ -32,9 +32,16 @@ def load_release(root):
         raise ValueError('A fixed Flutter version is required')
     if not re.fullmatch(r'\d+\.\d+\.\d+', version) or type(build) is not int or build < 1:
         raise ValueError('Invalid release version/build')
+    tag = release.get('tag', version)
+    if tag not in (version, f'{version}+{build}'):
+        raise ValueError('Invalid release tag for version/build')
     actual = re.search(r'^version:\s*(\S+)', (root / 'pubspec.yaml').read_text(encoding='utf-8'), re.M)
     if actual is None or actual[1] != f'{version}+{build}':
         raise ValueError('release.json and pubspec.yaml version/build differ')
+    catalog = json.loads((root / 'remote/latest.json').read_text(encoding='utf-8'))
+    snapshot = json.loads((root / f'remote/{build}.json').read_text(encoding='utf-8'))
+    if type(catalog.get('configBuild')) is not int or catalog['configBuild'] != build or snapshot != catalog:
+        raise ValueError('Bundled and build-specific catalogs must match the release build')
     for key in ('adapter', 'native'):
         if not re.fullmatch(r'[0-9a-f]{40}', release[key]['commit']):
             raise ValueError(f'{key} must use a full commit SHA')
@@ -50,8 +57,8 @@ def load_release(root):
 
 def upload_github(release, files):
     repository = 'RWKV-APP/RWKV_APP'
-    tag = release['version']
-    prefix = f"rwkv_chat_{tag}_{release['build']}"
+    tag = release.get('tag', release['version'])
+    prefix = f"rwkv_chat_{release['version']}_{release['build']}"
     suffixes = ('.apk', '_macos.dmg', '_linux-x64.tar.gz', '_linux-x64.AppImage',
                 '_windows-x64.zip', '_windows-arm64.zip',
                 '_windows-x64-setup.exe', '_windows-arm64-setup.exe')
@@ -119,7 +126,7 @@ def peeled_tag(refs, tag):
 
 def check_apple_source(root, release):
     apple = release['apple']
-    if apple['baseTag'] != release['version'] or not re.fullmatch(r'[0-9a-f]{40}', apple['baseCommit']):
+    if apple['baseTag'] != release.get('tag', release['version']) or not re.fullmatch(r'[0-9a-f]{40}', apple['baseCommit']):
         raise RuntimeError('Apple base tag/commit does not identify the frozen release')
     for branch in (apple['sourceBranch'], apple['integrationBranch'], release['adapter']['branch'], release['native']['branch']):
         command('git', 'check-ref-format', f'refs/heads/{branch}')
@@ -226,8 +233,8 @@ def apple_identity(root, release):
 def prepare_apple(root, release):
     check_apple_environment(release)
     source_head = check_apple_source(root, release)
-    published = json.loads(command('gh', 'release', 'view', release['version'], '--repo', 'RWKV-APP/RWKV_APP', '--json', 'isDraft,tagName'))
-    if published['isDraft'] or published['tagName'] != release['version']:
+    published = json.loads(command('gh', 'release', 'view', release.get('tag', release['version']), '--repo', 'RWKV-APP/RWKV_APP', '--json', 'isDraft,tagName'))
+    if published['isDraft'] or published['tagName'] != release.get('tag', release['version']):
         raise RuntimeError('The base GitHub release must already be published')
     adapter = root.parent / 'rwkv_mobile_flutter'
     sha = release['adapter']['commit']
@@ -299,8 +306,8 @@ def main():
     root = Path(__file__).resolve().parents[1]
     release = load_release(root)
     requested_tag = os.environ.get('RWKV_RELEASE_TAG') or (os.environ.get('GITHUB_REF_NAME') if os.environ.get('GITHUB_REF_TYPE') == 'tag' else '')
-    if requested_tag and requested_tag != release['version']:
-        raise ValueError('Requested tag differs from the frozen release version')
+    if requested_tag and requested_tag != release.get('tag', release['version']):
+        raise ValueError('Requested tag differs from the frozen release tag')
     if args.verify_apple_build_inputs and not args.platform:
         parser.error('--verify-apple-build-inputs requires --platform ios or macos')
     if args.check_apple_source:

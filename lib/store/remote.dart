@@ -282,12 +282,12 @@ extension $Remote on _Remote {
     final roleplayWeights = castJsonList(roleplayConfig ?? []).map((e) => FileInfo.fromJSON(e)).toSet();
 
     _allChatWeights.q = chatWeights;
-    this.chatWeights.q = chatWeights.where((e) => e.available).toSet();
-    this.roleplayWeights.q = roleplayWeights.where((e) => e.available).toSet();
-    this.ttsWeights.q = ttsWeights.where((e) => e.available).toSet();
-    this.sudokuWeights.q = sudokuWeights.where((e) => e.available).toSet();
-    this.othelloWeights.q = othelloWeights.where((e) => e.available).toSet();
-    seeWeights.q = worldWeights.where((e) => e.available).toSet();
+    this.chatWeights.q = _latestAvailableGenerations(chatWeights);
+    this.roleplayWeights.q = _latestAvailableGenerations(roleplayWeights);
+    this.ttsWeights.q = _latestAvailableGenerations(ttsWeights);
+    this.sudokuWeights.q = _latestAvailableGenerations(sudokuWeights);
+    this.othelloWeights.q = _latestAvailableGenerations(othelloWeights);
+    seeWeights.q = _latestAvailableGenerations(worldWeights);
 
     ttsCores.q = this.ttsWeights.q.where((e) => e.tags.contains("core")).toSet();
   }
@@ -295,6 +295,17 @@ extension $Remote on _Remote {
   void cleanDownloadTasks() {
     _downloadTasks.clear();
   }
+
+  Set<FileInfo> _latestAvailableGenerations(Iterable<FileInfo> files) => latestModelGenerations(
+    files.where((file) => file.available),
+    (file) => {
+      'name': file.name,
+      'url': file.raw,
+      'modelSize': file.modelSize,
+      'backends': [if (file.backend != null) file.backend!.name],
+      'tags': file.tags,
+    },
+  ).toSet();
 
   /// 检查本地是否存在量化好的权重文件
   ///
@@ -433,7 +444,7 @@ extension $Remote on _Remote {
   }
 
   List<FileInfo> getNekoModel() {
-    final nekos = _allChatWeights.q.where((e) => e.available && e.isNeko).toList();
+    final nekos = _latestAvailableGenerations(_allChatWeights.q).where((e) => e.isNeko).toList();
     return nekos;
   }
 

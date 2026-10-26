@@ -110,12 +110,13 @@
       {
         "name": "RWKV7-G1k 1.5B (CoreML)",
         "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
-        "fileSize": 876773160,
-        "sha256": "635269f998d3fd9b684ebdd34473b06545c915ca6015866105533184baf450f2",
+        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
+        "fileSize": 879540339,
+        "sha256": "767053ee2aaf266c85e062a1027e802ce05ee57f9cdcfd71be34fe9ee16cbf69",
         "quantization": "W4",
         "platforms": [
-          "macos"
+          "macos",
+          "ios"
         ],
         "backends": [
           "coreml"
@@ -267,9 +268,9 @@
       {
         "name": "RWKV7-G1k 13.3B (CoreML)",
         "modelSize": 13.3,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-wkvstate-compiled-xcode27-cpugpu-control.zip",
-        "fileSize": 7444090932,
-        "sha256": "6da7cf5e997573481a2cbbca01a158f2d0f5a93b7f94548a43708d93dccf1443",
+        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
+        "fileSize": 7450947027,
+        "sha256": "d21cd9bce1909909241e9a90efcafd438cd161a89a6a0edbc73c688f1186d409",
         "quantization": "W4",
         "platforms": [
           "macos"
@@ -366,12 +367,13 @@
       {
         "name": "RWKV7-G1k 2.9B (CoreML)",
         "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
-        "fileSize": 1645769529,
-        "sha256": "5a17314b927ce8cedc8993d1243ec09e0637ac9bb83e66ab1334d45502723b9e",
+        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
+        "fileSize": 1649461487,
+        "sha256": "bb1e6884e56b3ba72cc12a3686434560ac892731f8cdd88dff7cfa654533127a",
         "quantization": "W4",
         "platforms": [
-          "macos"
+          "macos",
+          "ios"
         ],
         "backends": [
           "coreml"
@@ -875,9 +877,9 @@
       {
         "name": "RWKV7-G1k 7.2B (CoreML)",
         "modelSize": 7.2,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-decode-cpugpu-compiled-xcode27-cpugpu-control.zip",
-        "fileSize": 3938626036,
-        "sha256": "69be02f754c10a527b868c38ffb0da459e18050ad5c0ec447a7f174c14c3c5a5",
+        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-decode-cpugpu-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
+        "fileSize": 3942293289,
+        "sha256": "f81a2a5263791b626f21df14e8159a6ebee0379f164ce277f19d56df5952dbcb",
         "quantization": "W4",
         "platforms": [
           "macos"
@@ -1433,90 +1435,6 @@
         ]
       },
       {
-        "name": "RWKV7-G1j 1.5B (CoreML)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1j-1.5b-20260831-ctx16384-c1-coreml-direct-int4lut6mix-attout-lut6-wkvstate.zip",
-        "fileSize": 876774188,
-        "sha256": "221232c51a716cc73cfcb1be860b9b2f6729a1cb03ad8eebd3719e52f700bda9",
-        "quantization": "W4",
-        "platforms": [
-          "ios"
-        ],
-        "backends": [
-          "coreml"
-        ],
-        "tags": [
-          "reason",
-          "coreml"
-        ],
-        "date": 1788889792,
-        "availableIn": [
-          "modelscope",
-          "huggingface"
-        ]
-      },
-      {
-        "name": "RWKV7-G1j 2.9B (CoreML)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1j-2.9b-20260831-ctx16384-c2-coreml-direct-int4lut6mix-attout-lut6-wkvstate.zip",
-        "fileSize": 1645771418,
-        "sha256": "ca890ccc53e4bf9561dac571b9bffb62c34b26e56b0132f25cef948597e317a5",
-        "quantization": "W4",
-        "platforms": [
-          "ios"
-        ],
-        "backends": [
-          "coreml"
-        ],
-        "tags": [
-          "reason",
-          "coreml"
-        ],
-        "date": 1788889792,
-        "availableIn": [
-          "modelscope",
-          "huggingface"
-        ]
-      },
-      {
-        "name": "RWKV7-G1i 1.5B (CoreML)",
-        "modelSize": 1.5,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1i-1.5b-20260805-ctx16384-c1-coreml-direct-int4lut6mix-attout-lut6-wkvstate.zip",
-        "fileSize": 876776265,
-        "sha256": "85430fbe7e56ce8d84c90d7b5c155bbcecbfe3b34e413c1c2c1b33f09facfcf5",
-        "quantization": "W4",
-        "platforms": [
-          "ios"
-        ],
-        "backends": [
-          "coreml"
-        ],
-        "tags": [
-          "reason",
-          "coreml"
-        ],
-        "date": 1787331324
-      },
-      {
-        "name": "RWKV7-G1i 2.9B (CoreML)",
-        "modelSize": 2.9,
-        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1i-2.9b-20260805-ctx16384-c2-coreml-direct-int4lut6mix-attout-lut6-wkvstate.zip",
-        "fileSize": 1645775285,
-        "sha256": "32ccb09d75a22c364ef20adc4d873260165cb9ab83515ca99f1a8598f422a522",
-        "quantization": "W4",
-        "platforms": [
-          "ios"
-        ],
-        "backends": [
-          "coreml"
-        ],
-        "tags": [
-          "reason",
-          "coreml"
-        ],
-        "date": 1787331736
-      },
-      {
         "name": "RWKV7-G1d 0.1B",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1d-0.1b-20260129-ctx8192-q8_0.gguf",
@@ -1760,8 +1678,8 @@
       {
         "name": "RWKV7-G1d 0.1B (CoreML)",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-0.1b-20260129-ctx8192-coreml-int8-wkvstate.zip",
-        "fileSize": 243479219,
+        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/0.1b/coreml/rwkv7-g1d-0.1b-20260129-ctx8192-coreml-int8-tensorstate-statefix-20261020.zip",
+        "fileSize": 244861470,
         "quantization": "W8",
         "platforms": [
           "ios",
@@ -1774,13 +1692,18 @@
           "reason",
           "coreml"
         ],
-        "date": 1777209436
+        "date": 1777209436,
+        "sha256": "d1cd6b20a46b888015ba682a7a53ba7c7ce3cc85be0ff434ccdd6d93e4509f6b",
+        "availableIn": [
+          "modelscope",
+          "huggingface"
+        ]
       },
       {
         "name": "RWKV7-G1d 0.4B (CoreML)",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-0.4b-20260210-ctx8192-coreml-int8-wkvstate.zip",
-        "fileSize": 522109232,
+        "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv7/chat/0.4b/coreml/rwkv7-g1d-0.4b-20260210-ctx8192-coreml-int8-tensorstate-statefix-20261020.zip",
+        "fileSize": 524875031,
         "quantization": "W8",
         "platforms": [
           "ios",
@@ -1793,7 +1716,12 @@
           "reason",
           "coreml"
         ],
-        "date": 1777210348
+        "date": 1777210348,
+        "sha256": "819c2e470dc3e96422ef6c48b15216e2d953ba826655c91aa70249e58872585a",
+        "availableIn": [
+          "modelscope",
+          "huggingface"
+        ]
       },
       {
         "name": "RWKV7-G1 1.5B Neko (WebRWKV)",
@@ -4137,69 +4065,6 @@
         "date": 1783520411
       },
       {
-        "name": "RWKV-VL-260625 1.5B Vision Encoder",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-1.5v100m-finevisionmax-vision-encoder.mnn",
-        "fileSize": 402661632,
-        "quantization": "W8",
-        "platforms": [
-          "macos",
-          "linux",
-          "android",
-          "ios",
-          "windows"
-        ],
-        "backends": [
-          "mnn"
-        ],
-        "tags": [
-          "encoder"
-        ],
-        "date": 1784039823
-      },
-      {
-        "name": "RWKV-VL-260625 1.5B Vision Adapter",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-1.5v100m-finevisionmax-vision-adapter.mnn",
-        "fileSize": 100743336,
-        "quantization": "W8",
-        "platforms": [
-          "macos",
-          "linux",
-          "android",
-          "ios",
-          "windows"
-        ],
-        "backends": [
-          "mnn"
-        ],
-        "tags": [
-          "adapter"
-        ],
-        "date": 1784039766
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/rwkv-vl-1.5v100m-finevisionmax-Q8_0.gguf",
-        "fileSize": 1693646912,
-        "quantization": "Q8_0",
-        "platforms": [
-          "macos",
-          "linux",
-          "android",
-          "ios",
-          "windows",
-          "windows"
-        ],
-        "backends": [
-          "llamacpp"
-        ],
-        "tags": [
-          "reason",
-          "gpu"
-        ],
-        "date": 1784040567
-      },
-      {
         "name": "RWKV-VL 1.5B Thinking Preview · 260815 Vision Encoder",
         "url": "HaloWang/rwkv-weights/resolve/main/artifacts/rwkv-vl/vision/1.5v100m/mnn/rwkv-vl-1.5v100m-finevisionmax-thinking-preview-260815-vision-encoder.mnn",
         "fileSize": 402661092,
@@ -4500,220 +4365,6 @@
           "Dimensity 9500"
         ],
         "date": 1787235754
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B (8 Elite)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8elite.rmpack",
-        "fileSize": 1713897472,
-        "quantization": "W8",
-        "platforms": [
-          "android"
-        ],
-        "backends": [
-          "qnn"
-        ],
-        "tags": [
-          "npu",
-          "core"
-        ],
-        "socLimitations": [
-          "8 Elite"
-        ],
-        "date": 1784049209
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B (X Elite)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-xelite-nocustomop.rmpack",
-        "fileSize": 1744392192,
-        "quantization": "W8",
-        "platforms": [
-          "windows"
-        ],
-        "backends": [
-          "qnn"
-        ],
-        "tags": [
-          "npu",
-          "core"
-        ],
-        "socLimitations": [
-          "X Elite",
-          "X Plus",
-          "X1"
-        ],
-        "date": 1784049265
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B (X2 Elite)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-x2elite-nocustomop.rmpack",
-        "fileSize": 1755574272,
-        "quantization": "W8",
-        "platforms": [
-          "windows"
-        ],
-        "backends": [
-          "qnn"
-        ],
-        "tags": [
-          "npu",
-          "core"
-        ],
-        "socLimitations": [
-          "X2 Elite Extreme",
-          "X2 Elite",
-          "X2 Plus"
-        ],
-        "date": 1784069783
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B (8 Elite Gen5)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8elitegen5.rmpack",
-        "fileSize": 1722695680,
-        "quantization": "W8",
-        "platforms": [
-          "android"
-        ],
-        "backends": [
-          "qnn"
-        ],
-        "tags": [
-          "npu",
-          "core"
-        ],
-        "socLimitations": [
-          "8 Elite Gen5"
-        ],
-        "date": 1784069749
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B (8 Gen 5)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen5.rmpack",
-        "fileSize": 1713885184,
-        "quantization": "W8",
-        "platforms": [
-          "android"
-        ],
-        "backends": [
-          "qnn"
-        ],
-        "tags": [
-          "npu",
-          "core"
-        ],
-        "socLimitations": [
-          "8 Gen 5"
-        ],
-        "date": 1784049135
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B (8 Gen 2)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen2.rmpack",
-        "fileSize": 1717223424,
-        "quantization": "W8",
-        "platforms": [
-          "android"
-        ],
-        "backends": [
-          "qnn"
-        ],
-        "tags": [
-          "npu",
-          "core"
-        ],
-        "socLimitations": [
-          "8 Gen 2"
-        ],
-        "date": 1784049186
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B (8 Gen 3)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8gen3.rmpack",
-        "fileSize": 1717485568,
-        "quantization": "W8",
-        "platforms": [
-          "android"
-        ],
-        "backends": [
-          "qnn"
-        ],
-        "tags": [
-          "npu",
-          "core"
-        ],
-        "socLimitations": [
-          "8 Gen 3"
-        ],
-        "date": 1784069762
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B (8s Gen 3)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-260625/2.42-260118/rwkv-vl-1.5v100m-finevisionmax-rwkv-a16w8-8sgen3.rmpack",
-        "fileSize": 1717747712,
-        "quantization": "W8",
-        "platforms": [
-          "android"
-        ],
-        "backends": [
-          "qnn"
-        ],
-        "tags": [
-          "npu",
-          "core"
-        ],
-        "socLimitations": [
-          "8s Gen 3"
-        ],
-        "date": 1784049172
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B (Dimensity 9300)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl-1.5v100m-finevisionmax-rwkv-MT6989.rmpack",
-        "fileSize": 1676341248,
-        "quantization": "W8",
-        "platforms": [
-          "android"
-        ],
-        "backends": [
-          "mtk_np7"
-        ],
-        "tags": [
-          "npu",
-          "core"
-        ],
-        "socLimitations": [
-          "Dimensity 9300"
-        ],
-        "date": 1784069249
-      },
-      {
-        "name": "(Preview) RWKV-VL-260625 1.5B (Dimensity 9500)",
-        "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np9/260621/rwkv-vl-1.5v100m-finevisionmax-rwkv-MT6993-static-asym-a16w8-sumconvtree-fusev1-splitffnv4.rmpack",
-        "fileSize": 1949941760,
-        "quantization": "W8",
-        "platforms": [
-          "android"
-        ],
-        "backends": [
-          "mtk_np9"
-        ],
-        "tags": [
-          "npu",
-          "core"
-        ],
-        "socLimitations": [
-          "Dimensity 9500"
-        ],
-        "date": 1784074280
       }
     ]
   },

@@ -38,6 +38,16 @@ class ReleaseIdentityTest(unittest.TestCase):
                     upload_github(dict(version='4.8.0', build=755), [file])
                 mutate.assert_not_called()
 
+    def test_qualified_tag_keeps_semantic_package_prefix(self):
+        with tempfile.TemporaryDirectory() as directory:
+            file = Path(directory) / 'rwkv_chat_4.9.0_765_windows-x64.zip'
+            file.write_bytes(b'qualified release')
+            asset = dict(name=file.name, size=file.stat().st_size, digest='sha256:' + hashlib.sha256(file.read_bytes()).hexdigest())
+            with patch('release_identity.command', return_value=json.dumps(dict(tagName='4.9.0+765', assets=[asset]))) as read, patch('release_identity.subprocess.run') as mutate:
+                upload_github(dict(version='4.9.0', build=765, tag='4.9.0+765'), [file])
+                self.assertEqual('4.9.0+765', read.call_args.args[3])
+                mutate.assert_not_called()
+
     def test_rejects_version_and_mutable_dependency_drift(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -46,10 +56,27 @@ class ReleaseIdentityTest(unittest.TestCase):
                            adapter=dict(repository='RWKV-APP/rwkv_mobile_flutter', commit='a' * 40),
                            native=dict(repository='RWKV-APP/rwkv-mobile', commit='b' * 40, tag='v4.8.0-native.1'),
                            channels=dict(github=True, modelscope=True, huggingface=False))
+            root.joinpath('remote').mkdir()
+            for name in ('latest.json', '755.json'):
+                root.joinpath('remote', name).write_text(json.dumps(dict(configBuild=755)))
             def write():
                 root.joinpath('release.json').write_text(json.dumps(release))
             write()
             self.assertEqual(755, load_release(root)['build'])
+            release['tag'] = '4.8.0+755'
+            write()
+            self.assertEqual('4.8.0+755', load_release(root)['tag'])
+            for tag in ('4.8.0+756', '4.8.1', 'latest', 755):
+                release['tag'] = tag
+                write()
+                with self.assertRaisesRegex(ValueError, 'release tag'):
+                    load_release(root)
+            del release['tag']
+            root.joinpath('remote/latest.json').write_text(json.dumps(dict(configBuild=754)))
+            write()
+            with self.assertRaisesRegex(ValueError, 'catalogs'):
+                load_release(root)
+            root.joinpath('remote/latest.json').write_text(json.dumps(dict(configBuild=755)))
             release['build'] = 756
             write()
             with self.assertRaisesRegex(ValueError, 'differ'):

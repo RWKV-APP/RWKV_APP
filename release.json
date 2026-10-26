@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "version": "4.9.0",
-  "build": 764,
+  "build": 765,
   "flutterVersion": "3.47.5",
   "adapter": {
     "repository": "RWKV-APP/rwkv_mobile_flutter",
@@ -37,31 +37,34 @@
       {
         "modelSize": 1.5,
         "backend": "coreml",
-        "filename": "rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
-        "fileSize": 876773160,
-        "sha256": "635269f998d3fd9b684ebdd34473b06545c915ca6015866105533184baf450f2",
+        "filename": "rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
+        "fileSize": 879540339,
+        "sha256": "767053ee2aaf266c85e062a1027e802ce05ee57f9cdcfd71be34fe9ee16cbf69",
         "quantization": "W4",
         "quantizationRecipe": "CoreML int4 CPU/GPU; prefill/decode chunks 1",
         "platforms": [
-          "macos"
+          "macos",
+          "ios"
         ],
         "catalogNames": [
           "RWKV7-G1k 1.5B (CoreML)"
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "8631e1fe3450b13b5190330e8c0ce84bed5f03cb",
-          "path": "artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
+          "revision": "abc735b2054294dbdfad811f6427823b920a9c20",
+          "path": "artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "44ba7baffc89ddcf0b35dd2db1684d37c8cbdf9a",
-            "path": "artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
+            "revision": "52b2c4a57eed896ecb6d3afadf75b9bb4d2817ad",
+            "path": "artifacts/rwkv7/chat/1.5b/coreml/rwkv7-g1k-1.5b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
             "stage": "formal"
           }
-        }
+        },
+        "runtimeAcceptance": "not_tested_on_repaired_package",
+        "iosAcceptance": "not_tested"
       },
       {
         "modelSize": 1.5,
@@ -227,9 +230,9 @@
       {
         "modelSize": 13.3,
         "backend": "coreml",
-        "filename": "rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-wkvstate-compiled-xcode27-cpugpu-control.zip",
-        "fileSize": 7444090932,
-        "sha256": "6da7cf5e997573481a2cbbca01a158f2d0f5a93b7f94548a43708d93dccf1443",
+        "filename": "rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
+        "fileSize": 7450947027,
+        "sha256": "d21cd9bce1909909241e9a90efcafd438cd161a89a6a0edbc73c688f1186d409",
         "quantization": "W4",
         "quantizationRecipe": "CoreML int4 CPU/GPU; prefill/decode chunks 8",
         "platforms": [
@@ -240,18 +243,19 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "8631e1fe3450b13b5190330e8c0ce84bed5f03cb",
-          "path": "artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-wkvstate-compiled-xcode27-cpugpu-control.zip",
+          "revision": "e6dc33434a4c75b64510118f87a6b2668c37acd2",
+          "path": "artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "44ba7baffc89ddcf0b35dd2db1684d37c8cbdf9a",
-            "path": "artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-wkvstate-compiled-xcode27-cpugpu-control.zip",
+            "revision": "913a562776a607bb5f1f8387e5e6534a967183ff",
+            "path": "artifacts/rwkv7/chat/13.3b/coreml/rwkv7-g1k-13.3b-20260930-ctx25600-coreml-int4-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
             "stage": "formal"
           }
-        }
+        },
+        "runtimeAcceptance": "not_tested_on_repaired_package"
       },
       {
         "modelSize": 13.3,
@@ -349,31 +353,34 @@
       {
         "modelSize": 2.9,
         "backend": "coreml",
-        "filename": "rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
-        "fileSize": 1645769529,
-        "sha256": "5a17314b927ce8cedc8993d1243ec09e0637ac9bb83e66ab1334d45502723b9e",
+        "filename": "rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
+        "fileSize": 1649461487,
+        "sha256": "bb1e6884e56b3ba72cc12a3686434560ac892731f8cdd88dff7cfa654533127a",
         "quantization": "W4",
         "quantizationRecipe": "CoreML int4 CPU/GPU; prefill/decode chunks 2",
         "platforms": [
-          "macos"
+          "macos",
+          "ios"
         ],
         "catalogNames": [
           "RWKV7-G1k 2.9B (CoreML)"
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "8631e1fe3450b13b5190330e8c0ce84bed5f03cb",
-          "path": "artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
+          "revision": "a4601f8a244094e26b3629fbc8f15212764e15d3",
+          "path": "artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "44ba7baffc89ddcf0b35dd2db1684d37c8cbdf9a",
-            "path": "artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-compiled-xcode27-cpugpu-control.zip",
+            "revision": "6f4381f5feb646b69d67f09175b004473616f908",
+            "path": "artifacts/rwkv7/chat/2.9b/coreml/rwkv7-g1k-2.9b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
             "stage": "formal"
           }
-        }
+        },
+        "runtimeAcceptance": "not_tested_on_repaired_package",
+        "iosAcceptance": "not_tested"
       },
       {
         "modelSize": 2.9,
@@ -929,9 +936,9 @@
       {
         "modelSize": 7.2,
         "backend": "coreml",
-        "filename": "rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-decode-cpugpu-compiled-xcode27-cpugpu-control.zip",
-        "fileSize": 3938626036,
-        "sha256": "69be02f754c10a527b868c38ffb0da459e18050ad5c0ec447a7f174c14c3c5a5",
+        "filename": "rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-decode-cpugpu-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
+        "fileSize": 3942293289,
+        "sha256": "f81a2a5263791b626f21df14e8159a6ebee0379f164ce277f19d56df5952dbcb",
         "quantization": "W4",
         "quantizationRecipe": "CoreML int4 CPU/GPU; prefill/decode chunks 2",
         "platforms": [
@@ -942,18 +949,19 @@
         ],
         "distribution": {
           "repository": "HaloWang1991/rwkv-weights",
-          "revision": "8631e1fe3450b13b5190330e8c0ce84bed5f03cb",
-          "path": "artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-decode-cpugpu-compiled-xcode27-cpugpu-control.zip",
+          "revision": "66b8e302910daadb2f4fa76c61e122572225b687",
+          "path": "artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-decode-cpugpu-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
           "stage": "formal"
         },
         "mirrors": {
           "huggingface": {
             "repository": "HaloWang/rwkv-weights",
-            "revision": "44ba7baffc89ddcf0b35dd2db1684d37c8cbdf9a",
-            "path": "artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-wkvstate-decode-cpugpu-compiled-xcode27-cpugpu-control.zip",
+            "revision": "8a6e062dba0c5e1b38708b5d695ffbd25dc7a503",
+            "path": "artifacts/rwkv7/chat/7.2b/coreml/rwkv7-g1k-7.2b-20260930-ctx25600-coreml-direct-int4lut6mix-attout-lut6-tensorstate-decode-cpugpu-compiled-xcode27-cpugpu-control-statefix-20261020.zip",
             "stage": "formal"
           }
-        }
+        },
+        "runtimeAcceptance": "not_tested_on_repaired_package"
       },
       {
         "modelSize": 7.2,
@@ -1314,5 +1322,6 @@
       "size": 132998,
       "sha256": "c65dc9a72482921e915a292bccd98faaa50c953ab93b5ee0b584446ddeaa78d8"
     }
-  }
+  },
+  "tag": "4.9.0+765"
 }
