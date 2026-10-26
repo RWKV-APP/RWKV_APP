@@ -1,5 +1,35 @@
 # App Binary Distribution Contract
 
+## Release 4.9.0
+
+Version 4.9.0 uses build 764 and Flutter 3.47.5, retaining the complete
+Android, iOS, macOS, Windows x64/ARM64 and Linux x64 package and distribution
+matrix. The App consumes adapter 22dd913d014a7b5fbdfbfaf273ca91b81a80e3fa
+and its independently pinned platform archives. Android advances to
+4.9.0-native.1; macOS and Windows x64 retain their verified 4.8.6-native.2
+artifacts. Other platform archives keep their independently recorded identities.
+
+This release includes the accepted macOS compiled decode and eight-row WKV
+execution improvements, Windows CPU fallback scheduling and CUDA resource
+handling, Android CPU scheduling and WKV slow-path improvements, QNN model
+resource cleanup, scoped generation repaint, and visible/native sampler
+parameter consistency. It does not enable the unadopted iPhone experiments or
+promise a general model-loading speedup. Native benchmark results do not
+establish packaged App performance percentages.
+
+Keep the existing compatible model catalog and immutable weight artifacts;
+this App release does not publish a new weight cohort. Publish the eight
+direct-download packages through GitHub, Hugging Face and ModelScope, the
+Android APK through Pgyer, and matching builds to App Store, external
+TestFlight and Google Play production review. Preserve APK and Play AAB
+signing continuity separately. Version 4.9 starts its own release-note series;
+retain the complete published 4.8 series in all six locales.
+
+Windows chat and performance acceptance is explicitly waived for this release
+and remains unperformed. Package identity, resources, signatures and channel
+verification still apply. Store submission and public availability are recorded
+separately, including any platform review or account prerequisite.
+
 ## Release 4.8.6
 
 Version 4.8.6 uses build 763 and Flutter 3.47.5, retaining the Android, iOS,
