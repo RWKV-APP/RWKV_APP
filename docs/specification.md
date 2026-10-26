@@ -144,6 +144,17 @@ does not promise factual accuracy, alter sampling, or change the existing
 Apply, Cancel, and Reset behavior. Section labels identify reasoning mode in
 the selected language.
 
+## SPEC-RWKV-SAMPLER-PARAMETER-CONSISTENCY — Visible And Native Sampler Parameters
+
+Loading or reloading a chat or vision model applies the currently selected
+sampler preset or custom values to the native model. Model loading does not
+silently replace those values with defaults while retaining the old controls.
+The persisted selection is restored before it is applied to a loaded model.
+
+An explicit sampler Reset restores the displayed parameters and native sampler
+together to the existing defaults for the current mode. Changing the thinking
+mode or loading a model does not count as an explicit sampler Reset.
+
 ## SPEC-RWKV-CHAT-SAME-APP-ACCEPTANCE — RWKV Chat Acceptance Uses One App Identity
 
 Every App-level RWKV Chat acceptance must use the canonical RWKV Chat product

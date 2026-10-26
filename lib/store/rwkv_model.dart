@@ -184,9 +184,8 @@ extension $RWKVModel on _RWKVModel {
     };
 
     await P.rwkvParams.setModelConfig(thinkingMode: P.rwkvParams.thinkingModeForCurrentChatConfig());
-    await P.rwkvParams.resetSamplerParams(enableReasoning: enableReasoning);
+    await P.rwkvParams.syncSamplerParams();
     await P.rwkvParams.resetMaxLength(enableReasoning: enableReasoning);
-    // send(to_rwkv.GetSamplerParams()); NOTE: already get in resetSamplerParams, so no need here
     P.rwkvParams._syncMaxBatchCount();
 
     return (P.rwkvBridge.sendPort, modelID);
@@ -247,7 +246,7 @@ extension $RWKVModel on _RWKVModel {
       setPrompt: false,
       thinkingMode: P.rwkvParams._thinkingMode.q,
     );
-    await P.rwkvParams.resetSamplerParams(enableReasoning: enableReasoning);
+    await P.rwkvParams.syncSamplerParams();
     await P.rwkvParams.resetMaxLength(enableReasoning: enableReasoning);
     if (fileInfo.usesFlowerTemplate) {
       P.rwkvBridge.send(to_rwkv.SetFlowerTemplate(true, modelID: modelID));

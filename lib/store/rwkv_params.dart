@@ -194,20 +194,14 @@ extension $RWKVParams on _RWKVParams {
   }
 
   Future<void> resetSamplerParams({required bool enableReasoning}) async {
-    for (final entry in P.rwkvModel.allLoaded.q.entries) {
-      final modelID = entry.value;
-      P.rwkvBridge.send(
-        to_rwkv.SetSamplerParams(
-          temperature: enableReasoning ? Argument.temperature.reasonDefaults : Argument.temperature.defaults,
-          topK: enableReasoning ? Argument.topK.reasonDefaults : Argument.topK.defaults,
-          topP: enableReasoning ? Argument.topP.reasonDefaults : Argument.topP.defaults,
-          presencePenalty: enableReasoning ? Argument.presencePenalty.reasonDefaults : Argument.presencePenalty.defaults,
-          frequencyPenalty: enableReasoning ? Argument.frequencyPenalty.reasonDefaults : Argument.frequencyPenalty.defaults,
-          penaltyDecay: enableReasoning ? Argument.penaltyDecay.reasonDefaults : Argument.penaltyDecay.defaults,
-          modelID: modelID,
-        ),
-      );
-    }
+    await syncSamplerParams(
+      temperature: enableReasoning ? Argument.temperature.reasonDefaults : Argument.temperature.defaults,
+      topK: enableReasoning ? Argument.topK.reasonDefaults : Argument.topK.defaults,
+      topP: enableReasoning ? Argument.topP.reasonDefaults : Argument.topP.defaults,
+      presencePenalty: enableReasoning ? Argument.presencePenalty.reasonDefaults : Argument.presencePenalty.defaults,
+      frequencyPenalty: enableReasoning ? Argument.frequencyPenalty.reasonDefaults : Argument.frequencyPenalty.defaults,
+      penaltyDecay: enableReasoning ? Argument.penaltyDecay.reasonDefaults : Argument.penaltyDecay.defaults,
+    );
   }
 
   Future syncSamplerParamsFromDefault(DecodeParamType param) async {
