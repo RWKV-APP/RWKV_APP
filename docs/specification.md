@@ -126,6 +126,19 @@ user text, or thinking without an answer cannot satisfy that acceptance.
 Verify the APK consumed through the public download entry in the canonical
 chat page; local candidate success alone does not verify the published APK.
 
+## SPEC-RWKV-MODEL-GENERATION-EMPHASIS — Model Selector Generation Labels
+
+Model names in the model selector emphasize the G1 generation token (for
+example, G1j or G1k) with a heavier font weight than the surrounding name and
+solid black text in light themes. Dark themes use a high-contrast light
+foreground. The same treatment applies to catalog models, grouped model
+entries and their expanded files, and imported local model names.
+
+Preserve the complete name, its casing, surrounding typography, wrapping and
+text scaling. Names without a G1 generation suffix retain their existing
+appearance. This is a display rule; model metadata, filenames, ordering and
+selection behavior remain unchanged.
+
 ## SPEC-RWKV-MODEL-PARAMETER-HELP — Model Settings Parameter Help
 
 Model settings display an accessible information button beside Temperature,

@@ -26,6 +26,7 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_item.dart';
+import 'package:zone/widgets/model_name.dart';
 import 'package:zone/widgets/model_tag.dart';
 import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
@@ -739,7 +740,7 @@ class _LocalPthFileItem extends ConsumerWidget {
                 spacing: 8,
                 runSpacing: 0,
                 children: [
-                  Text(fileInfo.name, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .w600)),
+                  ModelName(fileInfo.name, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .w600)),
                   Text(
                     formatBytes(fileInfo.fileSize),
                     style: TextStyle(color: qb.withValues(alpha: .7), fontWeight: .w500),

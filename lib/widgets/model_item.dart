@@ -21,6 +21,7 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
+import 'package:zone/widgets/model_name.dart';
 import 'package:zone/widgets/model_tag.dart';
 
 class ModelItem extends ConsumerWidget {
@@ -402,7 +403,7 @@ class _FileKeyItem extends ConsumerWidget {
           spacing: 8,
           runSpacing: 0,
           children: [
-            Text(
+            ModelName(
               fileInfo.name,
               style: const TextStyle(fontWeight: .w600),
             ),
