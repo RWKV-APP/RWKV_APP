@@ -1,5 +1,17 @@
 # App Binary Distribution Contract
 
+## Release 4.9.1
+
+Version 4.9.1 uses build 766 and Flutter 3.47.5. It expands optional
+chat web search, source links and search details, and makes G1 generation labels
+clearer in model selection. The release retains the 4.9.0 adapter and pinned
+platform archives and the same package, signing and distribution matrix.
+
+Keep the bundled model fallback compatible and carry the current online model
+availability forward under the new build identity. Existing model weight and
+package bytes retain their published identities. Retain the 4.9.0 release notes
+in the same series in all six locales.
+
 ## Release 4.9.0
 
 Version 4.9.0 uses build 765 and Flutter 3.47.5, retaining the complete
