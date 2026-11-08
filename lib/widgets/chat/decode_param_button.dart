@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:ui';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -18,8 +15,7 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/arguments_panel.dart';
-import 'package:zone/widgets/chat/interaction_visual_state.dart';
-import 'package:zone/widgets/input_interactions.dart';
+import 'package:zone/widgets/chat/chat_interaction_button.dart';
 
 class DecodeParamButton extends ConsumerWidget {
   const DecodeParamButton({super.key});
@@ -83,75 +79,20 @@ class DecodeParamButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
-    final appTheme = ref.watch(P.app.theme);
-    final height = InputInteractions.calculateButtonHeight(context);
+    final _ = theme;
     final loading = ref.watch(P.rwkvModel.loading);
     final generating = ref.watch(P.rwkvGeneration.generating);
     final loaded = ref.watch(P.rwkvModel.loaded);
     final albatrossCanUse = ref.watch(P.albatrossRuntime.canUse);
     final decodeParamType = ref.watch(P.rwkvParams.decodeParamType);
-    final canUseChatBackend = loaded || albatrossCanUse;
-    final canEnable = canUseChatBackend && !loading && !generating;
-    final interactionState = canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable;
-    final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
-    final bgColor = colors.background;
-    final textColor = colors.foreground;
-    final borderColor = colors.border;
-    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
-    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
-    final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
-    final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
-    final s = S.of(context);
+    final canEnable = (loaded || albatrossCanUse) && !loading && !generating;
 
-    return Tooltip(
-      message: s.decode_param,
-      child: IntrinsicWidth(
-        child: GestureDetector(
-          onTap: _onTap,
-          child: ClipRRect(
-            borderRadius: .circular(60),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: sigmaForBackdropFilterForInputOptions.toDouble(),
-                sigmaY: sigmaForBackdropFilterForInputOptions.toDouble(),
-              ),
-              enabled: userBackdropFilterForInputOptions,
-              child: Container(
-                height: height,
-                padding: const .symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                  color: bgColor.withValues(
-                    alpha: userBackdropFilterForInputOptions
-                        ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
-                        : 1,
-                  ),
-                  borderRadius: .circular(60),
-                  border: .all(color: borderColor),
-                ),
-                child: Row(
-                  mainAxisAlignment: .center,
-                  crossAxisAlignment: .center,
-                  children: [
-                    Icon(Symbols.auto_awesome, color: textColor, size: appTheme.inputBarInteractionsIconSize),
-                    const SizedBox(width: 4),
-                    Text(
-                      decodeParamType.displayNameShort,
-                      style: TextStyle(color: textColor, fontSize: fontSize, height: 1, fontWeight: .w500),
-                      strutStyle: StrutStyle(
-                        fontSize: fontSize,
-                        height: 1,
-                        forceStrutHeight: true,
-                        leadingDistribution: TextLeadingDistribution.even,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+    return ChatInteractionButton(
+      label: decodeParamType.displayNameShort,
+      tooltip: S.of(context).decode_param,
+      state: canEnable ? .available : .unavailable,
+      iconBuilder: (color, size) => Icon(Symbols.auto_awesome, color: color, size: size),
+      onTap: _onTap,
     );
   }
 }

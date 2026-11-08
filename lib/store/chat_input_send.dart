@@ -451,6 +451,12 @@ extension $ChatInputSend on _Chat {
 
     List<String> history = withHistory ? _history(excludedMessageId: receiveId) : <String>[];
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
+    if (!P.rwkvGeneration.generating.q ||
+        this.receiveId.q != receiveId ||
+        _pauseFinalizingMessageId == receiveId ||
+        P.msg.pool.q[receiveId]?.paused == true) {
+      return;
+    }
     final inSee = P.app.pageKey.q == .see;
     if (inSee) P.see._updateSystemPromptForUserInput(raw);
     // final forceChinese = inSee && message.containsChinese;

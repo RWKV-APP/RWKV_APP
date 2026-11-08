@@ -82,6 +82,13 @@ class _Chat {
   late final completionMode = qs(false);
 
   late final webSearchMode = qs(WebSearchMode.off);
+  late final webSearchProvider = qs(WebSearchProvider.zhihuGlobal);
+  late final webSearchApiKeys = qs<Map<String, String>>(const {});
+  late final webSearchChecks = qs<Map<WebSearchProvider, AsyncValue<String>>>(const {});
+  late final webSearchKeysLoading = qs(false);
+  late final webSearchStorageError = qs(false);
+  WebSearchCredentialStore webSearchCredentialStore = WebSearchCredentialStore();
+  final Set<String> _editedWebSearchCredentials = {};
   late final localWebSearchPanelEnabled = qs(false);
   late final localWebSearchPanelSplitRatio = qs(0.5);
   late final localWebSearchRunning = qs(false);

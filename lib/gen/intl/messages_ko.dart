@@ -186,19 +186,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m77(tokens, bytes) => "${tokens} tokens, ${bytes} bytes";
 
-  static String m78(port) => "WebSocket 서비스 (포트: ${port})";
+  static String m78(index) => "병렬 대화 ${index}";
 
-  static String m79(id) => "창 ${id}";
+  static String m79(index) => "모델 호출 ${index}";
 
-  static String m80(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m80(port) => "WebSocket 서비스 (포트: ${port})";
+
+  static String m81(id) => "창 ${id}";
+
+  static String m82(buildArchitecture, operatingSystemArchitecture, url) =>
       "현재 앱의 Build Architecture는 ${buildArchitecture}이고, Windows Operating System의 Architecture는 ${operatingSystemArchitecture}입니다.\n\n공식 다운로드 페이지에서 아키텍처에 맞는 실행 파일을 다운로드하세요:\n${url}";
 
-  static String m81(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m83(buildArchitecture, operatingSystemArchitecture, url) =>
       "아키텍처 불일치가 감지되었습니다: 현재 앱의 Build Architecture는 ${buildArchitecture}이고, Windows Operating System의 Architecture는 ${operatingSystemArchitecture}입니다. 공식 다운로드 페이지에서 일치하는 버전을 다운로드하세요: ${url}";
 
-  static String m82(count) => "${count}개의 탭";
+  static String m84(count) => "${count}개의 탭";
 
-  static String m83(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
+  static String m85(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1488,7 +1492,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reason": MessageLookupByLibrary.simpleMessage("추론"),
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("추론 모드"),
     "recording_your_voice": MessageLookupByLibrary.simpleMessage("음성 녹음 중..."),
-    "reference_source": MessageLookupByLibrary.simpleMessage("참조 소스"),
+    "reference_source": MessageLookupByLibrary.simpleMessage("검색 출처"),
     "refresh": MessageLookupByLibrary.simpleMessage("새로고침"),
     "refresh_complete": MessageLookupByLibrary.simpleMessage("새로고침 완료"),
     "refreshed": MessageLookupByLibrary.simpleMessage("새로고침"),
@@ -1932,8 +1936,195 @@ class MessageLookup extends MessageLookupByLibrary {
       "HTML 문서를 기다리는 중",
     ),
     "web_search": MessageLookupByLibrary.simpleMessage("웹 검색"),
+    "web_search_allowance_notice": MessageLookupByLibrary.simpleMessage(
+      "무료 사용량은 변경될 수 있습니다. 제한과 초과 요금은 서비스 계정과 공식 요금을 따릅니다.",
+    ),
+    "web_search_anysearch_notice": MessageLookupByLibrary.simpleMessage(
+      "API 키가 필요하지 않습니다. 익명 무료 할당량은 IP 주소별로 공유되며 할당량과 요청 제한은 AnySearch가 결정합니다.",
+    ),
+    "web_search_balance": MessageLookupByLibrary.simpleMessage(
+      "서비스 계정 잔액이나 크레딧이 부족합니다. 제공업체에서 잔액을 확인한 후 다시 시도하세요.",
+    ),
+    "web_search_brave_allowance": MessageLookupByLibrary.simpleMessage(
+      "월 무료 사용량: 미화 5달러 credits. 검색 요금은 1,000회당 5달러입니다.",
+    ),
+    "web_search_browser": MessageLookupByLibrary.simpleMessage("브라우저 검색"),
+    "web_search_browser_notice": MessageLookupByLibrary.simpleMessage(
+      "데스크톱 브라우저 검색에는 API 키가 필요하지 않습니다. 브라우저가 준비되지 않았다면 잠시 후 다시 시도하세요.",
+    ),
+    "web_search_deepseek_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. DeepSeek 플랫폼에 로그인하고 API keys 페이지에서 개인 키를 생성해 복사하세요.\n2. 계정 잔액과 검색 이용 권한을 확인하세요.\n3. 여기에 키를 붙여 넣고 검증 후 활성화를 누르세요. 검증에 성공하면 검색을 켭니다.",
+    ),
+    "web_search_exa_allowance": MessageLookupByLibrary.simpleMessage(
+      "매월 미화 10달러 무료 credits와 가입 시 10달러 추가 제공. 사용량은 검색 및 콘텐츠 옵션에 따라 다릅니다.",
+    ),
+    "web_search_firecrawl_allowance": MessageLookupByLibrary.simpleMessage(
+      "무료 요금제: 매월 1,000 credits, 본문 수집 없는 검색 최대 500회. 요청 속도 제한이 적용됩니다.",
+    ),
+    "web_search_generic_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. 개인 키 받기에서 본인의 서비스 계정으로 로그인하거나 가입하세요.\n2. API 키를 만들고 검색 권한과 무료 사용량을 확인하세요.\n3. 여기에 키를 붙여 넣고 검증 후 활성화를 누르세요. 검증에 성공하면 검색을 켭니다.",
+    ),
+    "web_search_get_key": MessageLookupByLibrary.simpleMessage("개인 키 발급"),
+    "web_search_invalid_query": MessageLookupByLibrary.simpleMessage(
+      "검색어가 비어 있거나 길이 제한을 초과했습니다. 메시지를 줄이고 다시 시도하세요.",
+    ),
+    "web_search_invalid_response": MessageLookupByLibrary.simpleMessage(
+      "검색 서비스의 응답 형식을 지원하지 않습니다.",
+    ),
+    "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
+      "Bearer 접두어 없이 본인의 키만 붙여 넣으세요. 검증 및 활성화에 성공하면 안전하게 저장되어 다음에도 재사용됩니다.",
+    ),
+    "web_search_key_configured": MessageLookupByLibrary.simpleMessage("키가 설정됨"),
+    "web_search_key_help_title": MessageLookupByLibrary.simpleMessage(
+      "키 발급 및 설정",
+    ),
+    "web_search_link_failed": MessageLookupByLibrary.simpleMessage(
+      "공식 페이지를 열 수 없습니다. 나중에 다시 시도하세요.",
+    ),
+    "web_search_missing_key": MessageLookupByLibrary.simpleMessage(
+      "개인 API 키를 입력한 다음 이 서비스를 검증하고 활성화하세요.",
+    ),
+    "web_search_no_results": MessageLookupByLibrary.simpleMessage(
+      "검색 결과가 없습니다. 모델이 웹 참고 자료 없이 답변합니다.",
+    ),
+    "web_search_official_docs": MessageLookupByLibrary.simpleMessage("공식 안내"),
+    "web_search_optional_key_notice": MessageLookupByLibrary.simpleMessage(
+      "Firecrawl은 키 없는 익명 검색을 지원하지만 요청 속도 제한이 낮습니다. 선택적으로 개인 키를 입력하면 본인 계정의 사용량을 이용합니다.",
+    ),
+    "web_search_own_key_notice": MessageLookupByLibrary.simpleMessage(
+      "본인 계정의 키를 사용하세요. 할당량과 요금은 해당 계정에 적용됩니다. RWKV Chat은 공용 키를 제공하지 않습니다.",
+    ),
+    "web_search_pricing": MessageLookupByLibrary.simpleMessage("무료 사용량 및 요금"),
+    "web_search_privacy_notice": MessageLookupByLibrary.simpleMessage(
+      "활성화하면 현재 메시지에서 추출한 검색어를 선택한 서비스로 전송합니다. 이전 대화는 전송하지 않습니다. 답변은 로컬 RWKV가 생성합니다. 서비스 요금이 발생할 수 있습니다.",
+    ),
+    "web_search_provider": MessageLookupByLibrary.simpleMessage("검색 서비스"),
+    "web_search_quota": MessageLookupByLibrary.simpleMessage(
+      "계정의 검색 할당량을 모두 사용했습니다. 제공업체의 할당량을 확인하고 복구 후 다시 시도하세요.",
+    ),
+    "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
+      "요청이 너무 잦거나 서비스 한도에 도달했습니다. 잠시 후 다시 시도하고 계정 할당량을 확인하세요.",
+    ),
+    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
+      "보안 저장소 다시 시도",
+    ),
+    "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
+      "네 항목 모두 복사",
+    ),
+    "web_search_report_details_action": MessageLookupByLibrary.simpleMessage(
+      "상세",
+    ),
+    "web_search_report_error": MessageLookupByLibrary.simpleMessage("검색 오류"),
+    "web_search_report_full_response": MessageLookupByLibrary.simpleMessage(
+      "전체 응답",
+    ),
+    "web_search_report_injected_prompt": MessageLookupByLibrary.simpleMessage(
+      "검색 정보가 추가된 사용자 메시지(모델 입력의 일부)",
+    ),
+    "web_search_report_input": MessageLookupByLibrary.simpleMessage(
+      "3. 최종 모델 입력",
+    ),
+    "web_search_report_input_missing": MessageLookupByLibrary.simpleMessage(
+      "이 응답의 전체 엔진 입력은 기록되지 않았습니다. 저장된 검색 보강 사용자 메시지가 있는 경우에도 입력의 일부에 해당합니다.",
+    ),
+    "web_search_report_input_note": MessageLookupByLibrary.simpleMessage(
+      "모델에 실제로 보낸 메시지 원문을 전송 순서대로 표시합니다.",
+    ),
+    "web_search_report_model_batch": m78,
+    "web_search_report_model_call": m79,
+    "web_search_report_native_note": MessageLookupByLibrary.simpleMessage(
+      "네이티브 런타임의 채팅 템플릿 직렬화 텍스트와 토크나이저 입력은 기록되지 않습니다.",
+    ),
+    "web_search_report_output": MessageLookupByLibrary.simpleMessage(
+      "4. 모델 출력",
+    ),
+    "web_search_report_output_complete": MessageLookupByLibrary.simpleMessage(
+      "생성이 종료되었습니다.",
+    ),
+    "web_search_report_output_empty": MessageLookupByLibrary.simpleMessage(
+      "모델 출력이 비어 있습니다.",
+    ),
+    "web_search_report_output_generating": MessageLookupByLibrary.simpleMessage(
+      "생성 중이며 아래 출력이 계속 갱신됩니다.",
+    ),
+    "web_search_report_output_paused": MessageLookupByLibrary.simpleMessage(
+      "중지 또는 일시 정지되었습니다. 출력이 완전하지 않을 수 있습니다.",
+    ),
+    "web_search_report_output_unavailable":
+        MessageLookupByLibrary.simpleMessage(
+          "연결된 응답을 사용할 수 없어 모델 출력을 읽을 수 없습니다.",
+        ),
+    "web_search_report_query": MessageLookupByLibrary.simpleMessage("검색어"),
+    "web_search_report_request": MessageLookupByLibrary.simpleMessage(
+      "1. 검색 요청",
+    ),
+    "web_search_report_request_details": MessageLookupByLibrary.simpleMessage(
+      "요청 세부 정보",
+    ),
+    "web_search_report_request_missing": MessageLookupByLibrary.simpleMessage(
+      "이 응답의 검색 요청 스냅샷이 기록되지 않았습니다.",
+    ),
+    "web_search_report_response_missing": MessageLookupByLibrary.simpleMessage(
+      "이 검색의 전체 API 응답이 기록되지 않았습니다. 저장된 참고 자료만 표시합니다.",
+    ),
+    "web_search_report_results": MessageLookupByLibrary.simpleMessage(
+      "2. 검색 결과",
+    ),
+    "web_search_report_title": MessageLookupByLibrary.simpleMessage("검색 상세 정보"),
+    "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
+      "사용자 메시지",
+    ),
+    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
+      "검증된 키는 이 기기의 보안 저장소에 저장되며 RWKV Chat을 다시 시작해도 재사용됩니다. 지우기 버튼으로 저장된 키를 삭제할 수 있습니다.",
+    ),
+    "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
+      "가입 체험: 무료 요청 100회. 매월 갱신되지 않는 일회성 체험입니다.",
+    ),
+    "web_search_serpapi_allowance": MessageLookupByLibrary.simpleMessage(
+      "월 무료 사용량: 검색 250회. 계정별 요청 속도 제한도 적용됩니다.",
+    ),
+    "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
+      "가입 체험: 무료 검색 2,500회. 매월 갱신되지 않는 일회성 체험입니다.",
+    ),
+    "web_search_settings": MessageLookupByLibrary.simpleMessage("검색 설정"),
+    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
+      "보안 저장소에 접근할 수 없어 키 저장 또는 삭제를 확인하지 못했습니다. 기기의 잠금을 해제한 후 다시 시도하세요.",
+    ),
+    "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
+      "월 무료 사용량: 1,000 credits. 기본 검색은 요청당 1 credit을 사용합니다.",
+    ),
     "web_search_template": MessageLookupByLibrary.simpleMessage("웹 검색 템플릿"),
-    "websocket_service_port": m78,
+    "web_search_timeout": MessageLookupByLibrary.simpleMessage(
+      "검색 시간이 초과되었습니다. 다시 시도하세요.",
+    ),
+    "web_search_unauthorized": MessageLookupByLibrary.simpleMessage(
+      "키가 유효하지 않거나 만료·취소되었거나 권한이 없습니다. 키를 갱신하거나 계정 권한을 확인하세요.",
+    ),
+    "web_search_unavailable": MessageLookupByLibrary.simpleMessage(
+      "검색을 사용할 수 없습니다. 연결을 확인하고 다시 시도하세요.",
+    ),
+    "web_search_validate_enable": MessageLookupByLibrary.simpleMessage(
+      "검증 후 활성화",
+    ),
+    "web_search_validating": MessageLookupByLibrary.simpleMessage("연결 검증 중…"),
+    "web_search_validation_notice": MessageLookupByLibrary.simpleMessage(
+      "이 서비스에 테스트 검색어 “RWKV”를 전송하며 검색 사용량 1회를 소모할 수 있습니다. 검증에 성공하면 검색을 활성화합니다.",
+    ),
+    "web_search_validation_success": MessageLookupByLibrary.simpleMessage(
+      "연결 검증에 성공했습니다.",
+    ),
+    "web_search_zhihu_global": MessageLookupByLibrary.simpleMessage("즈후 · 웹"),
+    "web_search_zhihu_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. Zhihu 데이터 플랫폼에 로그인하고 개인 센터에서 Access Secret을 생성해 복사하세요.\n2. 선택한 검색 서비스의 권한과 할당량을 확인하세요.\n3. 여기에 키를 붙여 넣고 검증 후 활성화를 누르세요. 검증에 성공하면 검색을 켭니다.",
+    ),
+    "web_search_zhihu_site": MessageLookupByLibrary.simpleMessage("즈후 · 사이트 내"),
+    "web_search_zhihu_site_description": MessageLookupByLibrary.simpleMessage(
+      "즈후 내부 검색: 커뮤니티 질문, 답변 및 문서.",
+    ),
+    "web_search_zhihu_web_description": MessageLookupByLibrary.simpleMessage(
+      "여러 웹사이트 검색: 공식 페이지, 뉴스 및 기타 웹 자료.",
+    ),
+    "websocket_service_port": m80,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("가중치 파일 관리"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "가중치 파일 저장 디렉토리",
@@ -1953,16 +2144,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("백"),
     "white_score": MessageLookupByLibrary.simpleMessage("백 점수"),
     "white_wins": MessageLookupByLibrary.simpleMessage("백이 이겼습니다!"),
-    "window_id": m79,
-    "windows_architecture_mismatch_dialog_message": m80,
+    "window_id": m81,
+    "windows_architecture_mismatch_dialog_message": m82,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("아키텍처 불일치"),
-    "windows_architecture_mismatch_warning": m81,
+    "windows_architecture_mismatch_warning": m83,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d개 메시지 선택됨"),
-    "x_pages_found": MessageLookupByLibrary.simpleMessage("%d페이지 찾음"),
-    "x_tabs": m82,
-    "you_are_now_using": m83,
+    "x_pages_found": MessageLookupByLibrary.simpleMessage("출처 %d개"),
+    "x_tabs": m84,
+    "you_are_now_using": m85,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "이제 RWKV와 채팅을 시작할 수 있습니다",
     ),

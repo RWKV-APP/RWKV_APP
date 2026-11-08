@@ -123,6 +123,7 @@ jobs:
             ninja-build \
             pkg-config \
             libgtk-3-dev \
+            libsecret-1-dev \
             liblzma-dev \
             libgstreamer1.0-dev \
             libgstreamer-plugins-base1.0-dev \

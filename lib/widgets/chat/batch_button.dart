@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:ui';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -8,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
-import 'package:zone/widgets/input_interactions.dart';
+import 'package:zone/widgets/chat/chat_interaction_button.dart';
 
 class BatchButton extends ConsumerWidget {
   const BatchButton({super.key});
@@ -18,78 +16,25 @@ class BatchButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
-    final appTheme = ref.watch(P.app.theme);
-    final height = InputInteractions.calculateButtonHeight(context);
+    final _ = theme;
     final loading = ref.watch(P.rwkvModel.loading);
     final generating = ref.watch(P.rwkvGeneration.generating);
     final batchAllowed = ref.watch(P.chat.batchInferenceAvailable);
     final batchEnabled = ref.watch(P.chat.effectiveBatchEnabled);
     final batchCount = ref.watch(P.chat.effectiveBatchCount);
     final canEnable = !loading && !generating && batchAllowed;
-
-    final InteractionVisualState interactionState = switch ((batchEnabled, canEnable)) {
+    final InteractionVisualState state = switch ((batchEnabled, canEnable)) {
       (true, _) => .enabled,
       (false, true) => .available,
       (false, false) => .unavailable,
     };
 
-    final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
-    final bgColor = colors.background;
-    final textColor = colors.foreground;
-    final borderColor = colors.border;
-
-    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
-    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
-    final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
-    final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
-
-    return IntrinsicWidth(
-      child: GestureDetector(
-        onTap: P.rwkvParams.onBatchInferenceTapped,
-        child: ClipRRect(
-          borderRadius: .circular(60),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: sigmaForBackdropFilterForInputOptions.toDouble(),
-              sigmaY: sigmaForBackdropFilterForInputOptions.toDouble(),
-            ),
-            enabled: userBackdropFilterForInputOptions,
-            child: Container(
-              height: height,
-              decoration: BoxDecoration(
-                color: bgColor.withValues(
-                  alpha: userBackdropFilterForInputOptions
-                      ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
-                      : 1,
-                ),
-                borderRadius: .circular(60),
-                border: .all(color: borderColor),
-              ),
-              padding: const .only(left: 8, right: 8),
-              child: Row(
-                mainAxisAlignment: .center,
-                crossAxisAlignment: .center,
-                children: [
-                  Icon(Icons.playlist_play, color: textColor, size: appTheme.inputBarInteractionsIconSize),
-                  if (batchEnabled) const SizedBox(width: 4),
-                  if (batchEnabled)
-                    Text(
-                      batchCount.toString(),
-                      style: TextStyle(color: textColor, fontSize: fontSize, height: 1, fontWeight: .w500),
-                      strutStyle: StrutStyle(
-                        fontSize: fontSize,
-                        height: 1,
-                        forceStrutHeight: true,
-                        leadingDistribution: TextLeadingDistribution.even,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+    return ChatInteractionButton(
+      label: batchEnabled ? batchCount.toString() : null,
+      tooltip: S.of(context).batch_inference,
+      state: state,
+      iconBuilder: (color, size) => Icon(Icons.playlist_play, color: color, size: size),
+      onTap: P.rwkvParams.onBatchInferenceTapped,
     );
   }
 }

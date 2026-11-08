@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:ui';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -15,7 +12,7 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/alert.dart';
 import 'package:zone/widgets/chat/ask_question_panel.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
-import 'package:zone/widgets/input_interactions.dart';
+import 'package:zone/widgets/chat/chat_interaction_button.dart';
 
 class AskQuestionButton extends ConsumerWidget {
   const AskQuestionButton({super.key});
@@ -36,83 +33,24 @@ class AskQuestionButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final s = S.of(context);
-    final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
-    final appTheme = ref.watch(P.app.theme);
-    final height = InputInteractions.calculateButtonHeight(context);
+    final _ = theme;
     final loading = ref.watch(P.rwkvModel.loading);
     final generating = ref.watch(P.rwkvGeneration.generating);
     final loaded = ref.watch(P.rwkvModel.loaded);
     final albatrossCanUse = ref.watch(P.albatrossRuntime.canUse);
     final canUseChatBackend = loaded || albatrossCanUse;
     final canEnable = canUseChatBackend && !loading && !generating;
+    final InteractionVisualState state = generating || !canUseChatBackend
+        ? .unavailable
+        : canEnable
+        ? .available
+        : .idleInteractive;
 
-    InteractionVisualState interactionState = canEnable ? .available : .idleInteractive;
-    if (generating || !canUseChatBackend) interactionState = .unavailable;
-
-    final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
-    final color = colors.background;
-    final textColor = colors.foreground;
-    final border = Border.all(color: colors.border);
-    final useBackdropFilter = ref.watch(P.ui.useBackdropFilterForInputOptions);
-    final sigma = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
-
-    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
-    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
-    final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
-
-    return IntrinsicWidth(
-      child: GestureDetector(
-        onTap: _onTap,
-        child: ClipRRect(
-          borderRadius: .circular(60),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: sigma.toDouble(),
-              sigmaY: sigma.toDouble(),
-            ),
-            enabled: useBackdropFilter,
-            child: Container(
-              height: height,
-              padding: const .symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: color.withValues(
-                  alpha: userBackdropFilterForInputOptions
-                      ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
-                      : 1,
-                ),
-                borderRadius: .circular(60),
-                border: border,
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Symbols.lightbulb,
-                    color: textColor,
-                    size: appTheme.inputBarInteractionsIconSize,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    s.ask,
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: fontSize,
-                      height: 1,
-                      fontWeight: .w500,
-                    ),
-                    strutStyle: StrutStyle(
-                      fontSize: fontSize,
-                      height: 1,
-                      forceStrutHeight: true,
-                      leadingDistribution: TextLeadingDistribution.even,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+    return ChatInteractionButton(
+      label: S.of(context).ask,
+      state: state,
+      iconBuilder: (color, size) => Icon(Symbols.lightbulb, color: color, size: size),
+      onTap: _onTap,
     );
   }
 }

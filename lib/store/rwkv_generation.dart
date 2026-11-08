@@ -152,6 +152,7 @@ extension $RWKVGeneration on _RWKVGeneration {
     }
     _latestGenerationRequest = request;
     _failedGenerationRequestId = null;
+    if (maxLength != 0) P.chat.onWebSearchModelRequest(request);
     P.rwkvBridge.send(request);
 
     generatingId.q = request.requestId;

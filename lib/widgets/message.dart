@@ -219,7 +219,8 @@ class _MessageState extends ConsumerState<Message> {
                 child: Column(
                   crossAxisAlignment: .start,
                   children: [
-                    if (demoType == .chat && msg.reference.enable) ReferenceInfo(refInfo: msg.reference, generating: msg.changing),
+                    if (demoType == .chat && msg.reference.enable)
+                      ReferenceInfo(refInfo: msg.reference, generating: msg.changing, messageId: msg.id),
                     GestureDetector(
                       onTap: () => P.chat.onMessageTapped(msg),
                       onLongPressStart: canShowUserMessageMenu && isMobile
@@ -498,6 +499,7 @@ class _BotMessageBubble extends ConsumerWidget {
           if (!thinkingData.reasoning && !isBatch)
             StreamingMarkdownRender(
               raw: finalContent,
+              references: msg.reference.list,
               streaming: thisMessageIsReceiving,
               useMessageLineHeight: true,
               debugTintStableBlocks: _kDebugTintNonBatchStableMarkdown,
@@ -554,6 +556,7 @@ class _BotMessageBubble extends ConsumerWidget {
           if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && !isBatch)
             StreamingMarkdownRender(
               raw: thinkingData.cotResult,
+              references: msg.reference.list,
               streaming: thisMessageIsReceiving,
               useMessageLineHeight: true,
               debugTintStableBlocks: _kDebugTintNonBatchStableMarkdown,

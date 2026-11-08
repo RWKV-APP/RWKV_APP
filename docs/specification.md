@@ -66,6 +66,189 @@ Loaded local model inference runs on the user's device through CPU, GPU, or NPU 
 
 Local inference does not imply that every app feature is offline. Model downloads, remote model configuration, links, and other explicitly approved connected workflows can use the network. Product copy and acceptance must distinguish on-device inference from connected features and must follow each narrower data-flow assertion.
 
+## SPEC-RWKV-CHAT-SEARCH — Optional Chat Search Providers
+
+Chat search is off by default. Users can turn it on or off from the chat input
+and select browser search on desktop, DeepSeek Search, Zhihu global search,
+Zhihu site search, anonymous AnySearch, Tavily, Brave Search, Exa, Serper,
+SerpApi, SearchApi, or Firecrawl. API search also works on mobile without an embedded browser.
+The Search input action uses the same rendering component as Fixed, Fast,
+Ask, and Batch Inference, including height, padding, typography, borders,
+state colors, and keyboard interaction. It has no dropdown arrow or separate
+toggle target. Clicking it uses the same adaptive action-sheet entrypoint and
+platform style as the thinking-mode and decode-parameter selectors, without
+forcing a Material sheet. List AnySearch first, then the other API providers,
+followed by desktop Browser search, Search settings next-to-last and Off last. Keep the native
+cancel action separate. DeepSeek, Zhihu and AnySearch use their bundled service
+icons in the selector, provider configuration and active input action.
+Provider actions keep the icon, title and selection mark together in a compact
+centered header. Explanatory subtitles sit on a separate centered line below;
+long descriptions must not push the icon away from its title.
+The DeepSeek whale in the chat input action uses button-only monochrome
+rendering: the shared foreground on enabled buttons and a light theme token
+on dark unavailable buttons. This provides white and light variants on dark
+surfaces. Preserve the original blue service icon in provider lists and settings.
+Search settings is the sole configuration entrypoint and contains a provider
+configuration selector, enable control, masked key entry, setup instructions,
+official links and allowance information. Choosing any provider in the action
+sheet selects and enables search when prerequisites are satisfied. Missing
+required configuration or an unverified personal key keeps search off and
+opens Search settings focused on that provider. Choosing
+Off disables search. Opening or dismissing the selector alone does not change
+the selection. Browsing configuration does not activate a provider or edit a
+different provider's key.
+Settings offers an explicit Verify and enable action. It sends the fixed public
+test query `RWKV` through the selected provider's normal safe API client and
+enables that provider only after a successful, schema-valid response. Explain
+that this check may consume one search request. Empty, schema-valid search
+results still establish connectivity; verification does not rank result quality.
+Show progress, a localized failure or success state, and retry without exposing
+provider bodies or credentials. Disable duplicate verification and configuration
+changes while checking. The user may close settings to cancel activation.
+After successful verification, save the user's key and its exact-provider
+verification in platform secure storage. Restore saved keys and verified scopes
+on subsequent App launches without requesting the key again. Search remains off
+by default until the user chooses a provider. Editing a key removes the old saved
+credential and invalidates its verification until the replacement is verified
+and saved. Clearing removes both the saved and current key. A changed Zhihu
+Access Secret invalidates both scopes, which verify separately. Closing settings, changing
+provider or key, or starting generation prevents a pending check from enabling
+search later. Anonymous search remains available without a required key check.
+Storage read, write and deletion failures are visible, support retry, and must
+not silently fall back to plaintext or claim that a key was saved or removed.
+Serialize secure mutations so a pending save cannot undo a later clear or edit.
+Authentication rejection, including an expired or revoked key, disables that
+credential's verified search scopes and prompts the user to check or replace it.
+Report insufficient balance, exhausted quota and rate limiting separately when
+the provider's status or documented error code identifies them. Keep saved keys
+available for account recovery, and retain safe error details on the failed
+search result. Do not fabricate an expiry date or account balance, echo remote
+error bodies in alerts or logs, repeatedly retry, or switch to another provider
+automatically. Credential-redacted response bodies are available only in the
+search Details diagnostic view and its explicit copy actions.
+The chooser and settings explain the two Zhihu scopes inline: Web searches
+across websites for external pages, official sites and news; Site searches
+Zhihu community questions, answers and articles. Both use the same personal
+Access Secret. Service configuration distinguishes recurring free allowances
+from finite signup trials, links to current official pricing, and explains
+that provider/account limits and charges govern actual use. Do not label
+limited or trial API access as unlimited free search.
+The chosen API receives only a query derived from the current user message;
+prior conversation messages are not sent. Retrieved references enter the
+existing local-model prompt and citation view. Search does not replace local
+RWKV answer generation with a provider's chat model.
+Preserve a current question that fits the provider query limit instead of
+adding an unrequested statistical scope, such as registered animals. Format
+API references as readable numbered titles, links and excerpts in the current
+prompt language, rather than serializing Reference objects into prompt JSON.
+Keep the untrusted-source boundary, citation instruction and source-sufficiency
+instruction. Historical or partial statistics must not be presented as a
+confirmed current total. Independent examples use a fresh chat; do not silently
+delete real history from an existing conversation to produce a cleaner report.
+The default search prompt places the original question once at the beginning,
+then the current local date, numbered references, and four short answer rules:
+direct answers with source citations; numbers retain their object, date and
+statistical scope; historical information is dated rather than asserted as
+current; insufficient evidence is stated without inventing a conclusion.
+Preserve explicit structured publication dates supplied by providers alongside
+references. Omit unknown dates and never infer publication dates from titles,
+page decoration or the search time. Exact old default templates adopt the new
+format; user-customized templates and the configured thinking footer remain
+intact. Keep the untrusted-reference instruction outside provider-authored text.
+
+Search Details presents four clearly numbered sections: the search request,
+the retrieved results used by the App, the final model input, and the actual
+assistant output. Each section and the complete report can be copied directly.
+The request content frame contains only the effective search query. Render
+provider, endpoint and fixed request metadata outside that frame; retain the
+safe complete request for report copying, excluding authentication headers and
+credential query parameters. Retain complete API response bodies and HTTP status
+before normalizing references, within the existing response-size limit. Redact
+credentials without truncating results or reconstructing the original response.
+Preview the response in results and offer a nested complete-response view and
+unabridged copying. Static notices stay outside response content. Legacy or
+browser records without an API response explicitly identify that absence and
+may show their saved references. Keep normalized citation order independent of
+the raw response. Valid reply citation numbers open their corresponding source;
+rendering links must not alter saved output or model input. Separate reference
+context from the answer instruction with two newline characters, including
+previously saved default search templates.
+Capture the complete ordered messages and generation options at the actual
+engine-request boundary, after search injection and response-style processing.
+The final-model-input section displays and copies the actual message text in
+send order, without adding translated role labels to the captured text.
+Do not render a diagnostic JSON envelope, diagnostic timestamps, capture flags, request
+identifiers or configured generation settings as model input. Do not repeat the
+injected user message when it is already present in the actual captured messages.
+Group multiple model calls and parallel conversations only when they occur.
+Copying one section returns its content without a report heading or Markdown
+code fence. Complete-report copying retains the four report sections.
+Keep diagnostic generation options separate from prompt text. Do not invent
+capture metadata or treat a frontend settings snapshot as effective model input.
+Distinguish these actual messages from the native runtime's internal
+chat-template serialization, which may be unavailable. Historical records
+missing actual messages must say so explicitly.
+Do not strip whitespace or Unicode from displayed or copied input/output;
+redact configured API credentials without changing the real engine request.
+Read the output from the associated message, update Details during generation,
+and retain the captured input with the conversation for later inspection.
+Failed and empty searches retain safe request, error and capture status;
+never fabricate results or reconstruct missing historic model inputs as exact.
+
+API credentials are user-configurable, masked, retained in the user's device
+secure storage after verification, and sent only to the selected provider's fixed HTTPS origin with
+redirects disabled. Do not put credentials in source, conversation records,
+search traces, logs, exports, or generated artifacts. The UI explains query
+transmission, secure local retention, automatic reuse and saved-key deletion.
+Use the platform keychain or credential vault without enabling cross-device
+credential synchronization; exclude Android vault files from system backup.
+Zhihu global and site
+search share the user's credential. Free allowances depend on the provider and account.
+
+Each credential belongs to the individual user's provider account. The App
+does not distribute bundled test keys or route searches through a shared
+service credential. Search settings provide masked personal-key entry,
+clearing of saved keys, automatic reuse, and provider-specific instructions with fixed
+official key-management and documentation links. Explain how to obtain the
+key, paste only its raw value without the Bearer prefix, verify and save it, and
+check the provider account's permissions and allowance. Zhihu global and site
+search use that user's same Access Secret. Make secure local retention clear.
+Selecting a service that needs a missing key, or clearing its active key,
+turns search off until the user supplies a key and verifies and enables search.
+Desktop browser search uses its browser path; an unavailable browser path
+reports failure and must not invoke an old shared-credential search service.
+
+AnySearch uses its fixed HTTPS search endpoint without an API key or
+Authorization header. Its anonymous free allowance and rate limits are shared
+by client IP and governed by the provider. The UI explains this limit and does
+not request a credential. Quota errors remain visible; never retain generated
+credentials from error bodies, register accounts, or switch to paid access
+automatically.
+
+Firecrawl also supports anonymous search at its fixed endpoint. A personal
+Firecrawl key is optional and may use that account's allowance and limits;
+clearing this optional key does not turn off anonymous search. Explain the
+anonymous rate limits and optional key in Search settings. Never obtain or
+rotate identities to bypass a provider quota.
+
+When search is off, sending a chat message does not call a search provider.
+An explicit verification action may still perform its disclosed setup probe.
+API search failure or an
+empty result is visible in the existing reference view, and never silently
+falls back to a different provider. A pending search must not start generation
+after that reply has been stopped or superseded. Changing providers or search
+settings is disabled while a reply is in progress.
+
+Each searched reply exposes a compact source-count button. Opening it shows a
+scrollable source sheet with stable one-based numbers matching the retrieved
+reference order, website domains, titles, excerpts, and original URLs. Selecting
+a valid HTTP or HTTPS source opens the original page. The source sheet remains
+available from saved replies without repeating the search. Search diagnostics
+remain a separate action. Source counts describe retrieved pages and do not
+claim that every page was cited by the model.
+The source-count and diagnostics actions use the same control layout, minimum
+height, padding, icon size, and text scale behavior, so they align in a reply.
+
 ## SPEC-RWKV-TELEMETRY-PRIVACY-CONTRACT — Telemetry Privacy Contract
 
 The current checked-in public policy says the app does not collect device information or track usage. Until an explicit approved decision supersedes that policy, telemetry must not transmit installation, device, model, usage, or performance data.

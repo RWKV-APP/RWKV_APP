@@ -197,19 +197,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m77(tokens, bytes) => "${tokens} tokens, ${bytes} bytes";
 
-  static String m78(port) => "WebSocket Service (Port: ${port})";
+  static String m78(index) => "Parallel conversation ${index}";
 
-  static String m79(id) => "Window ${id}";
+  static String m79(index) => "Model call ${index}";
 
-  static String m80(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m80(port) => "WebSocket Service (Port: ${port})";
+
+  static String m81(id) => "Window ${id}";
+
+  static String m82(buildArchitecture, operatingSystemArchitecture, url) =>
       "This app is built for ${buildArchitecture}, but your Windows operating system architecture is ${operatingSystemArchitecture}.\n\nPlease go to the official download page and download the matching executable:\n${url}";
 
-  static String m81(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m83(buildArchitecture, operatingSystemArchitecture, url) =>
       "Architecture mismatch detected: this app is built for ${buildArchitecture}, but your Windows operating system architecture is ${operatingSystemArchitecture}. Please download the matching build from the official page: ${url}";
 
-  static String m82(count) => "${count} tabs";
+  static String m84(count) => "${count} tabs";
 
-  static String m83(modelName) => "You are now using ${modelName}";
+  static String m85(modelName) => "You are now using ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1730,9 +1734,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recording_your_voice": MessageLookupByLibrary.simpleMessage(
       "Recording your voice...",
     ),
-    "reference_source": MessageLookupByLibrary.simpleMessage(
-      "Reference Source",
-    ),
+    "reference_source": MessageLookupByLibrary.simpleMessage("Search sources"),
     "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
     "refresh_complete": MessageLookupByLibrary.simpleMessage(
       "Refresh complete",
@@ -2236,10 +2238,223 @@ class MessageLookup extends MessageLookupByLibrary {
       "Waiting for HTML document",
     ),
     "web_search": MessageLookupByLibrary.simpleMessage("Web Search"),
+    "web_search_allowance_notice": MessageLookupByLibrary.simpleMessage(
+      "Free allowances can change. Your provider account and official pricing determine limits and any charges after the allowance.",
+    ),
+    "web_search_anysearch_notice": MessageLookupByLibrary.simpleMessage(
+      "No API key is required. Anonymous free quota is shared by IP address. Allowances and rate limits are controlled by AnySearch.",
+    ),
+    "web_search_balance": MessageLookupByLibrary.simpleMessage(
+      "The provider account has insufficient balance or credits. Check your balance on the provider platform before retrying.",
+    ),
+    "web_search_brave_allowance": MessageLookupByLibrary.simpleMessage(
+      "Recurring free allowance: \$5 in credits/month. Search is priced at \$5 per 1,000 requests.",
+    ),
+    "web_search_browser": MessageLookupByLibrary.simpleMessage(
+      "Browser search",
+    ),
+    "web_search_browser_notice": MessageLookupByLibrary.simpleMessage(
+      "No API key is needed for the desktop browser search. If the browser is not ready, try again shortly.",
+    ),
+    "web_search_deepseek_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. Sign in to the DeepSeek platform, then create and copy a personal key on the API keys page.\n2. Check your account balance and search access.\n3. Paste the key here and press Verify and enable. Search turns on after successful verification.",
+    ),
+    "web_search_exa_allowance": MessageLookupByLibrary.simpleMessage(
+      "Recurring free allowance: \$10 in credits/month, plus a \$10 onboarding bonus. Usage depends on search and content options.",
+    ),
+    "web_search_firecrawl_allowance": MessageLookupByLibrary.simpleMessage(
+      "Free plan: 1,000 credits/month, up to 500 searches without page scraping. Provider rate limits apply.",
+    ),
+    "web_search_generic_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. Open Get a personal key and sign in or create your own provider account.\n2. Create an API key and check search access and free allowance.\n3. Paste the key here and press Verify and enable. Search turns on after successful verification.",
+    ),
+    "web_search_get_key": MessageLookupByLibrary.simpleMessage(
+      "Get a personal key",
+    ),
+    "web_search_invalid_query": MessageLookupByLibrary.simpleMessage(
+      "The search query is empty or exceeds the provider limit. Shorten the message and try again.",
+    ),
+    "web_search_invalid_response": MessageLookupByLibrary.simpleMessage(
+      "The provider returned an unsupported response.",
+    ),
+    "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
+      "Paste only your personal key, without the Bearer prefix. Verify and enable saves it securely after a successful check for reuse next time.",
+    ),
+    "web_search_key_configured": MessageLookupByLibrary.simpleMessage(
+      "Key configured",
+    ),
+    "web_search_key_help_title": MessageLookupByLibrary.simpleMessage(
+      "Get and set up your key",
+    ),
+    "web_search_link_failed": MessageLookupByLibrary.simpleMessage(
+      "Could not open the official page. Please try again later.",
+    ),
+    "web_search_missing_key": MessageLookupByLibrary.simpleMessage(
+      "Enter your personal API key, then verify and enable this service.",
+    ),
+    "web_search_no_results": MessageLookupByLibrary.simpleMessage(
+      "No search results. The model will answer without web references.",
+    ),
+    "web_search_official_docs": MessageLookupByLibrary.simpleMessage(
+      "Official guide",
+    ),
+    "web_search_optional_key_notice": MessageLookupByLibrary.simpleMessage(
+      "No key is needed for anonymous Firecrawl search, which has lower provider rate limits. An optional personal key uses your account allowance.",
+    ),
+    "web_search_own_key_notice": MessageLookupByLibrary.simpleMessage(
+      "Use a key from your own account. Its quota and charges belong to that account. RWKV Chat does not provide a shared key.",
+    ),
+    "web_search_pricing": MessageLookupByLibrary.simpleMessage(
+      "Free allowance and pricing",
+    ),
+    "web_search_privacy_notice": MessageLookupByLibrary.simpleMessage(
+      "When enabled, a search query derived from your current message is sent to the selected provider. Earlier messages are not sent. RWKV generates the answer locally. Provider charges may apply.",
+    ),
+    "web_search_provider": MessageLookupByLibrary.simpleMessage(
+      "Search provider",
+    ),
+    "web_search_quota": MessageLookupByLibrary.simpleMessage(
+      "The account search quota is exhausted. Check your provider allowance and retry when it is available.",
+    ),
+    "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
+      "Requests are too frequent or a provider limit was reached. Wait before retrying and check your account allowance.",
+    ),
+    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
+      "Retry secure storage",
+    ),
+    "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
+      "Copy all four sections",
+    ),
+    "web_search_report_details_action": MessageLookupByLibrary.simpleMessage(
+      "Details",
+    ),
+    "web_search_report_error": MessageLookupByLibrary.simpleMessage(
+      "Search error",
+    ),
+    "web_search_report_full_response": MessageLookupByLibrary.simpleMessage(
+      "Full response",
+    ),
+    "web_search_report_injected_prompt": MessageLookupByLibrary.simpleMessage(
+      "Injected user message (one part of the model input)",
+    ),
+    "web_search_report_input": MessageLookupByLibrary.simpleMessage(
+      "3. Final model input",
+    ),
+    "web_search_report_input_missing": MessageLookupByLibrary.simpleMessage(
+      "Complete engine input was not recorded for this reply. A saved injected user message, when available, is only part of the input.",
+    ),
+    "web_search_report_input_note": MessageLookupByLibrary.simpleMessage(
+      "Actual message text sent to the model, in send order.",
+    ),
+    "web_search_report_model_batch": m78,
+    "web_search_report_model_call": m79,
+    "web_search_report_native_note": MessageLookupByLibrary.simpleMessage(
+      "Native chat-template serialization and tokenizer input are not captured.",
+    ),
+    "web_search_report_output": MessageLookupByLibrary.simpleMessage(
+      "4. Model output",
+    ),
+    "web_search_report_output_complete": MessageLookupByLibrary.simpleMessage(
+      "Generation finished.",
+    ),
+    "web_search_report_output_empty": MessageLookupByLibrary.simpleMessage(
+      "Model output is empty.",
+    ),
+    "web_search_report_output_generating": MessageLookupByLibrary.simpleMessage(
+      "Generating; the output below is still changing.",
+    ),
+    "web_search_report_output_paused": MessageLookupByLibrary.simpleMessage(
+      "Stopped or paused; output may be incomplete.",
+    ),
+    "web_search_report_output_unavailable":
+        MessageLookupByLibrary.simpleMessage(
+          "The associated reply is unavailable; model output cannot be read.",
+        ),
+    "web_search_report_query": MessageLookupByLibrary.simpleMessage(
+      "Search query",
+    ),
+    "web_search_report_request": MessageLookupByLibrary.simpleMessage(
+      "1. Search request",
+    ),
+    "web_search_report_request_details": MessageLookupByLibrary.simpleMessage(
+      "Request details",
+    ),
+    "web_search_report_request_missing": MessageLookupByLibrary.simpleMessage(
+      "No request snapshot was recorded for this reply.",
+    ),
+    "web_search_report_response_missing": MessageLookupByLibrary.simpleMessage(
+      "No complete API response was recorded for this search. Saved references are shown when available.",
+    ),
+    "web_search_report_results": MessageLookupByLibrary.simpleMessage(
+      "2. Search results",
+    ),
+    "web_search_report_title": MessageLookupByLibrary.simpleMessage(
+      "Search details",
+    ),
+    "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
+      "User message",
+    ),
+    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
+      "Verified keys are saved in secure storage on this device and reused after restarting RWKV Chat. Use the clear button to remove a saved key.",
+    ),
+    "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
+      "Signup trial: 100 free requests. This is a finite trial, not a monthly allowance.",
+    ),
+    "web_search_serpapi_allowance": MessageLookupByLibrary.simpleMessage(
+      "Recurring free allowance: 250 searches/month. Account rate limits also apply.",
+    ),
+    "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
+      "Signup trial: 2,500 free queries. This is a finite trial, not a monthly allowance.",
+    ),
+    "web_search_settings": MessageLookupByLibrary.simpleMessage(
+      "Search settings",
+    ),
+    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
+      "Secure storage could not be accessed. Saving or clearing the key could not be confirmed. Unlock your device, then retry.",
+    ),
+    "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
+      "Recurring free allowance: 1,000 credits/month. Basic search uses 1 credit per request.",
+    ),
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Web Search Template",
     ),
-    "websocket_service_port": m78,
+    "web_search_timeout": MessageLookupByLibrary.simpleMessage(
+      "Search timed out. Try again.",
+    ),
+    "web_search_unauthorized": MessageLookupByLibrary.simpleMessage(
+      "The key is invalid, expired, revoked, or lacks access. Update your key or check your account permissions.",
+    ),
+    "web_search_unavailable": MessageLookupByLibrary.simpleMessage(
+      "Search is unavailable. Check your connection and try again.",
+    ),
+    "web_search_validate_enable": MessageLookupByLibrary.simpleMessage(
+      "Verify and enable",
+    ),
+    "web_search_validating": MessageLookupByLibrary.simpleMessage(
+      "Verifying connection…",
+    ),
+    "web_search_validation_notice": MessageLookupByLibrary.simpleMessage(
+      "This sends the test query “RWKV” to this service and may use one search request. Search is enabled after successful verification.",
+    ),
+    "web_search_validation_success": MessageLookupByLibrary.simpleMessage(
+      "Connection verified.",
+    ),
+    "web_search_zhihu_global": MessageLookupByLibrary.simpleMessage(
+      "Zhihu · Web",
+    ),
+    "web_search_zhihu_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. Sign in to the Zhihu data platform, then generate and copy an Access Secret in your profile.\n2. Check access and quota for the selected search service.\n3. Paste the key here and press Verify and enable. Search turns on after successful verification.",
+    ),
+    "web_search_zhihu_site": MessageLookupByLibrary.simpleMessage(
+      "Zhihu · Site",
+    ),
+    "web_search_zhihu_site_description": MessageLookupByLibrary.simpleMessage(
+      "Within Zhihu: community questions, answers and articles.",
+    ),
+    "web_search_zhihu_web_description": MessageLookupByLibrary.simpleMessage(
+      "Across websites: official pages, news and other web sources.",
+    ),
+    "websocket_service_port": m80,
     "weights_mangement": MessageLookupByLibrary.simpleMessage(
       "Weight File Management",
     ),
@@ -2261,16 +2476,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("White"),
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
-    "window_id": m79,
-    "windows_architecture_mismatch_dialog_message": m80,
+    "window_id": m81,
+    "windows_architecture_mismatch_dialog_message": m82,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("Architecture Mismatch"),
-    "windows_architecture_mismatch_warning": m81,
+    "windows_architecture_mismatch_warning": m83,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
-    "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
-    "x_tabs": m82,
-    "you_are_now_using": m83,
+    "x_pages_found": MessageLookupByLibrary.simpleMessage("%d sources"),
+    "x_tabs": m84,
+    "you_are_now_using": m85,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),

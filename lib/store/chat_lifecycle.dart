@@ -13,6 +13,8 @@ extension $ChatLifecycle on _Chat {
     }
     qq;
 
+    await restoreWebSearchCredentials();
+
     textEditingController.addListener(_onTextEditingControllerValueChanged);
     textInInput.l(_onTextChanged);
 

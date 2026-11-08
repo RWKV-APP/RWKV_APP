@@ -185,19 +185,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m77(tokens, bytes) => "${tokens} tokens、${bytes} bytes";
 
-  static String m78(port) => "WebSocketサービス（ポート：${port}）";
+  static String m78(index) => "並列会話 ${index}";
 
-  static String m79(id) => "ウィンドウ ${id}";
+  static String m79(index) => "モデル呼び出し ${index}";
 
-  static String m80(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m80(port) => "WebSocketサービス（ポート：${port}）";
+
+  static String m81(id) => "ウィンドウ ${id}";
+
+  static String m82(buildArchitecture, operatingSystemArchitecture, url) =>
       "このアプリの Build Architecture は ${buildArchitecture} ですが、Windows Operating System の Architecture は ${operatingSystemArchitecture} です。\n\n公式ダウンロードページから一致する実行ファイルをダウンロードしてください：\n${url}";
 
-  static String m81(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m83(buildArchitecture, operatingSystemArchitecture, url) =>
       "アーキテクチャの不一致を検出しました：このアプリの Build Architecture は ${buildArchitecture} ですが、Windows Operating System の Architecture は ${operatingSystemArchitecture} です。公式ダウンロードページから一致する版をダウンロードしてください：${url}";
 
-  static String m82(count) => "${count}個のタブ";
+  static String m84(count) => "${count}個のタブ";
 
-  static String m83(modelName) => "現在、${modelName}を使用しています";
+  static String m85(modelName) => "現在、${modelName}を使用しています";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1503,7 +1507,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reason": MessageLookupByLibrary.simpleMessage("推論"),
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("推論モード"),
     "recording_your_voice": MessageLookupByLibrary.simpleMessage("音声を録音中..."),
-    "reference_source": MessageLookupByLibrary.simpleMessage("参照元"),
+    "reference_source": MessageLookupByLibrary.simpleMessage("検索ソース"),
     "refresh": MessageLookupByLibrary.simpleMessage("更新"),
     "refresh_complete": MessageLookupByLibrary.simpleMessage("更新完了"),
     "refreshed": MessageLookupByLibrary.simpleMessage("更新"),
@@ -1945,8 +1949,195 @@ class MessageLookup extends MessageLookupByLibrary {
       "HTML ドキュメントを待っています",
     ),
     "web_search": MessageLookupByLibrary.simpleMessage("ウェブ検索"),
+    "web_search_allowance_notice": MessageLookupByLibrary.simpleMessage(
+      "無料枠は変更される場合があります。制限と超過料金はサービスのアカウントと公式料金に従います。",
+    ),
+    "web_search_anysearch_notice": MessageLookupByLibrary.simpleMessage(
+      "API キーは不要です。匿名の無料枠は IP アドレスごとに共有されます。利用枠とレート制限は AnySearch が定めます。",
+    ),
+    "web_search_balance": MessageLookupByLibrary.simpleMessage(
+      "サービスの残高またはクレジットが不足しています。サービス側で残高を確認してから再試行してください。",
+    ),
+    "web_search_brave_allowance": MessageLookupByLibrary.simpleMessage(
+      "毎月の無料枠：5 米ドル分の credits。検索料金は 1,000 回につき 5 米ドル。",
+    ),
+    "web_search_browser": MessageLookupByLibrary.simpleMessage("ブラウザー検索"),
+    "web_search_browser_notice": MessageLookupByLibrary.simpleMessage(
+      "デスクトップのブラウザ検索に API キーは不要です。ブラウザの準備ができていない場合は、少し待って再試行してください。",
+    ),
+    "web_search_deepseek_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. DeepSeek プラットフォームにログインし、API keys ページで個人キーを作成してコピーします。\n2. アカウント残高と検索の利用権限を確認します。\n3. ここにキーを貼り付け、「検証して有効化」を押します。検証に成功すると検索が有効になります。",
+    ),
+    "web_search_exa_allowance": MessageLookupByLibrary.simpleMessage(
+      "毎月 10 米ドル分の無料 credits と登録時の 10 米ドル特典。消費量は検索・コンテンツ設定によります。",
+    ),
+    "web_search_firecrawl_allowance": MessageLookupByLibrary.simpleMessage(
+      "無料プラン：毎月 1,000 credits、本文取得なしの検索で最大 500 回。レート制限が適用されます。",
+    ),
+    "web_search_generic_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1.「個人キーを取得」から自分のサービスアカウントにログインまたは登録します。\n2. API キーを作成し、検索権限と無料枠を確認します。\n3. ここにキーを貼り付け、「検証して有効化」を押します。検証に成功すると検索が有効になります。",
+    ),
+    "web_search_get_key": MessageLookupByLibrary.simpleMessage("個人キーを取得"),
+    "web_search_invalid_query": MessageLookupByLibrary.simpleMessage(
+      "検索語が空か、長さの上限を超えています。メッセージを短くして再試行してください。",
+    ),
+    "web_search_invalid_response": MessageLookupByLibrary.simpleMessage(
+      "検索サービスの応答形式に対応していません。",
+    ),
+    "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
+      "Bearer を付けずに自分のキーだけを貼り付けてください。「検証して有効化」で検証に成功すると安全に保存され、次回も使用できます。",
+    ),
+    "web_search_key_configured": MessageLookupByLibrary.simpleMessage(
+      "キーを設定済み",
+    ),
+    "web_search_key_help_title": MessageLookupByLibrary.simpleMessage(
+      "キーの取得と設定",
+    ),
+    "web_search_link_failed": MessageLookupByLibrary.simpleMessage(
+      "公式ページを開けませんでした。後でもう一度お試しください。",
+    ),
+    "web_search_missing_key": MessageLookupByLibrary.simpleMessage(
+      "個人 API キーを入力してから、このサービスを検証して有効にしてください。",
+    ),
+    "web_search_no_results": MessageLookupByLibrary.simpleMessage(
+      "検索結果がありません。モデルはウェブの参考資料なしで回答します。",
+    ),
+    "web_search_official_docs": MessageLookupByLibrary.simpleMessage("公式ガイド"),
+    "web_search_optional_key_notice": MessageLookupByLibrary.simpleMessage(
+      "Firecrawl はキーなしの匿名検索に対応しますが、レート制限は低くなります。任意の個人キーを設定すると自分のアカウント枠を利用できます。",
+    ),
+    "web_search_own_key_notice": MessageLookupByLibrary.simpleMessage(
+      "自分のアカウントのキーを使用してください。利用枠と料金はそのアカウントに適用されます。RWKV Chat は共有キーを提供しません。",
+    ),
+    "web_search_pricing": MessageLookupByLibrary.simpleMessage("無料枠と料金"),
+    "web_search_privacy_notice": MessageLookupByLibrary.simpleMessage(
+      "有効にすると、現在のメッセージから抽出した検索語を選択したサービスに送信します。過去の会話は送信しません。回答はローカルの RWKV が生成します。サービス料金が発生する場合があります。",
+    ),
+    "web_search_provider": MessageLookupByLibrary.simpleMessage("検索サービス"),
+    "web_search_quota": MessageLookupByLibrary.simpleMessage(
+      "検索の利用枠を使い切りました。サービスの利用枠を確認し、回復後に再試行してください。",
+    ),
+    "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
+      "リクエストが多すぎるか、サービスの上限に達しました。しばらく待ち、利用枠を確認してください。",
+    ),
+    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
+      "安全なストレージを再試行",
+    ),
+    "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
+      "4つの項目をすべてコピー",
+    ),
+    "web_search_report_details_action": MessageLookupByLibrary.simpleMessage(
+      "詳細",
+    ),
+    "web_search_report_error": MessageLookupByLibrary.simpleMessage("検索エラー"),
+    "web_search_report_full_response": MessageLookupByLibrary.simpleMessage(
+      "完全なレスポンス",
+    ),
+    "web_search_report_injected_prompt": MessageLookupByLibrary.simpleMessage(
+      "検索情報を追加したユーザーメッセージ（モデル入力の一部）",
+    ),
+    "web_search_report_input": MessageLookupByLibrary.simpleMessage(
+      "3. 最終モデル入力",
+    ),
+    "web_search_report_input_missing": MessageLookupByLibrary.simpleMessage(
+      "この回答の完全なエンジン入力は記録されていません。保存済みの検索情報付きユーザーメッセージがある場合も、入力の一部のみです。",
+    ),
+    "web_search_report_input_note": MessageLookupByLibrary.simpleMessage(
+      "モデルへ実際に送ったメッセージ原文を送信順に表示します。",
+    ),
+    "web_search_report_model_batch": m78,
+    "web_search_report_model_call": m79,
+    "web_search_report_native_note": MessageLookupByLibrary.simpleMessage(
+      "ネイティブ実行時のチャットテンプレート適用後のテキストとトークナイザー入力は記録されていません。",
+    ),
+    "web_search_report_output": MessageLookupByLibrary.simpleMessage(
+      "4. モデル出力",
+    ),
+    "web_search_report_output_complete": MessageLookupByLibrary.simpleMessage(
+      "生成が終了しました。",
+    ),
+    "web_search_report_output_empty": MessageLookupByLibrary.simpleMessage(
+      "モデル出力は空です。",
+    ),
+    "web_search_report_output_generating": MessageLookupByLibrary.simpleMessage(
+      "生成中です。以下の出力は引き続き更新されます。",
+    ),
+    "web_search_report_output_paused": MessageLookupByLibrary.simpleMessage(
+      "停止または一時停止しました。出力が未完了の可能性があります。",
+    ),
+    "web_search_report_output_unavailable":
+        MessageLookupByLibrary.simpleMessage("関連する回答が利用できないため、モデル出力を読み取れません。"),
+    "web_search_report_query": MessageLookupByLibrary.simpleMessage("検索語"),
+    "web_search_report_request": MessageLookupByLibrary.simpleMessage(
+      "1. 検索リクエスト",
+    ),
+    "web_search_report_request_details": MessageLookupByLibrary.simpleMessage(
+      "リクエストの詳細",
+    ),
+    "web_search_report_request_missing": MessageLookupByLibrary.simpleMessage(
+      "この回答の検索リクエストは記録されていません。",
+    ),
+    "web_search_report_response_missing": MessageLookupByLibrary.simpleMessage(
+      "この検索の完全な API レスポンスは記録されていません。保存済みの参考資料のみ表示します。",
+    ),
+    "web_search_report_results": MessageLookupByLibrary.simpleMessage(
+      "2. 検索結果",
+    ),
+    "web_search_report_title": MessageLookupByLibrary.simpleMessage("検索の詳細"),
+    "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
+      "ユーザーメッセージ",
+    ),
+    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
+      "検証済みのキーはこの端末の安全なストレージに保存され、RWKV Chat の再起動後も使用できます。クリアボタンで保存済みのキーを削除できます。",
+    ),
+    "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
+      "登録時の試用枠：100 回の無料リクエスト。毎月更新される枠ではありません。",
+    ),
+    "web_search_serpapi_allowance": MessageLookupByLibrary.simpleMessage(
+      "毎月の無料枠：250 回の検索。アカウントのレート制限も適用されます。",
+    ),
+    "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
+      "登録時の試用枠：2,500 回の無料検索。毎月更新される枠ではありません。",
+    ),
+    "web_search_settings": MessageLookupByLibrary.simpleMessage("検索設定"),
+    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
+      "安全なストレージにアクセスできず、キーの保存または削除を確認できません。端末のロックを解除して再試行してください。",
+    ),
+    "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
+      "毎月の無料枠：1,000 credits。基本検索は 1 回につき 1 credit。",
+    ),
     "web_search_template": MessageLookupByLibrary.simpleMessage("ウェブ検索テンプレート"),
-    "websocket_service_port": m78,
+    "web_search_timeout": MessageLookupByLibrary.simpleMessage(
+      "検索がタイムアウトしました。再試行してください。",
+    ),
+    "web_search_unauthorized": MessageLookupByLibrary.simpleMessage(
+      "キーが無効、期限切れ、取り消し済み、または権限がありません。キーを更新するかアカウントの権限を確認してください。",
+    ),
+    "web_search_unavailable": MessageLookupByLibrary.simpleMessage(
+      "検索を利用できません。接続を確認して再試行してください。",
+    ),
+    "web_search_validate_enable": MessageLookupByLibrary.simpleMessage(
+      "検証して有効化",
+    ),
+    "web_search_validating": MessageLookupByLibrary.simpleMessage("接続を検証中…"),
+    "web_search_validation_notice": MessageLookupByLibrary.simpleMessage(
+      "テストクエリ「RWKV」をこのサービスに送信するため、検索枠を 1 回分消費する場合があります。検証に成功すると検索を有効にします。",
+    ),
+    "web_search_validation_success": MessageLookupByLibrary.simpleMessage(
+      "接続の検証に成功しました。",
+    ),
+    "web_search_zhihu_global": MessageLookupByLibrary.simpleMessage("知乎 · ウェブ"),
+    "web_search_zhihu_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. 知乎データプラットフォームにログインし、個人センターで Access Secret を生成してコピーします。\n2. 選択した検索サービスの利用権限と利用枠を確認します。\n3. ここにキーを貼り付け、「検証して有効化」を押します。検証に成功すると検索が有効になります。",
+    ),
+    "web_search_zhihu_site": MessageLookupByLibrary.simpleMessage("知乎 · サイト内"),
+    "web_search_zhihu_site_description": MessageLookupByLibrary.simpleMessage(
+      "知乎内：コミュニティの質問、回答、記事。",
+    ),
+    "web_search_zhihu_web_description": MessageLookupByLibrary.simpleMessage(
+      "Web 全体：公式サイト、ニュース、その他の Web 情報。",
+    ),
+    "websocket_service_port": m80,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("重みファイル管理"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "重みファイル保存ディレクトリ",
@@ -1964,18 +2155,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白"),
     "white_score": MessageLookupByLibrary.simpleMessage("白のスコア"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白の勝ち！"),
-    "window_id": m79,
-    "windows_architecture_mismatch_dialog_message": m80,
+    "window_id": m81,
+    "windows_architecture_mismatch_dialog_message": m82,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("アーキテクチャ不一致"),
-    "windows_architecture_mismatch_warning": m81,
+    "windows_architecture_mismatch_warning": m83,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",
     ),
-    "x_pages_found": MessageLookupByLibrary.simpleMessage("%dページ見つかりました"),
-    "x_tabs": m82,
-    "you_are_now_using": m83,
+    "x_pages_found": MessageLookupByLibrary.simpleMessage("%d 件のソース"),
+    "x_tabs": m84,
+    "you_are_now_using": m85,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "これでRWKVとのチャットを開始できます",
     ),

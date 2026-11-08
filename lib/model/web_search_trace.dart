@@ -13,6 +13,10 @@ final class WebSearchTrace {
   final List<WebSearchTraceStep> steps;
   final String promptContext;
   final String finalPrompt;
+  final String request;
+  final List<WebSearchTraceResponse> responses;
+  final List<List<WebSearchTraceSource>> sourceGroups;
+  final Map<String, dynamic> modelInput;
   final String error;
 
   const WebSearchTrace({
@@ -31,6 +35,10 @@ final class WebSearchTrace {
     required this.promptContext,
     required this.finalPrompt,
     required this.error,
+    this.request = '',
+    this.responses = const [],
+    this.sourceGroups = const [],
+    this.modelInput = const {},
   });
 
   factory WebSearchTrace.fromJson(dynamic json) {
@@ -50,6 +58,12 @@ final class WebSearchTrace {
       steps: (json['steps'] as Iterable?)?.map(WebSearchTraceStep.fromJson).toList() ?? const <WebSearchTraceStep>[],
       promptContext: json['promptContext']?.toString() ?? '',
       finalPrompt: json['finalPrompt']?.toString() ?? '',
+      request: json['request']?.toString() ?? '',
+      responses: (json['responses'] as Iterable?)?.map(WebSearchTraceResponse.fromJson).toList() ?? const [],
+      sourceGroups:
+          (json['sourceGroups'] as Iterable?)?.map((group) => (group as Iterable).map(WebSearchTraceSource.fromJson).toList()).toList() ??
+          const [],
+      modelInput: json['modelInput'] is Map ? Map<String, dynamic>.from(json['modelInput'] as Map) : const {},
       error: json['error']?.toString() ?? '',
     );
   }
@@ -83,6 +97,9 @@ final class WebSearchTrace {
         steps.isNotEmpty ||
         promptContext.isNotEmpty ||
         finalPrompt.isNotEmpty ||
+        request.isNotEmpty ||
+        responses.isNotEmpty ||
+        modelInput.isNotEmpty ||
         error.isNotEmpty;
   }
 
@@ -101,6 +118,10 @@ final class WebSearchTrace {
     List<WebSearchTraceStep>? steps,
     String? promptContext,
     String? finalPrompt,
+    String? request,
+    List<WebSearchTraceResponse>? responses,
+    List<List<WebSearchTraceSource>>? sourceGroups,
+    Map<String, dynamic>? modelInput,
     String? error,
   }) {
     return WebSearchTrace(
@@ -118,6 +139,10 @@ final class WebSearchTrace {
       steps: steps ?? this.steps,
       promptContext: promptContext ?? this.promptContext,
       finalPrompt: finalPrompt ?? this.finalPrompt,
+      request: request ?? this.request,
+      responses: responses ?? this.responses,
+      sourceGroups: sourceGroups ?? this.sourceGroups,
+      modelInput: modelInput ?? this.modelInput,
       error: error ?? this.error,
     );
   }
@@ -138,9 +163,29 @@ final class WebSearchTrace {
       'steps': steps.map((step) => step.toJson()).toList(),
       'promptContext': promptContext,
       'finalPrompt': finalPrompt,
+      'request': request,
+      'responses': responses.map((response) => response.toJson()).toList(),
+      'sourceGroups': [for (final group in sourceGroups) group.map((source) => source.toJson()).toList()],
+      'modelInput': modelInput,
       'error': error,
     };
   }
+}
+
+final class WebSearchTraceResponse {
+  final String query;
+  final int statusCode;
+  final String body;
+
+  const WebSearchTraceResponse({required this.query, required this.statusCode, required this.body});
+
+  factory WebSearchTraceResponse.fromJson(dynamic json) => WebSearchTraceResponse(
+    query: json is Map ? json['query']?.toString() ?? '' : '',
+    statusCode: json is Map ? (json['statusCode'] as num?)?.toInt() ?? 0 : 0,
+    body: json is Map ? json['body']?.toString() ?? '' : '',
+  );
+
+  Map<String, dynamic> toJson() => {'query': query, 'statusCode': statusCode, 'body': body};
 }
 
 final class WebSearchTraceSource {
@@ -148,12 +193,14 @@ final class WebSearchTraceSource {
   final String title;
   final String url;
   final String summary;
+  final String publishedAt;
 
   const WebSearchTraceSource({
     required this.rank,
     required this.title,
     required this.url,
     required this.summary,
+    this.publishedAt = '',
   });
 
   factory WebSearchTraceSource.fromJson(dynamic json) {
@@ -163,6 +210,7 @@ final class WebSearchTraceSource {
       title: json['title']?.toString() ?? '',
       url: json['url']?.toString() ?? '',
       summary: json['summary']?.toString() ?? '',
+      publishedAt: json['publishedAt'] is String ? json['publishedAt'] as String : '',
     );
   }
 
@@ -176,6 +224,7 @@ final class WebSearchTraceSource {
       'title': title,
       'url': url,
       'summary': summary,
+      if (publishedAt.isNotEmpty) 'publishedAt': publishedAt,
     };
   }
 }

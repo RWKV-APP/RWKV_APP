@@ -9,6 +9,8 @@
 
     <application
         android:name="${applicationName}"
+        android:fullBackupContent="@xml/search_backup_rules"
+        android:dataExtractionRules="@xml/search_data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
         android:label="RWKV Chat"

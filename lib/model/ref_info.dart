@@ -42,6 +42,15 @@ final class RefInfo {
     return list.map((e) => e.summary).join("\n");
   }
 
+  List<Reference> sourcesForBatch(int slot) {
+    final groups = trace?.sourceGroups;
+    if (groups == null || slot < 0 || slot >= groups.length) return const [];
+    return [
+      for (final source in groups[slot])
+        Reference(url: source.url, title: source.title, summary: source.summary, publishedAt: source.publishedAt),
+    ];
+  }
+
   String serialize() => jsonEncode(toJson());
 
   Map<String, dynamic> toJson() {

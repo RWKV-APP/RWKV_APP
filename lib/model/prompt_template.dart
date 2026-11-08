@@ -3,6 +3,7 @@ import 'dart:convert';
 
 // Project imports:
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
+import 'package:zone/func/web_search_prompt.dart';
 import 'package:zone/store/p.dart';
 
 class PromptTemplate {
@@ -33,8 +34,8 @@ class PromptTemplate {
       thinkingFast: '<think>\n</think',
       thinkingFree: '<think',
       newChatTemplate: '',
-      webSearchTemplate: '%s\nPlease answer according to the above information:\n%s',
-      webSearchChineseTemplate: '%s\n请根据以上信息回答:\n%s',
+      webSearchTemplate: defaultWebSearchTemplate,
+      webSearchChineseTemplate: defaultWebSearchChineseTemplate,
       systemPrompt: '',
       // 'System: You are RWKV, a next-gen RNN chatbot developed by RWKV foundation. '
       // 'You are a helpful assistant. Today is {{date}}, {{day_of_week}}.',

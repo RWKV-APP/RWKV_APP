@@ -18,6 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 // Project imports:
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/reference.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/alert.dart';
 
@@ -159,6 +160,7 @@ bool _containsInlineLatexDelimiter(String line) {
 
 class MarkdownRender extends ConsumerWidget {
   final String raw;
+  final List<Reference> references;
   final Color? color;
   final bool useMessageLineHeight;
   final double inlineLatexVerticalPaddingFactor;
@@ -166,6 +168,7 @@ class MarkdownRender extends ConsumerWidget {
   const MarkdownRender({
     super.key,
     required this.raw,
+    this.references = const [],
     this.color,
     this.useMessageLineHeight = false,
     this.inlineLatexVerticalPaddingFactor = 0,
@@ -224,6 +227,7 @@ class MarkdownRender extends ConsumerWidget {
 
     final gptMarkdown = GptMarkdown(
       breakableRaw,
+      sourceTagBuilder: references.isEmpty ? null : (context, number, style) => _SearchCitation(number: number, references: references),
       onLinkTap: _onTapLink,
       style: gptMarkdownStyle,
       textScaler: .noScaling,
@@ -291,8 +295,40 @@ class StreamingMarkdownSplit {
   });
 }
 
+class _SearchCitation extends StatelessWidget {
+  final String number;
+  final List<Reference> references;
+
+  const _SearchCitation({required this.number, required this.references});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final index = (int.tryParse(number) ?? 0) - 1;
+    final source = index < 0 || index >= references.length ? null : references[index];
+    final uri = source?.webUri;
+    if (source == null || uri == null) return Text('[$number]');
+    return Tooltip(
+      message: '${source.title}\n${source.url}',
+      child: Material(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: .circular(10),
+        child: InkWell(
+          borderRadius: .circular(10),
+          onTap: () => launchUrl(uri),
+          child: Padding(
+            padding: const .symmetric(horizontal: 6, vertical: 2),
+            child: Text(number, style: TextStyle(color: theme.colorScheme.primary, fontSize: 12)),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class StreamingMarkdownRender extends ConsumerStatefulWidget {
   final String raw;
+  final List<Reference> references;
   final Color? color;
   final bool streaming;
   final bool useMessageLineHeight;
@@ -303,6 +339,7 @@ class StreamingMarkdownRender extends ConsumerStatefulWidget {
   const StreamingMarkdownRender({
     super.key,
     required this.raw,
+    this.references = const [],
     required this.streaming,
     this.color,
     this.useMessageLineHeight = false,
@@ -321,6 +358,7 @@ class _StreamingMarkdownRenderState extends ConsumerState<StreamingMarkdownRende
   @override
   void didUpdateWidget(covariant StreamingMarkdownRender oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (!listEquals(oldWidget.references, widget.references)) _clearStableCache();
     if (oldWidget.streaming == widget.streaming) return;
     if (widget.streaming) return;
     _clearStableCache();
@@ -369,6 +407,7 @@ class _StreamingMarkdownRenderState extends ConsumerState<StreamingMarkdownRende
 
     final markdown = MarkdownRender(
       raw: raw,
+      references: widget.references,
       color: widget.color,
       useMessageLineHeight: widget.useMessageLineHeight,
       inlineLatexVerticalPaddingFactor: widget.inlineLatexVerticalPaddingFactor,
@@ -408,6 +447,7 @@ class _StreamingMarkdownRenderState extends ConsumerState<StreamingMarkdownRende
     if (!widget.streaming) {
       return MarkdownRender(
         raw: widget.raw,
+        references: widget.references,
         color: widget.color,
         useMessageLineHeight: widget.useMessageLineHeight,
         inlineLatexVerticalPaddingFactor: widget.inlineLatexVerticalPaddingFactor,
@@ -418,6 +458,7 @@ class _StreamingMarkdownRenderState extends ConsumerState<StreamingMarkdownRende
     if (split.stableBlocks.isEmpty) {
       return _StreamingMarkdownTail(
         raw: split.tail,
+        references: widget.references,
         color: widget.color,
         useMessageLineHeight: widget.useMessageLineHeight,
         inlineLatexVerticalPaddingFactor: widget.inlineLatexVerticalPaddingFactor,
@@ -429,6 +470,7 @@ class _StreamingMarkdownRenderState extends ConsumerState<StreamingMarkdownRende
       children.add(
         _StreamingMarkdownTail(
           raw: split.tail,
+          references: widget.references,
           color: widget.color,
           useMessageLineHeight: widget.useMessageLineHeight,
           inlineLatexVerticalPaddingFactor: widget.inlineLatexVerticalPaddingFactor,
@@ -483,12 +525,14 @@ class _StreamingMarkdownStableBlockCacheEntry {
 
 class _StreamingMarkdownTail extends ConsumerWidget {
   final String raw;
+  final List<Reference> references;
   final Color? color;
   final bool useMessageLineHeight;
   final double inlineLatexVerticalPaddingFactor;
 
   const _StreamingMarkdownTail({
     required this.raw,
+    required this.references,
     required this.color,
     required this.useMessageLineHeight,
     required this.inlineLatexVerticalPaddingFactor,
@@ -502,9 +546,11 @@ class _StreamingMarkdownTail extends ConsumerWidget {
     if (raw.isEmpty) return const SizedBox.shrink();
 
     final renderMarkdownAndLatexEnabled = ref.watch(P.preference.renderMarkdownAndLatexEnabled);
-    if (renderMarkdownAndLatexEnabled && shouldRenderStreamingMarkdownTailAsFullMarkdown(raw)) {
+    if (renderMarkdownAndLatexEnabled &&
+        (shouldRenderStreamingMarkdownTailAsFullMarkdown(raw) || references.isNotEmpty && RegExp(r'\[\d+\]').hasMatch(raw))) {
       return MarkdownRender(
         raw: _streamingMarkdownTailRawForFullMarkdown(raw),
+        references: references,
         color: color,
         useMessageLineHeight: useMessageLineHeight,
         inlineLatexVerticalPaddingFactor: inlineLatexVerticalPaddingFactor,

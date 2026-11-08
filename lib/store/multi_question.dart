@@ -242,6 +242,12 @@ extension $MultiQuestion on _MultiQuestion {
       batchMessages.add([...historyPrefix, userContent]);
     }
     batchMessages = await P.chat._batchHistoriesWithWebSearch(botMsgId, batchMessages);
+    if (!P.rwkvGeneration.generating.q ||
+        P.chat.receiveId.q != botMsgId ||
+        P.chat._pauseFinalizingMessageId == botMsgId ||
+        P.msg.pool.q[botMsgId]?.paused == true) {
+      return;
+    }
 
     // 9. 发送
     final int batchSize = batchMessages.length;

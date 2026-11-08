@@ -25,6 +25,7 @@ void main() {
           title: 'China',
           url: 'https://example.com/china',
           summary: 'China overview.',
+          publishedAt: '2025-08-29',
         ),
       ],
       steps: <WebSearchTraceStep>[
@@ -40,6 +41,7 @@ void main() {
           url: 'https://example.com/china',
           title: 'China',
           summary: 'China overview.',
+          publishedAt: '2025-08-29',
         ),
       ],
       enable: true,
@@ -51,6 +53,8 @@ void main() {
 
     expect(decoded.trace?.searchEngineLabel, 'Bing');
     expect(decoded.trace?.sources.single.url, 'https://example.com/china');
+    expect(decoded.trace?.sources.single.publishedAt, '2025-08-29');
+    expect(decoded.list.single.publishedAt, '2025-08-29');
     expect(decoded.trace?.steps.single.title, 'Query generated');
     expect(decoded.trace?.finalPrompt, contains('请根据以上信息回答'));
   });

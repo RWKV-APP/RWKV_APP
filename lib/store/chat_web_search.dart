@@ -1,23 +1,249 @@
 part of 'p.dart';
 
 extension $ChatWebSearch on _Chat {
-  void onSwitchWebSearchMode(WebSearchMode mode) async {
+  Future<void> restoreWebSearchCredentials() async {
+    if (webSearchKeysLoading.q || P.rwkvGeneration.generating.q) return;
+    webSearchKeysLoading.q = true;
+    try {
+      final saved = await webSearchCredentialStore.load();
+      _editedWebSearchCredentials.clear();
+      for (final entry in webSearchApiKeys.q.entries) {
+        if (entry.value != saved[entry.key]?.key) _editedWebSearchCredentials.add(entry.key);
+      }
+      webSearchApiKeys.q = {
+        for (final entry in saved.entries) entry.key: entry.value.key,
+        ...webSearchApiKeys.q,
+      };
+      webSearchChecks.q = {
+        for (final entry in saved.entries)
+          if (webSearchApiKeys.q[entry.key] == entry.value.key)
+            for (final provider in entry.value.verified)
+              provider: AsyncData<String>(crypto.sha256.convert(utf8.encode(entry.value.key)).toString()),
+      };
+      webSearchStorageError.q = false;
+    } catch (_) {
+      webSearchStorageError.q = true;
+    } finally {
+      webSearchKeysLoading.q = false;
+    }
+  }
+
+  String searchProviderLabel(WebSearchProvider provider) => switch (provider) {
+    .browser => S.current.web_search_browser,
+    .deepseek => 'DeepSeek',
+    .anysearch => 'AnySearch',
+    .tavily => 'Tavily',
+    .brave => 'Brave Search',
+    .exa => 'Exa',
+    .serper => 'Serper',
+    .serpapi => 'SerpApi',
+    .searchapi => 'SearchApi',
+    .firecrawl => 'Firecrawl',
+    .zhihuGlobal => S.current.web_search_zhihu_global,
+    .zhihuSite => S.current.web_search_zhihu_site,
+  };
+
+  void onWebSearchProviderChanged(WebSearchProvider provider) {
+    if (P.rwkvGeneration.generating.q) return;
+    onWebSearchSettingsClosed();
+    webSearchProvider.q = provider;
+    if (!_webSearchVerified(provider)) webSearchMode.q = .off;
+    localWebSearchPanelEnabled.q = provider == .browser && webSearchMode.q != .off && P.app.isDesktop.q;
+  }
+
+  Future<void> onWebSearchKeyChanged(WebSearchProvider provider, String value) async {
+    if (P.rwkvGeneration.generating.q) return;
+    if (webSearchKeysLoading.q) return;
+    if (provider.credentialId.isEmpty) return;
+    final key = value.trim();
+    if (webSearchApiKeys.q[provider.credentialId] == key && !webSearchStorageError.q) return;
+    webSearchApiKeys.q = {...webSearchApiKeys.q, provider.credentialId: key};
+    webSearchChecks.q = {
+      for (final entry in webSearchChecks.q.entries)
+        if (entry.key.credentialId != provider.credentialId) entry.key: entry.value,
+    };
+    if ((provider.requiresApiKey || key.isNotEmpty) && provider.credentialId == webSearchProvider.q.credentialId) {
+      webSearchMode.q = .off;
+    }
+    if (!_editedWebSearchCredentials.add(provider.credentialId)) return;
+    try {
+      await webSearchCredentialStore.remove(provider.credentialId);
+      webSearchStorageError.q = false;
+    } catch (_) {
+      _editedWebSearchCredentials.remove(provider.credentialId);
+      webSearchStorageError.q = true;
+    }
+  }
+
+  String searchProviderDescription(WebSearchProvider provider) => switch (provider) {
+    .zhihuGlobal => S.current.web_search_zhihu_web_description,
+    .zhihuSite => S.current.web_search_zhihu_site_description,
+    _ => '',
+  };
+
+  String searchProviderAllowance(WebSearchProvider provider) => switch (provider) {
+    .tavily => S.current.web_search_tavily_allowance,
+    .brave => S.current.web_search_brave_allowance,
+    .exa => S.current.web_search_exa_allowance,
+    .serper => S.current.web_search_serper_allowance,
+    .serpapi => S.current.web_search_serpapi_allowance,
+    .searchapi => S.current.web_search_searchapi_allowance,
+    .firecrawl => S.current.web_search_firecrawl_allowance,
+    _ => '',
+  };
+
+  void onWebSearchSettingsTapped({WebSearchProvider? provider, BuildContext? context}) {
+    if (P.rwkvGeneration.generating.q) return;
+    WebSearchSettingsPanel.show(provider: provider, context: context);
+  }
+
+  Future<void> onWebSearchProviderEnabledChanged(WebSearchProvider provider, bool enabled) async {
+    if (P.rwkvGeneration.generating.q) return;
+    if (webSearchChecks.q.values.any((value) => value.isLoading)) return;
+    if (enabled && !_webSearchVerified(provider)) {
+      await onVerifyAndEnableWebSearchProvider(provider);
+      return;
+    }
+    onWebSearchProviderChanged(provider);
+    onSwitchWebSearchMode(enabled ? .search : .off);
+  }
+
+  bool _webSearchVerified(WebSearchProvider provider) {
+    final key = webSearchApiKeys.q[provider.credentialId] ?? '';
+    if (!provider.requiresApiKey && key.isEmpty) return true;
+    if (key.isEmpty) return false;
+    return webSearchChecks.q[provider]?.asData?.value == crypto.sha256.convert(utf8.encode(key)).toString();
+  }
+
+  void onWebSearchSettingsClosed() {
+    if (!webSearchChecks.q.values.any((value) => value.isLoading)) return;
+    webSearchChecks.q = {
+      for (final entry in webSearchChecks.q.entries)
+        if (!entry.value.isLoading) entry.key: entry.value,
+    };
+  }
+
+  String webSearchValidationText(AsyncValue<String> check) {
+    if (check.isLoading) return S.current.web_search_validating;
+    if (check.hasError) return _webSearchFailureMessage(check.error is WebSearchFailure ? check.error as WebSearchFailure : .unavailable);
+    return S.current.web_search_validation_success;
+  }
+
+  Future<void> onVerifyAndEnableWebSearchProvider(WebSearchProvider provider, {http.Client? client}) async {
+    if (P.rwkvGeneration.generating.q || provider == .browser) return;
+    if (webSearchKeysLoading.q) return;
+    if (webSearchChecks.q.values.any((value) => value.isLoading)) return;
+    final key = webSearchApiKeys.q[provider.credentialId] ?? '';
+    if (provider.requiresApiKey && key.isEmpty) {
+      webSearchChecks.q = {...webSearchChecks.q, provider: AsyncError<String>(WebSearchFailure.missingKey, StackTrace.empty)};
+      return;
+    }
+    final checking = AsyncLoading<String>();
+    final generationId = receiveId.q;
+    webSearchChecks.q = {...webSearchChecks.q, provider: checking};
+    WebSearchFailure? failure;
+    try {
+      await searchWebApi(provider: provider, apiKey: key, query: 'RWKV', client: client);
+    } catch (error) {
+      failure = error is WebSearchFailure ? error : .unavailable;
+    }
+    if (!identical(webSearchChecks.q[provider], checking)) return;
+    if ((webSearchApiKeys.q[provider.credentialId] ?? '') != key || P.rwkvGeneration.generating.q || receiveId.q != generationId) {
+      onWebSearchSettingsClosed();
+      return;
+    }
+    if (failure != null) {
+      await onWebSearchProviderFailure(provider, failure);
+      if (webSearchProvider.q == provider) webSearchMode.q = .off;
+      return;
+    }
+    if (provider.credentialId.isNotEmpty && key.isNotEmpty) {
+      _editedWebSearchCredentials.remove(provider.credentialId);
+      try {
+        await webSearchCredentialStore.save(provider, key);
+        webSearchStorageError.q = false;
+      } catch (_) {
+        if (!identical(webSearchChecks.q[provider], checking)) return;
+        webSearchStorageError.q = true;
+        webSearchChecks.q = {...webSearchChecks.q, provider: AsyncError<String>(WebSearchFailure.storage, StackTrace.empty)};
+        if (webSearchProvider.q == provider) webSearchMode.q = .off;
+        return;
+      }
+    }
+    if (!identical(webSearchChecks.q[provider], checking) || (webSearchApiKeys.q[provider.credentialId] ?? '') != key) return;
+    if (P.rwkvGeneration.generating.q || receiveId.q != generationId) {
+      onWebSearchSettingsClosed();
+      return;
+    }
+    webSearchChecks.q = {...webSearchChecks.q, provider: AsyncData<String>(crypto.sha256.convert(utf8.encode(key)).toString())};
+    onWebSearchProviderChanged(provider);
+    onSwitchWebSearchMode(.search);
+  }
+
+  Future<void> _invalidateSavedWebSearchCredential(WebSearchProvider provider) async {
+    webSearchChecks.q = {
+      for (final entry in webSearchChecks.q.entries)
+        if (entry.key.credentialId != provider.credentialId) entry.key: entry.value,
+      for (final value in WebSearchProvider.values)
+        if (value.credentialId == provider.credentialId) value: AsyncError<String>(WebSearchFailure.unauthorized, StackTrace.empty),
+    };
+    try {
+      await webSearchCredentialStore.invalidate(provider);
+    } catch (_) {
+      webSearchStorageError.q = true;
+    }
+  }
+
+  Future<void> onWebSearchProviderFailure(WebSearchProvider provider, WebSearchFailure failure, {bool notify = false}) async {
+    webSearchChecks.q = {...webSearchChecks.q, provider: AsyncError<String>(failure, StackTrace.empty)};
+    if (failure == .unauthorized) await _invalidateSavedWebSearchCredential(provider);
+    if (webSearchProvider.q == provider && (failure == .unauthorized || failure == .balance || failure == .quota)) {
+      webSearchMode.q = .off;
+      localWebSearchPanelEnabled.q = false;
+    }
+    if (!notify) return;
+    Alert.warning('${searchProviderLabel(provider)}: ${_webSearchFailureMessage(failure)}');
+  }
+
+  Future<void> onWebSearchProviderLinkTapped(WebSearchProvider provider, {bool manageKey = false, bool pricing = false}) async {
+    final uri = pricing
+        ? provider.pricingUrl!
+        : manageKey
+        ? provider.keyManagementUrl
+        : provider.documentationUrl;
+    try {
+      if (await launchUrl(uri, mode: .externalApplication)) return;
+    } catch (_) {
+      // Only show a local message; platform errors are not useful setup guidance.
+    }
+    Alert.error(S.current.web_search_link_failed);
+  }
+
+  void onSwitchWebSearchMode(WebSearchMode mode, {BuildContext? context}) async {
     final receiving = P.rwkvGeneration.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    if (Platform.isAndroid || Platform.isIOS) {
+    if ((Platform.isAndroid || Platform.isIOS) && webSearchProvider.q == .browser) {
       webSearchMode.q = WebSearchMode.off;
       localWebSearchPanelEnabled.q = false;
       return;
     }
+    final provider = webSearchProvider.q;
+    if (mode != .off && !_webSearchVerified(provider)) {
+      webSearchMode.q = .off;
+      localWebSearchPanelEnabled.q = false;
+      onWebSearchSettingsTapped(provider: provider, context: context);
+      return;
+    }
     webSearchMode.q = mode;
     if (mode == WebSearchMode.off) {
+      onWebSearchSettingsClosed();
       localWebSearchPanelEnabled.q = false;
       return;
     }
-    if (P.app.isDesktop.q) {
+    if (P.app.isDesktop.q && provider == .browser) {
       localWebSearchPanelEnabled.q = true;
     }
   }
@@ -29,6 +255,7 @@ extension $ChatWebSearch on _Chat {
       return;
     }
     if (!P.app.isDesktop.q) return;
+    webSearchProvider.q = .browser;
 
     final enabled = !localWebSearchPanelEnabled.q;
     localWebSearchPanelEnabled.q = enabled;
@@ -49,32 +276,33 @@ extension $ChatWebSearch on _Chat {
     localWebSearchBundle.q = bundle;
   }
 
-  void onWebSearchModeTapped() {
-    if (Platform.isAndroid || Platform.isIOS) return;
-
-    final loading = P.rwkvModel.loading.q;
-    if (loading) return;
-
-    final receiving = P.rwkvGeneration.generating.q;
-    if (receiving) {
-      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+  Future<void> onWebSearchModeTapped(BuildContext context) async {
+    if (P.rwkvGeneration.generating.q) return;
+    P.app.hapticLight();
+    final selected = webSearchMode.q == .off ? 'off' : webSearchProvider.q.name;
+    final result = await WebSearchProviderSheet.show(context, selected: selected);
+    if (result == null || !context.mounted || P.rwkvGeneration.generating.q) return;
+    if (result == 'settings') {
+      onWebSearchSettingsTapped(context: context);
       return;
     }
-    if (!checkModelSelection(preferredDemoType: .chat)) return;
-
-    P.app.hapticLight();
-    final nextMode = webSearchMode.q == WebSearchMode.off ? WebSearchMode.search : WebSearchMode.off;
-    onSwitchWebSearchMode(nextMode);
+    if (result == 'off') {
+      onSwitchWebSearchMode(.off);
+      return;
+    }
+    final provider = WebSearchProvider.values.byName(result);
+    onWebSearchProviderChanged(provider);
+    onSwitchWebSearchMode(.search, context: context);
   }
 
   Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {
     if (webSearchMode.q == WebSearchMode.off) return allMessage;
-    if (Platform.isAndroid || Platform.isIOS) return allMessage;
+    if ((Platform.isAndroid || Platform.isIOS) && webSearchProvider.q == .browser) return allMessage;
 
     final searchingRef = RefInfo.empty().copyWith(enable: true);
     _updateMessageById(id: receiveId, reference: searchingRef);
     final result = await _historyWithWebSearchResult(allMessage);
-    unawaited(_updateWebSearchReferenceAfterDelay(receiveId: receiveId, ref: result.ref));
+    _updateMessageById(id: receiveId, reference: result.ref);
     return result.history;
   }
 
@@ -83,7 +311,7 @@ extension $ChatWebSearch on _Chat {
     List<List<String>> batchMessages,
   ) async {
     if (webSearchMode.q == WebSearchMode.off) return batchMessages;
-    if (Platform.isAndroid || Platform.isIOS) return batchMessages;
+    if ((Platform.isAndroid || Platform.isIOS) && webSearchProvider.q == .browser) return batchMessages;
 
     final searchingRef = RefInfo.empty().copyWith(enable: true);
     _updateMessageById(id: receiveId, reference: searchingRef);
@@ -91,6 +319,7 @@ extension $ChatWebSearch on _Chat {
     final histories = <List<String>>[];
     final refs = <RefInfo>[];
     for (final batchMessage in batchMessages) {
+      if (!P.rwkvGeneration.generating.q || this.receiveId.q != receiveId || _pauseFinalizingMessageId == receiveId) break;
       final result = await _historyWithWebSearchResult(batchMessage);
       histories.add(result.history);
       refs.add(result.ref);
@@ -99,7 +328,7 @@ extension $ChatWebSearch on _Chat {
     }
 
     final combined = _combineWebSearchRefs(refs);
-    unawaited(_updateWebSearchReferenceAfterDelay(receiveId: receiveId, ref: combined));
+    _updateMessageById(id: receiveId, reference: combined);
     return histories;
   }
 
@@ -117,20 +346,21 @@ extension $ChatWebSearch on _Chat {
         prompt: prompt,
         userMsgFooter: P.rwkvParams.thinkingMode.q.userMsgFooter,
       );
-      final localWebSearch = await _runLocalWebSearchForPrompt(
-        allMessage: history,
-        query: promptParts.query,
-      );
+      final localWebSearch = webSearchProvider.q == .browser
+          ? await _runLocalWebSearchForPrompt(allMessage: history, query: promptParts.query)
+          : await _runApiWebSearchForPrompt(query: promptParts.query);
       if (localWebSearch != null) {
         ref = localWebSearch.ref;
         if (localWebSearch.promptContext.isNotEmpty) {
           history.removeLast();
           final template = P.preference.promptTemplate;
           final msg =
-              sprintf(isZh ? template.webSearchChineseTemplate : template.webSearchTemplate, [
-                localWebSearch.promptContext,
-                promptParts.query,
-              ]) +
+              buildWebSearchPrompt(
+                template: isZh ? template.webSearchChineseTemplate : template.webSearchTemplate,
+                context: localWebSearch.promptContext,
+                question: promptParts.query,
+                chinese: isZh,
+              ) +
               promptParts.footer;
           history.add(msg);
           ref = _refWithWebSearchFinalPrompt(ref: ref, finalPrompt: msg);
@@ -140,44 +370,82 @@ extension $ChatWebSearch on _Chat {
         return (history: history, ref: ref);
       }
 
-      final resp =
-          await _post(
-                'https://auth.rwkvos.com/api/internet_search',
-                token: 'x8rYbL3KfGp2Nq1zT9wVvJ0iQ5sUoAeX7HcM4',
-                body: {
-                  "query": promptParts.query,
-                  "top_n": 3,
-                },
-              ).timeout(const Duration(seconds: 10))
-              as dynamic;
-      qqq('web search mode: ${webSearchMode.q}');
-      final refs = (resp['data'] as Iterable).map((e) => Reference.fromJson(e)).toList();
-      ref = ref.copyWith(list: refs);
-      final searchResult = refs.map((e) => e.summary).join("\n");
-      history.removeLast();
-      final template = P.preference.promptTemplate;
-      final msg =
-          sprintf(isZh ? template.webSearchChineseTemplate : template.webSearchTemplate, [searchResult, promptParts.query]) +
-          promptParts.footer;
-      history.add(msg);
-      ref = RefInfo(
-        list: refs,
-        enable: true,
-        error: "",
-        trace: _remoteWebSearchTrace(
-          endpoint: 'https://auth.rwkvos.com/api/internet_search',
-          query: promptParts.query,
-          refs: refs,
-          searchResult: searchResult,
-          finalPrompt: msg,
-        ),
-      );
+      throw WebSearchFailure.unavailable;
     } catch (e) {
-      ref = ref.copyWith(error: e.toString());
-      qqe(e);
+      final error = e is WebSearchFailure ? _webSearchFailureMessage(e) : e.toString();
+      ref = ref.copyWith(error: error);
+      if (webSearchProvider.q == .browser) qqe(e);
     }
 
     return (history: history, ref: ref);
+  }
+
+  String _webSearchFailureMessage(WebSearchFailure failure) => switch (failure) {
+    .missingKey => S.current.web_search_missing_key,
+    .invalidQuery => S.current.web_search_invalid_query,
+    .unauthorized => S.current.web_search_unauthorized,
+    .balance => S.current.web_search_balance,
+    .quota => S.current.web_search_quota,
+    .rateLimit => S.current.web_search_rate_limit,
+    .storage => S.current.web_search_storage_error,
+    .timeout => S.current.web_search_timeout,
+    .invalidResponse => S.current.web_search_invalid_response,
+    .unavailable => S.current.web_search_unavailable,
+  };
+
+  Future<({RefInfo ref, String promptContext})> _runApiWebSearchForPrompt({required String query}) async {
+    final provider = webSearchProvider.q;
+    final searchQuery = buildWebSearchApiQuery(query, maxLength: provider == .deepseek ? 128 : 100);
+    String request = '';
+    final responses = <WebSearchTraceResponse>[];
+    String error = '';
+    List<Reference> refs = const [];
+    localWebSearchRunning.q = true;
+    try {
+      refs = await searchWebApi(
+        provider: provider,
+        apiKey: webSearchApiKeys.q[provider.credentialId] ?? '',
+        query: searchQuery,
+        onRequest: (value) => request = value,
+        onResponse: (statusCode, body) => responses.add(WebSearchTraceResponse(query: searchQuery, statusCode: statusCode, body: body)),
+      );
+    } on WebSearchFailure catch (failure) {
+      error = _webSearchFailureMessage(failure);
+      await onWebSearchProviderFailure(provider, failure, notify: true);
+    } finally {
+      localWebSearchRunning.q = false;
+    }
+    final isZh = P.preference.currentLangIsZh.q;
+    final template = P.preference.promptTemplate;
+    final context = webSearchApiContext(
+      refs,
+      chinese: isZh,
+      includeInstructions: !usesDefaultWebSearchTemplate(
+        isZh ? template.webSearchChineseTemplate : template.webSearchTemplate,
+        chinese: isZh,
+      ),
+    );
+    if (refs.isEmpty && error.isEmpty) error = S.current.web_search_no_results;
+    final trace =
+        _remoteWebSearchTrace(
+          endpoint: provider.endpoint.toString(),
+          query: searchQuery,
+          userQuery: query,
+          requestDetail: request,
+          refs: refs,
+          searchResult: context,
+          finalPrompt: '',
+        ).copyWith(
+          searchProvider: searchProviderLabel(provider),
+          searchEngineId: provider.name,
+          searchEngineLabel: searchProviderLabel(provider),
+          userQuery: query,
+          error: error,
+          request: request,
+          responses: responses,
+        );
+    final safeTrace = WebSearchTrace.fromJson(redactWebSearchPayload(trace.toJson(), webSearchApiKeys.q.values));
+    return (ref: RefInfo(list: refs, enable: true, error: error, trace: safeTrace), promptContext: context);
   }
 
   RefInfo _combineWebSearchRefs(List<RefInfo> refs) {
@@ -316,11 +584,11 @@ extension $ChatWebSearch on _Chat {
       ...trace.steps,
       const WebSearchTraceStep(
         title: 'Prompt constructed',
-        detail: 'The prompt below was passed to the inference engine.',
+        detail: 'Search context was injected into the user message before response-style processing.',
       ),
     ];
     return ref.copyWith(
-      trace: trace.copyWith(finalPrompt: finalPrompt, steps: nextSteps),
+      trace: trace.copyWith(finalPrompt: redactWebSearchReport(finalPrompt, webSearchApiKeys.q.values), steps: nextSteps),
     );
   }
 
@@ -424,6 +692,8 @@ extension $ChatWebSearch on _Chat {
   WebSearchTrace _remoteWebSearchTrace({
     required String endpoint,
     required String query,
+    String? userQuery,
+    String requestDetail = 'top_n=3',
     required List<Reference> refs,
     required String searchResult,
     required String finalPrompt,
@@ -437,6 +707,7 @@ extension $ChatWebSearch on _Chat {
           title: ref.title,
           url: ref.url,
           summary: ref.summary,
+          publishedAt: ref.publishedAt,
         ),
       );
     }
@@ -444,7 +715,7 @@ extension $ChatWebSearch on _Chat {
       searchProvider: 'Remote Web Search API',
       searchEngineId: 'remote_search',
       searchEngineLabel: 'Remote Search',
-      userQuery: query,
+      userQuery: userQuery ?? query,
       query: query,
       searchUrl: endpoint,
       pageUrl: endpoint,
@@ -453,19 +724,21 @@ extension $ChatWebSearch on _Chat {
       sourceLimit: 3,
       sources: sources,
       steps: <WebSearchTraceStep>[
-        WebSearchTraceStep(title: 'Input captured', detail: query),
-        const WebSearchTraceStep(
+        WebSearchTraceStep(title: 'Input captured', detail: userQuery ?? query),
+        if (userQuery != null && userQuery != query) WebSearchTraceStep(title: 'Query generated', detail: query),
+        WebSearchTraceStep(
           title: 'Remote search requested',
-          detail: 'top_n=3',
+          detail: requestDetail,
         ),
         WebSearchTraceStep(
           title: 'Reference summaries received',
           detail: searchResult,
         ),
-        const WebSearchTraceStep(
-          title: 'Prompt constructed',
-          detail: 'The prompt below was passed to the inference engine.',
-        ),
+        if (finalPrompt.isNotEmpty)
+          const WebSearchTraceStep(
+            title: 'Prompt constructed',
+            detail: 'The prompt below was passed to the inference engine.',
+          ),
       ],
       promptContext: searchResult,
       finalPrompt: finalPrompt,
@@ -479,7 +752,7 @@ extension $ChatWebSearch on _Chat {
     required String error,
   }) {
     if (traces.isEmpty) return null;
-    if (traces.length == 1) return traces.first;
+    if (traces.length == 1) return traces.first.copyWith(sourceGroups: [traces.first.sources]);
 
     final sources = <WebSearchTraceSource>[];
     for (int i = 0; i < references.length; i += 1) {
@@ -490,6 +763,7 @@ extension $ChatWebSearch on _Chat {
           title: ref.title,
           url: ref.url,
           summary: ref.summary,
+          publishedAt: ref.publishedAt,
         ),
       );
     }
@@ -523,6 +797,9 @@ extension $ChatWebSearch on _Chat {
       steps: steps,
       promptContext: traces.map((trace) => trace.promptContext).where((text) => text.isNotEmpty).join('\n\n'),
       finalPrompt: traces.map((trace) => trace.finalPrompt).where((text) => text.isNotEmpty).join('\n\n'),
+      request: traces.map((trace) => trace.request).where((text) => text.isNotEmpty).join('\n\n'),
+      responses: [for (final trace in traces) ...trace.responses],
+      sourceGroups: [for (final trace in traces) trace.sources],
       error: error,
     );
   }
@@ -559,11 +836,39 @@ extension $ChatWebSearch on _Chat {
     }
   }
 
-  Future<void> _updateWebSearchReferenceAfterDelay({
-    required int receiveId,
-    required RefInfo ref,
-  }) async {
-    await 50.msLater;
-    _updateMessageById(id: receiveId, reference: ref);
+  void onWebSearchModelRequest(to_rwkv.ToRWKV request) {
+    final id = receiveId.q;
+    final message = P.msg.pool.q[id];
+    final trace = message?.reference.trace;
+    if (id == null || message == null || trace == null || !message.changing || P.app.demoType.q != .chat) return;
+    final input = webSearchModelRequest(request);
+    if (input == null) return;
+    final captured = appendWebSearchModelRequest(
+      trace: trace,
+      request: input,
+      redactions: webSearchApiKeys.q.values,
+    );
+    _updateMessageById(
+      id: id,
+      reference: message.reference.copyWith(trace: captured),
+    );
+  }
+
+  Future<void> onCopyWebSearchReport(int messageId, {int? section}) async {
+    final message = P.msg.pool.q[messageId];
+    if (message == null) return;
+    final trace = webSearchTraceForReport(message.reference);
+    if (!trace.hasData) return;
+    final text = formatWebSearchReport(
+      trace: trace,
+      strings: S.current,
+      modelOutput: message.content,
+      generating: message.changing,
+      paused: message.paused,
+      redactions: webSearchApiKeys.q.values,
+      section: section,
+    );
+    await Clipboard.setData(ClipboardData(text: text));
+    Alert.success(S.current.chat_copied_to_clipboard);
   }
 }

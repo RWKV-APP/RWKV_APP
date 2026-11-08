@@ -185,19 +185,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m77(tokens, bytes) => "${tokens} tokens，${bytes} bytes";
 
-  static String m78(port) => "WebSocket 服務 (連接埠: ${port})";
+  static String m78(index) => "平行對話 ${index}";
 
-  static String m79(id) => "視窗 ${id}";
+  static String m79(index) => "第 ${index} 次模型呼叫";
 
-  static String m80(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m80(port) => "WebSocket 服務 (連接埠: ${port})";
+
+  static String m81(id) => "視窗 ${id}";
+
+  static String m82(buildArchitecture, operatingSystemArchitecture, url) =>
       "目前應用程式 Build Architecture 為 ${buildArchitecture}，但 Windows Operating System 為 ${operatingSystemArchitecture}。\n\n請前往官方下載頁下載相符架構的可執行檔：\n${url}";
 
-  static String m81(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m83(buildArchitecture, operatingSystemArchitecture, url) =>
       "偵測到架構不相符：目前應用程式 Build Architecture 為 ${buildArchitecture}，但 Windows Operating System 為 ${operatingSystemArchitecture}。請前往官方下載頁下載相符版本：${url}";
 
-  static String m82(count) => "${count} 個分頁";
+  static String m84(count) => "${count} 個分頁";
 
-  static String m83(modelName) => "您目前正在使用 ${modelName}";
+  static String m85(modelName) => "您目前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1370,7 +1374,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reason": MessageLookupByLibrary.simpleMessage("推理"),
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("推理模式"),
     "recording_your_voice": MessageLookupByLibrary.simpleMessage("正在錄音..."),
-    "reference_source": MessageLookupByLibrary.simpleMessage("參考來源"),
+    "reference_source": MessageLookupByLibrary.simpleMessage("搜尋來源"),
     "refresh": MessageLookupByLibrary.simpleMessage("刷新"),
     "refresh_complete": MessageLookupByLibrary.simpleMessage("重新整理完成"),
     "refreshed": MessageLookupByLibrary.simpleMessage("已刷新"),
@@ -1766,8 +1770,187 @@ class MessageLookup extends MessageLookupByLibrary {
       "正在等待 HTML 文件",
     ),
     "web_search": MessageLookupByLibrary.simpleMessage("網路搜尋"),
+    "web_search_allowance_notice": MessageLookupByLibrary.simpleMessage(
+      "免費額度可能調整，使用限制與超額費用以你的服務商帳號和官方價格為準。",
+    ),
+    "web_search_anysearch_notice": MessageLookupByLibrary.simpleMessage(
+      "無需 API Key。匿名免費額度按 IP 共用，具體額度與限流由 AnySearch 決定。",
+    ),
+    "web_search_balance": MessageLookupByLibrary.simpleMessage(
+      "服務帳號餘額或可用點數不足。請前往服務平台檢查餘額後重試。",
+    ),
+    "web_search_brave_allowance": MessageLookupByLibrary.simpleMessage(
+      "每月免費額度：5 美元 credits；搜尋價格為每 1,000 次 5 美元。",
+    ),
+    "web_search_browser": MessageLookupByLibrary.simpleMessage("瀏覽器搜尋"),
+    "web_search_browser_notice": MessageLookupByLibrary.simpleMessage(
+      "無需 API Key，直接使用桌面內建瀏覽器搜尋。瀏覽器尚未就緒時請稍後重試。",
+    ),
+    "web_search_deepseek_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. 登入 DeepSeek 開放平台，在 API keys 頁面建立並複製個人密鑰。\n2. 確認帳戶餘額與搜尋服務權限。\n3. 在此貼上金鑰，點選「驗證並啟用」，驗證通過後即可搜尋。",
+    ),
+    "web_search_exa_allowance": MessageLookupByLibrary.simpleMessage(
+      "每月免費額度：10 美元 credits，另有 10 美元新用戶額度；實際用量取決於搜尋和內容選項。",
+    ),
+    "web_search_firecrawl_allowance": MessageLookupByLibrary.simpleMessage(
+      "免費方案：每月 1,000 credits，最多可用於 500 次不擷取網頁正文的搜尋；另受服務商速率限制。",
+    ),
+    "web_search_generic_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. 點選「取得個人金鑰」，登入或註冊你自己的服務商帳號。\n2. 建立 API Key，確認搜尋權限與免費額度。\n3. 在此貼上金鑰，點選「驗證並啟用」，驗證通過後即可搜尋。",
+    ),
+    "web_search_get_key": MessageLookupByLibrary.simpleMessage("取得個人密鑰"),
+    "web_search_invalid_query": MessageLookupByLibrary.simpleMessage(
+      "搜尋詞為空或超過介面長度限制，請縮短訊息後重試。",
+    ),
+    "web_search_invalid_response": MessageLookupByLibrary.simpleMessage(
+      "搜尋服務傳回了不支援的資料格式。",
+    ),
+    "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
+      "只需貼上你自己的原始金鑰，不要加上 Bearer 前綴。點擊「驗證並啟用」，驗證成功後安全儲存，下次自動沿用。",
+    ),
+    "web_search_key_configured": MessageLookupByLibrary.simpleMessage("已設定金鑰"),
+    "web_search_key_help_title": MessageLookupByLibrary.simpleMessage(
+      "如何取得和設定密鑰",
+    ),
+    "web_search_link_failed": MessageLookupByLibrary.simpleMessage(
+      "無法開啟官方頁面，請稍後重試。",
+    ),
+    "web_search_missing_key": MessageLookupByLibrary.simpleMessage(
+      "請填寫個人 API Key，再驗證並啟用此服務。",
+    ),
+    "web_search_no_results": MessageLookupByLibrary.simpleMessage(
+      "找不到結果，模型將不使用聯網參考資料回答。",
+    ),
+    "web_search_official_docs": MessageLookupByLibrary.simpleMessage("官方說明"),
+    "web_search_optional_key_notice": MessageLookupByLibrary.simpleMessage(
+      "Firecrawl 支援不填 Key 的匿名搜尋，速率限制較低。也可以填寫個人 Key，使用自己帳號的額度。",
+    ),
+    "web_search_own_key_notice": MessageLookupByLibrary.simpleMessage(
+      "請使用你自己帳號的密鑰，呼叫費用與額度歸該帳號。RWKV Chat 不提供共用密鑰。",
+    ),
+    "web_search_pricing": MessageLookupByLibrary.simpleMessage("免費額度與價格"),
+    "web_search_privacy_notice": MessageLookupByLibrary.simpleMessage(
+      "開啟後，將從目前訊息擷取搜尋詞並傳送給所選服務，不傳送歷史對話。回答仍由本機 RWKV 產生。服務商可能收取費用。",
+    ),
+    "web_search_provider": MessageLookupByLibrary.simpleMessage("搜尋引擎"),
+    "web_search_quota": MessageLookupByLibrary.simpleMessage(
+      "帳號的搜尋額度已用完。請查看服務平台的額度，並在額度恢復後重試。",
+    ),
+    "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
+      "請求過於頻繁或已達平台限制。請稍後重試，並檢查帳號額度。",
+    ),
+    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
+      "重試安全儲存",
+    ),
+    "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
+      "複製全部四區塊",
+    ),
+    "web_search_report_details_action": MessageLookupByLibrary.simpleMessage(
+      "詳情",
+    ),
+    "web_search_report_error": MessageLookupByLibrary.simpleMessage("搜尋錯誤"),
+    "web_search_report_full_response": MessageLookupByLibrary.simpleMessage(
+      "完整回應",
+    ),
+    "web_search_report_injected_prompt": MessageLookupByLibrary.simpleMessage(
+      "搜尋增強後的使用者訊息（模型輸入的一部分）",
+    ),
+    "web_search_report_input": MessageLookupByLibrary.simpleMessage(
+      "3. 最終模型輸入",
+    ),
+    "web_search_report_input_missing": MessageLookupByLibrary.simpleMessage(
+      "這則回覆沒有記錄完整引擎輸入。下方已儲存的搜尋增強使用者訊息（如有）僅包含部分輸入。",
+    ),
+    "web_search_report_input_note": MessageLookupByLibrary.simpleMessage(
+      "實際傳送給模型的訊息原文，按傳送順序排列。",
+    ),
+    "web_search_report_model_batch": m78,
+    "web_search_report_model_call": m79,
+    "web_search_report_native_note": MessageLookupByLibrary.simpleMessage(
+      "未擷取原生執行階段的聊天範本序列化文字與分詞器輸入。",
+    ),
+    "web_search_report_output": MessageLookupByLibrary.simpleMessage("4. 模型輸出"),
+    "web_search_report_output_complete": MessageLookupByLibrary.simpleMessage(
+      "生成已結束。",
+    ),
+    "web_search_report_output_empty": MessageLookupByLibrary.simpleMessage(
+      "模型輸出為空。",
+    ),
+    "web_search_report_output_generating": MessageLookupByLibrary.simpleMessage(
+      "正在生成，下方輸出仍會更新。",
+    ),
+    "web_search_report_output_paused": MessageLookupByLibrary.simpleMessage(
+      "已停止或暫停，輸出可能不完整。",
+    ),
+    "web_search_report_output_unavailable":
+        MessageLookupByLibrary.simpleMessage("關聯回覆已無法使用，無法讀取模型輸出。"),
+    "web_search_report_query": MessageLookupByLibrary.simpleMessage("搜尋詞"),
+    "web_search_report_request": MessageLookupByLibrary.simpleMessage(
+      "1. 搜尋請求",
+    ),
+    "web_search_report_request_details": MessageLookupByLibrary.simpleMessage(
+      "請求詳情",
+    ),
+    "web_search_report_request_missing": MessageLookupByLibrary.simpleMessage(
+      "這則回覆沒有記錄搜尋請求快照。",
+    ),
+    "web_search_report_response_missing": MessageLookupByLibrary.simpleMessage(
+      "此次搜尋未儲存完整 API 回應；以下僅顯示已儲存的參考資料。",
+    ),
+    "web_search_report_results": MessageLookupByLibrary.simpleMessage(
+      "2. 搜尋結果",
+    ),
+    "web_search_report_title": MessageLookupByLibrary.simpleMessage("搜尋詳情"),
+    "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
+      "使用者訊息",
+    ),
+    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
+      "驗證成功的金鑰會儲存在本裝置的系統安全儲存中，重新啟動 RWKV Chat 後自動沿用。點擊清除按鈕可刪除已儲存的金鑰。",
+    ),
+    "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
+      "新用戶試用：100 次免費請求，屬一次性試用額度，不會每月重設。",
+    ),
+    "web_search_serpapi_allowance": MessageLookupByLibrary.simpleMessage(
+      "每月免費額度：250 次搜尋，另受帳號速率限制。",
+    ),
+    "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
+      "新用戶試用：2,500 次免費查詢，屬一次性試用額度，不會每月重設。",
+    ),
+    "web_search_settings": MessageLookupByLibrary.simpleMessage("聯網搜尋設定"),
+    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
+      "無法存取系統安全儲存，未能確認金鑰是否已儲存或清除。請解鎖裝置後重試。",
+    ),
+    "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
+      "每月免費額度：1,000 credits；基本搜尋每次使用 1 credit。",
+    ),
     "web_search_template": MessageLookupByLibrary.simpleMessage("網路搜尋範本"),
-    "websocket_service_port": m78,
+    "web_search_timeout": MessageLookupByLibrary.simpleMessage("搜尋逾時，請重試。"),
+    "web_search_unauthorized": MessageLookupByLibrary.simpleMessage(
+      "金鑰無效、已過期、已撤銷或沒有存取權限。請更新金鑰或檢查帳號權限。",
+    ),
+    "web_search_unavailable": MessageLookupByLibrary.simpleMessage(
+      "搜尋暫時無法使用，請檢查網路後重試。",
+    ),
+    "web_search_validate_enable": MessageLookupByLibrary.simpleMessage("驗證並啟用"),
+    "web_search_validating": MessageLookupByLibrary.simpleMessage("正在驗證連線…"),
+    "web_search_validation_notice": MessageLookupByLibrary.simpleMessage(
+      "驗證會向該服務傳送測試查詢「RWKV」，可能消耗一次搜尋額度。驗證成功後啟用搜尋。",
+    ),
+    "web_search_validation_success": MessageLookupByLibrary.simpleMessage(
+      "連線驗證通過。",
+    ),
+    "web_search_zhihu_global": MessageLookupByLibrary.simpleMessage("知乎 · 全網"),
+    "web_search_zhihu_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. 登入知乎資料開放平台，在個人中心產生並複製 Access Secret。\n2. 確認所選搜尋服務的權限與可用額度。\n3. 在此貼上金鑰，點選「驗證並啟用」，驗證通過後即可搜尋。",
+    ),
+    "web_search_zhihu_site": MessageLookupByLibrary.simpleMessage("知乎 · 站內"),
+    "web_search_zhihu_site_description": MessageLookupByLibrary.simpleMessage(
+      "知乎站內搜尋：社群問題、回答和文章。",
+    ),
+    "web_search_zhihu_web_description": MessageLookupByLibrary.simpleMessage(
+      "跨網站搜尋：官網、新聞及其他網頁資料。",
+    ),
+    "websocket_service_port": m80,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("權重檔案管理"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "權重文件保存目錄",
@@ -1785,16 +1968,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方獲勝！"),
-    "window_id": m79,
-    "windows_architecture_mismatch_dialog_message": m80,
+    "window_id": m81,
+    "windows_architecture_mismatch_dialog_message": m82,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("架構不相符"),
-    "windows_architecture_mismatch_warning": m81,
+    "windows_architecture_mismatch_warning": m83,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
-    "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 個相關網頁"),
-    "x_tabs": m82,
-    "you_are_now_using": m83,
+    "x_pages_found": MessageLookupByLibrary.simpleMessage("%d 個來源"),
+    "x_tabs": m84,
+    "you_are_now_using": m85,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "現在可以開始與 RWKV 聊天了",
     ),

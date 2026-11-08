@@ -9,6 +9,7 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/ask_question_button.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
+import 'package:zone/widgets/chat/chat_interaction_button.dart';
 import 'package:zone/widgets/chat/decode_param_button.dart';
 import 'package:zone/widgets/chat/response_style_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
@@ -18,10 +19,7 @@ import 'package:zone/widgets/chat/web_search_mode_button.dart';
 class InputInteractions extends ConsumerWidget {
   final DemoType preferredDemoType;
 
-  static double calculateButtonHeight(BuildContext context) {
-    final textScaleFactor = MediaQuery.textScalerOf(context);
-    return textScaleFactor.scale(14) + 20;
-  }
+  static double calculateButtonHeight(BuildContext context) => ChatInteractionButton.calculateHeight(context);
 
   const InputInteractions({
     super.key,
@@ -51,7 +49,6 @@ class _ItemList extends ConsumerWidget {
     final _ = theme;
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final currentModelIsBefore20250922 = ref.watch(P.rwkvParams.currentModelIsBefore20250922);
-    final isDesktop = ref.watch(P.app.isDesktop);
 
     final children = [
       if (preferredDemoType == .chat) const DecodeParamButton(),
@@ -59,7 +56,7 @@ class _ItemList extends ConsumerWidget {
       if (preferredDemoType == .chat) ThinkingModeButton(preferredDemoType: preferredDemoType),
       if (preferredDemoType == .chat) const BatchButton(),
       if (preferredDemoType == .chat && currentLangIsZh) const ResponseStyleButton(),
-      if (preferredDemoType == .chat && isDesktop) const WebSearchModeButton(),
+      if (preferredDemoType == .chat) const WebSearchModeButton(),
       if (preferredDemoType == .chat) const AskQuestionButton(),
     ];
 

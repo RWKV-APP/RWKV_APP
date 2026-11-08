@@ -3438,9 +3438,9 @@ class S {
     return Intl.message('搜索', name: 'search', desc: '', args: []);
   }
 
-  /// `参考源`
+  /// `搜索来源`
   String get reference_source {
-    return Intl.message('参考源', name: 'reference_source', desc: '', args: []);
+    return Intl.message('搜索来源', name: 'reference_source', desc: '', args: []);
   }
 
   /// `正在分析搜索结果`
@@ -3453,14 +3453,9 @@ class S {
     );
   }
 
-  /// `已找到 %d 个相关网页`
+  /// `%d 个来源`
   String get x_pages_found {
-    return Intl.message(
-      '已找到 %d 个相关网页',
-      name: 'x_pages_found',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('%d 个来源', name: 'x_pages_found', desc: '', args: []);
   }
 
   /// `关闭`
@@ -8152,6 +8147,726 @@ class S {
     return Intl.message(
       '文件大小与配置单不一致，未导入。',
       name: 'model_import_size_mismatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `联网搜索设置`
+  String get web_search_settings {
+    return Intl.message(
+      '联网搜索设置',
+      name: 'web_search_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索引擎`
+  String get web_search_provider {
+    return Intl.message(
+      '搜索引擎',
+      name: 'web_search_provider',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `浏览器搜索`
+  String get web_search_browser {
+    return Intl.message(
+      '浏览器搜索',
+      name: 'web_search_browser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `知乎 · 全网`
+  String get web_search_zhihu_global {
+    return Intl.message(
+      '知乎 · 全网',
+      name: 'web_search_zhihu_global',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `知乎 · 站内`
+  String get web_search_zhihu_site {
+    return Intl.message(
+      '知乎 · 站内',
+      name: 'web_search_zhihu_site',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开启后，将从当前消息提取搜索词并发送给所选服务，不发送历史对话。回答仍由本地 RWKV 生成。服务商可能收取费用。`
+  String get web_search_privacy_notice {
+    return Intl.message(
+      '开启后，将从当前消息提取搜索词并发送给所选服务，不发送历史对话。回答仍由本地 RWKV 生成。服务商可能收取费用。',
+      name: 'web_search_privacy_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已配置密钥`
+  String get web_search_key_configured {
+    return Intl.message(
+      '已配置密钥',
+      name: 'web_search_key_configured',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请填写个人 API Key，再验证并启用此服务。`
+  String get web_search_missing_key {
+    return Intl.message(
+      '请填写个人 API Key，再验证并启用此服务。',
+      name: 'web_search_missing_key',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索词为空或超过接口长度限制，请缩短消息后重试。`
+  String get web_search_invalid_query {
+    return Intl.message(
+      '搜索词为空或超过接口长度限制，请缩短消息后重试。',
+      name: 'web_search_invalid_query',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `密钥无效、已过期、被撤销或没有访问权限。请更新密钥或检查账号权限。`
+  String get web_search_unauthorized {
+    return Intl.message(
+      '密钥无效、已过期、被撤销或没有访问权限。请更新密钥或检查账号权限。',
+      name: 'web_search_unauthorized',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `账号的搜索额度已用完。请查看服务平台的额度，并在额度恢复后重试。`
+  String get web_search_quota {
+    return Intl.message(
+      '账号的搜索额度已用完。请查看服务平台的额度，并在额度恢复后重试。',
+      name: 'web_search_quota',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索超时，请重试。`
+  String get web_search_timeout {
+    return Intl.message(
+      '搜索超时，请重试。',
+      name: 'web_search_timeout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索服务返回了不支持的数据格式。`
+  String get web_search_invalid_response {
+    return Intl.message(
+      '搜索服务返回了不支持的数据格式。',
+      name: 'web_search_invalid_response',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索暂不可用，请检查网络后重试。`
+  String get web_search_unavailable {
+    return Intl.message(
+      '搜索暂不可用，请检查网络后重试。',
+      name: 'web_search_unavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请使用你自己账号的密钥，调用费用和额度归该账号。RWKV Chat 不提供共享密钥。`
+  String get web_search_own_key_notice {
+    return Intl.message(
+      '请使用你自己账号的密钥，调用费用和额度归该账号。RWKV Chat 不提供共享密钥。',
+      name: 'web_search_own_key_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `如何获取和设置密钥`
+  String get web_search_key_help_title {
+    return Intl.message(
+      '如何获取和设置密钥',
+      name: 'web_search_key_help_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1. 登录 DeepSeek 开放平台，在 API keys 页面创建并复制个人密钥。\n2. 确认账户余额和搜索服务权限。\n3. 在此粘贴密钥，点击“验证并启用”，验证通过后即可搜索。`
+  String get web_search_deepseek_key_steps {
+    return Intl.message(
+      '1. 登录 DeepSeek 开放平台，在 API keys 页面创建并复制个人密钥。\n2. 确认账户余额和搜索服务权限。\n3. 在此粘贴密钥，点击“验证并启用”，验证通过后即可搜索。',
+      name: 'web_search_deepseek_key_steps',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1. 登录知乎数据开放平台，在个人中心生成并复制 Access Secret。\n2. 确认所选搜索服务的权限和可用额度。\n3. 在此粘贴密钥，点击“验证并启用”，验证通过后即可搜索。`
+  String get web_search_zhihu_key_steps {
+    return Intl.message(
+      '1. 登录知乎数据开放平台，在个人中心生成并复制 Access Secret。\n2. 确认所选搜索服务的权限和可用额度。\n3. 在此粘贴密钥，点击“验证并启用”，验证通过后即可搜索。',
+      name: 'web_search_zhihu_key_steps',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `获取个人密钥`
+  String get web_search_get_key {
+    return Intl.message(
+      '获取个人密钥',
+      name: 'web_search_get_key',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `官方说明`
+  String get web_search_official_docs {
+    return Intl.message(
+      '官方说明',
+      name: 'web_search_official_docs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `只需粘贴你自己的原始密钥，不要添加 Bearer 前缀。点击“验证并启用”，验证成功后安全保存，下次自动沿用。`
+  String get web_search_key_auto_apply {
+    return Intl.message(
+      '只需粘贴你自己的原始密钥，不要添加 Bearer 前缀。点击“验证并启用”，验证成功后安全保存，下次自动沿用。',
+      name: 'web_search_key_auto_apply',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无法打开官方页面，请稍后重试。`
+  String get web_search_link_failed {
+    return Intl.message(
+      '无法打开官方页面，请稍后重试。',
+      name: 'web_search_link_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无需 API Key，直接使用桌面内置浏览器搜索。浏览器未就绪时请稍后重试。`
+  String get web_search_browser_notice {
+    return Intl.message(
+      '无需 API Key，直接使用桌面内置浏览器搜索。浏览器未就绪时请稍后重试。',
+      name: 'web_search_browser_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无需 API Key。匿名免费额度按 IP 共享，具体额度与限流由 AnySearch 决定。`
+  String get web_search_anysearch_notice {
+    return Intl.message(
+      '无需 API Key。匿名免费额度按 IP 共享，具体额度与限流由 AnySearch 决定。',
+      name: 'web_search_anysearch_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `没有找到结果，模型将不使用联网参考资料回答。`
+  String get web_search_no_results {
+    return Intl.message(
+      '没有找到结果，模型将不使用联网参考资料回答。',
+      name: 'web_search_no_results',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `跨网站搜索：官网、新闻及其他网页资料。`
+  String get web_search_zhihu_web_description {
+    return Intl.message(
+      '跨网站搜索：官网、新闻及其他网页资料。',
+      name: 'web_search_zhihu_web_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `知乎站内搜索：社区问题、回答和文章。`
+  String get web_search_zhihu_site_description {
+    return Intl.message(
+      '知乎站内搜索：社区问题、回答和文章。',
+      name: 'web_search_zhihu_site_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1. 点击“获取个人密钥”，登录或注册你自己的服务商账号。\n2. 创建 API Key，确认搜索权限和免费额度。\n3. 在此粘贴密钥，点击“验证并启用”，验证通过后即可搜索。`
+  String get web_search_generic_key_steps {
+    return Intl.message(
+      '1. 点击“获取个人密钥”，登录或注册你自己的服务商账号。\n2. 创建 API Key，确认搜索权限和免费额度。\n3. 在此粘贴密钥，点击“验证并启用”，验证通过后即可搜索。',
+      name: 'web_search_generic_key_steps',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `免费额度与价格`
+  String get web_search_pricing {
+    return Intl.message(
+      '免费额度与价格',
+      name: 'web_search_pricing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `免费额度可能调整，使用限制与超额费用以你的服务商账号和官方价格为准。`
+  String get web_search_allowance_notice {
+    return Intl.message(
+      '免费额度可能调整，使用限制与超额费用以你的服务商账号和官方价格为准。',
+      name: 'web_search_allowance_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每月免费额度：1,000 credits；基础搜索每次使用 1 credit。`
+  String get web_search_tavily_allowance {
+    return Intl.message(
+      '每月免费额度：1,000 credits；基础搜索每次使用 1 credit。',
+      name: 'web_search_tavily_allowance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每月免费额度：5 美元 credits；搜索价格为每 1,000 次 5 美元。`
+  String get web_search_brave_allowance {
+    return Intl.message(
+      '每月免费额度：5 美元 credits；搜索价格为每 1,000 次 5 美元。',
+      name: 'web_search_brave_allowance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每月免费额度：10 美元 credits，另有 10 美元新用户额度；实际消耗取决于搜索和内容选项。`
+  String get web_search_exa_allowance {
+    return Intl.message(
+      '每月免费额度：10 美元 credits，另有 10 美元新用户额度；实际消耗取决于搜索和内容选项。',
+      name: 'web_search_exa_allowance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `新用户试用：2,500 次免费查询，为一次性试用额度，不会每月重置。`
+  String get web_search_serper_allowance {
+    return Intl.message(
+      '新用户试用：2,500 次免费查询，为一次性试用额度，不会每月重置。',
+      name: 'web_search_serper_allowance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每月免费额度：250 次搜索，另受账号速率限制。`
+  String get web_search_serpapi_allowance {
+    return Intl.message(
+      '每月免费额度：250 次搜索，另受账号速率限制。',
+      name: 'web_search_serpapi_allowance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `新用户试用：100 次免费请求，为一次性试用额度，不会每月重置。`
+  String get web_search_searchapi_allowance {
+    return Intl.message(
+      '新用户试用：100 次免费请求，为一次性试用额度，不会每月重置。',
+      name: 'web_search_searchapi_allowance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `免费套餐：每月 1,000 credits，最多用于 500 次不抓取网页正文的搜索；另受服务商速率限制。`
+  String get web_search_firecrawl_allowance {
+    return Intl.message(
+      '免费套餐：每月 1,000 credits，最多用于 500 次不抓取网页正文的搜索；另受服务商速率限制。',
+      name: 'web_search_firecrawl_allowance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Firecrawl 支持不填 Key 的匿名搜索，速率限制较低。也可以填写个人 Key，使用自己账号的额度。`
+  String get web_search_optional_key_notice {
+    return Intl.message(
+      'Firecrawl 支持不填 Key 的匿名搜索，速率限制较低。也可以填写个人 Key，使用自己账号的额度。',
+      name: 'web_search_optional_key_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `验证并启用`
+  String get web_search_validate_enable {
+    return Intl.message(
+      '验证并启用',
+      name: 'web_search_validate_enable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在验证连接…`
+  String get web_search_validating {
+    return Intl.message(
+      '正在验证连接…',
+      name: 'web_search_validating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `连接验证通过。`
+  String get web_search_validation_success {
+    return Intl.message(
+      '连接验证通过。',
+      name: 'web_search_validation_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `验证会向该服务发送测试查询“RWKV”，可能消耗一次搜索额度。验证成功后启用搜索。`
+  String get web_search_validation_notice {
+    return Intl.message(
+      '验证会向该服务发送测试查询“RWKV”，可能消耗一次搜索额度。验证成功后启用搜索。',
+      name: 'web_search_validation_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务账号余额或可用积分不足。请前往服务平台检查余额，再重试。`
+  String get web_search_balance {
+    return Intl.message(
+      '服务账号余额或可用积分不足。请前往服务平台检查余额，再重试。',
+      name: 'web_search_balance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请求过快或已达到平台限额。请稍后重试，并检查账号额度。`
+  String get web_search_rate_limit {
+    return Intl.message(
+      '请求过快或已达到平台限额。请稍后重试，并检查账号额度。',
+      name: 'web_search_rate_limit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无法访问系统安全存储，未能确认密钥是否已保存或清除。请解锁设备后重试。`
+  String get web_search_storage_error {
+    return Intl.message(
+      '无法访问系统安全存储，未能确认密钥是否已保存或清除。请解锁设备后重试。',
+      name: 'web_search_storage_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `验证成功的密钥会保存在本设备的系统安全存储中，重启 RWKV Chat 后自动沿用。点击清除按钮可删除已保存的密钥。`
+  String get web_search_saved_key_notice {
+    return Intl.message(
+      '验证成功的密钥会保存在本设备的系统安全存储中，重启 RWKV Chat 后自动沿用。点击清除按钮可删除已保存的密钥。',
+      name: 'web_search_saved_key_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `重试安全存储`
+  String get web_search_reload_saved_keys {
+    return Intl.message(
+      '重试安全存储',
+      name: 'web_search_reload_saved_keys',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索详情`
+  String get web_search_report_title {
+    return Intl.message(
+      '搜索详情',
+      name: 'web_search_report_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1. 搜索请求`
+  String get web_search_report_request {
+    return Intl.message(
+      '1. 搜索请求',
+      name: 'web_search_report_request',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2. 搜索结果`
+  String get web_search_report_results {
+    return Intl.message(
+      '2. 搜索结果',
+      name: 'web_search_report_results',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3. 最终模型输入`
+  String get web_search_report_input {
+    return Intl.message(
+      '3. 最终模型输入',
+      name: 'web_search_report_input',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `4. 模型输出`
+  String get web_search_report_output {
+    return Intl.message(
+      '4. 模型输出',
+      name: 'web_search_report_output',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `复制全部四块`
+  String get web_search_report_copy_all {
+    return Intl.message(
+      '复制全部四块',
+      name: 'web_search_report_copy_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `这条回复没有记录搜索请求快照。`
+  String get web_search_report_request_missing {
+    return Intl.message(
+      '这条回复没有记录搜索请求快照。',
+      name: 'web_search_report_request_missing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `第 {index} 次模型调用`
+  String web_search_report_model_call(Object index) {
+    return Intl.message(
+      '第 $index 次模型调用',
+      name: 'web_search_report_model_call',
+      desc: '',
+      args: [index],
+    );
+  }
+
+  /// `并行对话 {index}`
+  String web_search_report_model_batch(Object index) {
+    return Intl.message(
+      '并行对话 $index',
+      name: 'web_search_report_model_batch',
+      desc: '',
+      args: [index],
+    );
+  }
+
+  /// `实际发送给模型的消息原文，按发送顺序排列。`
+  String get web_search_report_input_note {
+    return Intl.message(
+      '实际发送给模型的消息原文，按发送顺序排列。',
+      name: 'web_search_report_input_note',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `这条回复没有记录完整引擎输入。下方已保存的搜索增强用户消息（如有）只包含部分输入。`
+  String get web_search_report_input_missing {
+    return Intl.message(
+      '这条回复没有记录完整引擎输入。下方已保存的搜索增强用户消息（如有）只包含部分输入。',
+      name: 'web_search_report_input_missing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未采集原生运行时的聊天模板序列化文本和分词器输入。`
+  String get web_search_report_native_note {
+    return Intl.message(
+      '未采集原生运行时的聊天模板序列化文本和分词器输入。',
+      name: 'web_search_report_native_note',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `关联回复已不可用，无法读取模型输出。`
+  String get web_search_report_output_unavailable {
+    return Intl.message(
+      '关联回复已不可用，无法读取模型输出。',
+      name: 'web_search_report_output_unavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在生成，下方输出仍会更新。`
+  String get web_search_report_output_generating {
+    return Intl.message(
+      '正在生成，下方输出仍会更新。',
+      name: 'web_search_report_output_generating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已停止或暂停，输出可能不完整。`
+  String get web_search_report_output_paused {
+    return Intl.message(
+      '已停止或暂停，输出可能不完整。',
+      name: 'web_search_report_output_paused',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `生成已结束。`
+  String get web_search_report_output_complete {
+    return Intl.message(
+      '生成已结束。',
+      name: 'web_search_report_output_complete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `模型输出为空。`
+  String get web_search_report_output_empty {
+    return Intl.message(
+      '模型输出为空。',
+      name: 'web_search_report_output_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户消息`
+  String get web_search_report_user_query {
+    return Intl.message(
+      '用户消息',
+      name: 'web_search_report_user_query',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索词`
+  String get web_search_report_query {
+    return Intl.message(
+      '搜索词',
+      name: 'web_search_report_query',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索增强后的用户消息（模型输入的一部分）`
+  String get web_search_report_injected_prompt {
+    return Intl.message(
+      '搜索增强后的用户消息（模型输入的一部分）',
+      name: 'web_search_report_injected_prompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索错误`
+  String get web_search_report_error {
+    return Intl.message(
+      '搜索错误',
+      name: 'web_search_report_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `详情`
+  String get web_search_report_details_action {
+    return Intl.message(
+      '详情',
+      name: 'web_search_report_details_action',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `完整响应`
+  String get web_search_report_full_response {
+    return Intl.message(
+      '完整响应',
+      name: 'web_search_report_full_response',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `此次搜索未保存完整 API 响应；以下仅展示已保存的参考资料。`
+  String get web_search_report_response_missing {
+    return Intl.message(
+      '此次搜索未保存完整 API 响应；以下仅展示已保存的参考资料。',
+      name: 'web_search_report_response_missing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请求详情`
+  String get web_search_report_request_details {
+    return Intl.message(
+      '请求详情',
+      name: 'web_search_report_request_details',
       desc: '',
       args: [],
     );

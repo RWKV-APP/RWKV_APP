@@ -909,6 +909,7 @@ class _MarkdownBody extends ConsumerWidget {
           StreamingMarkdownRender(
             key: const ValueKey("batch-output"),
             raw: output,
+            references: msg.reference.sourcesForBatch(slotIndex),
             streaming: streaming,
             useMessageLineHeight: true,
             inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
@@ -965,6 +966,7 @@ class _MarkdownBody extends ConsumerWidget {
             StreamingMarkdownRender(
               key: const ValueKey("batch-output"),
               raw: output,
+              references: msg.reference.sourcesForBatch(slotIndex),
               streaming: streaming,
               useMessageLineHeight: true,
               inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
@@ -1023,6 +1025,7 @@ class _MarkdownBody extends ConsumerWidget {
           StreamingMarkdownRender(
             key: const ValueKey("batch-output"),
             raw: output,
+            references: msg.reference.sourcesForBatch(slotIndex),
             streaming: streaming,
             useMessageLineHeight: true,
             inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,

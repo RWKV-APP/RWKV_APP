@@ -198,19 +198,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m77(tokens, bytes) => "${tokens} токенов, ${bytes} байт";
 
-  static String m78(port) => "WebSocket-сервис (Порт: ${port})";
+  static String m78(index) => "Параллельный диалог ${index}";
 
-  static String m79(id) => "Окно ${id}";
+  static String m79(index) => "Вызов модели ${index}";
 
-  static String m80(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m80(port) => "WebSocket-сервис (Порт: ${port})";
+
+  static String m81(id) => "Окно ${id}";
+
+  static String m82(buildArchitecture, operatingSystemArchitecture, url) =>
       "Приложение собрано для ${buildArchitecture}, а архитектура Windows — ${operatingSystemArchitecture}.\n\nПерейдите на официальную страницу загрузки и скачайте подходящий исполняемый файл:\n${url}";
 
-  static String m81(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m83(buildArchitecture, operatingSystemArchitecture, url) =>
       "Обнаружено несоответствие архитектуры: приложение собрано для ${buildArchitecture}, а архитектура Windows — ${operatingSystemArchitecture}. Скачайте подходящую версию с официальной страницы: ${url}";
 
-  static String m82(count) => "${count} вкладок";
+  static String m84(count) => "${count} вкладок";
 
-  static String m83(modelName) => "Вы сейчас используете ${modelName}";
+  static String m85(modelName) => "Вы сейчас используете ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1813,7 +1817,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "recording_your_voice": MessageLookupByLibrary.simpleMessage(
       "Идет запись голоса...",
     ),
-    "reference_source": MessageLookupByLibrary.simpleMessage("Источник"),
+    "reference_source": MessageLookupByLibrary.simpleMessage(
+      "Источники поиска",
+    ),
     "refresh": MessageLookupByLibrary.simpleMessage("Обновлено"),
     "refresh_complete": MessageLookupByLibrary.simpleMessage(
       "Обновление завершено",
@@ -2347,10 +2353,223 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ожидание HTML-документа",
     ),
     "web_search": MessageLookupByLibrary.simpleMessage("Веб-поиск"),
+    "web_search_allowance_notice": MessageLookupByLibrary.simpleMessage(
+      "Бесплатные квоты могут меняться. Ограничения и плата после их исчерпания определяются вашим аккаунтом и официальными тарифами сервиса.",
+    ),
+    "web_search_anysearch_notice": MessageLookupByLibrary.simpleMessage(
+      "Ключ API не требуется. Бесплатная анонимная квота общая для IP-адреса. Квоты и ограничения частоты запросов определяет AnySearch.",
+    ),
+    "web_search_balance": MessageLookupByLibrary.simpleMessage(
+      "На счёте сервиса недостаточно средств или кредитов. Проверьте баланс на платформе перед повтором.",
+    ),
+    "web_search_brave_allowance": MessageLookupByLibrary.simpleMessage(
+      "Ежемесячно бесплатно: credits на 5 долларов США. Поиск стоит 5 долларов за 1 000 запросов.",
+    ),
+    "web_search_browser": MessageLookupByLibrary.simpleMessage(
+      "Поиск в браузере",
+    ),
+    "web_search_browser_notice": MessageLookupByLibrary.simpleMessage(
+      "Для поиска через браузер на компьютере ключ API не нужен. Если браузер ещё не готов, повторите попытку чуть позже.",
+    ),
+    "web_search_deepseek_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. Войдите на платформу DeepSeek, создайте и скопируйте личный ключ на странице API keys.\n2. Проверьте баланс и доступ к поиску.\n3. Вставьте ключ здесь и нажмите «Проверить и включить». Поиск включится после успешной проверки.",
+    ),
+    "web_search_exa_allowance": MessageLookupByLibrary.simpleMessage(
+      "Ежемесячно бесплатно: credits на 10 долларов и бонус 10 долларов при регистрации. Расход зависит от параметров поиска и контента.",
+    ),
+    "web_search_firecrawl_allowance": MessageLookupByLibrary.simpleMessage(
+      "Бесплатный план: 1 000 credits в месяц, до 500 поисковых запросов без загрузки содержимого страниц. Действуют ограничения частоты запросов.",
+    ),
+    "web_search_generic_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. Нажмите «Получить личный ключ» и войдите или создайте собственный аккаунт сервиса.\n2. Создайте API-ключ и проверьте доступ к поиску и бесплатную квоту.\n3. Вставьте ключ здесь и нажмите «Проверить и включить». Поиск включится после успешной проверки.",
+    ),
+    "web_search_get_key": MessageLookupByLibrary.simpleMessage(
+      "Получить личный ключ",
+    ),
+    "web_search_invalid_query": MessageLookupByLibrary.simpleMessage(
+      "Поисковый запрос пуст или превышает лимит длины. Сократите сообщение и повторите попытку.",
+    ),
+    "web_search_invalid_response": MessageLookupByLibrary.simpleMessage(
+      "Сервис вернул неподдерживаемый формат данных.",
+    ),
+    "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
+      "Вставьте только свой ключ без префикса Bearer. После успешной проверки и включения он сохранится безопасно для повторного использования.",
+    ),
+    "web_search_key_configured": MessageLookupByLibrary.simpleMessage(
+      "Ключ настроен",
+    ),
+    "web_search_key_help_title": MessageLookupByLibrary.simpleMessage(
+      "Получение и настройка ключа",
+    ),
+    "web_search_link_failed": MessageLookupByLibrary.simpleMessage(
+      "Не удалось открыть официальную страницу. Повторите попытку позже.",
+    ),
+    "web_search_missing_key": MessageLookupByLibrary.simpleMessage(
+      "Введите личный API-ключ, затем проверьте и включите сервис.",
+    ),
+    "web_search_no_results": MessageLookupByLibrary.simpleMessage(
+      "Ничего не найдено. Модель ответит без веб-источников.",
+    ),
+    "web_search_official_docs": MessageLookupByLibrary.simpleMessage(
+      "Официальная инструкция",
+    ),
+    "web_search_optional_key_notice": MessageLookupByLibrary.simpleMessage(
+      "Firecrawl поддерживает анонимный поиск без ключа с более низкими ограничениями частоты. Необязательный личный ключ использует квоту вашего аккаунта.",
+    ),
+    "web_search_own_key_notice": MessageLookupByLibrary.simpleMessage(
+      "Используйте ключ своей учётной записи. К ней относятся квота и расходы. RWKV Chat не предоставляет общий ключ.",
+    ),
+    "web_search_pricing": MessageLookupByLibrary.simpleMessage(
+      "Бесплатная квота и цены",
+    ),
+    "web_search_privacy_notice": MessageLookupByLibrary.simpleMessage(
+      "При включении поисковый запрос из текущего сообщения отправляется выбранному сервису. История переписки не отправляется. Ответ создаёт локальная модель RWKV. Сервис может взимать плату.",
+    ),
+    "web_search_provider": MessageLookupByLibrary.simpleMessage(
+      "Поисковый сервис",
+    ),
+    "web_search_quota": MessageLookupByLibrary.simpleMessage(
+      "Квота поиска исчерпана. Проверьте лимиты сервиса и повторите после их восстановления.",
+    ),
+    "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
+      "Слишком много запросов или достигнут лимит сервиса. Подождите и проверьте квоту учётной записи.",
+    ),
+    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
+      "Повторить доступ к хранилищу",
+    ),
+    "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
+      "Копировать все четыре раздела",
+    ),
+    "web_search_report_details_action": MessageLookupByLibrary.simpleMessage(
+      "Подробнее",
+    ),
+    "web_search_report_error": MessageLookupByLibrary.simpleMessage(
+      "Ошибка поиска",
+    ),
+    "web_search_report_full_response": MessageLookupByLibrary.simpleMessage(
+      "Полный ответ",
+    ),
+    "web_search_report_injected_prompt": MessageLookupByLibrary.simpleMessage(
+      "Сообщение пользователя с результатами поиска (часть ввода модели)",
+    ),
+    "web_search_report_input": MessageLookupByLibrary.simpleMessage(
+      "3. Итоговый ввод модели",
+    ),
+    "web_search_report_input_missing": MessageLookupByLibrary.simpleMessage(
+      "Полный ввод движка для этого ответа не записан. Сохраненное сообщение пользователя с результатами поиска, если оно есть, содержит лишь часть ввода.",
+    ),
+    "web_search_report_input_note": MessageLookupByLibrary.simpleMessage(
+      "Точный текст сообщений, отправленных модели, в порядке отправки.",
+    ),
+    "web_search_report_model_batch": m78,
+    "web_search_report_model_call": m79,
+    "web_search_report_native_note": MessageLookupByLibrary.simpleMessage(
+      "Текст после применения нативного шаблона чата и вход токенизатора не фиксируются.",
+    ),
+    "web_search_report_output": MessageLookupByLibrary.simpleMessage(
+      "4. Вывод модели",
+    ),
+    "web_search_report_output_complete": MessageLookupByLibrary.simpleMessage(
+      "Генерация завершена.",
+    ),
+    "web_search_report_output_empty": MessageLookupByLibrary.simpleMessage(
+      "Вывод модели пуст.",
+    ),
+    "web_search_report_output_generating": MessageLookupByLibrary.simpleMessage(
+      "Идет генерация; вывод ниже продолжает обновляться.",
+    ),
+    "web_search_report_output_paused": MessageLookupByLibrary.simpleMessage(
+      "Остановлено или приостановлено; вывод может быть неполным.",
+    ),
+    "web_search_report_output_unavailable":
+        MessageLookupByLibrary.simpleMessage(
+          "Связанный ответ недоступен; вывод модели прочитать невозможно.",
+        ),
+    "web_search_report_query": MessageLookupByLibrary.simpleMessage(
+      "Поисковая фраза",
+    ),
+    "web_search_report_request": MessageLookupByLibrary.simpleMessage(
+      "1. Поисковый запрос",
+    ),
+    "web_search_report_request_details": MessageLookupByLibrary.simpleMessage(
+      "Подробности запроса",
+    ),
+    "web_search_report_request_missing": MessageLookupByLibrary.simpleMessage(
+      "Снимок поискового запроса для этого ответа не сохранен.",
+    ),
+    "web_search_report_response_missing": MessageLookupByLibrary.simpleMessage(
+      "Полный ответ API для этого поиска не сохранён. Ниже показаны только сохранённые источники.",
+    ),
+    "web_search_report_results": MessageLookupByLibrary.simpleMessage(
+      "2. Результаты поиска",
+    ),
+    "web_search_report_title": MessageLookupByLibrary.simpleMessage(
+      "Подробности поиска",
+    ),
+    "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
+      "Сообщение пользователя",
+    ),
+    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
+      "Проверенные ключи сохраняются в защищённом хранилище этого устройства и используются после перезапуска RWKV Chat. Кнопка очистки удаляет сохранённый ключ.",
+    ),
+    "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
+      "Пробная квота при регистрации: 100 бесплатных запросов. Это разовая квота без ежемесячного обновления.",
+    ),
+    "web_search_serpapi_allowance": MessageLookupByLibrary.simpleMessage(
+      "Ежемесячно бесплатно: 250 поисковых запросов. Также действуют ограничения частоты запросов аккаунта.",
+    ),
+    "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
+      "Пробная квота при регистрации: 2 500 бесплатных запросов. Это разовая квота без ежемесячного обновления.",
+    ),
+    "web_search_settings": MessageLookupByLibrary.simpleMessage(
+      "Настройки поиска",
+    ),
+    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
+      "Нет доступа к защищённому хранилищу. Не удалось подтвердить сохранение или удаление ключа. Разблокируйте устройство и повторите.",
+    ),
+    "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
+      "Ежемесячно бесплатно: 1 000 credits. Базовый поиск расходует 1 credit за запрос.",
+    ),
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон веб-поиска",
     ),
-    "websocket_service_port": m78,
+    "web_search_timeout": MessageLookupByLibrary.simpleMessage(
+      "Время поиска истекло. Повторите попытку.",
+    ),
+    "web_search_unauthorized": MessageLookupByLibrary.simpleMessage(
+      "Ключ недействителен, истёк, отозван или не имеет доступа. Обновите ключ или проверьте разрешения учётной записи.",
+    ),
+    "web_search_unavailable": MessageLookupByLibrary.simpleMessage(
+      "Поиск недоступен. Проверьте подключение и повторите попытку.",
+    ),
+    "web_search_validate_enable": MessageLookupByLibrary.simpleMessage(
+      "Проверить и включить",
+    ),
+    "web_search_validating": MessageLookupByLibrary.simpleMessage(
+      "Проверка подключения…",
+    ),
+    "web_search_validation_notice": MessageLookupByLibrary.simpleMessage(
+      "Проверка отправит сервису тестовый запрос «RWKV» и может потратить один запрос из квоты. Поиск включится после успешной проверки.",
+    ),
+    "web_search_validation_success": MessageLookupByLibrary.simpleMessage(
+      "Подключение проверено.",
+    ),
+    "web_search_zhihu_global": MessageLookupByLibrary.simpleMessage(
+      "Zhihu · Веб",
+    ),
+    "web_search_zhihu_key_steps": MessageLookupByLibrary.simpleMessage(
+      "1. Войдите на платформу данных Zhihu, создайте и скопируйте Access Secret в личном профиле.\n2. Проверьте доступ и квоту выбранного сервиса поиска.\n3. Вставьте ключ здесь и нажмите «Проверить и включить». Поиск включится после успешной проверки.",
+    ),
+    "web_search_zhihu_site": MessageLookupByLibrary.simpleMessage(
+      "Zhihu · На сайте",
+    ),
+    "web_search_zhihu_site_description": MessageLookupByLibrary.simpleMessage(
+      "Поиск внутри Zhihu: вопросы, ответы и статьи сообщества.",
+    ),
+    "web_search_zhihu_web_description": MessageLookupByLibrary.simpleMessage(
+      "Поиск по сайтам: официальные страницы, новости и другие веб-источники.",
+    ),
+    "websocket_service_port": m80,
     "weights_mangement": MessageLookupByLibrary.simpleMessage(
       "Управление файлами весов",
     ),
@@ -2372,18 +2591,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("Белые"),
     "white_score": MessageLookupByLibrary.simpleMessage("Счет белых"),
     "white_wins": MessageLookupByLibrary.simpleMessage("Белые победили!"),
-    "window_id": m79,
-    "windows_architecture_mismatch_dialog_message": m80,
+    "window_id": m81,
+    "windows_architecture_mismatch_dialog_message": m82,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("Несоответствие архитектуры"),
-    "windows_architecture_mismatch_warning": m81,
+    "windows_architecture_mismatch_warning": m83,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "Выбрано %d сообщений",
     ),
-    "x_pages_found": MessageLookupByLibrary.simpleMessage("Найдено %d страниц"),
-    "x_tabs": m82,
-    "you_are_now_using": m83,
+    "x_pages_found": MessageLookupByLibrary.simpleMessage("Источников: %d"),
+    "x_tabs": m84,
+    "you_are_now_using": m85,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "Теперь вы можете начать общаться с RWKV",
     ),

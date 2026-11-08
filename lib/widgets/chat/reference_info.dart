@@ -6,9 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sprintf/sprintf.dart';
 
 // Project imports:
+import 'package:zone/func/web_search_report.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/ref_info.dart' as model;
-import 'package:zone/model/web_search_trace.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/search_reference_dialog.dart';
 import 'package:zone/widgets/chat/web_search_trace_panel.dart';
@@ -16,8 +16,9 @@ import 'package:zone/widgets/chat/web_search_trace_panel.dart';
 class ReferenceInfo extends ConsumerStatefulWidget {
   final model.RefInfo refInfo;
   final bool generating;
+  final int? messageId;
 
-  const ReferenceInfo({super.key, required this.refInfo, required this.generating});
+  const ReferenceInfo({super.key, required this.refInfo, required this.generating, this.messageId});
 
   @override
   ConsumerState<ReferenceInfo> createState() => _ReferenceInfoState();
@@ -28,15 +29,14 @@ class _ReferenceInfoState extends ConsumerState<ReferenceInfo> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final prefill = ref.watch(P.rwkvGeneration.prefillProgress).clamp(0, 1).toDouble();
-    final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
 
     final hasError = widget.refInfo.error.isNotEmpty;
     final showProgress = prefill > 0 && prefill < 1 && widget.generating && !hasError;
 
     final primary = theme.colorScheme.primary;
     final searching = widget.refInfo.list.isEmpty && widget.generating && !hasError;
-    final trace = widget.refInfo.trace;
-    final canShowTrace = trace != null && trace.hasData;
+    final trace = webSearchTraceForReport(widget.refInfo);
+    final canShowTrace = trace.hasData;
 
     return Column(
       crossAxisAlignment: .stretch,
@@ -50,27 +50,23 @@ class _ReferenceInfoState extends ConsumerState<ReferenceInfo> {
               runSpacing: 6,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                InkWell(
-                  borderRadius: .circular(20),
+                _ReferenceActionButton(
+                  tooltip: widget.refInfo.error,
+                  label: searching
+                      ? S.current.searching
+                      : hasError
+                      ? S.current.search_failed
+                      : sprintf(S.current.x_pages_found, [widget.refInfo.list.length]),
+                  icon: hasError ? Icons.error_outline : Icons.public,
+                  searching: searching,
+                  showChevron: !hasError && !searching,
                   onTap: hasError || searching ? null : () => SearchReferenceDialog.show(context, widget.refInfo),
-                  child: Container(
-                    padding: const .symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: primary.withValues(alpha: .1),
-                      borderRadius: .circular(20),
-                    ),
-                    child: searching
-                        ? _AdvancedBlinkText(text: S.current.searching, color: primary)
-                        : Text(
-                            hasError ? S.current.search_failed : sprintf(S.current.x_pages_found, [widget.refInfo.list.length]),
-                            style: TextStyle(color: primary, fontSize: 12),
-                          ),
-                  ),
                 ),
                 if (canShowTrace)
-                  _WebSearchTraceButton(
-                    trace: trace,
-                    label: currentLangIsZh ? '步骤' : 'Details',
+                  _ReferenceActionButton(
+                    label: S.of(context).web_search_report_details_action,
+                    icon: Icons.receipt_long,
+                    onTap: widget.messageId == null ? null : () => WebSearchTracePanel.show(messageId: widget.messageId!, trace: trace),
                   ),
               ],
             ),
@@ -106,11 +102,22 @@ class _ReferenceInfoState extends ConsumerState<ReferenceInfo> {
   }
 }
 
-class _WebSearchTraceButton extends StatelessWidget {
-  final WebSearchTrace trace;
+class _ReferenceActionButton extends StatelessWidget {
   final String label;
+  final String? tooltip;
+  final IconData icon;
+  final bool searching;
+  final bool showChevron;
+  final VoidCallback? onTap;
 
-  const _WebSearchTraceButton({required this.trace, required this.label});
+  const _ReferenceActionButton({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+    this.tooltip,
+    this.searching = false,
+    this.showChevron = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -118,24 +125,36 @@ class _WebSearchTraceButton extends StatelessWidget {
     final primary = theme.colorScheme.primary;
 
     return Tooltip(
-      message: label,
-      child: InkWell(
-        borderRadius: .circular(20),
-        onTap: () => WebSearchTracePanel.show(trace),
-        child: Container(
-          padding: const .symmetric(horizontal: 9, vertical: 4),
-          decoration: BoxDecoration(
-            color: primary.withValues(alpha: .1),
-            borderRadius: .circular(20),
-            border: Border.all(color: primary.withValues(alpha: .18), width: 0.5),
-          ),
-          child: Row(
-            mainAxisSize: .min,
-            children: [
-              Icon(Icons.receipt_long, size: 14, color: primary),
-              const SizedBox(width: 4),
-              Text(label, style: TextStyle(color: primary, fontSize: 12)),
-            ],
+      message: tooltip ?? label,
+      child: Semantics(
+        button: true,
+        enabled: onTap != null,
+        child: InkWell(
+          borderRadius: .circular(20),
+          onTap: onTap,
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 40),
+            padding: const .symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: primary.withValues(alpha: .1),
+              borderRadius: .circular(20),
+              border: Border.all(color: primary.withValues(alpha: .18), width: 0.5),
+            ),
+            child: Row(
+              mainAxisSize: .min,
+              children: [
+                Icon(icon, size: 16, color: primary),
+                const SizedBox(width: 6),
+                if (searching)
+                  _AdvancedBlinkText(text: label, color: primary)
+                else
+                  Text(label, style: TextStyle(color: primary, fontSize: 12)),
+                if (showChevron) ...[
+                  const SizedBox(width: 4),
+                  Icon(Icons.chevron_right, size: 16, color: primary),
+                ],
+              ],
+            ),
           ),
         ),
       ),
