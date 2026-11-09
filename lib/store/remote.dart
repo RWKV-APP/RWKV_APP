@@ -905,7 +905,7 @@ extension $Remote on _Remote {
 
     // Read and decode ZIP file
     final zipBytes = await zipFile.readAsBytes();
-    final archive = ZipDecoder().decodeBytes(zipBytes);
+    final archive = ZipDecoder().decodeBytes(zipBytes, throwOnError: true);
 
     if (archive.isEmpty) {
       throw Exception("ZIP file is empty");

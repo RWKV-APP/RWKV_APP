@@ -76,6 +76,19 @@ void main() {
     expect(Directory(p.join(temporary.path, 'model')).existsSync(), isFalse);
   });
 
+  test('rejects a truncated ZIP without creating a reusable model directory', () async {
+    final temporary = Directory.systemTemp.createTempSync('rwkv-unzip-test-');
+    addTearDown(() => temporary.deleteSync(recursive: true));
+    final archive = Archive()..addFile(ArchiveFile.string('config.json', 'model configuration'));
+    final bytes = ZipEncoder().encode(archive);
+    final zip = File(p.join(temporary.path, 'model.zip'));
+    zip.writeAsBytesSync(bytes.sublist(0, bytes.length - 22));
+
+    await expectLater(unzipInPlace(zip.path), throwsA(isA<ArchiveException>()));
+
+    expect(temporary.listSync().map((entry) => p.basename(entry.path)), ['model.zip']);
+  });
+
   test('removes incomplete extraction and can retry the archive', () async {
     final temporary = Directory.systemTemp.createTempSync('rwkv-unzip-test-');
     addTearDown(() => temporary.deleteSync(recursive: true));

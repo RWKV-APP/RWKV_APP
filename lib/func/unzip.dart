@@ -38,7 +38,7 @@ Future<String> _unzipInPlaceIsolate(String modelPath) async {
   Directory? staging;
 
   try {
-    final archive = ZipDecoder().decodeStream(inputStream);
+    final archive = ZipDecoder().decodeStream(inputStream, throwOnError: true);
     final folderPrefix = '${p.basename(modelPathWithoutZip)}/';
     final wrapped = archive.any((file) => file.name.startsWith(folderPrefix));
     final extractionRoot = wrapped ? modelDir : modelPathWithoutZip;

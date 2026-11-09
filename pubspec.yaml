@@ -75,7 +75,7 @@ dependencies:
       ref: 3bd744d
 
   adaptive_dialog:
-  archive:
+  archive: ^4.6.0
   audioplayers:
   background_downloader:
   cached_network_image: ^3.4.1
