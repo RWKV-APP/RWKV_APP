@@ -163,6 +163,12 @@ Both providers must use the same platform directory, artifact filename, version,
 build number, and artifact bytes. GitHub Release and store-specific channels
 remain independent distribution surfaces.
 
+Build the macOS DMG from the signed app with
+`python3 scripts/package_macos_dmg.py "<path to RWKV Chat.app>" "<output.dmg>"`.
+The image must contain the app and an `Applications` link to `/Applications`
+in the same Finder window. Verify the mounted image before signing and
+notarizing the DMG for publication.
+
 The default ModelScope dataset is `HaloWang1991/rwkv-chat` on the `master`
 branch. Deployments may override the endpoint, repository ID, or revision by
 environment variable without changing the artifact mapping contract.

@@ -87,7 +87,7 @@ module Fastlane
             '#{app_path}'")
         else
           UI.important('未找到 create-dmg，改用基础 hdiutil 打包')
-          sh("hdiutil create -volname 'RWKV Chat' -srcfolder '#{app_path}' -ov -format UDZO '#{dmg_path}'")
+          sh('python3', File.join(project_root, 'scripts/package_macos_dmg.py'), app_path, dmg_path)
         end
 
         UI.success("DMG 创建成功: #{dmg_path}")
