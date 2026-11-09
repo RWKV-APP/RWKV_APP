@@ -1,5 +1,16 @@
 # App Binary Distribution Contract
 
+## Release 4.9.2
+
+Version 4.9.2 uses build 767 and Flutter 3.47.5 for iPhone and macOS.
+It reduces memory use when extracting large model archives and restores
+the Applications shortcut in the macOS installer. The release retains the
+4.9.1 adapter, Apple native archives, and bundled model entries.
+
+Submit the iPhone build to App Store and external TestFlight review with
+automatic distribution after approval. Publish the signed and notarized
+macOS installer. Android, Linux and Windows tag builds exclude 4.9.2+767.
+
 ## Release 4.9.1
 
 Version 4.9.1 uses build 766 and Flutter 3.47.5. It expands optional

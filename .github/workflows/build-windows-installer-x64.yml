@@ -6,6 +6,7 @@ on:
   push:
     tags:
       - "[0-9]*"
+      - '!4.9.2\+767'
   workflow_dispatch:
     inputs:
       release_tag:

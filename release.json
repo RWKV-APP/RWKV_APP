@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "version": "4.9.1",
-  "build": 766,
+  "version": "4.9.2",
+  "build": 767,
   "flutterVersion": "3.47.5",
   "adapter": {
     "repository": "RWKV-APP/rwkv_mobile_flutter",
@@ -1323,5 +1323,5 @@
       "sha256": "c65dc9a72482921e915a292bccd98faaa50c953ab93b5ee0b584446ddeaa78d8"
     }
   },
-  "tag": "4.9.1+766"
+  "tag": "4.9.2+767"
 }
