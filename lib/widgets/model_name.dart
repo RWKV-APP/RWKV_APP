@@ -23,7 +23,7 @@ class ModelName extends StatelessWidget {
         children: [
           for (final (index, match) in matches.indexed) ...[
             TextSpan(text: name.substring(index == 0 ? 0 : matches[index - 1].end, match.start)),
-            TextSpan(text: match[0], style: emphasis),
+            TextSpan(text: match[0]!.toUpperCase(), style: emphasis),
           ],
           TextSpan(text: name.substring(matches.isEmpty ? 0 : matches.last.end)),
         ],
