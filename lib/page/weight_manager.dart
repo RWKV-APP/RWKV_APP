@@ -237,67 +237,73 @@ class _CustomDirectoryTile extends ConsumerWidget {
 
     final s = S.of(context);
     final theme = Theme.of(context);
-
+    final themed = !ref.watch(P.preference.appStyle).isClassic;
+    final details = Column(
+      crossAxisAlignment: .start,
+      children: [
+        Text(s.weights_saving_directory, style: theme.textTheme.titleMedium),
+        const SizedBox(height: 4),
+        Text(effectiveModelsDir),
+        const SizedBox(height: 4),
+        Text(
+          isUsingCustomDir ? s.using_custom_directory : s.using_default_directory,
+          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary),
+        ),
+      ],
+    );
+    final actions = [
+      IconButton(
+        icon: syncingLocalFiles
+            ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator.adaptive(strokeWidth: 2))
+            : const Icon(Icons.refresh),
+        tooltip: s.refresh,
+        onPressed: syncingLocalFiles
+            ? null
+            : () async {
+                await P.remote.sync();
+                Alert.success(s.refresh_complete);
+              },
+      ),
+      IconButton(
+        icon: const Icon(Icons.folder_open),
+        tooltip: s.open_folder,
+        onPressed: P.remote.openModelDirectory,
+      ),
+      IconButton(
+        icon: const Icon(Icons.drive_file_move),
+        tooltip: s.set_custom_directory,
+        onPressed: () => P.remote.pickAndSetCustomModelsDir(context: context),
+      ),
+      if (isUsingCustomDir)
+        IconButton(
+          icon: const Icon(Icons.restore),
+          tooltip: s.reset,
+          onPressed: () => P.remote.resetToDefaultModelsDir(context: context),
+        ),
+    ];
+    final row = Row(
+      crossAxisAlignment: .start,
+      children: [
+        Expanded(child: details),
+        Row(mainAxisSize: .min, children: actions),
+      ],
+    );
     return Padding(
       padding: const .fromLTRB(16, 12, 16, 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  s.weights_saving_directory,
-                  style: theme.textTheme.titleMedium,
-                ),
-                const SizedBox(height: 4),
-                Text(effectiveModelsDir),
-                const SizedBox(height: 4),
-                Text(
-                  isUsingCustomDir ? s.using_custom_directory : s.using_default_directory,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: syncingLocalFiles
-                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator.adaptive(strokeWidth: 2))
-                    : const Icon(Icons.refresh),
-                tooltip: s.refresh,
-                onPressed: syncingLocalFiles
-                    ? null
-                    : () async {
-                        await P.remote.sync();
-                        Alert.success(s.refresh_complete);
-                      },
-              ),
-              IconButton(
-                icon: const Icon(Icons.folder_open),
-                tooltip: s.open_folder,
-                onPressed: P.remote.openModelDirectory,
-              ),
-              IconButton(
-                icon: const Icon(Icons.drive_file_move),
-                tooltip: s.set_custom_directory,
-                onPressed: () => P.remote.pickAndSetCustomModelsDir(context: context),
-              ),
-              if (isUsingCustomDir)
-                IconButton(
-                  icon: const Icon(Icons.restore),
-                  tooltip: s.reset,
-                  onPressed: () => P.remote.resetToDefaultModelsDir(context: context),
-                ),
-            ],
-          ),
-        ],
-      ),
+      child: themed
+          ? LayoutBuilder(
+              builder: (context, constraints) => constraints.maxWidth >= 520
+                  ? row
+                  : Column(
+                      crossAxisAlignment: .start,
+                      children: [
+                        details,
+                        const SizedBox(height: 4),
+                        Wrap(children: actions),
+                      ],
+                    ),
+            )
+          : row,
     );
   }
 }

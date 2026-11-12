@@ -45,11 +45,13 @@ class ResponseStyleButton extends ConsumerWidget {
       (true, true) => InteractionVisualState.idleInteractive,
       (true, false) => InteractionVisualState.enabled,
     };
-    final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
+    final style = ref.watch(P.preference.appStyle);
+    final colors = interactionVisualColors(appTheme: appTheme, state: interactionState, themed: !style.isClassic);
+    final corners = BorderRadius.circular(style.isClassic ? 60 : style.radius);
     final bgColor = colors.background;
     final textColor = colors.foreground;
     final borderColor = colors.border;
-    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final userBackdropFilterForInputOptions = style.isClassic && ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
     final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
     final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
@@ -58,7 +60,7 @@ class ResponseStyleButton extends ConsumerWidget {
       child: GestureDetector(
         onTap: _onTap,
         child: ClipRRect(
-          borderRadius: .circular(60),
+          borderRadius: corners,
           child: BackdropFilter(
             filter: ImageFilter.blur(
               sigmaX: sigmaForBackdropFilterForInputOptions.toDouble(),
@@ -74,7 +76,7 @@ class ResponseStyleButton extends ConsumerWidget {
                       ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                       : 1,
                 ),
-                borderRadius: .circular(60),
+                borderRadius: corners,
                 border: .all(color: borderColor, width: 1),
               ),
               alignment: .center,

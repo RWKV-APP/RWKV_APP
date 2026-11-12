@@ -1529,6 +1529,7 @@ class _CodeState extends ConsumerState<_Code> {
       .light => qb.withValues(alpha: .04),
       .dim => qb.withValues(alpha: .08),
       .lightsOut => qb.withValues(alpha: .1),
+      _ => appTheme.inlineCodeBackgroundColor,
     };
 
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);

@@ -35,7 +35,8 @@ class WebDemoPreviewPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final grayscaleTheme = webDemoGrayscaleTheme(theme);
+    final classic = ref.watch(P.preference.appStyle).isClassic;
+    final previewTheme = classic ? webDemoGrayscaleTheme(theme) : theme;
     final appTheme = ref.watch(P.app.theme);
     final document = extractFirstWebDemoHtml(raw);
     final html = document?.html;
@@ -54,7 +55,7 @@ class WebDemoPreviewPanel extends ConsumerWidget {
     );
 
     return Theme(
-      data: grayscaleTheme,
+      data: previewTheme,
       child: Container(
         margin: EdgeInsets.only(bottom: compact ? 8 : 12),
         decoration: BoxDecoration(
@@ -70,7 +71,7 @@ class WebDemoPreviewPanel extends ConsumerWidget {
               padding: const .symmetric(horizontal: 10, vertical: 8),
               child: Row(
                 children: [
-                  Icon(Icons.web_asset_rounded, size: 16, color: grayscaleTheme.colorScheme.primary),
+                  Icon(Icons.web_asset_rounded, size: 16, color: previewTheme.colorScheme.primary),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Column(
@@ -275,13 +276,14 @@ void showWebDemoSourceSheet({
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    builder: (context) {
-      final theme = Theme.of(context);
-      return Theme(
-        data: webDemoGrayscaleTheme(theme),
-        child: _WebDemoSourceSheet(source: source, label: label),
-      );
-    },
+    builder: (context) => Consumer(
+      builder: (context, ref, child) {
+        final theme = Theme.of(context);
+        final classic = ref.watch(P.preference.appStyle).isClassic;
+        return Theme(data: classic ? webDemoGrayscaleTheme(theme) : theme, child: child!);
+      },
+      child: _WebDemoSourceSheet(source: source, label: label),
+    ),
   );
 }
 

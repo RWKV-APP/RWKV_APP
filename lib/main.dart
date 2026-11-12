@@ -140,6 +140,7 @@ class _App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final appTheme = ref.watch(P.app.theme);
+    final appStyle = ref.watch(P.preference.appStyle);
     final brightness = appTheme.isLight ? Brightness.light : Brightness.dark;
     final appColorScheme = appTheme.colorScheme;
     final modalBarrierColor = appTheme.pagerDim.withValues(alpha: .25);
@@ -158,7 +159,7 @@ class _App extends ConsumerWidget {
     final _ = ref.watch(P.preference.preferredMonospaceFont);
     final effectiveFont = (preferredUIFont == null || preferredUIFont.isEmpty || preferredUIFont == 'System') ? null : preferredUIFont;
 
-    final themeData = ThemeData(
+    final baseTheme = ThemeData(
       fontFamily: effectiveFont,
       fontFamilyFallback: Config.fontFamilyFallback,
       brightness: brightness,
@@ -170,6 +171,7 @@ class _App extends ConsumerWidget {
       bottomSheetTheme: bottomSheetTheme,
       typography: Typography.material2018(),
     );
+    final themeData = appStyle.applyTo(baseTheme, customFont: effectiveFont != null);
 
     return MaterialApp.router(
       color: appTheme.scaffoldBg,
@@ -181,6 +183,9 @@ class _App extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       themeMode: preferredThemeMode,
+      themeAnimationDuration: MediaQuery.maybeOf(context)?.disableAnimations == true
+          ? Duration.zero
+          : Duration(milliseconds: appStyle.motionMs),
       theme: themeData,
       darkTheme: themeData,
       routerConfig: kRouter,

@@ -270,7 +270,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final s = S.of(context);
     if (_fileInfos.isEmpty) {
       qqw("fileInfos is empty, worldType: ${widget.worldType}");
-      if (kDebugMode) {
+      if (kDebugMode && ref.watch(P.preference.appStyle).isClassic) {
         return Text(
           "fileInfos is empty, worldType: ${widget.worldType}",
           style: const TextStyle(color: Colors.red),

@@ -34,6 +34,7 @@ class DecodeParamButton extends ConsumerWidget {
     final s = S.current;
 
     final current = P.rwkvParams.decodeParamType.q;
+    final selectedMark = P.preference.appStyle.q.isClassic ? '☑' : '✓';
 
     qqr(current);
 
@@ -48,7 +49,7 @@ class DecodeParamButton extends ConsumerWidget {
 
     final actions = actionPairs.map((e) {
       final isCurrent = e.key == current;
-      final label = isCurrent ? "☑ ${e.label}" : e.label;
+      final label = isCurrent ? '$selectedMark ${e.label}' : e.label;
       final key = e.key;
       return SheetAction(label: label, key: key);
     }).toList();

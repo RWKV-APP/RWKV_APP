@@ -50,6 +50,26 @@ Settings omits the obsolete community feedback entry and its external URL.
 The About section begins with Check for updates, followed by the GitHub
 repository, GitHub issue reporting, and licenses.
 
+## SPEC-RWKV-APPEARANCE-THEMES — Built-in Appearance Themes
+
+Settings > Theme previews and selects Classic or one of nine built-in
+designs: Anthropic frontend-design, UI UX Pro Max, Taste, Impeccable,
+Emil’s skills, Hallmark, Vercel web-design-guidelines, UI Skills, and
+Smartisan UI. Each alternative design selects a responsive presentation
+for navigation, the Home launcher, conversations, Settings, the
+chat workspace, Completion, and the model picker. The page structure, typography and control styling
+change together when the design changes. All designs use the same
+routes, data, and actions. The picker shows previews and identifies the
+current selection with a check and an accessible selected state.
+
+Settings > Display controls light, dark, and system appearance independently
+of the design. Each design has light and dark variants. Classic retains
+its existing page layouts and palette choices and uses the last selected
+palette for each brightness. The design, appearance mode, and Classic
+palettes persist on this device across restarts. Existing preferences
+remain valid. The default is Classic, following the system with Light and
+Lights out.
+
 ## SPEC-RWKV-REPOSITORY-BOUNDARIES — Repository Ownership
 
 This repository owns the Flutter application, routes, Riverpod state, local persistence, model selection, local API UI, user-facing workflows, app packaging, and repository-level release automation.
@@ -105,22 +125,19 @@ results still establish connectivity; verification does not rank result quality.
 Show progress, a localized failure or success state, and retry without exposing
 provider bodies or credentials. Disable duplicate verification and configuration
 changes while checking. The user may close settings to cancel activation.
-After successful verification, save the user's key and its exact-provider
-verification in platform secure storage. Restore saved keys and verified scopes
-on subsequent App launches without requesting the key again. Search remains off
-by default until the user chooses a provider. Editing a key removes the old saved
-credential and invalidates its verification until the replacement is verified
-and saved. Clearing removes both the saved and current key. A changed Zhihu
-Access Secret invalidates both scopes, which verify separately. Closing settings, changing
+Keys and their exact-provider verification live only in process memory.
+Do not read, write, delete or migrate search credentials through operating-system
+keychains, credential vaults, files, preferences or other persistent storage.
+Startup does not restore credentials or request a keychain password. Existing
+stored credentials remain untouched. Search remains off by default until the
+user chooses a provider. Editing or clearing a key removes its verification.
+A changed Zhihu Access Secret invalidates both scopes, which verify separately. Closing settings, changing
 provider or key, or starting generation prevents a pending check from enabling
 search later. Anonymous search remains available without a required key check.
-Storage read, write and deletion failures are visible, support retry, and must
-not silently fall back to plaintext or claim that a key was saved or removed.
-Serialize secure mutations so a pending save cannot undo a later clear or edit.
 Authentication rejection, including an expired or revoked key, disables that
 credential's verified search scopes and prompts the user to check or replace it.
 Report insufficient balance, exhausted quota and rate limiting separately when
-the provider's status or documented error code identifies them. Keep saved keys
+the provider's status or documented error code identifies them. Keep current keys
 available for account recovery, and retain safe error details on the failed
 search result. Do not fabricate an expiry date or account balance, echo remote
 error bodies in alerts or logs, repeatedly retry, or switch to another provider
@@ -138,23 +155,31 @@ prior conversation messages are not sent. Retrieved references enter the
 existing local-model prompt and citation view. Search does not replace local
 RWKV answer generation with a provider's chat model.
 Preserve a current question that fits the provider query limit instead of
-adding an unrequested statistical scope, such as registered animals. Format
-API references as readable numbered titles, links and excerpts in the current
-prompt language, rather than serializing Reference objects into prompt JSON.
-Keep the untrusted-source boundary, citation instruction and source-sufficiency
-instruction. Historical or partial statistics must not be presented as a
-confirmed current total. Independent examples use a fresh chat; do not silently
-delete real history from an existing conversation to produce a cleaner report.
-The default search prompt places the original question once at the beginning,
-then the current local date, numbered references, and four short answer rules:
-direct answers with source citations; numbers retain their object, date and
-statistical scope; historical information is dated rather than asserted as
-current; insufficient evidence is stated without inventing a conclusion.
+adding an unrequested statistical scope, such as registered animals. Put each
+result's title and excerpt on separate lines and separate results with a blank
+line. Source URLs remain available in the UI and are not injected as Prompt
+fields. The Chinese default starts with “材料：” and uses “结合以上信息回答下面的问题”
+on its own line, with a blank line on either side, before the original question.
+The English default uses the same layout. Add no question label, current date,
+repeated query, citation requirement or other answer rules.
+Acceptance for this prompt change covers its simplicity and material/question
+structure. Incorrect model answers do not require extra prompt clauses,
+refusal instructions, answer filters or content-specific workarounds.
+Browser search retains its shallow or deep source selection and inserts only
+the selected source blocks. Independent examples use a fresh chat; do not
+silently delete real history from an existing conversation to produce a
+cleaner report.
+Keep dates and times stated by sources inside their material blocks, including
+intraday and closing times for market reports. Use each API's result title and
+its selected excerpt: `snippet` for AnySearch, Serper, SerpApi and SearchApi;
+`summary` with `snippet` if blank or absent for DeepSeek; `ContentText` for
+Zhihu Web and Site; `content` for Tavily basic; `highlights` joined by newlines
+for Exa; `description` for Brave Search and Firecrawl.
 Preserve explicit structured publication dates supplied by providers alongside
 references. Omit unknown dates and never infer publication dates from titles,
 page decoration or the search time. Exact old default templates adopt the new
 format; user-customized templates and the configured thinking footer remain
-intact. Keep the untrusted-reference instruction outside provider-authored text.
+intact.
 
 Search Details presents four clearly numbered sections: the search request,
 the retrieved results used by the App, the final model input, and the actual
@@ -170,9 +195,7 @@ unabridged copying. Static notices stay outside response content. Legacy or
 browser records without an API response explicitly identify that absence and
 may show their saved references. Keep normalized citation order independent of
 the raw response. Valid reply citation numbers open their corresponding source;
-rendering links must not alter saved output or model input. Separate reference
-context from the answer instruction with two newline characters, including
-previously saved default search templates.
+rendering links must not alter saved output or model input.
 Capture the complete ordered messages and generation options at the actual
 engine-request boundary, after search injection and response-style processing.
 The final-model-input section displays and copies the actual message text in
@@ -195,24 +218,24 @@ and retain the captured input with the conversation for later inspection.
 Failed and empty searches retain safe request, error and capture status;
 never fabricate results or reconstruct missing historic model inputs as exact.
 
-API credentials are user-configurable, masked, retained in the user's device
-secure storage after verification, and sent only to the selected provider's fixed HTTPS origin with
+API credentials are user-configurable, masked, retained only in process memory,
+and sent only to the selected provider's fixed HTTPS origin with
 redirects disabled. Do not put credentials in source, conversation records,
 search traces, logs, exports, or generated artifacts. The UI explains query
-transmission, secure local retention, automatic reuse and saved-key deletion.
-Use the platform keychain or credential vault without enabling cross-device
-credential synchronization; exclude Android vault files from system backup.
+transmission and that keys must be entered again after restarting the App.
+Retain existing Android backup exclusions for legacy credential files without
+accessing those files.
 Zhihu global and site
 search share the user's credential. Free allowances depend on the provider and account.
 
 Each credential belongs to the individual user's provider account. The App
 does not distribute bundled test keys or route searches through a shared
 service credential. Search settings provide masked personal-key entry,
-clearing of saved keys, automatic reuse, and provider-specific instructions with fixed
+clearing of current keys and provider-specific instructions with fixed
 official key-management and documentation links. Explain how to obtain the
-key, paste only its raw value without the Bearer prefix, verify and save it, and
+key, paste only its raw value without the Bearer prefix, verify and enable it, and
 check the provider account's permissions and allowance. Zhihu global and site
-search use that user's same Access Secret. Make secure local retention clear.
+search use that user's same Access Secret. Make the session-only lifetime clear.
 Selecting a service that needs a missing key, or clearing its active key,
 turns search off until the user supplies a key and verifies and enables search.
 Desktop browser search uses its browser path; an unavailable browser path

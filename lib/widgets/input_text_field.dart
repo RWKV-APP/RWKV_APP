@@ -71,13 +71,14 @@ class InputTextField extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final isDesktop = ref.watch(P.app.isDesktop);
     final appTheme = ref.watch(P.app.theme);
+    final style = ref.watch(P.preference.appStyle);
 
     final inputBarHorizontalPadding = appTheme.inputBarHorizontalPadding;
     final paddingBottom = ref.watch(P.app.paddingBottom) + appTheme.inputBarMinPaddingBottom;
 
     final inputBarShadowColor = appTheme.textInputShadowC;
     final inputBarBorderColor = appTheme.textInputBorderC;
-    final inputBarBorderRadius = appTheme.inputBarBorderRadius;
+    final corners = BorderRadius.circular(style.composerRadius);
     final inputBarBgColor = appTheme.textInputBgC;
     final inputBarShadowRadius = appTheme.inputBarShadowRadius;
     final inputBarShadowOffset = appTheme.inputBarShadowOffset;
@@ -103,18 +104,16 @@ class InputTextField extends ConsumerWidget {
       child: GestureDetector(
         onTap: textFieldEnabled ? null : _onTapTextFieldWhenItsDisabled,
         child: Container(
-          decoration: BoxDecoration(
-            color: inputBarBgColor,
-            borderRadius: .circular(inputBarBorderRadius),
-            border: Border.all(color: inputBarBorderColor, width: .5),
-            boxShadow: [
-              BoxShadow(
-                color: inputBarShadowColor,
-                blurRadius: inputBarShadowRadius,
-                offset: inputBarShadowOffset,
-              ),
-            ],
-          ),
+          decoration: style.isClassic
+              ? BoxDecoration(
+                  color: inputBarBgColor,
+                  borderRadius: corners,
+                  border: Border.all(color: inputBarBorderColor, width: .5),
+                  boxShadow: [
+                    BoxShadow(color: inputBarShadowColor, blurRadius: inputBarShadowRadius, offset: inputBarShadowOffset),
+                  ],
+                )
+              : style.box(appTheme, corners, fill: inputBarBgColor),
           child: Column(
             mainAxisSize: .min,
             crossAxisAlignment: .stretch,

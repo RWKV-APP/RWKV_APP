@@ -200,6 +200,9 @@ class _PreviewMessageList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
+    final classic = ref.watch(P.preference.appStyle).isClassic;
     final qb = ref.watch(P.app.qb);
     final paddingLeft = ref.watch(P.app.paddingLeft);
     final paddingRight = ref.watch(P.app.paddingRight);
@@ -221,13 +224,13 @@ class _PreviewMessageList extends ConsumerWidget {
 
     final listView = ListView.separated(
       controller: scrollController,
-      reverse: true,
+      reverse: classic,
       physics: const AlwaysScrollableScrollPhysics(),
       padding: .only(left: paddingLeft, top: 4, right: paddingRight, bottom: 4),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
       itemCount: messages.length,
       itemBuilder: (context, index) {
-        final finalIndex = messages.length - 1 - index;
+        final finalIndex = classic ? messages.length - 1 - index : index;
         final message = messages[finalIndex];
         return IgnorePointer(
           child: message_widget.Message(

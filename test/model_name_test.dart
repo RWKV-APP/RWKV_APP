@@ -5,7 +5,7 @@ import 'package:zone/widgets/model_name.dart';
 
 void main() {
   for (final appTheme in AppTheme.values) {
-    testWidgets('generation stands out in the ' + appTheme.name + ' theme', (tester) async {
+    testWidgets('generation stands out in the ' + appTheme.storageId + ' theme', (tester) async {
       const name = 'RWKV7-G1l 2.9B (MLX)';
       const displayName = 'RWKV7-G1L 2.9B (MLX)';
       await tester.pumpWidget(

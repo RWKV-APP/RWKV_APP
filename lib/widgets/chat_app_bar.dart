@@ -25,8 +25,11 @@ import 'package:zone/widgets/state_panel.dart';
 
 class ChatAppBar extends ConsumerWidget {
   final DemoType? preferredDemoType;
+  final bool inFlow;
 
-  const ChatAppBar({super.key, this.preferredDemoType});
+  const ChatAppBar({super.key, this.preferredDemoType, this.inFlow = false});
+
+  static double themedToolbarHeight(BuildContext context) => 38 + MediaQuery.textScalerOf(context).scale(42);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,6 +78,7 @@ class ChatAppBar extends ConsumerWidget {
               : _ChatAppBar(
                   displayName: displayName,
                   preferredDemoType: demoType,
+                  inFlow: inFlow,
                 ),
         ),
       ),
@@ -85,10 +89,12 @@ class ChatAppBar extends ConsumerWidget {
 class _ChatAppBar extends ConsumerWidget {
   final String displayName;
   final DemoType preferredDemoType;
+  final bool inFlow;
 
   const _ChatAppBar({
     required this.displayName,
     required this.preferredDemoType,
+    required this.inFlow,
   });
 
   void _onSettingsPressed() async {
@@ -122,44 +128,75 @@ class _ChatAppBar extends ConsumerWidget {
     final listAtTop = ref.watch(P.chat.listAtTop);
 
     final backgroundColor = qt.appBarBgC;
+    final modelButton = ModelSelectButton(preferredDemoType: preferredDemoType, prominent: inFlow);
+    final s = S.of(context);
+    final title = switch (preferredDemoType) {
+      .see => s.see,
+      .tts => s.tts,
+      _ => ref.watch(P.app.pageKey) == .neko ? s.neko : s.chat,
+    };
 
     return Column(
       children: [
         AppBar(
-          toolbarHeight: theme.appBarTheme.toolbarHeight,
-          centerTitle: true,
+          toolbarHeight: inFlow ? ChatAppBar.themedToolbarHeight(context) : theme.appBarTheme.toolbarHeight,
+          centerTitle: !inFlow,
           backgroundColor: backgroundColor.withValues(alpha: listAtTop ? 1 : 0.5),
           systemOverlayStyle: qt.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
-          title: Tooltip(
-            message: displayName,
-            child: GestureDetector(
-              onTap: _onTitlePressed,
-              child: Container(
-                decoration: const BoxDecoration(color: Colors.transparent),
-                child: Column(
-                  crossAxisAlignment: .center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: .center,
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .end,
-                      children: [
-                        const Text(
-                          Config.appTitle,
-                          style: TextStyle(fontSize: 16, fontWeight: .w600),
-                        ),
-                        Padding(
-                          padding: const .only(bottom: 3, left: 1),
-                          child: Text(' $version', style: const TextStyle(fontSize: 8, fontWeight: .bold)),
-                        ),
-                      ],
+          title: inFlow
+              ? LayoutBuilder(
+                  builder: (context, constraints) {
+                    final heading = Text(
+                      title,
+                      style: theme.textTheme.titleLarge,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                    );
+                    return constraints.maxWidth >= 480
+                        ? Row(
+                            children: [
+                              Flexible(child: heading),
+                              const SizedBox(width: 16),
+                              Flexible(child: modelButton),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: .start,
+                            mainAxisSize: .min,
+                            children: [heading, const SizedBox(height: 3), modelButton],
+                          );
+                  },
+                )
+              : Tooltip(
+                  message: displayName,
+                  child: GestureDetector(
+                    onTap: _onTitlePressed,
+                    child: Container(
+                      decoration: const BoxDecoration(color: Colors.transparent),
+                      child: Column(
+                        crossAxisAlignment: .center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: .center,
+                            mainAxisSize: .min,
+                            crossAxisAlignment: .end,
+                            children: [
+                              const Text(
+                                Config.appTitle,
+                                style: TextStyle(fontSize: 16, fontWeight: .w600),
+                              ),
+                              Padding(
+                                padding: const .only(bottom: 3, left: 1),
+                                child: Text(' $version', style: const TextStyle(fontSize: 8, fontWeight: .bold)),
+                              ),
+                            ],
+                          ),
+                          modelButton,
+                        ],
+                      ),
                     ),
-                    ModelSelectButton(preferredDemoType: preferredDemoType),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
           // leading: IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
           actions: [
             if ((preferredDemoType == .chat || preferredDemoType == .see) && !completionMode)

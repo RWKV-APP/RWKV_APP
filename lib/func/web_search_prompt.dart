@@ -1,7 +1,10 @@
 import 'package:local_web_search/local_web_search.dart';
 import 'package:sprintf/sprintf.dart';
 
-const defaultWebSearchChineseTemplate = r'''问题：%2$s
+const defaultWebSearchChineseTemplate = '材料：\n%s\n\n结合以上信息回答下面的问题\n\n%s';
+const defaultWebSearchTemplate = 'Material:\n%s\n\nAnswer the following question using the information above\n\n%s';
+
+const _previousWebSearchChineseTemplate = r'''问题：%2$s
 当前日期：%3$s
 
 【参考资料】
@@ -15,7 +18,7 @@ const defaultWebSearchChineseTemplate = r'''问题：%2$s
 3. 历史数据要说明日期；无法确认当前情况时，明确说明。
 4. 资料不足时说明缺少什么，不编造结论。''';
 
-const defaultWebSearchTemplate = r'''Question: %2$s
+const _previousWebSearchTemplate = r'''Question: %2$s
 Current date: %3$s
 
 [Reference material]
@@ -33,8 +36,17 @@ typedef WebSearchPromptParts = ({String query, String footer});
 
 String webSearchPromptTemplate(String template, {bool chinese = false}) {
   if (template.isEmpty) return chinese ? defaultWebSearchChineseTemplate : defaultWebSearchTemplate;
-  if (const ['%s\n请根据以上信息回答:\n%s', '%s\n\n请根据以上信息回答:\n%s'].contains(template)) return defaultWebSearchChineseTemplate;
   if (const [
+    _previousWebSearchChineseTemplate,
+    '材料：\n%s\n\n问题：%s',
+    '%s\n请根据以上信息回答:\n%s',
+    '%s\n\n请根据以上信息回答:\n%s',
+  ].contains(template)) {
+    return defaultWebSearchChineseTemplate;
+  }
+  if (const [
+    _previousWebSearchTemplate,
+    'Material:\n%s\n\nQuestion: %s',
     '%s\nPlease answer according to the above information:\n%s',
     '%s\n\nPlease answer according to the above information:\n%s',
   ].contains(template)) {
@@ -43,11 +55,6 @@ String webSearchPromptTemplate(String template, {bool chinese = false}) {
   final index = template.indexOf('%s');
   if (index < 0 || !template.startsWith('\n', index + 2) || template.startsWith('\n\n', index + 2)) return template;
   return template.replaceRange(index + 2, index + 3, '\n\n');
-}
-
-bool usesDefaultWebSearchTemplate(String template, {bool chinese = false}) {
-  final resolved = webSearchPromptTemplate(template, chinese: chinese);
-  return resolved == defaultWebSearchTemplate || resolved == defaultWebSearchChineseTemplate;
 }
 
 String buildWebSearchPrompt({

@@ -134,7 +134,6 @@ dependencies:
   local_web_search:
     path: packages/local_web_search
   lua_dardo_co: ^0.0.10
-  flutter_secure_storage: ^10.3.4
 
 dependency_overrides:
   flutter_inappwebview_windows:

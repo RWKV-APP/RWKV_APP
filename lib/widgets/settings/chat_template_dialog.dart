@@ -79,12 +79,17 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
 
   @override
   void dispose() {
-    super.dispose();
     _controllerFree.dispose();
     _controllerPreferChinese.dispose();
     _controllerLighting.dispose();
+    _controllerNewChat.dispose();
+    _controllerSystemPrompt.dispose();
     _controllerFast.dispose();
+    super.dispose();
   }
+
+  bool get _classic => P.preference.appStyle.q.isClassic;
+  InputBorder? get _fieldBorder => _classic ? const OutlineInputBorder() : null;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +129,8 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                       decoration: InputDecoration(
                         labelText: S.current.new_chat_template,
                         labelStyle: const TextStyle(fontSize: 16),
-                        border: const OutlineInputBorder(),
+                        alignLabelWithHint: !_classic,
+                        border: _fieldBorder,
                         helperMaxLines: 10,
                         helperText: S.current.new_chat_template_helper_text,
                       ),
@@ -156,7 +162,8 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
         decoration: InputDecoration(
           labelText: S.current.system_prompt,
           labelStyle: const TextStyle(fontSize: 16),
-          border: const OutlineInputBorder(),
+          alignLabelWithHint: !_classic,
+          border: _fieldBorder,
           hintText: S.current.hint_system_prompt,
         ),
       ),
@@ -207,7 +214,8 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
         decoration: InputDecoration(
           labelText: S.current.thinking_mode_template,
           labelStyle: const TextStyle(fontSize: 16),
-          border: const OutlineInputBorder(),
+          alignLabelWithHint: !_classic,
+          border: _fieldBorder,
         ),
       ),
       const SizedBox(height: 16),
@@ -218,7 +226,8 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
           hintText: S.current.hint_chinese_thinking_mode_template,
           labelText: S.current.chinese_thinking_mode_template,
           labelStyle: const TextStyle(fontSize: 16),
-          border: const OutlineInputBorder(),
+          alignLabelWithHint: !_classic,
+          border: _fieldBorder,
         ),
       ),
       const SizedBox(height: 8),
@@ -264,7 +273,8 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
         decoration: InputDecoration(
           labelText: S.current.lazy_thinking_mode_template,
           labelStyle: const TextStyle(fontSize: 16),
-          border: const OutlineInputBorder(),
+          alignLabelWithHint: !_classic,
+          border: _fieldBorder,
         ),
       ),
     ];

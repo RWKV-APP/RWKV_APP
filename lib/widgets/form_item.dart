@@ -56,23 +56,35 @@ class FormItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final appTheme = ref.watch(P.app.theme);
+    final style = ref.watch(P.preference.appStyle);
     final qb = ref.watch(P.app.qb);
+    final radius = Radius.circular(style.radius);
+    final corners = BorderRadius.vertical(
+      top: isSectionStart ? radius : .zero,
+      bottom: isSectionEnd ? radius : .zero,
+    );
+    final surface = style.box(appTheme, corners);
+    final titleStyle = style.isClassic
+        ? TextStyle(fontWeight: .w500, fontSize: 16, color: titleColor ?? theme.colorScheme.onSurface)
+        : theme.textTheme.titleMedium?.copyWith(color: titleColor ?? theme.colorScheme.onSurface);
+    final info = infoText;
+    final stackedInfo =
+        !style.isClassic &&
+            subtitle == null &&
+            trailing == null &&
+            MediaQuery.sizeOf(context).width < 520 &&
+            MediaQuery.textScalerOf(context).scale(12) > 14.4
+        ? info
+        : null;
+    final detailStyle = TextStyle(fontWeight: .w500, fontSize: 12, color: appTheme.qb6);
 
     return GestureDetector(
       onTap: onTap,
       child: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
-              color: appTheme.settingItem,
-              borderRadius: .only(
-                topLeft: isSectionStart ? const Radius.circular(12) : .zero,
-                topRight: isSectionStart ? const Radius.circular(12) : .zero,
-                bottomLeft: isSectionEnd ? const Radius.circular(12) : .zero,
-                bottomRight: isSectionEnd ? const Radius.circular(12) : .zero,
-              ),
-            ),
-            padding: const .only(left: 8, top: 12, right: 8, bottom: 12),
+            decoration: isSectionStart && isSectionEnd ? surface : surface.copyWith(boxShadow: const [], border: const Border()),
+            padding: .symmetric(horizontal: style.rowInset, vertical: style.rowPadding),
             child: Column(
               children: [
                 Row(
@@ -87,27 +99,31 @@ class FormItem extends ConsumerWidget {
                           Text(
                             title,
                             textAlign: titleTextAlign,
-                            style: TextStyle(fontWeight: .w500, fontSize: 16, color: titleColor ?? theme.colorScheme.onSurface),
+                            style: titleStyle,
                           ),
                           if (subtitle != null)
                             Text(
                               subtitle!,
-                              style: TextStyle(fontWeight: .w500, fontSize: 12, color: appTheme.qb6),
+                              style: detailStyle,
                             ),
+                          if (stackedInfo != null) ...[
+                            const SizedBox(height: 2),
+                            Text(stackedInfo, style: detailStyle),
+                          ],
                         ],
                       ),
                     ),
-                    if (infoText != null)
+                    if (info != null && stackedInfo == null)
                       Expanded(
                         flex: 2,
                         child: Text(
-                          infoText ?? "null",
-                          style: TextStyle(fontWeight: .w500, fontSize: 12, color: appTheme.qb6),
+                          info,
+                          style: detailStyle,
                           textAlign: TextAlign.right,
                         ),
                       ),
                     ?infoWidget,
-                    if (!showArrow && infoText != null) const SizedBox(width: 4),
+                    if (!showArrow && info != null && stackedInfo == null) const SizedBox(width: 4),
                     ?trailing,
                     if (showArrow) const SizedBox(width: 8),
                     if (showArrow)

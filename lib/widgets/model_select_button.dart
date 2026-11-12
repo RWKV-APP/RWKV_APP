@@ -14,10 +14,12 @@ import 'package:zone/widgets/triangle_painter.dart';
 
 class ModelSelectButton extends ConsumerWidget {
   final DemoType preferredDemoType;
+  final bool prominent;
 
   const ModelSelectButton({
     required this.preferredDemoType,
     super.key,
+    this.prominent = false,
   });
 
   @override
@@ -64,6 +66,10 @@ class ModelSelectButton extends ConsumerWidget {
     final showBatchShortcut = (currentModel != null || albatrossCanUse) && batchEnabled && preferredDemoType == .chat;
     final rawMaxButtonWidth = showBatchShortcut ? screenWidth * .46 : screenWidth * .62;
     final maxButtonWidth = rawMaxButtonWidth.clamp(180.0, 360.0).toDouble();
+    final labelStyle = prominent
+        ? theme.textTheme.bodySmall?.copyWith(fontSize: 13, height: 1, fontWeight: .w500)
+        : const TextStyle(fontSize: 10, height: 1, fontWeight: .w500);
+    final padding = EdgeInsets.symmetric(horizontal: 8, vertical: prominent ? 9 : 4);
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: maxButtonWidth),
@@ -88,7 +94,7 @@ class ModelSelectButton extends ConsumerWidget {
                     );
                   },
                   child: Padding(
-                    padding: const .symmetric(horizontal: 8, vertical: 4),
+                    padding: padding,
                     child: isLoadingModel
                         ? _ActiveLoadingModelContent(
                             progress: activeLoadingProgress,
@@ -99,7 +105,7 @@ class ModelSelectButton extends ConsumerWidget {
                             modelDisplay,
                             maxLines: 1,
                             overflow: .ellipsis,
-                            style: const TextStyle(fontSize: 10, height: 1, fontWeight: .w500),
+                            style: labelStyle,
                           ),
                   ),
                 ),
@@ -123,8 +129,8 @@ class ModelSelectButton extends ConsumerWidget {
                   borderRadius: const .horizontal(right: .circular(16)),
                   onTap: P.rwkvParams.onBatchInferenceTapped,
                   child: Padding(
-                    padding: const .symmetric(horizontal: 8, vertical: 4),
-                    child: Text("  " + s.batch_inference_short + "  ", style: const TextStyle(fontSize: 10, height: 1, fontWeight: .w500)),
+                    padding: padding,
+                    child: Text("  " + s.batch_inference_short + "  ", style: labelStyle),
                   ),
                 ),
               ],

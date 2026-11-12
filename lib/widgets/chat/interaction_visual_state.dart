@@ -26,7 +26,24 @@ class InteractionVisualColors {
 InteractionVisualColors interactionVisualColors({
   required AppTheme appTheme,
   required InteractionVisualState state,
+  bool themed = false,
 }) {
+  if (themed) {
+    return InteractionVisualColors(
+      background: state == .enabled ? appTheme.userMsgBg : appTheme.settingItem,
+      foreground: switch (state) {
+        .unavailable => appTheme.qb9,
+        .idleInteractive => appTheme.qb6,
+        .available => appTheme.qb4,
+        .enabled => appTheme.primary,
+      },
+      border: switch (state) {
+        .unavailable => appTheme.qb13,
+        .enabled => appTheme.primary,
+        _ => appTheme.qb11,
+      },
+    );
+  }
   final qw = appTheme.isLight ? Colors.white : Colors.black;
 
   final unavailableColors = InteractionVisualColors(

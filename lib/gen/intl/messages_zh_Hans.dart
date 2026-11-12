@@ -1094,6 +1094,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "model_loading": MessageLookupByLibrary.simpleMessage("模型加载中..."),
     "model_output": m43,
+    "model_picker_local": MessageLookupByLibrary.simpleMessage("本地模型"),
+    "model_picker_prebuilt": MessageLookupByLibrary.simpleMessage("预量化模型"),
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage("模型大小增加，请打开一个新的对话, 以提升对话质量"),
@@ -1569,9 +1571,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "text_color": MessageLookupByLibrary.simpleMessage("文本颜色"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage("文本补全模式"),
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage("数独无效"),
+    "theme_classic": MessageLookupByLibrary.simpleMessage("经典"),
     "theme_dim": MessageLookupByLibrary.simpleMessage("深色"),
+    "theme_forest": MessageLookupByLibrary.simpleMessage("松林"),
+    "theme_glacier": MessageLookupByLibrary.simpleMessage("冰川"),
     "theme_light": MessageLookupByLibrary.simpleMessage("浅色"),
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
+    "theme_midnight": MessageLookupByLibrary.simpleMessage("午夜蓝"),
+    "theme_paper": MessageLookupByLibrary.simpleMessage("纸白"),
+    "theme_save_failed": MessageLookupByLibrary.simpleMessage("无法保存主题，请重新选择。"),
+    "theme_styles": MessageLookupByLibrary.simpleMessage("主题"),
+    "theme_styles_hint": MessageLookupByLibrary.simpleMessage(
+      "为整个应用选择一种风格。浅色或深色可在显示设置中切换。",
+    ),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
     "think_button_mode_en": m63,
@@ -1806,7 +1818,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "搜索服务返回了不支持的数据格式。",
     ),
     "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
-      "只需粘贴你自己的原始密钥，不要添加 Bearer 前缀。点击“验证并启用”，验证成功后安全保存，下次自动沿用。",
+      "粘贴你自己的原始密钥，不要添加 Bearer 前缀，然后点击“验证并启用”。",
     ),
     "web_search_key_configured": MessageLookupByLibrary.simpleMessage("已配置密钥"),
     "web_search_key_help_title": MessageLookupByLibrary.simpleMessage(
@@ -1838,9 +1850,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
       "请求过快或已达到平台限额。请稍后重试，并检查账号额度。",
-    ),
-    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
-      "重试安全存储",
     ),
     "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
       "复制全部四块",
@@ -1904,9 +1913,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
       "用户消息",
     ),
-    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
-      "验证成功的密钥会保存在本设备的系统安全存储中，重启 RWKV Chat 后自动沿用。点击清除按钮可删除已保存的密钥。",
-    ),
     "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
       "新用户试用：100 次免费请求，为一次性试用额度，不会每月重置。",
     ),
@@ -1916,10 +1922,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
       "新用户试用：2,500 次免费查询，为一次性试用额度，不会每月重置。",
     ),
-    "web_search_settings": MessageLookupByLibrary.simpleMessage("联网搜索设置"),
-    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
-      "无法访问系统安全存储，未能确认密钥是否已保存或清除。请解锁设备后重试。",
+    "web_search_session_key_notice": MessageLookupByLibrary.simpleMessage(
+      "密钥仅在本次运行的内存中使用，不写入磁盘或系统钥匙串。重启 App 后需重新输入。",
     ),
+    "web_search_settings": MessageLookupByLibrary.simpleMessage("联网搜索设置"),
     "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
       "每月免费额度：1,000 credits；基础搜索每次使用 1 credit。",
     ),
@@ -1973,6 +1979,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("架构不匹配"),
     "windows_architecture_mismatch_warning": m83,
+    "workspace_create": MessageLookupByLibrary.simpleMessage("创作与探索"),
+    "workspace_data": MessageLookupByLibrary.simpleMessage("数据与存储"),
+    "workspace_tools": MessageLookupByLibrary.simpleMessage("实用工具"),
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d 个来源"),

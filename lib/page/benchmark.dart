@@ -81,6 +81,10 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
     final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
     final s = S.of(context);
+    final classic = ref.watch(P.preference.appStyle).isClassic;
+    final tabScale = MediaQuery.textScalerOf(context).scale(14) / 14;
+    final scrollTabs = !classic && MediaQuery.sizeOf(context).width < 340 * tabScale;
+    final tabNames = [s.performance_test, s.lambada_test, s.agent_test];
     final benchmarkTheme = theme.copyWith(
       tabBarTheme: theme.tabBarTheme.copyWith(
         dividerColor: qb.withValues(alpha: .16),
@@ -110,10 +114,12 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
             title: Text(s.performance_test),
             bottom: TabBar(
               controller: _tabController,
+              isScrollable: scrollTabs,
+              tabAlignment: scrollTabs ? .start : null,
+              labelPadding: classic ? null : const .symmetric(horizontal: 6),
               tabs: [
-                Tab(text: s.performance_test),
-                Tab(text: s.lambada_test),
-                Tab(text: s.agent_test),
+                for (final name in tabNames)
+                  if (classic) Tab(text: name) else Tab(child: Text(name, textAlign: .center)),
               ],
             ),
           ),

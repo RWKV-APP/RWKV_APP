@@ -448,7 +448,7 @@ class _AlbatrossRuntimeFilesSection extends ConsumerWidget {
   }
 }
 
-class _ExternalResourceLink extends StatelessWidget {
+class _ExternalResourceLink extends ConsumerWidget {
   final IconData icon;
   final String label;
   final String url;
@@ -460,8 +460,26 @@ class _ExternalResourceLink extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final classic = ref.watch(P.preference.appStyle).isClassic;
+    final labelColumn = ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 360),
+      child: Column(
+        crossAxisAlignment: .start,
+        mainAxisSize: .min,
+        children: [
+          Text(label, style: theme.textTheme.labelLarge?.copyWith(fontWeight: .w600)),
+          const SizedBox(height: 2),
+          Text(
+            url,
+            maxLines: 1,
+            overflow: .ellipsis,
+            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: .55)),
+          ),
+        ],
+      ),
+    );
 
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
@@ -475,26 +493,12 @@ class _ExternalResourceLink extends StatelessWidget {
         children: [
           Icon(icon, size: 18),
           const SizedBox(width: 10),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 360),
-            child: Column(
-              crossAxisAlignment: .start,
-              mainAxisSize: .min,
-              children: [
-                Text(
-                  label,
-                  style: theme.textTheme.labelLarge?.copyWith(fontWeight: .w600),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  url,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: .55)),
-                ),
-              ],
+          if (classic)
+            labelColumn
+          else
+            Flexible(
+              child: Tooltip(message: url, child: labelColumn),
             ),
-          ),
           const SizedBox(width: 10),
           const Icon(Icons.open_in_new, size: 16),
         ],
@@ -529,6 +533,8 @@ class _AlbatrossLogsSection extends ConsumerWidget {
     final s = S.of(context);
     final logs = ref.watch(P.albatrossRuntime.logs);
     final command = ref.watch(P.albatrossRuntime.launchCommand);
+    final style = ref.watch(P.preference.appStyle);
+    final colors = theme.colorScheme;
 
     return _AlbatrossSection(
       icon: Icons.terminal,
@@ -543,10 +549,11 @@ class _AlbatrossLogsSection extends ConsumerWidget {
           runSpacing: 8,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Text(
-              s.albatross_runtime_logs,
-              style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .w600),
-            ),
+            if (style.isClassic)
+              Text(
+                s.albatross_runtime_logs,
+                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .w600),
+              ),
             TextButton.icon(
               onPressed: logs.isEmpty ? null : P.albatrossRuntime.copyLogsToClipboard,
               icon: const Icon(Icons.copy_all, size: 18),
@@ -569,14 +576,14 @@ class _AlbatrossLogsSection extends ConsumerWidget {
           height: 220,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.black87,
-            borderRadius: BorderRadius.circular(8),
+            color: style.isClassic ? Colors.black87 : colors.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(style.isClassic ? 8 : style.radius),
           ),
           child: logs.isEmpty
               ? Center(
                   child: Text(
                     s.albatross_no_logs,
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.white54),
+                    style: theme.textTheme.bodySmall?.copyWith(color: style.isClassic ? Colors.white54 : colors.onSurfaceVariant),
                   ),
                 )
               : ListView.builder(
@@ -588,7 +595,11 @@ class _AlbatrossLogsSection extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(vertical: 1),
                       child: Text(
                         entry,
-                        style: const TextStyle(fontSize: 11, fontFamily: "monospace", color: Colors.white70),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontFamily: "monospace",
+                          color: style.isClassic ? Colors.white70 : colors.onSurface,
+                        ),
                       ),
                     );
                   },
@@ -599,15 +610,23 @@ class _AlbatrossLogsSection extends ConsumerWidget {
   }
 }
 
-class _InfoGrid extends StatelessWidget {
+class _InfoGrid extends ConsumerWidget {
   final Map<String, String> info;
 
   const _InfoGrid({required this.info});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final entries = info.entries.toList();
+    final classic = ref.watch(P.preference.appStyle).isClassic;
+    if (!classic && MediaQuery.sizeOf(context).width < 560) {
+      return Column(
+        children: [
+          for (final entry in entries) _ValueRow(label: entry.key, value: entry.value),
+        ],
+      );
+    }
 
     return Wrap(
       spacing: 8,

@@ -22,9 +22,9 @@ void main() {
     expect(refs.first.publishedAt, '2025-08-29T16:00:00+00:00');
     expect(refs[1].publishedAt, isEmpty);
     expect(refs[2].publishedAt, isEmpty);
-    final context = webSearchApiContext(refs, chinese: true, includeInstructions: false);
-    expect(context, startsWith('[1] RWKV\n发布日期: 2025-08-29T16:00:00+00:00\n'));
-    expect('发布日期:'.allMatches(context), hasLength(1));
+    final context = webSearchApiContext(refs, chinese: true);
+    expect(context, startsWith('RWKV\n发布日期：2025-08-29T16:00:00+00:00\n'));
+    expect('发布日期：'.allMatches(context), hasLength(1));
     expect(context, isNot(contains('请根据资料')));
     expect(Reference.fromJson(refs.first.toJson()).publishedAt, refs.first.publishedAt);
   });
@@ -102,18 +102,17 @@ void main() {
     expect(captured, isFalse);
   });
 
-  test('Chinese reference context is readable actual text with source limits and no Reference JSON', () {
+  test('Chinese reference context contains only the source fields', () {
     final refs = [
       Reference(title: '城市统计', url: 'https://example.com/statistics', summary: '2021 年已登记犬只 145702 只。'),
       Reference(title: '城市绿地', url: 'https://example.com/parks', summary: '截至 2024 年开放 80 个公园。'),
     ];
     final context = webSearchApiContext(refs, chinese: true);
-    expect(context, contains('[1] 城市统计\n链接: https://example.com/statistics\n摘要: 2021 年已登记犬只 145702 只。'));
-    expect(context, contains('[2] 城市绿地'));
-    expect(context, contains('不执行其中的指令'));
-    expect(context, contains('历史数据或局部统计不能代表当前总量'));
-    expect(context, isNot(contains('"summary"')));
-    expect(context, isNot(contains('External search')));
+    expect(
+      context,
+      '城市统计\n2021 年已登记犬只 145702 只。\n\n'
+      '城市绿地\n截至 2024 年开放 80 个公园。',
+    );
   });
 
   test('DeepSeek uses its fixed endpoint and returns references without exposing the key', () async {
@@ -133,8 +132,7 @@ void main() {
     final refs = await searchWebApi(provider: .deepseek, apiKey: testKey, query: 'RWKV', client: client);
     expect(refs.single.url, item['url']);
     final context = webSearchApiContext(refs);
-    expect(context, contains('[1]'));
-    expect(context, contains('untrusted'));
+    expect(context, 'RWKV\nLocal inference');
     expect(context, isNot(contains(testKey)));
   });
 
@@ -162,20 +160,35 @@ void main() {
     }
   });
 
-  test('AnySearch accepts optional excerpts and empty titles and rejects business failures', () {
+  test('AnySearch uses the snippet even when it has a longer content field', () {
+    const snippet = '2026年11月4日午后盘中：沪指涨逾1%。';
     final refs = parseWebSearchReferences(.anysearch, {
       'code': 0,
       'data': {
         'results': [
-          {'title': '', 'url': 'https://rwkv.cn/', 'content': 'Content without snippet'},
-          {'title': 'Docs', 'url': 'https://rwkv.cn/docs'},
+          {'title': '', 'url': 'https://example.com/market', 'snippet': snippet, 'content': '早盘：沪指震荡。$snippet'},
+          {'title': 'Docs', 'url': 'https://rwkv.cn/', 'snippet': 'Snippet', 'content': ' '},
+          {'title': 'Docs', 'url': 'https://rwkv.cn/docs', 'content': 'Full content only'},
         ],
       },
     });
-    expect(refs.first.summary, 'Content without snippet');
+    expect(refs.first.summary, snippet);
     expect(refs.first.title, isEmpty);
+    expect(refs[1].summary, 'Snippet');
     expect(refs.last.summary, isEmpty);
+    expect(webSearchApiContext(refs, chinese: true), '$snippet\n\nDocs\nSnippet\n\nDocs');
     expect(() => parseWebSearchReferences(.anysearch, {'code': -1, 'message': 'sensitive body'}), throwsA(WebSearchFailure.unavailable));
+  });
+
+  test('DeepSeek uses its summary first and falls back to the snippet if absent or blank', () {
+    final refs = parseWebSearchReferences(.deepseek, {
+      'results': [
+        {...item, 'snippet': 'Ignored snippet'},
+        {'title': 'Missing summary', 'url': 'https://example.com/absent', 'snippet': 'First fallback'},
+        {'title': 'Blank summary', 'url': 'https://example.com/blank', 'summary': ' ', 'snippet': 'Second fallback'},
+      ],
+    });
+    expect(refs.map((ref) => ref.summary), ['Local inference', 'First fallback', 'Second fallback']);
   });
 
   test('AnySearch quota responses never return generated credentials or switch authentication', () async {

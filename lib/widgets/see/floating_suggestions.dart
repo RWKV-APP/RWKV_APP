@@ -28,9 +28,11 @@ class FloatingSuggestions extends ConsumerWidget {
     if (suggestions.isEmpty && !showVisionThinking) return const SizedBox.shrink();
 
     final appTheme = ref.watch(P.app.theme);
+    final style = ref.watch(P.preference.appStyle);
     final colors = interactionVisualColors(
       appTheme: appTheme,
       state: .available,
+      themed: !style.isClassic,
     );
 
     return SuggestionChips(
@@ -44,6 +46,7 @@ class FloatingSuggestions extends ConsumerWidget {
       textColor: colors.foreground,
       fontWeight: .w500,
       matchInteractionTextMetrics: true,
+      borderRadius: style.isClassic ? 1000 : style.radius,
       separatorWidth: 4,
       leadingWidgets: [
         if (showVisionThinking) const ThinkingModeButton(preferredDemoType: .see),

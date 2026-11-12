@@ -457,24 +457,17 @@ extension _$App on _App {
 
     if (Args.debuggingThemes) {
       Timer.periodic(const Duration(seconds: 1), (timer) {
-        final theme = this.theme.q;
-        switch (theme) {
-          case .light:
-            this.theme.q = P.preference.preferredDarkCustomTheme.q;
-          case .dim:
-          case .lightsOut:
-            this.theme.q = .light;
-        }
-        preferredThemeMode.q = this.theme.q.isLight ? ThemeMode.light : ThemeMode.dark;
+        preferredThemeMode.q = theme.q.isLight ? .dark : .light;
       });
     }
 
     preferredThemeMode.q = P.preference.themeMode.q;
-    theme.q = P.preference.preferredDarkCustomTheme.q;
+    _syncTheme();
     theme.lv(customThemeChanged, fireImmediately: true);
-    preferredThemeMode.lv(_syncTheme, fireImmediately: true);
-    light.lv(_syncTheme, fireImmediately: true);
-    P.preference.preferredDarkCustomTheme.lv(_syncTheme, fireImmediately: true);
+    light.lv(_syncTheme);
+    P.preference.preferredLightCustomTheme.lv(_syncTheme);
+    P.preference.preferredDarkCustomTheme.lv(_syncTheme);
+    P.preference.appStyle.lv(_syncTheme);
 
     if (Args.autoShowTranslator) {
       1500.msLater.then((_) {
@@ -506,23 +499,11 @@ extension _$App on _App {
     }
   }
 
-  Future<void> _syncTheme() async {
-    final light = this.light.q;
-    final preferredThemeMode = this.preferredThemeMode.q;
-    final preferredDarkCustomTheme = P.preference.preferredDarkCustomTheme.q;
-    switch (preferredThemeMode) {
-      case ThemeMode.light:
-        theme.q = .light;
-      case ThemeMode.dark:
-        theme.q = preferredDarkCustomTheme;
-      case ThemeMode.system:
-        switch (light) {
-          case true:
-            theme.q = .light;
-          case false:
-            theme.q = preferredDarkCustomTheme;
-        }
-    }
+  void _syncTheme() {
+    final style = P.preference.appStyle.q;
+    theme.q = light.q
+        ? (style.isClassic ? P.preference.preferredLightCustomTheme.q : style.light)
+        : (style.isClassic ? P.preference.preferredDarkCustomTheme.q : style.dark);
   }
 
   Future<void> _statusBarToLightMode() async {

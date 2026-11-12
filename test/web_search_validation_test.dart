@@ -11,8 +11,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/model/web_search_provider.dart';
 import 'package:zone/store/p.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:zone/func/web_search_credentials.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -34,10 +32,7 @@ void main() {
     P.chat.webSearchProvider.q = .deepseek;
     P.chat.receiveId.q = null;
     P.rwkvGeneration.generating.q = false;
-    FlutterSecureStorage.setMockInitialValues({});
-    P.chat.webSearchCredentialStore = WebSearchCredentialStore();
     P.chat.webSearchApiKeys.q = {};
-    await P.chat.restoreWebSearchCredentials();
   });
   tearDown(() {
     P.chat.onWebSearchSettingsClosed();

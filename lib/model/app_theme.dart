@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 
-enum AppTheme {
+final class AppTheme {
   /// 浅色主题
-  light(
+  static const light = AppTheme._(
+    storageId: 'Light',
     isLight: true,
     primary: Color(0xFF0F968A),
     themePrimary: Color(0xFF404040),
@@ -55,10 +56,11 @@ enum AppTheme {
     generatingIndicatorC: Color(0xFF000000),
     botMsgBg: Color(0xFFFFFFFF),
     userMsgBg: Color(0xFFF5F5F5),
-  ),
+  );
 
   /// 深色主题, 中对比度
-  dim(
+  static const dim = AppTheme._(
+    storageId: 'Dim',
     isLight: false,
     primary: Color(0xFF0D9488),
     themePrimary: Color(0xFFAAAAAA),
@@ -105,10 +107,11 @@ enum AppTheme {
     generatingIndicatorC: Color(0xFF000000),
     botMsgBg: Color(0xFF151515),
     userMsgBg: Color(0xFF303030),
-  ),
+  );
 
   /// 全黑主题, 高对比度
-  lightsOut(
+  static const lightsOut = AppTheme._(
+    storageId: 'LightsOut',
     isLight: false,
     primary: Color(0xFF0D9488),
     themePrimary: Color(0xFFCCCCCC),
@@ -155,10 +158,104 @@ enum AppTheme {
     generatingIndicatorC: Color(0xFF000000),
     botMsgBg: Color(0xFF000000),
     userMsgBg: Color(0xFF121212),
-  ),
-  ;
+  );
 
-  const AppTheme({
+  static const paper = AppTheme.tinted(
+    storageId: 'Paper',
+    isLight: true,
+    accent: Color(0xFF865128),
+    canvas: Color(0xFFFCF6E9),
+    panel: Color(0xFFF0E5D5),
+    card: Color(0xFFFFF9EF),
+    bubble: Color(0xFFEEDCC4),
+  );
+  static const glacier = AppTheme.tinted(
+    storageId: 'Glacier',
+    isLight: true,
+    accent: Color(0xFF1F5CA9),
+    canvas: Color(0xFFF1F7FD),
+    panel: Color(0xFFE2EDF8),
+    card: Color(0xFFF8FBFF),
+    bubble: Color(0xFFD9E9FA),
+  );
+  static const midnight = AppTheme.tinted(
+    storageId: 'Midnight',
+    isLight: false,
+    accent: Color(0xFFA7B9FF),
+    canvas: Color(0xFF0F1629),
+    panel: Color(0xFF141D34),
+    card: Color(0xFF1A2642),
+    bubble: Color(0xFF26395D),
+  );
+  static const forest = AppTheme.tinted(
+    storageId: 'Forest',
+    isLight: false,
+    accent: Color(0xFFA2D7AC),
+    canvas: Color(0xFF101D19),
+    panel: Color(0xFF172721),
+    card: Color(0xFF1F342A),
+    bubble: Color(0xFF2B4638),
+  );
+
+  static const values = [light, dim, lightsOut, paper, glacier, midnight, forest];
+
+  const AppTheme.tinted({
+    required String storageId,
+    required bool isLight,
+    required Color accent,
+    required Color canvas,
+    required Color panel,
+    required Color card,
+    required Color bubble,
+  }) : this._(
+         storageId: storageId,
+         tinted: true,
+         isLight: isLight,
+         primary: accent,
+         themePrimary: accent,
+         g1: panel,
+         g2: bubble,
+         g3: isLight ? const Color(0xFFCCCCCC) : const Color(0xFF333333),
+         g4: isLight ? const Color(0xFFBBBBBB) : const Color(0xFF444444),
+         g5: isLight ? const Color(0xFFAAAAAA) : const Color(0xFF555555),
+         g6: isLight ? const Color(0xFF999999) : const Color(0xFF666666),
+         g7: isLight ? const Color(0xFF888888) : const Color(0xFF777777),
+         qb0: isLight ? Colors.black : Colors.white,
+         qb1: isLight ? const Color(0xFF111111) : const Color(0xFFF5F5F5),
+         qb2: isLight ? const Color(0xFF222222) : const Color(0xFFE5E5E5),
+         qb3: isLight ? const Color(0xFF333333) : const Color(0xFFD5D5D5),
+         qb4: isLight ? const Color(0xFF444444) : const Color(0xFFC5C5C5),
+         qb5: isLight ? const Color(0xFF555555) : const Color(0xFFB5B5B5),
+         qb6: isLight ? const Color(0xFF666666) : const Color(0xFFA5A5A5),
+         qb7: isLight ? const Color(0xFF777777) : const Color(0xFF959595),
+         qb8: isLight ? const Color(0xFF888888) : const Color(0xFF858585),
+         qb9: isLight ? const Color(0xFF999999) : const Color(0xFF757575),
+         qb10: isLight ? const Color(0xFFAAAAAA) : const Color(0xFF656565),
+         qb11: isLight ? const Color(0xFFBBBBBB) : const Color(0xFF555555),
+         qb12: isLight ? const Color(0xFFCCCCCC) : const Color(0xFF454545),
+         qb13: isLight ? const Color(0xFFDDDDDD) : const Color(0xFF353535),
+         qb14: bubble,
+         qb144: panel,
+         qb15: canvas,
+         inlineCodeBackgroundColor: bubble,
+         scaffoldBg: canvas,
+         settingBg: panel,
+         appBarBgC: canvas,
+         settingItem: card,
+         pagerDim: isLight ? Colors.black : Colors.white,
+         textInputShadowC: const Color(0x22000000),
+         textInputBorderC: isLight ? const Color(0x2A000000) : const Color(0x33FFFFFF),
+         textInputBgC: card,
+         sendingButtonC: accent,
+         stopButtonC: Colors.black,
+         generatingIndicatorC: accent,
+         botMsgBg: canvas,
+         userMsgBg: bubble,
+       );
+
+  const AppTheme._({
+    required this.storageId,
+    bool tinted = false,
     required this.primary,
     required this.themePrimary,
     required this.textInputBorderC,
@@ -200,7 +297,10 @@ enum AppTheme {
     required this.qb144,
     required this.qb15,
     required this.inlineCodeBackgroundColor,
-  });
+  }) : _tintedColors = tinted;
+
+  final String storageId;
+  final bool _tintedColors;
 
   /// 是否为浅色主题
   final bool isLight;
@@ -301,39 +401,41 @@ enum AppTheme {
       seedColor: themePrimary,
       brightness: brightness,
     );
+    if (!_tintedColors) return seeded.copyWith(primary: themePrimary);
     return seeded.copyWith(
       primary: themePrimary,
+      onPrimary: isLight ? Colors.white : Colors.black,
+      surface: scaffoldBg,
+      onSurface: qb1,
+      onSurfaceVariant: qb5,
+      surfaceContainerLowest: scaffoldBg,
+      surfaceContainerLow: settingBg,
+      surfaceContainer: settingItem,
+      surfaceContainerHigh: userMsgBg,
+      surfaceContainerHighest: userMsgBg,
     );
   }
 
-  /// displayName 不能作为 const 构造参数，
-  /// 因为 S.current 是运行时获取的（非 const），所以必须写成 getter。
-  String get displayName {
-    final s = S.current;
+  String displayName(S s) {
     return switch (this) {
       .light => s.theme_light,
       .dim => s.theme_dim,
       .lightsOut => s.theme_lights_out,
+      .paper => s.theme_paper,
+      .glacier => s.theme_glacier,
+      .midnight => s.theme_midnight,
+      .forest => s.theme_forest,
+      _ => isLight ? s.light_mode : s.dark_mode,
     };
   }
 
-  /// 替代原本的 fromString，兼容旧的 "Light"/"Dim"/"LightsOut" 字符串。
-  static AppTheme? fromString(String name) {
-    return switch (name) {
-      "Light" => .light,
-      "Dim" => .dim,
-      "LightsOut" => .lightsOut,
-      _ => null,
-    };
+  static AppTheme? fromString(String? id) {
+    for (final theme in values) {
+      if (theme.storageId == id) return theme;
+    }
+    return null;
   }
 
-  /// 维持与旧实现兼容的字符串表示（"Light"/"Dim"/"LightsOut"）。
   @override
-  String toString() {
-    return switch (this) {
-      .light => "Light",
-      .dim => "Dim",
-      .lightsOut => "LightsOut",
-    };
-  }
+  String toString() => storageId;
 }

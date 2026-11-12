@@ -76,15 +76,17 @@ class _PausedReplyGuidanceBubble extends ConsumerWidget {
     final _ = theme;
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
+    final style = ref.watch(P.preference.appStyle);
     final colors = interactionVisualColors(
       appTheme: appTheme,
       state: .available,
+      themed: !style.isClassic,
     );
-    final useBackdropFilter = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final useBackdropFilter = style.isClassic && ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backgroundAlpha = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
     final darkBackgroundAlphaModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
     final sigma = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
-    final borderRadius = BorderRadius.circular(16);
+    final borderRadius = BorderRadius.circular(style.isClassic ? 16 : style.radius);
     final backgroundColor = colors.background.withValues(
       alpha: useBackdropFilter ? backgroundAlpha * darkBackgroundAlphaModifier : 1,
     );

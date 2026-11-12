@@ -219,13 +219,14 @@ class ConversationItem extends ConsumerWidget {
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
     final isSelected = ref.watch(P.conversation.selectedConversations).contains(conversation.id);
     final appTheme = ref.watch(P.app.theme);
+    final style = ref.watch(P.preference.appStyle);
 
     return GestureDetector(
       onTap: isBatchMode ? () => _handleBatchSelection() : () => _onTap(context),
       onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
       child: Container(
         color: appTheme.settingBg,
-        padding: const .symmetric(horizontal: 12, vertical: 12),
+        padding: .symmetric(horizontal: style.isClassic ? 12 : style.rowInset, vertical: style.rowPadding),
         child: Row(
           crossAxisAlignment: .center,
           children: [
@@ -246,9 +247,9 @@ class ConversationItem extends ConsumerWidget {
                 alignment: .center,
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius: .circular(4),
+                  borderRadius: .circular(style.isClassic ? 4 : style.radius),
                 ),
-                child: _buildAvatar(),
+                child: _buildAvatar(!style.isClassic && color.computeLuminance() > .179 ? Colors.black : Colors.white),
               ),
             ),
             const SizedBox(width: 12),
@@ -265,6 +266,7 @@ class ConversationItem extends ConsumerWidget {
                           overflow: .ellipsis,
                         ),
                       ),
+                      if (!style.isClassic) const SizedBox(width: 8),
                       Text(conversation.displayTime, style: TextStyle(fontSize: 12, color: appTheme.qb6)),
                     ],
                   ),
@@ -285,9 +287,9 @@ class ConversationItem extends ConsumerWidget {
     );
   }
 
-  Widget _buildAvatar() {
+  Widget _buildAvatar(Color iconColor) {
     if (conversation.avatar == null) {
-      return const FaIcon(FontAwesomeIcons.message, size: 16, color: Colors.white);
+      return FaIcon(FontAwesomeIcons.message, size: 16, color: iconColor);
     }
     if (!conversation.avatar!.startsWith('http')) {
       return Image.asset(conversation.avatar!, height: 40, width: 40);

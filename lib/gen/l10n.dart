@@ -3263,6 +3263,86 @@ class S {
     return Intl.message('浅色', name: 'theme_light', desc: '', args: []);
   }
 
+  /// `本地模型`
+  String get model_picker_local {
+    return Intl.message('本地模型', name: 'model_picker_local', desc: '', args: []);
+  }
+
+  /// `预量化模型`
+  String get model_picker_prebuilt {
+    return Intl.message(
+      '预量化模型',
+      name: 'model_picker_prebuilt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `创作与探索`
+  String get workspace_create {
+    return Intl.message('创作与探索', name: 'workspace_create', desc: '', args: []);
+  }
+
+  /// `数据与存储`
+  String get workspace_data {
+    return Intl.message('数据与存储', name: 'workspace_data', desc: '', args: []);
+  }
+
+  /// `实用工具`
+  String get workspace_tools {
+    return Intl.message('实用工具', name: 'workspace_tools', desc: '', args: []);
+  }
+
+  /// `主题`
+  String get theme_styles {
+    return Intl.message('主题', name: 'theme_styles', desc: '', args: []);
+  }
+
+  /// `经典`
+  String get theme_classic {
+    return Intl.message('经典', name: 'theme_classic', desc: '', args: []);
+  }
+
+  /// `为整个应用选择一种风格。浅色或深色可在显示设置中切换。`
+  String get theme_styles_hint {
+    return Intl.message(
+      '为整个应用选择一种风格。浅色或深色可在显示设置中切换。',
+      name: 'theme_styles_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `纸白`
+  String get theme_paper {
+    return Intl.message('纸白', name: 'theme_paper', desc: '', args: []);
+  }
+
+  /// `冰川`
+  String get theme_glacier {
+    return Intl.message('冰川', name: 'theme_glacier', desc: '', args: []);
+  }
+
+  /// `午夜蓝`
+  String get theme_midnight {
+    return Intl.message('午夜蓝', name: 'theme_midnight', desc: '', args: []);
+  }
+
+  /// `松林`
+  String get theme_forest {
+    return Intl.message('松林', name: 'theme_forest', desc: '', args: []);
+  }
+
+  /// `无法保存主题，请重新选择。`
+  String get theme_save_failed {
+    return Intl.message(
+      '无法保存主题，请重新选择。',
+      name: 'theme_save_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `懒`
   String get lazy {
     return Intl.message('懒', name: 'lazy', desc: '', args: []);
@@ -8352,10 +8432,10 @@ class S {
     );
   }
 
-  /// `只需粘贴你自己的原始密钥，不要添加 Bearer 前缀。点击“验证并启用”，验证成功后安全保存，下次自动沿用。`
+  /// `粘贴你自己的原始密钥，不要添加 Bearer 前缀，然后点击“验证并启用”。`
   String get web_search_key_auto_apply {
     return Intl.message(
-      '只需粘贴你自己的原始密钥，不要添加 Bearer 前缀。点击“验证并启用”，验证成功后安全保存，下次自动沿用。',
+      '粘贴你自己的原始密钥，不要添加 Bearer 前缀，然后点击“验证并启用”。',
       name: 'web_search_key_auto_apply',
       desc: '',
       args: [],
@@ -8587,36 +8667,6 @@ class S {
     return Intl.message(
       '请求过快或已达到平台限额。请稍后重试，并检查账号额度。',
       name: 'web_search_rate_limit',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `无法访问系统安全存储，未能确认密钥是否已保存或清除。请解锁设备后重试。`
-  String get web_search_storage_error {
-    return Intl.message(
-      '无法访问系统安全存储，未能确认密钥是否已保存或清除。请解锁设备后重试。',
-      name: 'web_search_storage_error',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `验证成功的密钥会保存在本设备的系统安全存储中，重启 RWKV Chat 后自动沿用。点击清除按钮可删除已保存的密钥。`
-  String get web_search_saved_key_notice {
-    return Intl.message(
-      '验证成功的密钥会保存在本设备的系统安全存储中，重启 RWKV Chat 后自动沿用。点击清除按钮可删除已保存的密钥。',
-      name: 'web_search_saved_key_notice',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `重试安全存储`
-  String get web_search_reload_saved_keys {
-    return Intl.message(
-      '重试安全存储',
-      name: 'web_search_reload_saved_keys',
       desc: '',
       args: [],
     );
@@ -8867,6 +8917,16 @@ class S {
     return Intl.message(
       '请求详情',
       name: 'web_search_report_request_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `密钥仅在本次运行的内存中使用，不写入磁盘或系统钥匙串。重启 App 后需重新输入。`
+  String get web_search_session_key_notice {
+    return Intl.message(
+      '密钥仅在本次运行的内存中使用，不写入磁盘或系统钥匙串。重启 App 后需重新输入。',
+      name: 'web_search_session_key_notice',
       desc: '',
       args: [],
     );

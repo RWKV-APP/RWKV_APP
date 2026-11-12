@@ -77,6 +77,7 @@ class _MessageState extends ConsumerState<Message> {
     final s = S.of(context);
 
     final appTheme = ref.watch(P.app.theme);
+    final appStyle = ref.watch(P.preference.appStyle);
     final qb = ref.watch(P.app.qb);
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final worldType = ref.watch(P.rwkvContext.currentWorldType);
@@ -141,6 +142,7 @@ class _MessageState extends ConsumerState<Message> {
       isMine: isMine,
       demoType: demoType,
       appTheme: appTheme,
+      bubbleRadius: appStyle.bubbleRadius,
       primary: theme.colorScheme.primary,
       isBatch: batchData.isBatch,
     );
@@ -782,17 +784,18 @@ _BubbleStyleData _resolveBubbleStyleData({
   required bool isMine,
   required DemoType demoType,
   required AppTheme appTheme,
+  required double bubbleRadius,
   required Color primary,
   required bool isBatch,
 }) {
   EdgeInsets padding = appTheme.msgDefaultPadding;
   Border? border = Border.all(color: primary.withValues(alpha: .2));
-  double radius = 12;
+  double radius = bubbleRadius;
 
   switch (msg.type) {
     case .userTTS:
     case .ttsGeneration:
-      radius = 16;
+      radius += 4;
     case .userImage:
     case .text:
       break;

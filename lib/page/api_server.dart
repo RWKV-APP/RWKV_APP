@@ -204,6 +204,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final s = S.of(context);
+    final classic = ref.watch(P.preference.appStyle).isClassic;
     final appTheme = ref.watch(P.app.theme);
     final serverState = ref.watch(P.apiServer.state);
     final serverPort = ref.watch(P.apiServer.port);
@@ -246,7 +247,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
             _buildDashboardButton(s, loopbackUrl),
             const SizedBox(height: 16),
           ],
-          _buildLogsSection(s, logs),
+          _buildLogsSection(s, logs, theme, classic: classic),
         ],
       ),
     );
@@ -608,19 +609,22 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     );
   }
 
-  Widget _buildLogsSection(S s, List<String> logs) {
+  Widget _buildLogsSection(S s, List<String> logs, ThemeData theme, {required bool classic}) {
+    final colors = theme.colorScheme;
+    final heading = Text(
+      s.api_server_logs,
+      style: classic ? const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'monospace') : theme.textTheme.titleMedium,
+    );
     return _buildSectionCard(
       children: [
+        if (!classic) heading,
         Wrap(
           alignment: WrapAlignment.spaceBetween,
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: 8,
           runSpacing: 8,
           children: [
-            Text(
-              s.api_server_logs,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'monospace'),
-            ),
+            if (classic) heading,
             TextButton.icon(
               onPressed: logs.isEmpty ? null : () => _copyAllLogs(s, logs),
               icon: const Icon(Icons.copy_all, size: 18),
@@ -641,15 +645,18 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
         const SizedBox(height: 8),
         Container(
           width: double.infinity,
-          height: 200,
+          height: !classic && logs.isEmpty ? 120 : 200,
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.black87,
+            color: classic ? Colors.black87 : colors.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(8),
           ),
           child: logs.isEmpty
-              ? const Center(
-                  child: Text('—', style: TextStyle(color: Colors.white38)),
+              ? Center(
+                  child: Text(
+                    classic ? '—' : s.albatross_no_logs,
+                    style: TextStyle(color: classic ? Colors.white38 : colors.onSurfaceVariant),
+                  ),
                 )
               : ListView.builder(
                   reverse: true,
@@ -660,7 +667,11 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
                       padding: const EdgeInsets.symmetric(vertical: 1),
                       child: Text(
                         entry,
-                        style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: Colors.white70),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontFamily: 'monospace',
+                          color: classic ? Colors.white70 : colors.onSurface,
+                        ),
                       ),
                     );
                   },

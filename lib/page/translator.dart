@@ -67,29 +67,31 @@ class _DesktopLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
+    final classic = ref.watch(P.preference.appStyle).isClassic;
+    const translation = [_TranslatorInterface(), SizedBox(height: 16), _InferenceInfo()];
+    const serviceDetails = [_BrowserInfo(), SizedBox(height: 16), _TranslatorDebugInfo()];
+    const service = [_ServiceInfo(), SizedBox(height: 16), ...serviceDetails];
+    if (!classic && MediaQuery.sizeOf(context).width < 760) {
+      return ListView(
+        padding: const .all(16),
+        children: const [_ServiceInfo(), SizedBox(height: 16), ...translation, SizedBox(height: 16), ...serviceDetails],
+      );
+    }
     return Row(
       crossAxisAlignment: .start,
       children: [
         Expanded(
           child: ListView(
             padding: const .all(16),
-            children: const [
-              _TranslatorInterface(),
-              SizedBox(height: 16),
-              _InferenceInfo(),
-            ],
+            children: translation,
           ),
         ),
         Expanded(
           child: ListView(
             padding: const .all(16),
-            children: const [
-              _ServiceInfo(),
-              SizedBox(height: 16),
-              _BrowserInfo(),
-              SizedBox(height: 16),
-              _TranslatorDebugInfo(),
-            ],
+            children: service,
           ),
         ),
       ],

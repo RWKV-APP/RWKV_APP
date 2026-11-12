@@ -1,33 +1,6 @@
 part of 'p.dart';
 
 extension $ChatWebSearch on _Chat {
-  Future<void> restoreWebSearchCredentials() async {
-    if (webSearchKeysLoading.q || P.rwkvGeneration.generating.q) return;
-    webSearchKeysLoading.q = true;
-    try {
-      final saved = await webSearchCredentialStore.load();
-      _editedWebSearchCredentials.clear();
-      for (final entry in webSearchApiKeys.q.entries) {
-        if (entry.value != saved[entry.key]?.key) _editedWebSearchCredentials.add(entry.key);
-      }
-      webSearchApiKeys.q = {
-        for (final entry in saved.entries) entry.key: entry.value.key,
-        ...webSearchApiKeys.q,
-      };
-      webSearchChecks.q = {
-        for (final entry in saved.entries)
-          if (webSearchApiKeys.q[entry.key] == entry.value.key)
-            for (final provider in entry.value.verified)
-              provider: AsyncData<String>(crypto.sha256.convert(utf8.encode(entry.value.key)).toString()),
-      };
-      webSearchStorageError.q = false;
-    } catch (_) {
-      webSearchStorageError.q = true;
-    } finally {
-      webSearchKeysLoading.q = false;
-    }
-  }
-
   String searchProviderLabel(WebSearchProvider provider) => switch (provider) {
     .browser => S.current.web_search_browser,
     .deepseek => 'DeepSeek',
@@ -53,10 +26,9 @@ extension $ChatWebSearch on _Chat {
 
   Future<void> onWebSearchKeyChanged(WebSearchProvider provider, String value) async {
     if (P.rwkvGeneration.generating.q) return;
-    if (webSearchKeysLoading.q) return;
     if (provider.credentialId.isEmpty) return;
     final key = value.trim();
-    if (webSearchApiKeys.q[provider.credentialId] == key && !webSearchStorageError.q) return;
+    if (webSearchApiKeys.q[provider.credentialId] == key) return;
     webSearchApiKeys.q = {...webSearchApiKeys.q, provider.credentialId: key};
     webSearchChecks.q = {
       for (final entry in webSearchChecks.q.entries)
@@ -64,14 +36,6 @@ extension $ChatWebSearch on _Chat {
     };
     if ((provider.requiresApiKey || key.isNotEmpty) && provider.credentialId == webSearchProvider.q.credentialId) {
       webSearchMode.q = .off;
-    }
-    if (!_editedWebSearchCredentials.add(provider.credentialId)) return;
-    try {
-      await webSearchCredentialStore.remove(provider.credentialId);
-      webSearchStorageError.q = false;
-    } catch (_) {
-      _editedWebSearchCredentials.remove(provider.credentialId);
-      webSearchStorageError.q = true;
     }
   }
 
@@ -131,7 +95,6 @@ extension $ChatWebSearch on _Chat {
 
   Future<void> onVerifyAndEnableWebSearchProvider(WebSearchProvider provider, {http.Client? client}) async {
     if (P.rwkvGeneration.generating.q || provider == .browser) return;
-    if (webSearchKeysLoading.q) return;
     if (webSearchChecks.q.values.any((value) => value.isLoading)) return;
     final key = webSearchApiKeys.q[provider.credentialId] ?? '';
     if (provider.requiresApiKey && key.isEmpty) {
@@ -157,46 +120,23 @@ extension $ChatWebSearch on _Chat {
       if (webSearchProvider.q == provider) webSearchMode.q = .off;
       return;
     }
-    if (provider.credentialId.isNotEmpty && key.isNotEmpty) {
-      _editedWebSearchCredentials.remove(provider.credentialId);
-      try {
-        await webSearchCredentialStore.save(provider, key);
-        webSearchStorageError.q = false;
-      } catch (_) {
-        if (!identical(webSearchChecks.q[provider], checking)) return;
-        webSearchStorageError.q = true;
-        webSearchChecks.q = {...webSearchChecks.q, provider: AsyncError<String>(WebSearchFailure.storage, StackTrace.empty)};
-        if (webSearchProvider.q == provider) webSearchMode.q = .off;
-        return;
-      }
-    }
-    if (!identical(webSearchChecks.q[provider], checking) || (webSearchApiKeys.q[provider.credentialId] ?? '') != key) return;
-    if (P.rwkvGeneration.generating.q || receiveId.q != generationId) {
-      onWebSearchSettingsClosed();
-      return;
-    }
     webSearchChecks.q = {...webSearchChecks.q, provider: AsyncData<String>(crypto.sha256.convert(utf8.encode(key)).toString())};
     onWebSearchProviderChanged(provider);
     onSwitchWebSearchMode(.search);
   }
 
-  Future<void> _invalidateSavedWebSearchCredential(WebSearchProvider provider) async {
+  void _invalidateWebSearchCredential(WebSearchProvider provider) {
     webSearchChecks.q = {
       for (final entry in webSearchChecks.q.entries)
         if (entry.key.credentialId != provider.credentialId) entry.key: entry.value,
       for (final value in WebSearchProvider.values)
         if (value.credentialId == provider.credentialId) value: AsyncError<String>(WebSearchFailure.unauthorized, StackTrace.empty),
     };
-    try {
-      await webSearchCredentialStore.invalidate(provider);
-    } catch (_) {
-      webSearchStorageError.q = true;
-    }
   }
 
   Future<void> onWebSearchProviderFailure(WebSearchProvider provider, WebSearchFailure failure, {bool notify = false}) async {
     webSearchChecks.q = {...webSearchChecks.q, provider: AsyncError<String>(failure, StackTrace.empty)};
-    if (failure == .unauthorized) await _invalidateSavedWebSearchCredential(provider);
+    if (failure == .unauthorized) _invalidateWebSearchCredential(provider);
     if (webSearchProvider.q == provider && (failure == .unauthorized || failure == .balance || failure == .quota)) {
       webSearchMode.q = .off;
       localWebSearchPanelEnabled.q = false;
@@ -387,7 +327,6 @@ extension $ChatWebSearch on _Chat {
     .balance => S.current.web_search_balance,
     .quota => S.current.web_search_quota,
     .rateLimit => S.current.web_search_rate_limit,
-    .storage => S.current.web_search_storage_error,
     .timeout => S.current.web_search_timeout,
     .invalidResponse => S.current.web_search_invalid_response,
     .unavailable => S.current.web_search_unavailable,
@@ -416,15 +355,7 @@ extension $ChatWebSearch on _Chat {
       localWebSearchRunning.q = false;
     }
     final isZh = P.preference.currentLangIsZh.q;
-    final template = P.preference.promptTemplate;
-    final context = webSearchApiContext(
-      refs,
-      chinese: isZh,
-      includeInstructions: !usesDefaultWebSearchTemplate(
-        isZh ? template.webSearchChineseTemplate : template.webSearchTemplate,
-        chinese: isZh,
-      ),
-    );
+    final context = webSearchApiContext(refs, chinese: isZh);
     if (refs.isEmpty && error.isEmpty) error = S.current.web_search_no_results;
     final trace =
         _remoteWebSearchTrace(
@@ -550,14 +481,17 @@ extension $ChatWebSearch on _Chat {
     return <String>["User: $query"];
   }
 
-  String _promptContextFromLocalWebSearchBundle({
-    required SearchReferenceBundle bundle,
-    required bool deepResultsEnabled,
-  }) {
-    if (deepResultsEnabled && bundle.deepPromptContext.isNotEmpty) {
-      return bundle.deepPromptContext;
+  String _promptContextFromLocalWebSearchBundle({required SearchReferenceBundle bundle, required bool deepResultsEnabled}) {
+    if (deepResultsEnabled) {
+      final deepContext = [
+        for (final result in bundle.deepResults)
+          if (result.hasContent) '${result.title}\n${result.markdown.trim()}',
+      ].join('\n\n');
+      if (deepContext.isNotEmpty) return deepContext;
     }
-    return bundle.promptContext;
+    return [
+      for (final source in bundle.sources) [source.title, if (source.summary.isNotEmpty) source.summary].join('\n'),
+    ].join('\n\n');
   }
 
   List<Reference> _referencesFromLocalWebSearchBundle(SearchReferenceBundle bundle) {

@@ -317,7 +317,11 @@ class BotMessageBottom extends ConsumerWidget {
       showChangingPrefillProgress: showChangingPrefillProgress,
     );
 
-    final inlineConversationTokenEstimatedWidth = isTTSDemo ? .0 : _estimateInlineTokenWidth(text: inlineConversationTokenText);
+    final classic = ref.watch(P.preference.appStyle).isClassic;
+    final tokenTextScale = classic ? 1.0 : MediaQuery.textScalerOf(context).scale(10) / 10;
+    final inlineConversationTokenEstimatedWidth = isTTSDemo
+        ? .0
+        : _estimateInlineTokenWidth(text: inlineConversationTokenText) * tokenTextScale;
     final showCopyInMain = showCopyButton;
     final showShareInMain = showShareButton;
     final showRegenerateInMain = showBotRegenerateButton;

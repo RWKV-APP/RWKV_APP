@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/app_presentation.dart';
 import 'package:zone/page/completion/_completion_controller.dart';
 import 'package:zone/page/completion/_completion_item_batch.dart';
 import 'package:zone/page/completion/_completion_list_item.dart';
@@ -14,14 +15,14 @@ import 'package:zone/page/completion/_completion_titlebar.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
 
-class CompletionPage extends StatefulWidget {
+class CompletionPage extends ConsumerStatefulWidget {
   const CompletionPage({super.key});
 
   @override
-  State<CompletionPage> createState() => _CompletionPageState();
+  ConsumerState<CompletionPage> createState() => _CompletionPageState();
 }
 
-class _CompletionPageState extends State<CompletionPage> {
+class _CompletionPageState extends ConsumerState<CompletionPage> {
   @override
   void initState() {
     super.initState();
@@ -40,15 +41,37 @@ class _CompletionPageState extends State<CompletionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final style = ref.watch(P.preference.appStyle);
     return Theme(
-      data: _buildCompletionTheme(context),
-      child: const _Page(),
+      data: _buildCompletionTheme(context, classic: style.isClassic),
+      child: _Page(presentation: AppPresentation.forStyle(style)),
     );
   }
 }
 
-ThemeData _buildCompletionTheme(BuildContext context) {
+ThemeData _buildCompletionTheme(BuildContext context, {required bool classic}) {
   final theme = Theme.of(context);
+  if (!classic) {
+    return theme.copyWith(
+      dividerTheme: DividerThemeData(space: 0, thickness: 1, color: theme.colorScheme.outlineVariant),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(minimumSize: const Size(120, 50)).merge(theme.filledButtonTheme.style),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: const ButtonStyle(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.standard,
+          minimumSize: WidgetStatePropertyAll(Size.zero),
+        ).merge(theme.outlinedButtonTheme.style),
+      ),
+      iconButtonTheme: const IconButtonThemeData(
+        style: ButtonStyle(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          minimumSize: WidgetStatePropertyAll(Size.zero),
+        ),
+      ),
+    );
+  }
   final isDark = theme.brightness == Brightness.dark;
   final primaryColor = theme.colorScheme.primary;
   Color backgroundColor = isDark ? const Color(0xFF242424) : const Color(0xFFFDFBF7);
@@ -108,24 +131,39 @@ ThemeData _buildCompletionTheme(BuildContext context) {
 }
 
 class _Page extends StatelessWidget {
-  const _Page();
+  const _Page({required this.presentation});
+
+  final AppPresentation? presentation;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final useHorizontalLayout = constraints.maxWidth > constraints.maxHeight;
+        final useHorizontalLayout = switch (presentation?.workspace) {
+          null => constraints.maxWidth > constraints.maxHeight,
+          .reading || .focus => false,
+          _ => constraints.maxWidth >= 820,
+        };
+        final body = _Body(useHorizontalLayout: useHorizontalLayout);
+        final toolbarHeight = presentation == null ? 90 + kToolbarHeight : 82 + MediaQuery.textScalerOf(context).scale(24);
 
         return Scaffold(
-          appBar: const PreferredSize(
-            preferredSize: Size.fromHeight(90 + kToolbarHeight),
-            child: CompletionTitleBar(),
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(toolbarHeight),
+            child: const CompletionTitleBar(),
           ),
           resizeToAvoidBottomInset: true,
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           floatingActionButton: useHorizontalLayout ? const _HorizontalFloatingAction() : const _BottomActions(),
           body: SafeArea(
-            child: _Body(useHorizontalLayout: useHorizontalLayout),
+            child: presentation == null
+                ? body
+                : Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: presentation!.readingWidth),
+                      child: body,
+                    ),
+                  ),
           ),
         );
       },
@@ -157,22 +195,24 @@ class _HorizontalFloatingAction extends StatelessWidget {
   }
 }
 
-class _BottomActions extends StatelessWidget {
+class _BottomActions extends ConsumerWidget {
   const _BottomActions();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final classic = ref.watch(P.preference.appStyle).isClassic;
+    final colors = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
-    final decodeParamForegroundColor = isDark ? Colors.white : Colors.black;
-    final decodeParamBackgroundColor = isDark ? Colors.transparent : Colors.white;
+    final decodeParamForegroundColor = classic ? (isDark ? Colors.white : Colors.black) : colors.onSurface;
+    final decodeParamBackgroundColor = classic ? (isDark ? Colors.transparent : Colors.white) : colors.surfaceContainerHigh;
 
     final decodeParamButtonStyle = FilledButton.styleFrom(
       minimumSize: const Size(0, 50),
       padding: const EdgeInsets.symmetric(horizontal: 12),
       foregroundColor: decodeParamForegroundColor,
       backgroundColor: decodeParamBackgroundColor,
-      side: BorderSide(color: decodeParamForegroundColor, width: 1),
+      side: BorderSide(color: classic ? decodeParamForegroundColor : colors.outlineVariant, width: 1),
       textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     );
 

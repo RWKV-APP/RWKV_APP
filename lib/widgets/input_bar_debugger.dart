@@ -149,7 +149,7 @@ class InputBarDebugger extends ConsumerWidget {
                             onChanged: _onInputBarGradientChanged,
                           ),
                           const SizedBox(height: 8),
-                          const ThemeColorSettingSection(showDarkThemeTitle: false),
+                          const ThemeColorSettingSection(showDisplayOptions: false),
                         ],
                       ),
                     ),

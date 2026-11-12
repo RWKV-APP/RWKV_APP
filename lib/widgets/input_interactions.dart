@@ -65,6 +65,13 @@ class _ItemList extends ConsumerWidget {
 
     if (children.isEmpty) return const SizedBox.shrink();
 
+    if (!ref.watch(P.preference.appStyle).isClassic) {
+      return Padding(
+        padding: .symmetric(horizontal: inputBarHorizontalPadding),
+        child: Wrap(spacing: 4, runSpacing: 4, children: children),
+      );
+    }
+
     return SizedBox(
       height: InputInteractions.calculateButtonHeight(context),
       child: ListView.separated(

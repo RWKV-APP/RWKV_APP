@@ -62,8 +62,9 @@ class VersionInfoPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
     final theme = Theme.of(context);
+    final s = S.of(context);
+    final colors = theme.colorScheme;
     final latestVersionInfo = ref.watch(P.app.latestVersionInfo);
     double paddingBottom = ref.watch(P.app.paddingBottom);
     paddingBottom = max(paddingBottom, 16);
@@ -119,15 +120,15 @@ class VersionInfoPanel extends ConsumerWidget {
                         height: 44,
                         padding: const .symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF14b8a6),
+                          color: colors.primary,
                           borderRadius: .circular(100),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.download, color: Colors.white),
+                            Icon(Icons.download, color: colors.onPrimary),
                             Text(
                               s.download_now,
-                              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                              style: theme.textTheme.bodyMedium?.copyWith(color: colors.onPrimary),
                             ),
                           ],
                         ),
@@ -146,15 +147,15 @@ class VersionInfoPanel extends ConsumerWidget {
                         height: 44,
                         padding: const .symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0d9488),
+                          color: colors.secondaryContainer,
                           borderRadius: .circular(100),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.skip_next, color: Colors.white),
+                            Icon(Icons.skip_next, color: colors.onSecondaryContainer),
                             Text(
                               s.skip_this_version,
-                              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                              style: theme.textTheme.bodyMedium?.copyWith(color: colors.onSecondaryContainer),
                             ),
                           ],
                         ),
@@ -168,15 +169,15 @@ class VersionInfoPanel extends ConsumerWidget {
                         height: 44,
                         padding: const .symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0d9488),
+                          color: colors.secondaryContainer,
                           borderRadius: .circular(100),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.cancel, color: Colors.white),
+                            Icon(Icons.cancel, color: colors.onSecondaryContainer),
                             Text(
                               s.cancel,
-                              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                              style: theme.textTheme.bodyMedium?.copyWith(color: colors.onSecondaryContainer),
                             ),
                           ],
                         ),

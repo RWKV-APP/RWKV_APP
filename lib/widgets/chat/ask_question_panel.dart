@@ -502,12 +502,16 @@ class _GenerateButton extends ConsumerWidget {
     final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;
     final isGenerateEnabled = !generating;
     final isDark = theme.brightness == Brightness.dark;
+    final style = ref.watch(P.preference.appStyle);
+    final scheme = theme.colorScheme;
     final preferredMonospaceFont = ref.watch(P.font.finalMonospaceFontFamily);
-    final backgroundColor = switch ((isDark, isGenerateEnabled)) {
-      (true, true) => const Color(0xFF000000),
-      (true, false) => const Color(0xFF121212),
-      (false, true) => const Color(0xFFFFFFFF),
-      (false, false) => const Color(0xFFF0F0F0),
+    final backgroundColor = switch ((style.isClassic, isDark, isGenerateEnabled)) {
+      (false, _, true) => scheme.primary,
+      (false, _, false) => scheme.surfaceContainer,
+      (true, true, true) => const Color(0xFF000000),
+      (true, true, false) => const Color(0xFF121212),
+      (true, false, true) => const Color(0xFFFFFFFF),
+      (true, false, false) => const Color(0xFFF0F0F0),
     };
     final borderColor = switch ((isDark, isGenerateEnabled)) {
       (true, true) => const Color(0xFF3C3C3C),
@@ -527,6 +531,7 @@ class _GenerateButton extends ConsumerWidget {
       (false, true) => const Color(0xFF666666),
       (false, false) => const Color(0xFF969696),
     };
+    final themedForeground = isGenerateEnabled ? scheme.onPrimary : scheme.onSurfaceVariant;
 
     final label = switch (activelyGenerating) {
       false => s.generate,
@@ -542,8 +547,8 @@ class _GenerateButton extends ConsumerWidget {
         child: Container(
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: .circular(_maxRadius),
-            border: .all(color: borderColor, width: .8),
+            borderRadius: .circular(style.isClassic ? _maxRadius : style.radius),
+            border: .all(color: style.isClassic ? borderColor : backgroundColor, width: .8),
           ),
           padding: .symmetric(horizontal: generating ? 10 : 14),
           child: Row(
@@ -555,13 +560,13 @@ class _GenerateButton extends ConsumerWidget {
                   height: iconSize,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: iconColor,
+                    color: style.isClassic ? iconColor : themedForeground,
                   ),
                 ),
                 const SizedBox(width: 12),
               ],
               if (!generating) ...[
-                Icon(Symbols.auto_awesome, size: iconSize, color: iconColor),
+                Icon(Symbols.auto_awesome, size: iconSize, color: style.isClassic ? iconColor : themedForeground),
                 const SizedBox(width: 12),
               ],
               Expanded(
@@ -570,7 +575,7 @@ class _GenerateButton extends ConsumerWidget {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   style: theme.textTheme.titleMedium?.copyWith(
-                    color: foregroundColor,
+                    color: style.isClassic ? foregroundColor : themedForeground,
                     fontWeight: FontWeight.w700,
                     fontFamily: preferredMonospaceFont,
                     fontSize: 16,
@@ -598,6 +603,8 @@ class _GenerateCountButton extends ConsumerWidget {
     final options = ref.watch(P.askQuestion.generateCountOptions);
     final enabled = !generating;
     final isDark = theme.brightness == Brightness.dark;
+    final style = ref.watch(P.preference.appStyle);
+    final scheme = theme.colorScheme;
 
     final buttonBackground = switch ((isDark, enabled)) {
       (true, true) => const Color(0xFF000000),
@@ -661,10 +668,10 @@ class _GenerateCountButton extends ConsumerWidget {
           duration: const Duration(milliseconds: 160),
           padding: const .symmetric(horizontal: 12, vertical: 9),
           decoration: BoxDecoration(
-            color: buttonBackground,
-            borderRadius: .circular(_maxRadius),
+            color: style.isClassic ? buttonBackground : scheme.surfaceContainerHigh,
+            borderRadius: .circular(style.isClassic ? _maxRadius : style.radius),
             border: .all(
-              color: buttonBorderColor,
+              color: style.isClassic ? buttonBorderColor : scheme.outlineVariant,
               width: .8,
             ),
           ),
@@ -680,14 +687,14 @@ class _GenerateCountButton extends ConsumerWidget {
                       maxLines: 1,
                       overflow: .ellipsis,
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: labelColor,
+                        color: style.isClassic ? labelColor : scheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
                       "$selectedCount",
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: valueColor,
+                        color: style.isClassic ? valueColor : scheme.onSurface,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -697,7 +704,7 @@ class _GenerateCountButton extends ConsumerWidget {
               Icon(
                 Symbols.expand_more,
                 size: 18,
-                color: iconColor,
+                color: style.isClassic ? iconColor : scheme.onSurfaceVariant,
               ),
             ],
           ),

@@ -23,13 +23,14 @@ class PageWebDemo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final _ = (theme, ref.watch(P.msg.ids));
+    final classic = ref.watch(P.preference.appStyle).isClassic;
+    ref.watch(P.msg.ids);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       P.webDemo.hydrateFromCurrentConversation();
     });
 
     return Theme(
-      data: webDemoGrayscaleTheme(theme),
+      data: classic ? webDemoGrayscaleTheme(theme) : theme,
       child: const Scaffold(
         body: SafeArea(
           bottom: false,
@@ -49,6 +50,15 @@ class _WebDemoShell extends ConsumerWidget {
     final _ = theme;
     final width = MediaQuery.sizeOf(context).width;
     final compact = width < 900;
+    if (compact && !ref.watch(P.preference.appStyle).isClassic) {
+      return const Column(
+        children: [
+          _WebDemoTopBar(compact: true),
+          Expanded(flex: 3, child: _WebDemoControlPanel(compact: true)),
+          Expanded(flex: 2, child: _WebDemoGrid()),
+        ],
+      );
+    }
 
     if (compact) {
       return const Column(
@@ -84,7 +94,9 @@ class _WebDemoShell extends ConsumerWidget {
 }
 
 class _WebDemoTopBar extends ConsumerWidget {
-  const _WebDemoTopBar();
+  const _WebDemoTopBar({this.compact = false});
+
+  final bool compact;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -103,12 +115,13 @@ class _WebDemoTopBar extends ConsumerWidget {
         : S.current.web_demo_pages_status(run.batchSize, backendText);
 
     return Container(
-      height: 64,
+      height: compact ? null : 64,
+      constraints: compact ? const BoxConstraints(minHeight: 64) : null,
       decoration: BoxDecoration(
         color: appTheme.appBarBgC,
         border: Border(bottom: BorderSide(color: qb.withValues(alpha: .14), width: .5)),
       ),
-      padding: const .symmetric(horizontal: 16),
+      padding: .symmetric(horizontal: 16, vertical: compact ? 6 : 0),
       child: Row(
         children: [
           Tooltip(
@@ -119,35 +132,48 @@ class _WebDemoTopBar extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 8),
-          const Expanded(
-            child: Center(
+          if (compact)
+            Expanded(
+              child: Column(
+                crossAxisAlignment: .start,
+                mainAxisSize: .min,
+                children: [
+                  Text('RWKV Web Demo', style: theme.textTheme.titleLarge),
+                  Text(statusText, style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                ],
+              ),
+            )
+          else
+            const Expanded(
+              child: Center(
+                child: Text(
+                  "RWKV Web Demo",
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  style: TextStyle(fontSize: 22, fontWeight: .w700),
+                ),
+              ),
+            ),
+          if (!compact)
+            Container(
+              constraints: const BoxConstraints(maxWidth: 220),
+              padding: const .symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: active ? theme.colorScheme.primary.withValues(alpha: .12) : appTheme.settingBg,
+                borderRadius: .circular(999),
+                border: Border.all(color: active ? theme.colorScheme.primary.withValues(alpha: .34) : qb.withValues(alpha: .12), width: .5),
+              ),
               child: Text(
-                "RWKV Web Demo",
+                statusText,
                 maxLines: 1,
                 overflow: .ellipsis,
-                style: TextStyle(fontSize: 22, fontWeight: .w700),
+                style: TextStyle(
+                  color: active ? theme.colorScheme.primary : qb.withValues(alpha: .72),
+                  fontSize: 12,
+                  fontWeight: .w600,
+                ),
               ),
             ),
-          ),
-          Container(
-            constraints: const BoxConstraints(maxWidth: 220),
-            padding: const .symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: active ? theme.colorScheme.primary.withValues(alpha: .12) : appTheme.settingBg,
-              borderRadius: .circular(999),
-              border: Border.all(color: active ? theme.colorScheme.primary.withValues(alpha: .34) : qb.withValues(alpha: .12), width: .5),
-            ),
-            child: Text(
-              statusText,
-              maxLines: 1,
-              overflow: .ellipsis,
-              style: TextStyle(
-                color: active ? theme.colorScheme.primary : qb.withValues(alpha: .72),
-                fontSize: 12,
-                fontWeight: .w600,
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -164,7 +190,9 @@ class _WebDemoTopBar extends ConsumerWidget {
 }
 
 class _WebDemoControlPanel extends ConsumerWidget {
-  const _WebDemoControlPanel();
+  const _WebDemoControlPanel({this.compact = false});
+
+  final bool compact;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -186,13 +214,14 @@ class _WebDemoControlPanel extends ConsumerWidget {
           children: [
             _PromptPicker(enabled: !active),
             const SizedBox(height: 10),
-            _PromptInput(enabled: !active),
+            _PromptInput(enabled: !active, compact: compact),
             if (pendingHtmlContext != null) const SizedBox(height: 8),
             if (pendingHtmlContext != null) const _AttachedHtmlNotice(),
             const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
+                  flex: compact ? 2 : 1,
                   child: FilledButton(
                     onPressed: active || prompt.trim().isEmpty ? null : P.webDemo.sendFromCurrentInput,
                     style: FilledButton.styleFrom(
@@ -202,7 +231,7 @@ class _WebDemoControlPanel extends ConsumerWidget {
                     child: Text(
                       S.current.web_demo_generate_html_grid,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontWeight: .w700),
+                      style: TextStyle(fontWeight: .w700, letterSpacing: compact ? 0 : null),
                     ),
                   ),
                 ),
@@ -344,8 +373,9 @@ class _PromptPicker extends ConsumerWidget {
 
 class _PromptInput extends ConsumerWidget {
   final bool enabled;
+  final bool compact;
 
-  const _PromptInput({required this.enabled});
+  const _PromptInput({required this.enabled, required this.compact});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -365,8 +395,8 @@ class _PromptInput extends ConsumerWidget {
           focusNode: P.webDemo.promptFocusNode,
           enabled: enabled,
           onChanged: P.webDemo.setPromptInput,
-          minLines: 9,
-          maxLines: 14,
+          minLines: compact ? 4 : 9,
+          maxLines: compact ? 8 : 14,
           style: theme.textTheme.bodyMedium?.copyWith(height: 1.24),
           decoration: InputDecoration(
             filled: true,

@@ -12,6 +12,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/app_presentation.dart';
+import 'package:zone/page/layout/themed_launcher.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/measure_size.dart';
@@ -26,6 +28,34 @@ class PageHome extends ConsumerWidget {
     final paddingTop = ref.watch(P.app.paddingTop);
     final paddingBottom = ref.watch(P.app.paddingBottom);
     final appTheme = ref.watch(P.app.theme);
+    final style = ref.watch(P.preference.appStyle);
+    final presentation = AppPresentation.forStyle(style);
+    final isDesktop = ref.watch(P.app.isDesktop);
+    final showAlbatross = ref.watch(P.albatrossRuntime.canShowHomeEntry);
+    final features = [
+      const _CompletionButton(),
+      if (isDesktop) const _WebDemoButton(),
+      const _VisualButton(),
+      const _TTSButton(),
+      const _RolePlayButton(),
+      const _TranslatorButton(),
+      const _NekoButton(),
+    ];
+    final utilities = [
+      const _BenchmarkButton(),
+      if (isDesktop || Platform.isAndroid) const _ApiServerButton(),
+      if (showAlbatross) const _AlbatrossButton(),
+    ];
+    if (presentation != null) {
+      return ThemedLauncher(
+        presentation: presentation,
+        style: style,
+        chat: const _ChatButton(),
+        features: features,
+        utilities: utilities,
+      );
+    }
+
     final tabBarHeight = appTheme.tabBarHeight;
     final ratio = width / height;
 
@@ -46,23 +76,21 @@ class PageHome extends ConsumerWidget {
 
     if (maxWidth < 0) maxWidth = .infinity;
 
-    final isDesktop = ref.watch(P.app.isDesktop);
-    final showApiServer = isDesktop || Platform.isAndroid;
-    final showAlbatross = ref.watch(P.albatrossRuntime.canShowHomeEntry);
-
-    final widgets = [
-      const _ChatButton(),
-      const _CompletionButton(),
-      if (isDesktop) const _WebDemoButton(),
-      const _VisualButton(),
-      const _TTSButton(),
-      const _RolePlayButton(),
-      const _TranslatorButton(),
-      const _NekoButton(),
-      const _BenchmarkButton(),
-      if (showApiServer) const _ApiServerButton(),
-      if (showAlbatross) const _AlbatrossButton(),
-    ];
+    final widgets = [const _ChatButton(), ...features, ...utilities];
+    final grid = MasonryGridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: crossAxisCount,
+      mainAxisSpacing: style.gap,
+      crossAxisSpacing: style.gap,
+      itemBuilder: (context, index) {
+        return ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: widgets[index],
+        );
+      },
+      itemCount: widgets.length,
+    );
 
     return Scaffold(
       backgroundColor: appTheme.settingBg,
@@ -79,20 +107,7 @@ class PageHome extends ConsumerWidget {
                 bottom: max(paddingBottom, 12) + tabBarHeight + 12,
               ),
               physics: const BouncingScrollPhysics(),
-              child: MasonryGridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: crossAxisCount,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                itemBuilder: (context, index) {
-                  return ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: widgets[index],
-                  );
-                },
-                itemCount: widgets.length,
-              ),
+              child: grid,
             ),
           ),
           const _NoMore(),
@@ -168,6 +183,92 @@ class _HomeCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final appTheme = ref.watch(P.app.theme);
+    final style = ref.watch(P.preference.appStyle);
+    final arrangement = AppPresentation.forStyle(style)?.launcher;
+    if (arrangement != null) {
+      final primary = heightsKey == 'chat';
+      final row = switch (arrangement) {
+        .editorial || .ledger || .console || .directory => true,
+        _ => primary,
+      };
+      final flat = arrangement == .console || arrangement == .directory;
+      final featured = primary && !flat;
+      final center = style.centered && !row;
+      final ink = featured ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface;
+      final corners = BorderRadius.circular(style.radius);
+      final badge = Container(
+        width: flat ? 34 : 44,
+        height: flat ? 34 : 44,
+        alignment: .center,
+        decoration: style
+            .box(
+              appTheme,
+              .circular(style.centered ? 22 : style.radius),
+              fill: featured ? theme.colorScheme.onPrimary.withValues(alpha: .16) : appTheme.primary,
+            )
+            .copyWith(boxShadow: const []),
+        child: IconTheme(
+          data: const IconThemeData(size: 20),
+          child: ColorFiltered(
+            colorFilter: ColorFilter.mode(featured ? ink : theme.colorScheme.onPrimary, BlendMode.srcIn),
+            child: icon,
+          ),
+        ),
+      );
+      final label = Column(
+        crossAxisAlignment: center ? .center : .start,
+        children: [
+          Text(
+            title,
+            style: (featured ? theme.textTheme.titleLarge : theme.textTheme.titleMedium)?.copyWith(color: ink),
+            textAlign: center ? .center : .start,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            description,
+            style: theme.textTheme.bodySmall?.copyWith(color: featured ? ink : appTheme.qb6),
+            textAlign: center ? .center : .start,
+          ),
+        ],
+      );
+      return DecoratedBox(
+        decoration: flat
+            ? BoxDecoration(
+                border: Border(bottom: BorderSide(color: appTheme.qb12)),
+              )
+            : style.box(appTheme, corners, fill: featured ? appTheme.primary : null),
+        child: Material(
+          type: .transparency,
+          child: InkWell(
+            borderRadius: corners,
+            onTap: onTap,
+            child: Padding(
+              padding: .all(featured ? 18 : style.rowInset),
+              child: row
+                  ? Row(
+                      children: [
+                        badge,
+                        SizedBox(width: style.gap),
+                        Expanded(child: label),
+                        if (featured || flat) ...[
+                          const SizedBox(width: 8),
+                          Icon(Icons.arrow_forward, size: 17, color: ink),
+                        ],
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: center ? .center : .start,
+                      children: [
+                        badge,
+                        SizedBox(height: style.gap),
+                        label,
+                      ],
+                    ),
+            ),
+          ),
+        ),
+      );
+    }
     final maxHeightOfTitle = ref.watch(P.ui.maxHeightsOfHomeItemTitle);
     final maxHeightOfDescription = ref.watch(P.ui.maxHeightsOfHomeItemDescription);
     return GestureDetector(

@@ -19,8 +19,9 @@ import 'package:zone/widgets/paused_reply_guidance.dart';
 
 class InputBar extends ConsumerWidget {
   final DemoType preferredDemoType;
+  final bool inFlow;
 
-  const InputBar({super.key, this.preferredDemoType = .chat});
+  const InputBar({super.key, this.preferredDemoType = .chat, this.inFlow = false});
 
   void _onChangeSize(Size size) {
     P.chat.inputHeight.q = size.height;
@@ -40,42 +41,42 @@ class InputBar extends ConsumerWidget {
     final gradientStartForInputBar = ref.watch(P.ui.gradientStartForInputBar);
     final gradientForInputBar = ref.watch(P.ui.gradientForInputBar);
 
-    return Positioned(
-      bottom: 0,
-      right: 0,
-      left: 0,
-      child: MeasureSize(
-        onChange: _onChangeSize,
-        child: Container(
-          decoration: BoxDecoration(
-            // color: Colors.red,
-            gradient: LinearGradient(
-              colors: [
-                appTheme.scaffoldBg.withValues(alpha: 0),
-                appTheme.scaffoldBg.withValues(alpha: 1),
-              ],
-              begin: Alignment(0, gradientStartForInputBar),
-              end: Alignment(0, gradientForInputBar),
-            ),
-          ),
-          child: InputBarWidthLimit(
-            child: AnimatedSize(
-              duration: const Duration(milliseconds: 250),
-              child: Column(
-                crossAxisAlignment: .start,
-                children: [
-                  if (preferredDemoType == .chat) const SizedBox(height: 12),
-                  if (inRWKVSee) const _WaitingMsg(),
-                  if (preferredDemoType == .chat) const PausedReplyGuidance(),
-                  if (preferredDemoType != .tts) InputInteractions(preferredDemoType: preferredDemoType),
-                  InputTextField(preferredDemoType: preferredDemoType),
-                ],
+    final body = MeasureSize(
+      onChange: _onChangeSize,
+      child: Container(
+        decoration: inFlow
+            ? BoxDecoration(
+                color: appTheme.settingBg,
+                border: Border.symmetric(horizontal: BorderSide(color: theme.colorScheme.outlineVariant)),
+              )
+            : BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    appTheme.scaffoldBg.withValues(alpha: 0),
+                    appTheme.scaffoldBg.withValues(alpha: 1),
+                  ],
+                  begin: Alignment(0, gradientStartForInputBar),
+                  end: Alignment(0, gradientForInputBar),
+                ),
               ),
+        child: InputBarWidthLimit(
+          child: AnimatedSize(
+            duration: const Duration(milliseconds: 250),
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                if (preferredDemoType == .chat) const SizedBox(height: 12),
+                if (inRWKVSee) const _WaitingMsg(),
+                if (preferredDemoType == .chat) const PausedReplyGuidance(),
+                if (preferredDemoType != .tts) InputInteractions(preferredDemoType: preferredDemoType),
+                InputTextField(preferredDemoType: preferredDemoType),
+              ],
             ),
           ),
         ),
       ),
     );
+    return inFlow ? body : Positioned(bottom: 0, right: 0, left: 0, child: body);
   }
 }
 

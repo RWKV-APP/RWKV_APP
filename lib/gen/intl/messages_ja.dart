@@ -1187,6 +1187,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "model_loading": MessageLookupByLibrary.simpleMessage("モデルを読み込み中..."),
     "model_output": m43,
+    "model_picker_local": MessageLookupByLibrary.simpleMessage("ローカルモデル"),
+    "model_picker_prebuilt": MessageLookupByLibrary.simpleMessage("量子化済みモデル"),
     "model_settings": MessageLookupByLibrary.simpleMessage("モデル設定"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage(
@@ -1718,9 +1720,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "text_color": MessageLookupByLibrary.simpleMessage("文字色"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage("テキスト補完モード"),
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage("数独が無効です"),
+    "theme_classic": MessageLookupByLibrary.simpleMessage("クラシック"),
     "theme_dim": MessageLookupByLibrary.simpleMessage("暗い"),
+    "theme_forest": MessageLookupByLibrary.simpleMessage("松林"),
+    "theme_glacier": MessageLookupByLibrary.simpleMessage("氷河"),
     "theme_light": MessageLookupByLibrary.simpleMessage("明るい"),
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黒"),
+    "theme_midnight": MessageLookupByLibrary.simpleMessage("ミッドナイト"),
+    "theme_paper": MessageLookupByLibrary.simpleMessage("ペーパー"),
+    "theme_save_failed": MessageLookupByLibrary.simpleMessage(
+      "テーマを保存できませんでした。もう一度選択してください。",
+    ),
+    "theme_styles": MessageLookupByLibrary.simpleMessage("テーマ"),
+    "theme_styles_hint": MessageLookupByLibrary.simpleMessage(
+      "アプリ全体のデザインを選択します。ライトとダークの切り替えは表示設定で行えます。",
+    ),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("これでRWKVとのチャットを開始できます"),
     "think_button_mode_en": m63,
@@ -1985,7 +1999,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "検索サービスの応答形式に対応していません。",
     ),
     "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
-      "Bearer を付けずに自分のキーだけを貼り付けてください。「検証して有効化」で検証に成功すると安全に保存され、次回も使用できます。",
+      "Bearer を付けずに個人のキーを貼り付け、「確認して有効化」を選択してください。",
     ),
     "web_search_key_configured": MessageLookupByLibrary.simpleMessage(
       "キーを設定済み",
@@ -2019,9 +2033,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
       "リクエストが多すぎるか、サービスの上限に達しました。しばらく待ち、利用枠を確認してください。",
-    ),
-    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
-      "安全なストレージを再試行",
     ),
     "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
       "4つの項目をすべてコピー",
@@ -2087,9 +2098,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
       "ユーザーメッセージ",
     ),
-    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
-      "検証済みのキーはこの端末の安全なストレージに保存され、RWKV Chat の再起動後も使用できます。クリアボタンで保存済みのキーを削除できます。",
-    ),
     "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
       "登録時の試用枠：100 回の無料リクエスト。毎月更新される枠ではありません。",
     ),
@@ -2099,10 +2107,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
       "登録時の試用枠：2,500 回の無料検索。毎月更新される枠ではありません。",
     ),
-    "web_search_settings": MessageLookupByLibrary.simpleMessage("検索設定"),
-    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
-      "安全なストレージにアクセスできず、キーの保存または削除を確認できません。端末のロックを解除して再試行してください。",
+    "web_search_session_key_notice": MessageLookupByLibrary.simpleMessage(
+      "キーはアプリ実行中のメモリにのみ保持され、ディスクやシステムのキーチェーンには保存されません。再起動後は再入力してください。",
     ),
+    "web_search_settings": MessageLookupByLibrary.simpleMessage("検索設定"),
     "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
       "毎月の無料枠：1,000 credits。基本検索は 1 回につき 1 credit。",
     ),
@@ -2160,6 +2168,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("アーキテクチャ不一致"),
     "windows_architecture_mismatch_warning": m83,
+    "workspace_create": MessageLookupByLibrary.simpleMessage("作成と探索"),
+    "workspace_data": MessageLookupByLibrary.simpleMessage("データとストレージ"),
+    "workspace_tools": MessageLookupByLibrary.simpleMessage("ツール"),
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",

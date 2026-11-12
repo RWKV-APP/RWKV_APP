@@ -1433,6 +1433,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "model_loading": MessageLookupByLibrary.simpleMessage("Загрузка модели..."),
     "model_output": m43,
+    "model_picker_local": MessageLookupByLibrary.simpleMessage(
+      "Локальные модели",
+    ),
+    "model_picker_prebuilt": MessageLookupByLibrary.simpleMessage(
+      "Квантованные модели",
+    ),
     "model_settings": MessageLookupByLibrary.simpleMessage("Настройки модели"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage(
@@ -2082,9 +2088,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage(
       "Судоку недействителен",
     ),
+    "theme_classic": MessageLookupByLibrary.simpleMessage("Классическая"),
     "theme_dim": MessageLookupByLibrary.simpleMessage("Приглушенный"),
+    "theme_forest": MessageLookupByLibrary.simpleMessage("Хвойный лес"),
+    "theme_glacier": MessageLookupByLibrary.simpleMessage("Ледник"),
     "theme_light": MessageLookupByLibrary.simpleMessage("Светлый"),
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("Чёрный"),
+    "theme_midnight": MessageLookupByLibrary.simpleMessage("Полночь"),
+    "theme_paper": MessageLookupByLibrary.simpleMessage("Бумага"),
+    "theme_save_failed": MessageLookupByLibrary.simpleMessage(
+      "Не удалось сохранить тему. Выберите её ещё раз.",
+    ),
+    "theme_styles": MessageLookupByLibrary.simpleMessage("Тема"),
+    "theme_styles_hint": MessageLookupByLibrary.simpleMessage(
+      "Выберите оформление всего приложения. Светлый и тёмный режимы доступны в настройках экрана.",
+    ),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage(
           "Затем вы можете начать общаться с RWKV",
@@ -2393,7 +2411,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Сервис вернул неподдерживаемый формат данных.",
     ),
     "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
-      "Вставьте только свой ключ без префикса Bearer. После успешной проверки и включения он сохранится безопасно для повторного использования.",
+      "Вставьте личный ключ без префикса Bearer и нажмите «Проверить и включить».",
     ),
     "web_search_key_configured": MessageLookupByLibrary.simpleMessage(
       "Ключ настроен",
@@ -2433,9 +2451,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
       "Слишком много запросов или достигнут лимит сервиса. Подождите и проверьте квоту учётной записи.",
-    ),
-    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
-      "Повторить доступ к хранилищу",
     ),
     "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
       "Копировать все четыре раздела",
@@ -2509,9 +2524,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
       "Сообщение пользователя",
     ),
-    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
-      "Проверенные ключи сохраняются в защищённом хранилище этого устройства и используются после перезапуска RWKV Chat. Кнопка очистки удаляет сохранённый ключ.",
-    ),
     "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
       "Пробная квота при регистрации: 100 бесплатных запросов. Это разовая квота без ежемесячного обновления.",
     ),
@@ -2521,11 +2533,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
       "Пробная квота при регистрации: 2 500 бесплатных запросов. Это разовая квота без ежемесячного обновления.",
     ),
+    "web_search_session_key_notice": MessageLookupByLibrary.simpleMessage(
+      "Ключи хранятся только в памяти работающего приложения и не записываются на диск или в системную связку ключей. После перезапуска введите их снова.",
+    ),
     "web_search_settings": MessageLookupByLibrary.simpleMessage(
       "Настройки поиска",
-    ),
-    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
-      "Нет доступа к защищённому хранилищу. Не удалось подтвердить сохранение или удаление ключа. Разблокируйте устройство и повторите.",
     ),
     "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
       "Ежемесячно бесплатно: 1 000 credits. Базовый поиск расходует 1 credit за запрос.",
@@ -2596,6 +2608,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("Несоответствие архитектуры"),
     "windows_architecture_mismatch_warning": m83,
+    "workspace_create": MessageLookupByLibrary.simpleMessage(
+      "Создание и поиск идей",
+    ),
+    "workspace_data": MessageLookupByLibrary.simpleMessage(
+      "Данные и хранилище",
+    ),
+    "workspace_tools": MessageLookupByLibrary.simpleMessage("Инструменты"),
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "Выбрано %d сообщений",

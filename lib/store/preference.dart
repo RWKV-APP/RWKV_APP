@@ -10,6 +10,8 @@ const String _batchViewportWidthPreferenceKey = "halo_state.batchViewportWidth";
 const String _webDemoBatchSizePreferenceKey = "halo_state.webDemoBatchSize";
 const String _renderThinkingTagAsPreviewPreferenceKey = "halo_state.renderThinkingTagAsPreview";
 const String _thinkingModePreferenceKey = "halo_state.thinkingMode";
+const String _appearancePreferenceKey = "halo_state.appearance";
+const String _appStylePreferenceKey = "halo_state.themeStyle";
 const String _respondToMobileOrientationChangesPreferenceKey = "halo_state.respondToMobileOrientationChanges";
 const String _pausedReplyGuidanceEnabledPreferenceKey = "halo_state.experimental.pausedReplyGuidanceEnabled";
 const Set<String> _preservedPreferenceCacheKeys = <String>{
@@ -40,6 +42,8 @@ class _Preference {
   bool _showBatteryOptimization = true;
 
   bool renderThinkingTagAsPreview = true;
+
+  Future<void>? _appearanceWrite;
 
   var promptTemplate = PromptTemplate.empty();
 
@@ -96,6 +100,9 @@ class _Preference {
 
   /// 偏好的主题模式设置，跟随系统、深色模式、浅色模式
   late final themeMode = qs<ThemeMode>(ThemeMode.system);
+  late final appStyle = qs<AppStyle>(.classic);
+
+  late final preferredLightCustomTheme = qs<app_theme.AppTheme>(.light);
 
   /// 偏好的深色模式主题
   late final preferredDarkCustomTheme = qs<app_theme.AppTheme>(.lightsOut);
@@ -214,18 +221,16 @@ extension _$Preference on _Preference {
       }
     }
 
-    final themeMode = sp.getString("halo_state.themeMode");
-    if (themeMode != null) {
-      this.themeMode.q = ThemeMode.values.firstWhereOrNull((e) => e.name == themeMode) ?? ThemeMode.system;
-    }
-
-    final preferredDarkCustomTheme = sp.getString("halo_state.preferredDarkCustomTheme");
-    if (preferredDarkCustomTheme != null) {
-      this.preferredDarkCustomTheme.q = .fromString(preferredDarkCustomTheme) ?? .lightsOut;
-      if (this.preferredDarkCustomTheme.q == .light) {
-        this.preferredDarkCustomTheme.q = .lightsOut;
-      }
-    }
+    final (savedMode, savedLight, savedDark) = switch (sp.get(_appearancePreferenceKey)) {
+      [final String mode, final String light, final String dark] => (mode, light, dark),
+      _ => (sp.getString("halo_state.themeMode"), null, sp.getString("halo_state.preferredDarkCustomTheme")),
+    };
+    themeMode.q = ThemeMode.values.firstWhereOrNull((mode) => mode.name == savedMode) ?? .system;
+    final lightTheme = app_theme.AppTheme.fromString(savedLight);
+    final darkTheme = app_theme.AppTheme.fromString(savedDark);
+    preferredLightCustomTheme.q = lightTheme != null && lightTheme.isLight ? lightTheme : .light;
+    preferredDarkCustomTheme.q = darkTheme != null && !darkTheme.isLight ? darkTheme : .lightsOut;
+    appStyle.q = AppStyle.fromId(sp.get(_appStylePreferenceKey));
 
     renderMarkdownAndLatexEnabled.q = true;
     renderThinkingTagAsPreview = sp.getBool(_renderThinkingTagAsPreviewPreferenceKey) ?? true;
@@ -387,6 +392,7 @@ extension _$Preference on _Preference {
   }
 
   Future<int> _clearPreferenceCache() async {
+    await _appearanceWrite;
     final sp = await SharedPreferences.getInstance();
     final keys = sp.getKeys().toList()..sort();
     int clearedCount = 0;
@@ -425,7 +431,9 @@ extension _$Preference on _Preference {
     respondToMobileOrientationChanges.q = _defaultRespondToMobileOrientationChanges;
     preferredThinkingMode.q = .fast;
     themeMode.q = ThemeMode.system;
+    preferredLightCustomTheme.q = .light;
     preferredDarkCustomTheme.q = .lightsOut;
+    appStyle.q = .classic;
     lastWorldModel.q = null;
     lastChatModel.q = null;
     latestRuntimeAddress.q = 0;
@@ -530,11 +538,11 @@ extension $Preference on _Preference {
     RoleplayManage.changeLocale(res.locale);
   }
 
-  Future<void> showThemeSettings() async {
+  Future<void> showThemeSettings({bool styles = false}) async {
     final context = getContext();
     if (context == null) return;
     if (!context.mounted) return;
-    await ThemeSelector.show();
+    await ThemeSelector.show(styles: styles);
   }
 
   Future<void> tryShowBatteryOptimizationDialog(BuildContext context) async {
@@ -580,6 +588,50 @@ extension $Preference on _Preference {
   Future<void> saveWebDemoBatchSize(int value) async {
     final sp = await SharedPreferences.getInstance();
     await sp.setInt(_webDemoBatchSizePreferenceKey, value);
+  }
+
+  Future<void> setAppearance(app_theme.AppTheme? preset) {
+    final ThemeMode mode = switch (preset) {
+      null => .system,
+      app_theme.AppTheme(isLight: true) => .light,
+      _ => .dark,
+    };
+    if (preset != null) {
+      final preference = preset.isLight ? preferredLightCustomTheme : preferredDarkCustomTheme;
+      preference.q = preset;
+    }
+    return setAppearanceMode(mode);
+  }
+
+  Future<void> setAppearanceMode(ThemeMode mode) {
+    themeMode.q = mode;
+    P.app.preferredThemeMode.q = mode;
+
+    final appearance = [mode.name, preferredLightCustomTheme.q.storageId, preferredDarkCustomTheme.q.storageId];
+    return _saveAppearance((sp) => sp.setStringList(_appearancePreferenceKey, appearance));
+  }
+
+  Future<void> setAppStyle(AppStyle style) {
+    appStyle.q = style;
+    return _saveAppearance((sp) => sp.setString(_appStylePreferenceKey, style.name));
+  }
+
+  Future<void> _saveAppearance(Future<bool> Function(SharedPreferences) save) {
+    final write = _saveAppearanceAfter(_appearanceWrite, save);
+    _appearanceWrite = write;
+    return write;
+  }
+
+  Future<void> _saveAppearanceAfter(Future<void>? previous, Future<bool> Function(SharedPreferences) save) async {
+    // The Windows preferences plugin reads and rewrites its file for each write.
+    await previous;
+    try {
+      final sp = await SharedPreferences.getInstance();
+      if (await save(sp)) return;
+    } catch (error) {
+      qqe(error);
+    }
+    unawaited(Alert.error(S.current.theme_save_failed));
   }
 
   Future<void> setRenderThinkingTagAsPreviewEnabled(bool value) async {

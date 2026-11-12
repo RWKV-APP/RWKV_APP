@@ -11,6 +11,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/app_presentation.dart';
+import 'package:zone/page/layout/themed_shell.dart';
 import 'package:zone/store/p.dart';
 
 class PageTab extends ConsumerWidget {
@@ -25,6 +27,17 @@ class PageTab extends ConsumerWidget {
     final tabIndex = ref.watch(P.app.tabIndex);
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
+    final style = ref.watch(P.preference.appStyle);
+    final presentation = AppPresentation.forStyle(style);
+    if (presentation != null) {
+      return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: appTheme.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
+        child: Scaffold(
+          body: ThemedAppShell(presentation: presentation, style: style, child: child),
+        ),
+      );
+    }
+    final navCorners = BorderRadius.circular(style.navigationRadius);
     final rawPaddingBottom = ref.watch(P.app.paddingBottom);
     double paddingBottom = rawPaddingBottom / 2;
     final qb = ref.watch(P.app.qb);
@@ -46,7 +59,7 @@ class PageTab extends ConsumerWidget {
           right: tabBarRightPadding,
           height: appTheme.tabBarHeight,
           child: ClipRRect(
-            borderRadius: .circular(100),
+            borderRadius: navCorners,
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
               child: Container(
@@ -63,7 +76,7 @@ class PageTab extends ConsumerWidget {
           child: Container(
             decoration: BoxDecoration(
               color: appTheme.settingBg.withValues(alpha: .5),
-              borderRadius: .circular(100),
+              borderRadius: navCorners,
               border: Border.all(color: qb.withValues(alpha: .2), width: .5),
             ),
             child: const Row(
@@ -103,6 +116,7 @@ class PageTab extends ConsumerWidget {
     final hoverColor = isLight ? Colors.white.withValues(alpha: .95) : Colors.white.withValues(alpha: .15);
     final indicatorColor = isLight ? Colors.white.withValues(alpha: .99) : Colors.white.withValues(alpha: .2);
     final railSelectedIndex = tabIndex == 2 ? null : tabIndex;
+    final indicatorCorners = BorderRadius.circular(4);
 
     final horizontalLayout = Row(
       children: <Widget>[
@@ -115,7 +129,7 @@ class PageTab extends ConsumerWidget {
           child: NavigationRail(
             backgroundColor: appTheme.qb144,
             indicatorColor: indicatorColor,
-            indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            indicatorShape: RoundedRectangleBorder(borderRadius: indicatorCorners),
             selectedIndex: railSelectedIndex,
             onDestinationSelected: P.app.onTabSelected,
             labelType: NavigationRailLabelType.all,
@@ -126,6 +140,7 @@ class PageTab extends ConsumerWidget {
               selected: tabIndex == 2,
               color: appTheme.qb3,
               indicatorColor: indicatorColor,
+              indicatorCorners: indicatorCorners,
             ),
             destinations: <NavigationRailDestination>[
               NavigationRailDestination(
@@ -197,23 +212,29 @@ class _TabItem extends ConsumerWidget {
     final selectedIndex = ref.watch(P.app.tabIndex);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
-    final color = selectedIndex == index ? qb : appTheme.qb6;
+    final style = ref.watch(P.preference.appStyle);
+    final selected = selectedIndex == index;
+    final color = selected ? (style.isClassic ? qb : appTheme.primary) : appTheme.qb6;
 
     return GestureDetector(
       onTap: () => P.app.onTabSelected(index),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: .circular(100),
+          color: selected && !style.isClassic ? appTheme.userMsgBg : Colors.transparent,
+          borderRadius: .circular(style.navigationRadius),
         ),
         child: Column(
           children: [
             const SizedBox(height: 12),
-            FaIcon(selectedIndex == index ? selectedIcon : icon, size: 20, color: color),
+            FaIcon(selected ? selectedIcon : icon, size: 20, color: color),
             const SizedBox(height: 2),
-            Text(
-              _resolveLabel(context),
-              style: theme.textTheme.labelSmall?.copyWith(fontSize: 12, color: color) ?? TextStyle(fontSize: 12, color: color),
+            Flexible(
+              child: Text(
+                _resolveLabel(context),
+                maxLines: 1,
+                overflow: .ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(fontSize: 12, color: color) ?? TextStyle(fontSize: 12, color: color),
+              ),
             ),
             const SizedBox(height: 8),
           ],
@@ -228,12 +249,14 @@ class _SideRailSettingsItem extends StatelessWidget {
   final bool selected;
   final Color color;
   final Color indicatorColor;
+  final BorderRadius indicatorCorners;
 
   const _SideRailSettingsItem({
     required this.label,
     required this.selected,
     required this.color,
     required this.indicatorColor,
+    required this.indicatorCorners,
   });
 
   @override
@@ -249,7 +272,7 @@ class _SideRailSettingsItem extends StatelessWidget {
         padding: const .only(bottom: 32),
         child: InkWell(
           onTap: () => P.app.onTabSelected(2),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: indicatorCorners,
           child: SizedBox(
             width: 72,
             child: Column(
@@ -261,7 +284,7 @@ class _SideRailSettingsItem extends StatelessWidget {
                   height: 32,
                   decoration: BoxDecoration(
                     color: selected ? indicatorColor : Colors.transparent,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: indicatorCorners,
                   ),
                   child: Icon(selected ? Icons.settings : Icons.settings_outlined, color: color),
                 ),

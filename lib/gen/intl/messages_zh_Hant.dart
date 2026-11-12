@@ -1094,6 +1094,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "model_loading": MessageLookupByLibrary.simpleMessage("模型載入中..."),
     "model_output": m43,
+    "model_picker_local": MessageLookupByLibrary.simpleMessage("本機模型"),
+    "model_picker_prebuilt": MessageLookupByLibrary.simpleMessage("預量化模型"),
     "model_settings": MessageLookupByLibrary.simpleMessage("模型設定"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage("模型大小增加，請開啟一個新的對話，以提升對話品質"),
@@ -1569,9 +1571,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "text_color": MessageLookupByLibrary.simpleMessage("文字顏色"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage("文字補全模式"),
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage("數獨無效"),
+    "theme_classic": MessageLookupByLibrary.simpleMessage("經典"),
     "theme_dim": MessageLookupByLibrary.simpleMessage("深色"),
+    "theme_forest": MessageLookupByLibrary.simpleMessage("松林"),
+    "theme_glacier": MessageLookupByLibrary.simpleMessage("冰川"),
     "theme_light": MessageLookupByLibrary.simpleMessage("淺色"),
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
+    "theme_midnight": MessageLookupByLibrary.simpleMessage("午夜藍"),
+    "theme_paper": MessageLookupByLibrary.simpleMessage("紙白"),
+    "theme_save_failed": MessageLookupByLibrary.simpleMessage("無法儲存主題，請重新選擇。"),
+    "theme_styles": MessageLookupByLibrary.simpleMessage("主題"),
+    "theme_styles_hint": MessageLookupByLibrary.simpleMessage(
+      "為整個應用程式選擇一種風格。淺色或深色可在顯示設定中切換。",
+    ),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然後您就可以開始與 RWKV 對話了"),
     "think_button_mode_en": m63,
@@ -1806,7 +1818,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "搜尋服務傳回了不支援的資料格式。",
     ),
     "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
-      "只需貼上你自己的原始金鑰，不要加上 Bearer 前綴。點擊「驗證並啟用」，驗證成功後安全儲存，下次自動沿用。",
+      "貼上你自己的原始金鑰，不要加入 Bearer 前綴，然後點擊「驗證並啟用」。",
     ),
     "web_search_key_configured": MessageLookupByLibrary.simpleMessage("已設定金鑰"),
     "web_search_key_help_title": MessageLookupByLibrary.simpleMessage(
@@ -1838,9 +1850,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
       "請求過於頻繁或已達平台限制。請稍後重試，並檢查帳號額度。",
-    ),
-    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
-      "重試安全儲存",
     ),
     "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
       "複製全部四區塊",
@@ -1904,9 +1913,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
       "使用者訊息",
     ),
-    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
-      "驗證成功的金鑰會儲存在本裝置的系統安全儲存中，重新啟動 RWKV Chat 後自動沿用。點擊清除按鈕可刪除已儲存的金鑰。",
-    ),
     "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
       "新用戶試用：100 次免費請求，屬一次性試用額度，不會每月重設。",
     ),
@@ -1916,10 +1922,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
       "新用戶試用：2,500 次免費查詢，屬一次性試用額度，不會每月重設。",
     ),
-    "web_search_settings": MessageLookupByLibrary.simpleMessage("聯網搜尋設定"),
-    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
-      "無法存取系統安全儲存，未能確認金鑰是否已儲存或清除。請解鎖裝置後重試。",
+    "web_search_session_key_notice": MessageLookupByLibrary.simpleMessage(
+      "金鑰僅在本次執行的記憶體中使用，不寫入磁碟或系統鑰匙圈。重新啟動 App 後需重新輸入。",
     ),
+    "web_search_settings": MessageLookupByLibrary.simpleMessage("聯網搜尋設定"),
     "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
       "每月免費額度：1,000 credits；基本搜尋每次使用 1 credit。",
     ),
@@ -1973,6 +1979,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("架構不相符"),
     "windows_architecture_mismatch_warning": m83,
+    "workspace_create": MessageLookupByLibrary.simpleMessage("創作與探索"),
+    "workspace_data": MessageLookupByLibrary.simpleMessage("資料與儲存"),
+    "workspace_tools": MessageLookupByLibrary.simpleMessage("實用工具"),
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d 個來源"),

@@ -87,7 +87,17 @@ an embedded browser.
 The API client reads at most 1 MiB, with a 20-second request timeout. It rejects
 unsupported status codes, invalid response structures, invalid result URLs,
 and responses echoing the configured credential. Titles, URLs and excerpts
-are mapped into `Reference` objects.
+are mapped into `Reference` objects. The excerpt comes from the following
+provider field:
+
+| Provider | Excerpt |
+| --- | --- |
+| AnySearch, Serper, SerpApi, SearchApi | `snippet` |
+| DeepSeek | `summary`, or `snippet` when absent or blank |
+| Zhihu Web and Site | `ContentText` |
+| Tavily basic | `content` |
+| Exa | `highlights` joined by newlines |
+| Brave Search, Firecrawl | `description` |
 
 The API normalizer examines at most the first 20 result entries, removes
 duplicate URLs, and retains at most three references. Titles are limited to
@@ -103,17 +113,13 @@ invalid UTF-8 bodies are not stored as complete responses. Legacy and Browser
 search records without an API response identify that absence and show only
 saved references. Normalized references remain separate and retain citation order.
 
-`webSearchApiContext` formats references as readable Chinese or English text,
-matching the current prompt language. It retains the untrusted-source boundary,
-numbered citation instruction and the distinction between historical/partial
-statistics and current totals:
+`webSearchApiContext` formats only the reference fields as readable Chinese
+or English text, matching the current prompt language:
 
 ```text
-<Reference and evidence-sufficiency instructions>
-
-[1] <Source title>
-URL: <Source URL>
-Excerpt: <Source excerpt>
+<Source title>
+发布日期：<Explicit publication date, when available>
+<Source excerpt>
 ```
 
 The angle-bracket entries above describe the format. An actual report must
@@ -122,21 +128,20 @@ contain the captured reference data, without substituting this example.
 ## Prompt construction
 
 The default wrapper is defined in `lib/func/web_search_prompt.dart` and used by
-`PromptTemplate.empty()`. It places the original current question once, the
-current local calendar date, numbered references, then four short requirements
-for direct cited answers, numeric scope, historical dates and insufficient
-evidence. The provider's explicit structured publication date is retained in
-`Reference.publishedAt` and `WebSearchTraceSource.publishedAt`; unknown dates
-are omitted and are never inferred from a title, summary or search time.
+`PromptTemplate.empty()`. It puts the material first, then a blank line,
+“结合以上信息回答下面的问题” (or the English equivalent), another blank line,
+and the original question. Source dates and times stay in the material. The App
+adds no source URL fields, current date, question label or extra answer rules.
+Explicit structured publication dates are retained in `Reference.publishedAt`
+and `WebSearchTraceSource.publishedAt`; unknown dates are omitted and are never
+inferred from a title, summary or search time.
 
 The shared builder passes context, question and current date as positional
-sprintf arguments. Exact one-newline and two-newline legacy defaults resolve
-to the new wrapper at use time. Custom templates retain their existing content
+sprintf arguments. Exact saved defaults resolve to the new wrapper at use
+time. Custom templates retain their existing content
 and argument order, including the earlier blank-line behavior. The configured
 thinking footer is separated before search and appended once after expansion.
-Default API context contains reference data only; custom templates retain the
-legacy untrusted-source/citation context. Browser search retains its existing
-full context and deep-result selection.
+Browser search inserts the titles and selected shallow or deep excerpts.
 
 ## Engine request capture
 
@@ -232,8 +237,9 @@ reference update must not overwrite a newer captured engine request.
 
 ## Security and failure boundaries
 
-- Personal API keys remain in platform secure storage after successful
-  verification. Do not add shared or bundled test credentials
+- Personal API keys and verification stay in process memory only. Startup,
+  verification and clearing never access an OS keychain or persistent store.
+  Do not add shared or bundled test credentials
 - Credentials are excluded from trace storage, logs, clipboard reports and
   delivery artifacts. Reports redact configured credentials while inference
   retains its real input
@@ -255,7 +261,7 @@ reference update must not overwrite a newer captured engine request.
 | --- | --- |
 | Search choice and settings | `lib/widgets/chat/web_search_mode_button.dart`, `web_search_provider_sheet.dart`, `web_search_settings_panel.dart` |
 | Provider endpoints | `lib/model/web_search_provider.dart` |
-| Personal credential vault | `lib/func/web_search_credentials.dart` |
+| Session-only credentials and verification | `lib/store/chat.dart`, `lib/store/chat_web_search.dart` |
 | API request, safe request snapshot, normalization | `lib/func/web_search_api.dart` |
 | Search query generation | `packages/local_web_search/lib/src/query/search_query_generator.dart` |
 | Thinking-footer separation | `lib/func/web_search_prompt.dart` |

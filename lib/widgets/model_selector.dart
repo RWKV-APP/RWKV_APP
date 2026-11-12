@@ -36,7 +36,7 @@ import 'package:zone/widgets/world_group_item.dart';
 /// 模型选择器
 ///
 /// 初始化方法为私有, 目前通过 `show` 方法来显示模型选择器
-class ModelSelector extends ConsumerWidget {
+class ModelSelector extends ConsumerStatefulWidget {
   static const String panelKey = 'ModelSelector';
   static DemoType? _preferredDemoType;
 
@@ -105,24 +105,35 @@ class ModelSelector extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ModelSelector> createState() => _ModelSelectorState();
+}
+
+class _ModelSelectorState extends ConsumerState<ModelSelector> {
+  bool _showLocal = false;
+
+  @override
+  Widget build(BuildContext context) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final isMobile = ref.watch(P.app.isMobile);
-    final canUsePth = ref.watch(P.app.pageKey) == .chat || ref.watch(P.app.pageKey) == .completion;
+    final listPadding = isMobile ? 8.0 : 12.0;
+    final pageKey = ref.watch(P.app.pageKey);
+    final canUsePth = pageKey == .chat || pageKey == .completion;
+    final classic = ref.watch(P.preference.appStyle).isClassic;
+    final grouped = !isMobile && canUsePth && !classic;
+    final s = S.of(context);
+    final controller = widget._scrollController;
 
-    final items = [
-      const _SelectionHint(),
+    final local = [
       if (canUsePth) const _ImportedLocalModels(),
       if (!isMobile && canUsePth) const _LocalPthDropZone(),
+    ];
+    final catalog = [
       if (!isMobile && canUsePth) ...[
         const SizedBox(height: 4),
         const _ModelsInConfigHeader(),
       ],
-      ...[
-        const _ModelsInConfigDownloadSource(),
-        _ModelsInConfigFile(showNeko: _showNeko, rolePlayOnly: _rolePlayOnly),
-      ],
-      SizedBox(height: (16 + paddingBottom)),
+      const _ModelsInConfigDownloadSource(),
+      _ModelsInConfigFile(showNeko: widget._showNeko, rolePlayOnly: widget._rolePlayOnly),
     ];
 
     return ClipRRect(
@@ -132,19 +143,46 @@ class ModelSelector extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          _PanelBar(scrollController: _scrollController),
+          _PanelBar(scrollController: controller),
+          if (grouped)
+            Padding(
+              padding: const .fromLTRB(12, 0, 12, 10),
+              child: Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final (local, label) in [(false, s.model_picker_prebuilt), (true, s.model_picker_local)])
+                    ChoiceChip(
+                      label: Text(label),
+                      selected: _showLocal == local,
+                      onSelected: (_) {
+                        if (controller.hasClients) controller.jumpTo(0);
+                        setState(() => _showLocal = local);
+                      },
+                    ),
+                ],
+              ),
+            ),
           Expanded(
             // Keep section semantics mounted while scrolling. Recycling these
             // few sections leaves stale child counts in Windows accessibility.
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: .only(
-                left: _listPadding,
-                right: _listPadding,
-                bottom: _listPadding,
+                left: listPadding,
+                right: listPadding,
+                bottom: listPadding,
               ),
-              controller: _scrollController,
-              child: Column(crossAxisAlignment: .stretch, children: items),
+              controller: controller,
+              child: Column(
+                crossAxisAlignment: .stretch,
+                children: [
+                  if (classic || canUsePth) const _SelectionHint(),
+                  if (!grouped || _showLocal) ...local,
+                  if (!grouped || !_showLocal) ...catalog,
+                  SizedBox(height: 16 + paddingBottom),
+                ],
+              ),
             ),
           ),
         ],
@@ -826,10 +864,11 @@ class _LocalPthFolderHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final folders = ref.watch(P.pth.folders);
+    final classic = ref.watch(P.preference.appStyle).isClassic;
     return Row(
       children: [
         Expanded(child: Text(S.current.below_are_your_local_folders)),
-        if (folders.isNotEmpty) Text(S.current.click_plus_to_add_more_folders),
+        if (classic && folders.isNotEmpty) Text(S.current.click_plus_to_add_more_folders),
         if (folders.isNotEmpty)
           IconButton(onPressed: P.pth.onAddFolderClicked, icon: const Icon(Icons.add), tooltip: S.current.add_local_folder),
       ],

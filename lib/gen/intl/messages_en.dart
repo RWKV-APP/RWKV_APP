@@ -1360,6 +1360,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "model_loading": MessageLookupByLibrary.simpleMessage("Model Loading..."),
     "model_output": m43,
+    "model_picker_local": MessageLookupByLibrary.simpleMessage("Local models"),
+    "model_picker_prebuilt": MessageLookupByLibrary.simpleMessage(
+      "Pre-quantized models",
+    ),
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage(
@@ -1985,9 +1989,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage(
       "The Sudoku puzzle is not valid",
     ),
+    "theme_classic": MessageLookupByLibrary.simpleMessage("Classic"),
     "theme_dim": MessageLookupByLibrary.simpleMessage("Dim"),
+    "theme_forest": MessageLookupByLibrary.simpleMessage("Forest"),
+    "theme_glacier": MessageLookupByLibrary.simpleMessage("Glacier"),
     "theme_light": MessageLookupByLibrary.simpleMessage("Light"),
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("Lights out"),
+    "theme_midnight": MessageLookupByLibrary.simpleMessage("Midnight"),
+    "theme_paper": MessageLookupByLibrary.simpleMessage("Paper"),
+    "theme_save_failed": MessageLookupByLibrary.simpleMessage(
+      "Could not save the theme. Select it again to retry.",
+    ),
+    "theme_styles": MessageLookupByLibrary.simpleMessage("Theme"),
+    "theme_styles_hint": MessageLookupByLibrary.simpleMessage(
+      "Choose a design for the whole app. Set light or dark appearance in Display Settings.",
+    ),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage(
           "Then you can start to chat with RWKV",
@@ -2278,7 +2294,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "The provider returned an unsupported response.",
     ),
     "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
-      "Paste only your personal key, without the Bearer prefix. Verify and enable saves it securely after a successful check for reuse next time.",
+      "Paste your personal key without the Bearer prefix, then choose Verify and enable.",
     ),
     "web_search_key_configured": MessageLookupByLibrary.simpleMessage(
       "Key configured",
@@ -2318,9 +2334,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
       "Requests are too frequent or a provider limit was reached. Wait before retrying and check your account allowance.",
-    ),
-    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
-      "Retry secure storage",
     ),
     "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
       "Copy all four sections",
@@ -2394,9 +2407,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
       "User message",
     ),
-    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
-      "Verified keys are saved in secure storage on this device and reused after restarting RWKV Chat. Use the clear button to remove a saved key.",
-    ),
     "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
       "Signup trial: 100 free requests. This is a finite trial, not a monthly allowance.",
     ),
@@ -2406,11 +2416,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
       "Signup trial: 2,500 free queries. This is a finite trial, not a monthly allowance.",
     ),
+    "web_search_session_key_notice": MessageLookupByLibrary.simpleMessage(
+      "Keys are kept only while RWKV Chat is running. They are not saved to disk or the system keychain. Enter them again after restarting.",
+    ),
     "web_search_settings": MessageLookupByLibrary.simpleMessage(
       "Search settings",
-    ),
-    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
-      "Secure storage could not be accessed. Saving or clearing the key could not be confirmed. Unlock your device, then retry.",
     ),
     "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
       "Recurring free allowance: 1,000 credits/month. Basic search uses 1 credit per request.",
@@ -2481,6 +2491,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("Architecture Mismatch"),
     "windows_architecture_mismatch_warning": m83,
+    "workspace_create": MessageLookupByLibrary.simpleMessage(
+      "Create & explore",
+    ),
+    "workspace_data": MessageLookupByLibrary.simpleMessage("Data & storage"),
+    "workspace_tools": MessageLookupByLibrary.simpleMessage("Tools"),
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d sources"),

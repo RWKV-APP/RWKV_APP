@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zone/config.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/app_presentation.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/all_suggestion_dialog.dart';
 import 'package:zone/widgets/model_selector.dart';
@@ -22,7 +23,9 @@ const Color _codeSuggestionColor = Color(0xFF4B5FD6);
 const Color _mathematicsSuggestionColor = Color(0xFF2F9D57);
 
 class Empty extends ConsumerWidget {
-  const Empty({super.key});
+  const Empty({super.key, this.presentation});
+
+  final AppPresentation? presentation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,6 +33,9 @@ class Empty extends ConsumerWidget {
     final s = S.of(context);
     final messages = ref.watch(P.msg.list);
     if (messages.isNotEmpty) return Positioned.fill(child: IgnorePointer(child: Container()));
+    if (presentation case final presentation?) {
+      return Positioned.fill(child: _EmptyV2ScrollView(presentation: presentation));
+    }
     final loaded = ref.watch(P.rwkvModel.loaded);
     final currentModel = ref.watch(P.rwkvModel.latest);
 
@@ -43,7 +49,6 @@ class Empty extends ConsumerWidget {
 
     final inputHeight = ref.watch(P.chat.inputHeight);
     final version = ref.watch(P.app.version);
-
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOutBack,
@@ -149,7 +154,9 @@ class Empty extends ConsumerWidget {
 }
 
 class _EmptyV2ScrollView extends StatefulWidget {
-  const _EmptyV2ScrollView();
+  const _EmptyV2ScrollView({this.presentation});
+
+  final AppPresentation? presentation;
 
   @override
   State<_EmptyV2ScrollView> createState() => _EmptyV2ScrollViewState();
@@ -172,14 +179,16 @@ class _EmptyV2ScrollViewState extends State<_EmptyV2ScrollView> {
       trackVisibility: false,
       child: SingleChildScrollView(
         controller: _scrollController,
-        child: const _EmptyV2(),
+        child: _EmptyV2(presentation: widget.presentation),
       ),
     );
   }
 }
 
 class _EmptyV2 extends ConsumerWidget {
-  const _EmptyV2();
+  const _EmptyV2({this.presentation});
+
+  final AppPresentation? presentation;
 
   String _normalizeCategory(String? category) {
     if (category == null) return "";
@@ -229,11 +238,108 @@ class _EmptyV2 extends ConsumerWidget {
     P.chat.send(s.prompt.isEmpty ? s.display : s.prompt);
   }
 
+  Future<void> _showMore(BuildContext context) async {
+    final suggestion = await AllSuggestionDialog.show(context);
+    if (suggestion != null) _onTap(suggestion);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
     final suggestions = ref.watch(P.suggestion.suggestion);
+    if (presentation case final presentation?) {
+      final prompts = ref.watch(P.suggestion.chatSuggestions);
+      final style = ref.watch(P.preference.appStyle);
+      final centered = presentation.prompts == .centered;
+      final colors = theme.colorScheme;
+      return Padding(
+        padding: const .fromLTRB(16, 16, 16, 14),
+        child: Column(
+          crossAxisAlignment: centered ? .center : .start,
+          children: [
+            Icon(Icons.auto_awesome_outlined, size: 22, color: colors.primary),
+            const SizedBox(height: 8),
+            Text(
+              s.hello_ask_me_anything.replaceAll(RegExp(r'\s+'), ' '),
+              style: theme.textTheme.headlineSmall,
+              textAlign: centered ? .center : .start,
+            ),
+            if (prompts.isNotEmpty) ...[
+              Wrap(
+                crossAxisAlignment: .center,
+                alignment: centered ? .center : .start,
+                children: [
+                  TextButton(onPressed: () => _showMore(context), child: Text(s.more_questions)),
+                  IconButton(
+                    tooltip: s.refresh,
+                    onPressed: P.suggestion.refreshChatSuggestions,
+                    icon: const Icon(Icons.refresh, size: 18),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final arrangement = presentation.prompts;
+                  final minGridWidth = MediaQuery.textScalerOf(context).scale(14) / 14 * 348;
+                  final useColumns = (arrangement == .grid || arrangement == .feature) && constraints.maxWidth >= minGridWidth;
+                  final pairedStart = useColumns && arrangement == .feature ? 1 : 0;
+                  final shape = RoundedRectangleBorder(borderRadius: .circular(style.radius));
+                  Widget promptCard(int index) {
+                    final prompt = prompts[index];
+                    return Material(
+                      color: arrangement == .feature && index == 0 ? colors.primaryContainer : colors.surfaceContainerHigh,
+                      shape: shape,
+                      child: InkWell(
+                        customBorder: shape,
+                        onTap: () => _onTap(prompt),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(minHeight: 48),
+                          child: Padding(
+                            padding: const .symmetric(horizontal: 12, vertical: 8),
+                            child: Row(
+                              children: [
+                                Icon(Icons.arrow_outward, size: 18, color: colors.primary),
+                                const SizedBox(width: 10),
+                                Expanded(child: Text(prompt.display)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    crossAxisAlignment: .stretch,
+                    children: [
+                      if (pairedStart == 1) promptCard(0),
+                      for (int index = pairedStart; index < prompts.length; index += useColumns ? 2 : 1) ...[
+                        if (index > 0) const SizedBox(height: 8),
+                        if (useColumns)
+                          IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: .stretch,
+                              children: [
+                                Expanded(child: promptCard(index)),
+                                const SizedBox(width: 8),
+                                Expanded(child: index + 1 < prompts.length ? promptCard(index + 1) : const SizedBox.shrink()),
+                              ],
+                            ),
+                          )
+                        else
+                          promptCard(index),
+                      ],
+                    ],
+                  );
+                },
+              ),
+            ],
+          ],
+        ),
+      );
+    }
 
     final appTheme = ref.watch(P.app.theme);
     final bgColor = appTheme.qb144;
@@ -297,10 +403,7 @@ class _EmptyV2 extends ConsumerWidget {
                 color: bgColor,
                 child: InkWell(
                   borderRadius: .circular(60),
-                  onTap: () async {
-                    final suggestion = await AllSuggestionDialog.show(context);
-                    if (suggestion != null) _onTap(suggestion);
-                  },
+                  onTap: () => _showMore(context),
                   child: Padding(
                     padding: const .symmetric(horizontal: 20, vertical: 12),
                     child: Text(

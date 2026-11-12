@@ -14,8 +14,6 @@ import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/model/web_search_provider.dart';
 import 'package:zone/model/app_theme.dart';
 import 'package:zone/store/p.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:zone/func/web_search_credentials.dart';
 import 'package:zone/widgets/chat/ask_question_button.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/chat_interaction_button.dart';
@@ -32,10 +30,7 @@ void main() {
     P.chat.webSearchChecks.q = {};
     P.rwkvGeneration.generating.q = false;
     P.rwkvModel.loadingStatus.q = {};
-    FlutterSecureStorage.setMockInitialValues({});
-    P.chat.webSearchCredentialStore = WebSearchCredentialStore();
     P.chat.webSearchApiKeys.q = {};
-    await P.chat.restoreWebSearchCredentials();
   });
 
   tearDown(() {

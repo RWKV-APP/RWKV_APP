@@ -13,23 +13,25 @@ import 'package:zone/widgets/input_bar.dart';
 import 'package:zone/widgets/message.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/talk/suggestions.dart';
+import 'package:zone/widgets/tool_intro.dart';
 
 class PageTalk extends ConsumerWidget {
   const PageTalk({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themed = !ref.watch(P.preference.appStyle).isClassic;
     final inputHeight = ref.watch(P.chat.inputHeight);
     return Scaffold(
       body: Stack(
         children: [
           const _List(),
           const _Empty(),
-          const Positioned(
+          Positioned(
             top: 0,
             left: 0,
             right: 0,
-            child: ChatAppBar(preferredDemoType: .tts),
+            child: ChatAppBar(preferredDemoType: .tts, inFlow: themed),
           ),
           Positioned(
             bottom: inputHeight + 8,
@@ -57,7 +59,8 @@ class _List extends ConsumerWidget {
     final paddingRight = ref.watch(P.app.paddingRight);
     final inputHeight = ref.watch(P.chat.inputHeight);
 
-    double top = paddingTop + kToolbarHeight + 4;
+    final toolbarHeight = ref.watch(P.preference.appStyle).isClassic ? kToolbarHeight : ChatAppBar.themedToolbarHeight(context);
+    final top = paddingTop + toolbarHeight + 4;
     double bottom = inputHeight + 12;
     double scrollBarBottom = inputHeight + 4;
 
@@ -101,6 +104,11 @@ class _Empty extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
+    if (!ref.watch(P.preference.appStyle).isClassic) {
+      return const ToolIntro(demoType: .tts, suggestionsHeight: Suggestions.defaultHeight + 8);
+    }
     final logoSquare = Assets.img.chat.logoSquare;
     final inputHeight = ref.watch(P.chat.inputHeight);
     final version = ref.watch(P.app.version);

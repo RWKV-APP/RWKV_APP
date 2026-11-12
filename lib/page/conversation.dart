@@ -16,6 +16,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:zone/func/debug_trace.dart';
 import 'package:zone/func/open_folder.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/app_presentation.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat_history_width_limit.dart';
@@ -68,6 +69,64 @@ class _PageConversationState extends ConsumerState<PageConversation> {
     final isEmpty = conversations.isEmpty;
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
     final appTheme = ref.watch(P.app.theme);
+    final presentation = AppPresentation.forStyle(ref.watch(P.preference.appStyle));
+    if (presentation != null) {
+      final contents = Column(
+        children: [
+          Expanded(child: isEmpty ? const _EmptyState() : const _ConversationList()),
+          if (isBatchMode) const ChatHistoryWidthLimit(child: _BatchActionBar()),
+        ],
+      );
+      final colors = theme.colorScheme;
+      final workspace = presentation.workspace;
+      const header = _ConversationAppBar(themed: true);
+      return Scaffold(
+        backgroundColor: appTheme.settingBg,
+        body: SafeArea(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: presentation.readingWidth),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  if ((workspace == .split || workspace == .console) && constraints.maxWidth >= 800) {
+                    return Row(
+                      crossAxisAlignment: .stretch,
+                      children: [
+                        SizedBox(
+                          width: 248,
+                          child: ColoredBox(color: colors.surfaceContainerLow, child: header),
+                        ),
+                        const VerticalDivider(width: 1),
+                        Expanded(child: contents),
+                      ],
+                    );
+                  }
+
+                  return Column(
+                    children: [
+                      header,
+                      Expanded(
+                        child: workspace == .framed
+                            ? Padding(
+                                padding: const .fromLTRB(12, 0, 12, 12),
+                                child: Material(
+                                  color: colors.surfaceContainerLowest,
+                                  borderRadius: const .all(Radius.circular(16)),
+                                  clipBehavior: .antiAlias,
+                                  child: contents,
+                                ),
+                              )
+                            : contents,
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: appTheme.settingBg,
@@ -83,7 +142,9 @@ class _PageConversationState extends ConsumerState<PageConversation> {
 }
 
 class _ConversationAppBar extends ConsumerWidget {
-  const _ConversationAppBar();
+  const _ConversationAppBar({this.themed = false});
+
+  final bool themed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -95,47 +156,65 @@ class _ConversationAppBar extends ConsumerWidget {
     final isDesktop = ref.watch(P.app.isDesktop);
     final s = S.of(context);
 
+    final title = isBatchMode ? s.selected_count(selectedCount) : s.conversations;
+    final leading = isBatchMode
+        ? TextButton(
+            onPressed: () => P.conversation.toggleBatchMode(),
+            child: Text(s.cancel),
+          )
+        : IconButton(
+            onPressed: () => P.conversation.toggleBatchMode(),
+            // child: Text(s.conversation_management),
+            icon: const Icon(Icons.list),
+            tooltip: s.conversation_management,
+          );
+    final actions = [
+      if (isDesktop && !isBatchMode)
+        IconButton(
+          onPressed: _openDatabaseFolder,
+          icon: const FaIcon(FontAwesomeIcons.folderOpen, size: 18),
+          tooltip: s.open_database_folder,
+        ),
+      if (!isBatchMode)
+        IconButton(
+          onPressed: _handleNewChat,
+          icon: const FaIcon(FontAwesomeIcons.squarePlus),
+          tooltip: themed ? s.new_conversation : null,
+        ),
+      if (isBatchMode)
+        TextButton(
+          onPressed: selectedCount == conversations.length
+              ? () => P.conversation.clearSelection()
+              : () => P.conversation.selectAllConversations(),
+          child: Text(
+            selectedCount == conversations.length ? s.cancel_all_selection : s.select_all,
+          ),
+        ),
+    ];
+    if (themed) {
+      final textTheme = Theme.of(context).textTheme;
+      return Padding(
+        padding: const .fromLTRB(16, 14, 16, 8),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Text(title, style: textTheme.headlineSmall),
+            Wrap(crossAxisAlignment: .center, children: [leading, ...actions]),
+            Container(height: .5, color: Theme.of(context).colorScheme.outlineVariant),
+          ],
+        ),
+      );
+    }
     return AppBar(
-      title: isBatchMode ? Text(s.selected_count(selectedCount)) : Text(s.conversations),
+      title: Text(title),
       backgroundColor: Colors.transparent,
       systemOverlayStyle: theme.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       primary: true,
       automaticallyImplyLeading: false,
       centerTitle: true,
-      leading: isBatchMode
-          ? TextButton(
-              onPressed: () => P.conversation.toggleBatchMode(),
-              child: Text(s.cancel),
-            )
-          : IconButton(
-              onPressed: () => P.conversation.toggleBatchMode(),
-              // child: Text(s.conversation_management),
-              icon: const Icon(Icons.list),
-              tooltip: s.conversation_management,
-            ),
+      leading: leading,
       leadingWidth: isBatchMode ? 80 : null,
-      actions: [
-        if (isDesktop && !isBatchMode)
-          IconButton(
-            onPressed: _openDatabaseFolder,
-            icon: const FaIcon(FontAwesomeIcons.folderOpen, size: 18),
-            tooltip: s.open_database_folder,
-          ),
-        if (!isBatchMode)
-          IconButton(
-            onPressed: _handleNewChat,
-            icon: const FaIcon(FontAwesomeIcons.squarePlus),
-          ),
-        if (isBatchMode)
-          TextButton(
-            onPressed: selectedCount == conversations.length
-                ? () => P.conversation.clearSelection()
-                : () => P.conversation.selectAllConversations(),
-            child: Text(
-              selectedCount == conversations.length ? s.cancel_all_selection : s.select_all,
-            ),
-          ),
-      ],
+      actions: actions,
     );
   }
 
@@ -166,7 +245,8 @@ class _ConversationList extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final paddingBottom = ref.watch(P.app.paddingBottom);
     final useBottomTabBar = ref.watch(P.app.useBottomTabBar);
-    final tabBarReservedHeight = useBottomTabBar ? appTheme.tabBarHeight : 0.0;
+    final isClassic = ref.watch(P.preference.appStyle).isClassic;
+    final tabBarReservedHeight = useBottomTabBar && isClassic ? appTheme.tabBarHeight : 0.0;
     return ListView.separated(
       padding: .only(bottom: max(paddingBottom, 12) + tabBarReservedHeight + 12),
       itemCount: conversations.length,
@@ -308,7 +388,8 @@ class _BatchActionBar extends ConsumerWidget {
     final selectedCount = selectedConversations.length;
     final hasSelection = selectedConversations.isNotEmpty;
     final useBottomTabBar = ref.watch(P.app.useBottomTabBar);
-    final tabBarReservedHeight = useBottomTabBar ? appTheme.tabBarHeight : 0.0;
+    final isClassic = ref.watch(P.preference.appStyle).isClassic;
+    final tabBarReservedHeight = useBottomTabBar && isClassic ? appTheme.tabBarHeight : 0.0;
 
     final bottomReserved = max(paddingBottom, 12) + tabBarReservedHeight + 24;
 

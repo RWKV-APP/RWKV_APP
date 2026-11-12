@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_web_search/local_web_search.dart';
 
 // Project imports:
+import 'package:zone/model/app_presentation.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
@@ -101,6 +102,11 @@ class _ChatPane extends ConsumerWidget {
     final theme = Theme.of(context);
     final _ = theme;
     final selectMessageMode = ref.watch(P.chat.isSharing);
+    final style = ref.watch(P.preference.appStyle);
+    final presentation = AppPresentation.forStyle(style);
+    if (presentation != null && !selectMessageMode && ref.watch(P.app.demoType) == .chat) {
+      return _ThemedChatPane(presentation: presentation, frameRadius: style.radius);
+    }
 
     return Stack(
       children: [
@@ -115,6 +121,86 @@ class _ChatPane extends ConsumerWidget {
         if (!selectMessageMode) const InputBar(),
         if (!selectMessageMode) const Positioned.fill(child: AgentLocalFileApprovalCard()),
         if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
+      ],
+    );
+  }
+}
+
+class _ThemedChatPane extends StatelessWidget {
+  const _ThemedChatPane({required this.presentation, required this.frameRadius});
+
+  final AppPresentation presentation;
+  final double frameRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final workspace = presentation.workspace;
+    final transcript = Stack(
+      children: [
+        const _List(inFlow: true),
+        Empty(presentation: presentation),
+      ],
+    );
+    const composer = SingleChildScrollView(reverse: true, child: InputBar(inFlow: true));
+
+    return Stack(
+      children: [
+        Column(
+          children: [
+            const ChatAppBar(inFlow: true),
+            Expanded(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: presentation.readingWidth),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (workspace == .split && constraints.maxWidth >= 860) {
+                        return Row(
+                          children: [
+                            Expanded(child: transcript),
+                            const VerticalDivider(width: 1),
+                            SizedBox(
+                              width: (constraints.maxWidth * .34).clamp(352.0, 424.0).toDouble(),
+                              child: const Align(alignment: .bottomCenter, child: composer),
+                            ),
+                          ],
+                        );
+                      }
+
+                      final framed = workspace == .framed;
+                      final messagePane = Expanded(
+                        child: framed
+                            ? Padding(
+                                padding: const .fromLTRB(12, 8, 12, 12),
+                                child: Material(
+                                  color: colors.surfaceContainerLowest,
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(color: colors.outlineVariant),
+                                    borderRadius: .circular(frameRadius),
+                                  ),
+                                  clipBehavior: .antiAlias,
+                                  child: transcript,
+                                ),
+                              )
+                            : transcript,
+                      );
+                      final composerPane = ConstrainedBox(
+                        constraints: BoxConstraints(maxHeight: constraints.maxHeight * .42),
+                        child: composer,
+                      );
+                      return Column(
+                        crossAxisAlignment: .stretch,
+                        children: workspace == .console ? [composerPane, messagePane] : [messagePane, composerPane],
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Positioned.fill(child: AgentLocalFileApprovalCard()),
       ],
     );
   }
@@ -178,7 +264,9 @@ class _LocalWebSearchPane extends ConsumerWidget {
 }
 
 class _List extends ConsumerWidget {
-  const _List();
+  const _List({this.inFlow = false});
+
+  final bool inFlow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -188,9 +276,9 @@ class _List extends ConsumerWidget {
     final paddingTop = ref.watch(P.app.paddingTop);
     final paddingLeft = ref.watch(P.app.paddingLeft);
     final paddingRight = ref.watch(P.app.paddingRight);
-    final inputHeight = ref.watch(P.chat.inputHeight);
+    final inputHeight = inFlow ? 12.0 : ref.watch(P.chat.inputHeight);
 
-    double top = paddingTop + kToolbarHeight + 4;
+    final top = inFlow ? 8.0 : paddingTop + kToolbarHeight + 4;
     double bottom = inputHeight;
     double scrollBarBottom = inputHeight + 4;
 

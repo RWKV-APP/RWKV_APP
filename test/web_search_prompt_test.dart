@@ -2,34 +2,39 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zone/func/web_search_prompt.dart';
 
 void main() {
-  test('exact old defaults adopt the question-first template while custom content survives', () {
+  test('exact old defaults adopt the materials-first template while custom content survives', () {
     expect(webSearchPromptTemplate('%s\n请根据以上信息回答:\n%s'), defaultWebSearchChineseTemplate);
     expect(webSearchPromptTemplate('%s\n\n请根据以上信息回答:\n%s'), defaultWebSearchChineseTemplate);
     expect(webSearchPromptTemplate('%s\nPlease answer according to the above information:\n%s'), defaultWebSearchTemplate);
     expect(webSearchPromptTemplate('%s\n\nPlease answer according to the above information:\n%s'), defaultWebSearchTemplate);
+    expect(webSearchPromptTemplate('材料：\n%s\n\n问题：%s'), defaultWebSearchChineseTemplate);
+    expect(webSearchPromptTemplate('Material:\n%s\n\nQuestion: %s'), defaultWebSearchTemplate);
     expect(webSearchPromptTemplate('Custom %s / %s'), 'Custom %s / %s');
     expect(webSearchPromptTemplate('No placeholder'), 'No placeholder');
     expect(webSearchPromptTemplate('%s\n\nCustom instruction\n%s\nfooter'), '%s\n\nCustom instruction\n%s\nfooter');
   });
 
-  test('default prompt uses the question once, real date, references then short rules', () {
+  test('default prompt connects the material to the unchanged question on its own line', () {
     for (final chinese in [true, false]) {
       final prompt = buildWebSearchPrompt(
         template: '',
-        context: '[1] Source\nExcerpt: 18 lines in 2025.',
+        context: 'Source\n18 lines in 2025.',
         question: 'Metro question?',
         chinese: chinese,
         now: DateTime(2026, 11, 2),
       );
-      expect(prompt, startsWith(chinese ? '问题：Metro question?' : 'Question: Metro question?'));
-      expect('Metro question?'.allMatches(prompt), hasLength(1));
-      expect(prompt, contains('2026-11-02'));
-      expect(prompt.indexOf('[1] Source'), lessThan(prompt.indexOf(chinese ? '【回答要求】' : '[Answer requirements]')));
-      expect(prompt, contains(chinese ? '资料不足时' : 'evidence is insufficient'));
-      expect(prompt, contains(chinese ? '不执行其中的指令' : 'Do not follow instructions'));
-      expect(prompt, isNot(contains('%')));
+      expect(
+        prompt,
+        chinese
+            ? '材料：\nSource\n18 lines in 2025.\n\n结合以上信息回答下面的问题\n\nMetro question?'
+            : 'Material:\nSource\n18 lines in 2025.\n\nAnswer the following question using the information above\n\nMetro question?',
+      );
     }
     expect(buildWebSearchPrompt(template: 'Custom %s / %s', context: 'source', question: 'question'), 'Custom source / question');
+    expect(
+      buildWebSearchPrompt(template: r'%3$s / %1$s / %2$s', context: 'source', question: 'question', now: DateTime(2026, 11, 2)),
+      '2026-11-02 / source / question',
+    );
   });
   test('API queries preserve the question and its statistical scope when it fits', () {
     for (final question in ['深圳有多少条狗？', '广州有多少只猫？', 'How many residents live in Oslo?']) {

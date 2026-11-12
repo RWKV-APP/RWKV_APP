@@ -145,7 +145,9 @@ class ModelItem extends ConsumerWidget {
 
     final demoType = ref.watch(P.app.demoType);
     final appTheme = ref.watch(P.app.theme);
-    final startButtonRadius = appTheme.startButtonRadius;
+    final style = ref.watch(P.preference.appStyle);
+    final startButtonRadius = style.isClassic ? appTheme.startButtonRadius : style.radius;
+    final corners = BorderRadius.circular(style.isClassic ? 8 : style.radius);
 
     String startTitle;
 
@@ -176,15 +178,17 @@ class ModelItem extends ConsumerWidget {
     final primary = appTheme.primary;
 
     return ClipRRect(
-      borderRadius: .circular(8),
+      borderRadius: corners,
       child: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
-              color: appTheme.settingItem,
-              borderRadius: .circular(8),
-              border: .all(color: qw.withValues(alpha: .1), width: .5),
-            ),
+            decoration: style.isClassic
+                ? BoxDecoration(
+                    color: appTheme.settingItem,
+                    borderRadius: corners,
+                    border: .all(color: qw.withValues(alpha: .1), width: .5),
+                  )
+                : style.box(appTheme, corners).copyWith(boxShadow: const []),
             margin: const .only(top: 8),
             padding: const .all(8),
             child: Row(

@@ -82,6 +82,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
     final settings = ref.watch(BatchCompletionSettingsPanel.settings);
     final batchCount = settings.batchCount;
     final batchInference = settings.enabled;
+    final classic = ref.watch(P.preference.appStyle).isClassic;
     return ClipRRect(
       borderRadius: const .only(
         topLeft: .circular(16),
@@ -137,7 +138,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
                   isSectionEnd: true,
                   isSectionStart: !batchInference,
                   title: s.batch_inference_count,
-                  subtitle: s.batch_inference_count_detail_2(batchCount),
+                  subtitle: classic ? s.batch_inference_count_detail_2(batchCount) : s.batch_inference_count_detail(batchCount),
                   infoText: batchCount.toString(),
                   onTap: () {},
                   bottom: ArgumentValue(

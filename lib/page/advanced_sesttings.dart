@@ -1,22 +1,26 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/settings/chat_template_dialog.dart';
 
-class PageAdvancedSettings extends StatefulWidget {
+class PageAdvancedSettings extends ConsumerStatefulWidget {
   const PageAdvancedSettings({super.key});
 
   @override
-  State<PageAdvancedSettings> createState() => _PageAdvancedSettingsState();
+  ConsumerState<PageAdvancedSettings> createState() => _PageAdvancedSettingsState();
 }
 
-class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
+class _PageAdvancedSettingsState extends ConsumerState<PageAdvancedSettings> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final classic = ref.watch(P.preference.appStyle).isClassic;
 
     return Scaffold(
       appBar: AppBar(
@@ -24,6 +28,7 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
         title: Text(S.current.advance_settings),
       ),
       body: SingleChildScrollView(
+        padding: classic ? null : const .all(12),
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
@@ -91,7 +96,8 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
   }
 
   Widget item({required String title, required Widget child, VoidCallback? onTap}) {
-    return InkWell(
+    final style = ref.watch(P.preference.appStyle);
+    final row = InkWell(
       onTap: onTap,
       child: Row(
         children: [
@@ -107,9 +113,24 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
         ],
       ),
     );
+    if (style.isClassic) return row;
+    final palette = ref.watch(P.app.theme);
+    final corners = BorderRadius.circular(style.radius);
+    return Material(
+      color: palette.settingItem,
+      borderRadius: corners,
+      clipBehavior: .antiAlias,
+      child: row,
+    );
   }
 
   Widget buildGroupTitle(String title, ThemeData theme) {
+    if (!ref.watch(P.preference.appStyle).isClassic) {
+      return Padding(
+        padding: const .fromLTRB(4, 4, 4, 10),
+        child: Semantics(header: true, child: Text(title, style: theme.textTheme.titleMedium)),
+      );
+    }
     final surface = theme.colorScheme.surface;
     return Container(
       margin: const .only(bottom: 16),

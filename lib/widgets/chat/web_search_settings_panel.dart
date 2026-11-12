@@ -50,19 +50,19 @@ class _WebSearchSettingsPanelState extends ConsumerState<WebSearchSettingsPanel>
     final activeProvider = ref.watch(P.chat.webSearchProvider);
     final enabled = ref.watch(P.chat.webSearchMode) != WebSearchMode.off && activeProvider == provider;
     final generating = ref.watch(P.rwkvGeneration.generating);
-    final loadingKeys = ref.watch(P.chat.webSearchKeysLoading);
-    final storageError = ref.watch(P.chat.webSearchStorageError);
     final checks = ref.watch(P.chat.webSearchChecks);
     final checking = checks.values.any((value) => value.isLoading);
     final check = checks[provider];
     final keyEntered = (ref.watch(P.chat.webSearchApiKeys)[provider.credentialId] ?? '').isNotEmpty;
     final isDesktop = ref.watch(P.app.isDesktop);
+    final classic = ref.watch(P.preference.appStyle).isClassic;
     final allowance = P.chat.searchProviderAllowance(provider);
     return AlertDialog(
       title: Text(s.web_search_settings),
       content: SizedBox(
         width: 440,
         child: SingleChildScrollView(
+          padding: classic ? null : .only(top: MediaQuery.textScalerOf(context).scale(8)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
@@ -70,7 +70,7 @@ class _WebSearchSettingsPanelState extends ConsumerState<WebSearchSettingsPanel>
               DropdownButtonFormField<WebSearchProvider>(
                 initialValue: provider,
                 isExpanded: true,
-                decoration: InputDecoration(labelText: s.web_search_provider, border: const OutlineInputBorder()),
+                decoration: InputDecoration(labelText: s.web_search_provider, border: classic ? const OutlineInputBorder() : null),
                 items: [
                   for (final value in WebSearchProvider.values)
                     if (value != .browser || isDesktop)
@@ -85,7 +85,7 @@ class _WebSearchSettingsPanelState extends ConsumerState<WebSearchSettingsPanel>
                         ),
                       ),
                 ],
-                onChanged: generating || checking || loadingKeys ? null : (value) => setState(() => provider = value!),
+                onChanged: generating || checking ? null : (value) => setState(() => provider = value!),
               ),
               if (provider == .zhihuGlobal || provider == .zhihuSite) ...[
                 const SizedBox(height: 16),
@@ -99,7 +99,7 @@ class _WebSearchSettingsPanelState extends ConsumerState<WebSearchSettingsPanel>
                   Expanded(child: Text(s.web_search)),
                   Switch(
                     value: enabled,
-                    onChanged: generating || checking || loadingKeys
+                    onChanged: generating || checking
                         ? null
                         : (value) => P.chat.onWebSearchProviderEnabledChanged(provider, value),
                   ),
@@ -122,7 +122,7 @@ class _WebSearchSettingsPanelState extends ConsumerState<WebSearchSettingsPanel>
                 Text(s.web_search_validation_notice, style: theme.textTheme.bodySmall),
                 const SizedBox(height: 12),
                 FilledButton.icon(
-                  onPressed: generating || checking || loadingKeys || (provider.requiresApiKey && !keyEntered)
+                  onPressed: generating || checking || (provider.requiresApiKey && !keyEntered)
                       ? null
                       : () => P.chat.onVerifyAndEnableWebSearchProvider(provider),
                   icon: checking
@@ -143,19 +143,7 @@ class _WebSearchSettingsPanelState extends ConsumerState<WebSearchSettingsPanel>
                   ),
                 ],
                 const SizedBox(height: 12),
-                Text(s.web_search_saved_key_notice, style: theme.textTheme.bodySmall),
-                if (storageError) ...[
-                  const SizedBox(height: 8),
-                  Text(s.web_search_storage_error, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error)),
-                  Align(
-                    alignment: .centerLeft,
-                    child: TextButton.icon(
-                      onPressed: generating || checking || loadingKeys ? null : P.chat.restoreWebSearchCredentials,
-                      icon: const Icon(Icons.refresh, size: 16),
-                      label: Text(s.web_search_reload_saved_keys),
-                    ),
-                  ),
-                ],
+                Text(s.web_search_session_key_notice, style: theme.textTheme.bodySmall),
               ],
               if (allowance.isNotEmpty) ...[
                 const SizedBox(height: 16),
@@ -266,10 +254,9 @@ class _SearchCredentialFieldState extends ConsumerState<_SearchCredentialField> 
     final configured = (ref.watch(P.chat.webSearchApiKeys)[widget.provider.credentialId] ?? '').isNotEmpty;
     final generating = ref.watch(P.rwkvGeneration.generating);
     final checking = ref.watch(P.chat.webSearchChecks).values.any((value) => value.isLoading);
-    final loadingKeys = ref.watch(P.chat.webSearchKeysLoading);
     return TextField(
       controller: _controller,
-      enabled: !generating && !checking && !loadingKeys,
+      enabled: !generating && !checking,
       obscureText: true,
       autocorrect: false,
       enableSuggestions: false,
@@ -289,7 +276,7 @@ class _SearchCredentialFieldState extends ConsumerState<_SearchCredentialField> 
         border: const OutlineInputBorder(),
         suffixIcon: IconButton(
           tooltip: s.clear,
-          onPressed: generating || checking || loadingKeys
+          onPressed: generating || checking
               ? null
               : () {
                   _controller.clear();

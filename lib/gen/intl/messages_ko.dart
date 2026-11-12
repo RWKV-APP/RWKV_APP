@@ -1178,6 +1178,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "model_loading": MessageLookupByLibrary.simpleMessage("모델 로딩 중..."),
     "model_output": m43,
+    "model_picker_local": MessageLookupByLibrary.simpleMessage("로컬 모델"),
+    "model_picker_prebuilt": MessageLookupByLibrary.simpleMessage("사전 양자화 모델"),
     "model_settings": MessageLookupByLibrary.simpleMessage("모델 설정"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage(
@@ -1705,9 +1707,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage(
       "스도쿠가 유효하지 않습니다",
     ),
+    "theme_classic": MessageLookupByLibrary.simpleMessage("클래식"),
     "theme_dim": MessageLookupByLibrary.simpleMessage("어둡게"),
+    "theme_forest": MessageLookupByLibrary.simpleMessage("소나무 숲"),
+    "theme_glacier": MessageLookupByLibrary.simpleMessage("빙하"),
     "theme_light": MessageLookupByLibrary.simpleMessage("밝게"),
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("검정"),
+    "theme_midnight": MessageLookupByLibrary.simpleMessage("한밤중"),
+    "theme_paper": MessageLookupByLibrary.simpleMessage("종이"),
+    "theme_save_failed": MessageLookupByLibrary.simpleMessage(
+      "테마를 저장하지 못했습니다. 다시 선택해 주세요.",
+    ),
+    "theme_styles": MessageLookupByLibrary.simpleMessage("테마"),
+    "theme_styles_hint": MessageLookupByLibrary.simpleMessage(
+      "앱 전체의 디자인을 선택하세요. 라이트 또는 다크 모드는 디스플레이 설정에서 바꿀 수 있습니다.",
+    ),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("그럼 이제 RWKV와 채팅을 시작할 수 있습니다"),
     "think_button_mode_en": m63,
@@ -1972,7 +1986,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "검색 서비스의 응답 형식을 지원하지 않습니다.",
     ),
     "web_search_key_auto_apply": MessageLookupByLibrary.simpleMessage(
-      "Bearer 접두어 없이 본인의 키만 붙여 넣으세요. 검증 및 활성화에 성공하면 안전하게 저장되어 다음에도 재사용됩니다.",
+      "Bearer 접두사 없이 개인 키를 붙여넣고 확인 및 활성화를 선택하세요.",
     ),
     "web_search_key_configured": MessageLookupByLibrary.simpleMessage("키가 설정됨"),
     "web_search_key_help_title": MessageLookupByLibrary.simpleMessage(
@@ -2004,9 +2018,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search_rate_limit": MessageLookupByLibrary.simpleMessage(
       "요청이 너무 잦거나 서비스 한도에 도달했습니다. 잠시 후 다시 시도하고 계정 할당량을 확인하세요.",
-    ),
-    "web_search_reload_saved_keys": MessageLookupByLibrary.simpleMessage(
-      "보안 저장소 다시 시도",
     ),
     "web_search_report_copy_all": MessageLookupByLibrary.simpleMessage(
       "네 항목 모두 복사",
@@ -2074,9 +2085,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_report_user_query": MessageLookupByLibrary.simpleMessage(
       "사용자 메시지",
     ),
-    "web_search_saved_key_notice": MessageLookupByLibrary.simpleMessage(
-      "검증된 키는 이 기기의 보안 저장소에 저장되며 RWKV Chat을 다시 시작해도 재사용됩니다. 지우기 버튼으로 저장된 키를 삭제할 수 있습니다.",
-    ),
     "web_search_searchapi_allowance": MessageLookupByLibrary.simpleMessage(
       "가입 체험: 무료 요청 100회. 매월 갱신되지 않는 일회성 체험입니다.",
     ),
@@ -2086,10 +2094,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_serper_allowance": MessageLookupByLibrary.simpleMessage(
       "가입 체험: 무료 검색 2,500회. 매월 갱신되지 않는 일회성 체험입니다.",
     ),
-    "web_search_settings": MessageLookupByLibrary.simpleMessage("검색 설정"),
-    "web_search_storage_error": MessageLookupByLibrary.simpleMessage(
-      "보안 저장소에 접근할 수 없어 키 저장 또는 삭제를 확인하지 못했습니다. 기기의 잠금을 해제한 후 다시 시도하세요.",
+    "web_search_session_key_notice": MessageLookupByLibrary.simpleMessage(
+      "키는 앱 실행 중 메모리에만 유지되며 디스크나 시스템 키체인에 저장되지 않습니다. 앱을 다시 시작하면 다시 입력해야 합니다.",
     ),
+    "web_search_settings": MessageLookupByLibrary.simpleMessage("검색 설정"),
     "web_search_tavily_allowance": MessageLookupByLibrary.simpleMessage(
       "월 무료 사용량: 1,000 credits. 기본 검색은 요청당 1 credit을 사용합니다.",
     ),
@@ -2149,6 +2157,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("아키텍처 불일치"),
     "windows_architecture_mismatch_warning": m83,
+    "workspace_create": MessageLookupByLibrary.simpleMessage("만들기 및 탐색"),
+    "workspace_data": MessageLookupByLibrary.simpleMessage("데이터 및 저장공간"),
+    "workspace_tools": MessageLookupByLibrary.simpleMessage("도구"),
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d개 메시지 선택됨"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("출처 %d개"),

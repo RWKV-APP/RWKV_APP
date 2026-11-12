@@ -22,26 +22,28 @@ class CompletionTitleBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final classic = ref.watch(P.preference.appStyle).isClassic;
     final model = ref.watch(CompletionState.model);
     final batchSettings = ref.watch(CompletionState.batchSettings);
     final s = S.current;
     final buttonStyle = OutlinedButton.styleFrom(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+      minimumSize: classic ? null : const Size(0, 34),
+      textStyle: TextStyle(fontSize: classic ? 10 : 12, fontWeight: FontWeight.w500),
     );
 
     return Column(
       mainAxisSize: .min,
       crossAxisAlignment: .center,
       children: [
-        const SizedBox(height: kToolbarHeight),
-        _TopBar(title: 'RWKV·${s.completion}'),
+        SizedBox(height: classic ? kToolbarHeight : 8),
+        _TopBar(title: classic ? 'RWKV·${s.completion}' : s.completion, classic: classic),
         _ControlBar(
           modelName: model?.name ?? s.select_model,
           batchText: batchSettings.enabled ? s.batch_inference_button(batchSettings.batchSize) : s.batch_inference_short,
           buttonStyle: buttonStyle,
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: classic ? 24 : 10),
         Container(
           height: 0.5,
           margin: const EdgeInsets.only(left: 28, right: 28),
@@ -54,8 +56,9 @@ class CompletionTitleBar extends ConsumerWidget {
 
 class _TopBar extends StatelessWidget {
   final String title;
+  final bool classic;
 
-  const _TopBar({required this.title});
+  const _TopBar({required this.title, required this.classic});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +66,7 @@ class _TopBar extends StatelessWidget {
 
     return Row(
       children: [
-        const SizedBox(width: 24),
+        SizedBox(width: classic ? 24 : 12),
         IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -75,10 +78,7 @@ class _TopBar extends StatelessWidget {
           child: Text(
             title,
             textAlign: TextAlign.center,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w400,
-              height: 1,
-            ),
+            style: classic ? theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w400, height: 1) : theme.textTheme.titleLarge,
           ),
         ),
         IconButton(
@@ -92,7 +92,7 @@ class _TopBar extends StatelessWidget {
           ),
           iconSize: 20,
         ),
-        const SizedBox(width: 24),
+        SizedBox(width: classic ? 24 : 12),
       ],
     );
   }
@@ -218,6 +218,7 @@ Future<DecodeParamType?> _showDecodeParamActionSheet({
   required DecodeParamType current,
 }) async {
   final s = S.current;
+  final selectedMark = P.preference.appStyle.q.isClassic ? '☑' : '✓';
   final actionPairs = <({String label, DecodeParamType key})>[
     (label: s.decode_param_custom, key: .custom),
     (label: s.decode_param_default_, key: .defaults),
@@ -228,7 +229,7 @@ Future<DecodeParamType?> _showDecodeParamActionSheet({
   ];
   final actions = actionPairs.map((item) {
     final isCurrent = item.key == current;
-    final label = isCurrent ? "☑ ${item.label}" : item.label;
+    final label = isCurrent ? '$selectedMark ${item.label}' : item.label;
 
     return SheetAction<DecodeParamType>(
       label: label,
