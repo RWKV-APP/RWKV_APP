@@ -2,7 +2,8 @@
 import 'dart:io';
 
 // Flutter imports:
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:flutter_roleplay/flutter_roleplay.dart';
@@ -122,12 +123,23 @@ enum PageKey {
         pageBuilder: (context, state) => NoTransitionPage(child: scaffold({})),
       );
     }
+
+    Widget buildScaffold(BuildContext _, GoRouterState state) => scaffold(state.extra as Map<String, String>? ?? {});
+
     return GoRoute(
       path: path,
       redirect: this == webDemo ? _redirectMobileHiddenPage : null,
-      builder: (context, state) {
-        return scaffold(state.extra as Map<String, String>? ?? {});
-      },
+      builder: buildScaffold,
+      // go_router 18 does not recognize the Flutter SDK's MaterialApp.
+      pageBuilder: !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS
+          ? (context, state) => CupertinoPage<void>(
+              key: state.pageKey,
+              name: state.name ?? state.path,
+              arguments: <String, String>{...state.pathParameters, ...state.uri.queryParameters},
+              restorationId: state.pageKey.value,
+              child: Builder(builder: (context) => buildScaffold(context, state)),
+            )
+          : null,
     );
   }
 

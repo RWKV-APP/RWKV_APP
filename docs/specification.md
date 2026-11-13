@@ -44,6 +44,12 @@ including equivalent whitespace-normalized forms in bundled dictionaries.
 The plain entries `亡共` and `共铲` remain active. Other filter rules retain
 their existing matching behavior.
 
+## SPEC-RWKV-IOS-BACK-GESTURE — iOS Interactive Back Navigation
+
+On iOS, pushed pages with a previous page support interactive back navigation
+from the leading screen edge. A completed drag pops the current page, while a
+cancelled drag keeps it open. The visible back button also pops the current page.
+
 ## SPEC-RWKV-SETTINGS-ABOUT — Settings About Section
 
 Settings omits the obsolete community feedback entry and its external URL.
