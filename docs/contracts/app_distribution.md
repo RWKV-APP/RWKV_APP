@@ -136,9 +136,8 @@ Use `.flutter-version`, `node tools/check_flutter_toolchain.mjs` and
 `node tools/flutter.mjs` for that toolchain. Windows can be operated from the
 coordinating client; a separate planning Agent is not a build requirement.
 
-Fastlane is retired for this current release workflow. The Fastlane descriptions
-below retain historical release provenance; they are not the entrypoint for a
-new release. Use Flutter's native build commands, the platform packager
+Fastlane was retired for this release. Use Flutter's native build commands,
+the platform packager
 and the existing provider upload scripts. Before any new release effect, freeze
 the new version/build and toolchain in `release.json`, pin the reviewed adapter
 and native artifacts, and verify the exact source snapshot on both hosts.
@@ -153,7 +152,7 @@ Android retains the 16 KB-aligned MTK libraries shipped in the preceding Play
 release, with their own immutable archive pinned in the adapter manifest.
 Other platform native files retain their existing digests.
 Core AI experiments are excluded. Public release notes are “性能优化” and their
-translations. Earlier release and Fastlane sections below are historical.
+translations.
 
 ## SPEC-RWKV-APP-BINARY-DISTRIBUTION
 
@@ -173,8 +172,9 @@ The default ModelScope dataset is `HaloWang1991/rwkv-chat` on the `master`
 branch. Deployments may override the endpoint, repository ID, or revision by
 environment variable without changing the artifact mapping contract.
 
-GitHub Actions owns Linux and Windows package publication. Fastlane owns Android
-APK and macOS DMG publication. Authentication tokens are supplied only through
+GitHub Actions builds the declared Android, Linux and Windows release packages.
+Use native Flutter and platform tools for local builds, signing and packaging,
+and the provider upload tools for publication. Authentication tokens are supplied only through
 runtime secrets and must never be written to tracked files or command output.
 
 The bundled `.env` contains only the runtime `x-api-key`. Keep signing,
@@ -192,7 +192,7 @@ APK, macOS DMG, Linux x64 tar.gz/AppImage and Windows x64/ARM64 ZIP/installer
 filenames, and reject metadata before any release mutation. Wildcard batches
 must pass that check in full before uploading their first file.
 
-Before Fastlane creates and pushes a release tag, its release commit must include
+Before creating and pushing a release tag, the release commit must include
 every changed or untracked source file needed by a clean checkout. Generated
 release artwork remains local and is excluded from that commit. A clean checkout
 of the tag must therefore contain every imported source file before GitHub
@@ -239,22 +239,21 @@ deferred to a separate Apple continuation and do not block this delivery.
 Apple application build targets are exactly `macos` and `ios`. iPhone and iPad
 use the same iOS build; iPadOS is never a separate lane or package target.
 
-The Apple-only Fastlane entrypoint continues the same release on an Apple Silicon
-Mac using Flutter 3.47.2 and its bundled Dart 3.13.2. The current
-`release.json.flutterVersion` is the build requirement for this continuation;
+Continue the selected release on an Apple Silicon Mac using the Flutter SDK in
+`release.json.flutterVersion` and its bundled Dart SDK;
 already published packages retain their original toolchain provenance.
 `release.json.apple` declares the continuation source branch, integration
 branch, and original published base tag/commit. The continuation may include
 subsequent catalog and Apple fixes without moving the original tag or changing
 the provenance of already published non-Apple packages. Before authentication,
-the lane checks the App fetch/push repository, clean worktree, exact branch and
+verify the App fetch/push repository, clean worktree, exact branch and
 remote tip, integration ancestry, unchanged base tag, and fixed Flutter/tool
 prerequisites. The pinned adapter and native commits must still be the remote
 tips of their declared branches; newer commits require a reviewed pin update.
 The immutable native release tag must resolve to its declared commit.
 
-After authentication, it prepares the clean sibling adapter at the pinned
-commit and verifies each iOS/macOS native file's full size and SHA-256 against
+After authentication, prepare the clean sibling adapter at the pinned
+commit and verify each iOS/macOS native file's full size and SHA-256 against
 the pinned manifest. Unexpected files inside the native packaging scope block
 the build. Flutter package metadata and CocoaPods plugin links must resolve to
 that same sibling checkout. Every fresh platform build cleans prior outputs,
@@ -263,15 +262,14 @@ again before publication. Generated release artwork may differ; source code and
 the dependency lockfile may not. A run-local identity receipt survives build
 cleanup and records the App commit, manifest digest, dependency pins and native
 file digests without personal paths or credentials.
-On exit the lane restores only its own tracked generated artwork when the file
+On exit, restore only tracked artwork generated by this run when the file
 still matches the captured generated digest; subsequent user changes and
 untracked files remain intact, and no whole-worktree reset is permitted.
 
-The lane publishes a signed and notarized macOS DMG to the existing GitHub
-release, ModelScope and Hugging Face, and uploads the matching iOS version/build
-to TestFlight. Every enabled provider requires credentials before work starts.
-It does not bump the version, run the all-platform lane, move an existing tag,
-or replace accepted packages from other platforms. Resume checks completed
+Publish the signed and notarized macOS DMG through the enabled direct-download
+channels and upload the matching iOS version/build to TestFlight if selected.
+Check each enabled provider before work starts. Preserve the version, tag and
+accepted packages from other platforms. On resume, check completed
 remote artifacts before skipping stages. Existing macOS and TestFlight builds
 also require local provenance receipts matching the exact run identity and
 artifact digest; a matching version/build alone is insufficient. Receipts live

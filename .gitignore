@@ -80,12 +80,11 @@ android/.kotlin/sessions/
 # Strategy for branding.png files:
 # - Default files ARE committed to Git for local development use
 # - During build process, build_assets generates new files with current version
-# - Generated files are used in builds but NOT committed (via git_reset in fastlane)
+# - Keep generated release artwork out of source commits
 # - This avoids frequent binary file commits while ensuring dev environment works
 #
 # Note: These files are NOT in .gitignore because they need to be in Git
-# for local development. The fastlane 'all' lane uses git_reset to discard
-# generated changes, preventing daily commits of version number images.
+# for local development.
 
 samples/
 .claude/settings.local.json
