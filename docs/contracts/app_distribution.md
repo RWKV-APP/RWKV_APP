@@ -1,5 +1,17 @@
 # App Binary Distribution Contract
 
+## Release 4.9.3
+
+Version 4.9.3 uses build 768 across Android, iOS, macOS, Windows x64/ARM64
+and Linux x64. It adds appearance themes, simplifies chat web search, restores
+interactive iOS back gestures and includes the model ZIP extraction and macOS
+installer fixes. Flutter, adapter and native archives retain their pinned
+identities from 4.9.1.
+
+The release bundles a compatible fallback and publishes the current online
+model selection under build 768. The iOS update prompt follows public App
+Store availability.
+
 ## Release 4.9.1
 
 Version 4.9.1 uses build 766 and Flutter 3.47.5. It expands optional
